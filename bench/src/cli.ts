@@ -1,6 +1,8 @@
 import { Command } from "commander";
 import cliProgress from "cli-progress";
 import chalk from "chalk";
+import { dirname, join, resolve } from "path";
+import { fileURLToPath } from "url";
 import { runBenchmark } from "./runner.js";
 import { loadAllSuites, loadSuite } from "./suite-loader.js";
 import {
@@ -10,6 +12,11 @@ import {
 } from "./providers/index.js";
 import { DEFAULT_CONFIG } from "./types.js";
 import type { RunnerEvent } from "./runner.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const BENCH_ROOT = resolve(__dirname, "..");
+const PROJECT_ROOT = resolve(BENCH_ROOT, "..");
 
 const program = new Command();
 
@@ -42,7 +49,7 @@ program
     if (opts.suite) {
       suites = [await loadSuite(opts.suite)];
     } else {
-      suites = await loadAllSuites("bench/tests");
+      suites = await loadAllSuites(join(BENCH_ROOT, "tests"));
     }
 
     if (opts.language) {

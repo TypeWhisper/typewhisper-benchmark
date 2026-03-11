@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx src/cli.ts",
-    "bench": "tsx src/cli.ts",
+    "start": "tsx --env-file=../.env src/cli.ts",
+    "bench": "tsx --env-file=../.env src/cli.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

@@ -1,8 +1,44 @@
 {
   "id": "clean-speech-en",
   "name": "Clean Speech (English)",
-  "description": "Clear studio recordings with a single speaker in English",
+  "description": "Clear synthetic speech, single speaker (macOS TTS)",
   "language": "en",
   "category": "clean-speech",
-  "tests": []
+  "tests": [
+    {
+      "id": "en-clean-01",
+      "audioFile": "samples-en/clean-01.wav",
+      "groundTruth": "The quick brown fox jumps over the lazy dog",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    },
+    {
+      "id": "en-clean-02",
+      "audioFile": "samples-en/clean-02.wav",
+      "groundTruth": "Artificial intelligence is transforming the way we work and live",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    },
+    {
+      "id": "en-clean-03",
+      "audioFile": "samples-en/clean-03.wav",
+      "groundTruth": "Please call me back at three thirty in the afternoon",
+      "tags": ["clean", "tts", "numbers"],
+      "source": "custom"
+    },
+    {
+      "id": "en-clean-04",
+      "audioFile": "samples-en/clean-04.wav",
+      "groundTruth": "The weather forecast says it will rain tomorrow morning",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    },
+    {
+      "id": "en-clean-05",
+      "audioFile": "samples-en/clean-05.wav",
+      "groundTruth": "I need to schedule a meeting with the engineering team",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    }
+  ]
 }

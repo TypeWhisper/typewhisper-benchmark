@@ -1,7 +1,12 @@
 import { mkdir, writeFile, readFile } from "fs/promises";
 import { existsSync } from "fs";
-import { join } from "path";
+import { join, dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 import { createHash } from "crypto";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const BENCH_ROOT = resolve(__dirname, "..");
 import { getAudioInfo } from "./audio.js";
 import { computeMetrics } from "./metrics/index.js";
 import type {
@@ -160,7 +165,7 @@ export async function runBenchmark(
       });
 
       try {
-        const audioPath = join("bench/audio", test.audioFile);
+        const audioPath = join(BENCH_ROOT, "audio", test.audioFile);
         const audioInfo = await getAudioInfo(audioPath, item.suite.language);
 
         const transcription = await Promise.race([

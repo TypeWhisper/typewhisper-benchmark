@@ -1,8 +1,44 @@
 {
   "id": "clean-speech-de",
   "name": "Clean Speech (German)",
-  "description": "Clear studio recordings with a single speaker in German",
+  "description": "Clear synthetic speech, single speaker (macOS TTS)",
   "language": "de",
   "category": "clean-speech",
-  "tests": []
+  "tests": [
+    {
+      "id": "de-clean-01",
+      "audioFile": "samples-de/clean-01.wav",
+      "groundTruth": "Der schnelle braune Fuchs springt über den faulen Hund",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    },
+    {
+      "id": "de-clean-02",
+      "audioFile": "samples-de/clean-02.wav",
+      "groundTruth": "Künstliche Intelligenz verändert die Art wie wir arbeiten und leben",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    },
+    {
+      "id": "de-clean-03",
+      "audioFile": "samples-de/clean-03.wav",
+      "groundTruth": "Bitte rufen Sie mich um halb vier am Nachmittag zurück",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    },
+    {
+      "id": "de-clean-04",
+      "audioFile": "samples-de/clean-04.wav",
+      "groundTruth": "Die Wettervorhersage sagt es wird morgen früh regnen",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    },
+    {
+      "id": "de-clean-05",
+      "audioFile": "samples-de/clean-05.wav",
+      "groundTruth": "Ich muss ein Treffen mit dem Entwicklerteam vereinbaren",
+      "tags": ["clean", "tts"],
+      "source": "custom"
+    }
+  ]
 }
