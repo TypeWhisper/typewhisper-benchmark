@@ -1,0 +1,44 @@
+{
+  "id": "hard-de",
+  "name": "Hard Cases (German)",
+  "description": "Challenging scenarios: fast speech, numbers, technical jargon, proper nouns, background noise",
+  "language": "de",
+  "category": "technical-jargon",
+  "tests": [
+    {
+      "id": "de-fast-01",
+      "audioFile": "samples-hard-de/fast-01.wav",
+      "groundTruth": "Das Entwicklerteam hat gestern drei Microservices in Produktion gebracht und siebzehn kritische Fehler festgestellt",
+      "tags": ["fast-speech", "numbers", "technical"],
+      "source": "custom"
+    },
+    {
+      "id": "de-numbers-01",
+      "audioFile": "samples-hard-de/numbers-01.wav",
+      "groundTruth": "Meine Telefonnummer ist 0171 234 5678 und der Termin ist am 15. März 2025 um 14 Uhr 30",
+      "tags": ["numbers", "dates"],
+      "source": "custom"
+    },
+    {
+      "id": "de-tech-01",
+      "audioFile": "samples-hard-de/tech-01.wav",
+      "groundTruth": "Der Kubernetes Cluster verwendet einen Nginx Ingress Controller mit TLS Terminierung und gRPC Lastverteilung",
+      "tags": ["technical-jargon"],
+      "source": "custom"
+    },
+    {
+      "id": "de-names-01",
+      "audioFile": "samples-hard-de/names-01.wav",
+      "groundTruth": "Die Deutsche Bahn und die Lufthansa haben mit der Telekom eine Kooperation für autonomes Fahren angekündigt",
+      "tags": ["proper-nouns"],
+      "source": "custom"
+    },
+    {
+      "id": "de-noisy-01",
+      "audioFile": "samples-hard-de/noisy-01.wav",
+      "groundTruth": "Können Sie mir bitte den Quartalsbericht bis Ende Freitag schicken",
+      "tags": ["noisy-environment"],
+      "source": "custom"
+    }
+  ]
+}

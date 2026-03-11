@@ -1,0 +1,44 @@
+{
+  "id": "hard-en",
+  "name": "Hard Cases (English)",
+  "description": "Challenging scenarios: fast speech, numbers, technical jargon, proper nouns, background noise",
+  "language": "en",
+  "category": "technical-jargon",
+  "tests": [
+    {
+      "id": "en-fast-01",
+      "audioFile": "samples-hard-en/fast-01.wav",
+      "groundTruth": "The development team deployed three microservices to production yesterday and encountered seventeen critical errors",
+      "tags": ["fast-speech", "numbers", "technical"],
+      "source": "custom"
+    },
+    {
+      "id": "en-numbers-01",
+      "audioFile": "samples-hard-en/numbers-01.wav",
+      "groundTruth": "My phone number is 555-123-4567 and my appointment is on March 15th 2025 at 2:30 PM",
+      "tags": ["numbers", "dates"],
+      "source": "custom"
+    },
+    {
+      "id": "en-tech-01",
+      "audioFile": "samples-hard-en/tech-01.wav",
+      "groundTruth": "The Kubernetes cluster uses an nginx ingress controller with TLS termination and gRPC load balancing",
+      "tags": ["technical-jargon"],
+      "source": "custom"
+    },
+    {
+      "id": "en-names-01",
+      "audioFile": "samples-hard-en/names-01.wav",
+      "groundTruth": "Elon Musk announced that SpaceX and Neuralink will collaborate with OpenAI on a new project",
+      "tags": ["proper-nouns"],
+      "source": "custom"
+    },
+    {
+      "id": "en-noisy-01",
+      "audioFile": "samples-hard-en/noisy-01.wav",
+      "groundTruth": "Can you please send me the quarterly report by end of day Friday",
+      "tags": ["noisy-environment"],
+      "source": "custom"
+    }
+  ]
+}
