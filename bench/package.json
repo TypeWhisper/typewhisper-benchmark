@@ -1,0 +1,27 @@
+{
+  "name": "stt-bench",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/cli.ts",
+    "bench": "tsx src/cli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "^4.77.0",
+    "@deepgram/sdk": "^3.9.0",
+    "groq-sdk": "^0.8.0",
+    "commander": "^13.0.0",
+    "cli-progress": "^3.12.0",
+    "chalk": "^5.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.10.0",
+    "@types/cli-progress": "^3.11.6"
+  }
+}
