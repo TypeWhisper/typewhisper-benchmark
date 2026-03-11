@@ -3,12 +3,14 @@ import { OpenAIProvider } from "./openai.js";
 import { DeepgramProvider } from "./deepgram.js";
 import { GroqProvider } from "./groq.js";
 import { WhisperCppProvider } from "./whisper-cpp.js";
+import { AppleSpeechProvider } from "./apple-speech.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
   new DeepgramProvider(),
   new GroqProvider(),
   new WhisperCppProvider(),
+  new AppleSpeechProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {
