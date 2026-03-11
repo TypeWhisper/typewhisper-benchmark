@@ -1,9 +1,14 @@
 import { execFile } from "child_process";
 import { promisify } from "util";
 import { platform } from "os";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 import type { STTProvider, AudioInput, TranscriptionResult } from "../types.js";
 
 const execFileAsync = promisify(execFile);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const SCRIPT_PATH = resolve(__dirname, "..", "..", "scripts", "apple-speech.swift");
 
 export class AppleSpeechProvider implements STTProvider {
   id = "apple-speech";
@@ -22,10 +27,10 @@ export class AppleSpeechProvider implements STTProvider {
     const start = performance.now();
 
     const { stdout } = await execFileAsync("swift", [
-      "bench/scripts/apple-speech.swift",
+      SCRIPT_PATH,
       audio.filePath,
       audio.language,
-    ]);
+    ], { timeout: 90000 });
 
     const durationMs = Math.round(performance.now() - start);
 
