@@ -375,7 +375,8 @@ async function saveResults(
 
   // Also write to visualizer data location
   try {
-    const vizDir = "visualizer/public/data";
+    const projectRoot = resolve(BENCH_ROOT, "..");
+    const vizDir = join(projectRoot, "visualizer", "public", "data");
     if (!existsSync(vizDir)) await mkdir(vizDir, { recursive: true });
     await writeFile(
       join(vizDir, "benchmark-results.json"),
