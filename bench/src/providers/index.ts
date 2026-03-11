@@ -2,11 +2,13 @@ import type { STTProvider } from "../types.js";
 import { OpenAIProvider } from "./openai.js";
 import { DeepgramProvider } from "./deepgram.js";
 import { GroqProvider } from "./groq.js";
+import { WhisperCppProvider } from "./whisper-cpp.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
   new DeepgramProvider(),
   new GroqProvider(),
+  new WhisperCppProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {
