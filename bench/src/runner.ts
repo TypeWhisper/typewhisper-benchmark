@@ -373,17 +373,140 @@ async function saveResults(
     "utf-8"
   );
 
-  // Also write to visualizer data location
+  // Write per-provider-model result files (conflict-free for git)
+  await savePerModelResults(summary);
+}
+
+/** Write one JSON file per provider+model, then merge all into benchmark-results.json */
+async function savePerModelResults(summary: BenchmarkSummary): Promise<void> {
   try {
     const projectRoot = resolve(BENCH_ROOT, "..");
-    const vizDir = join(projectRoot, "visualizer", "public", "data");
-    if (!existsSync(vizDir)) await mkdir(vizDir, { recursive: true });
-    await writeFile(
-      join(vizDir, "benchmark-results.json"),
-      JSON.stringify(summary, null, 2),
-      "utf-8"
-    );
+    const resultsDir = join(projectRoot, "visualizer", "public", "data", "results");
+    if (!existsSync(resultsDir)) await mkdir(resultsDir, { recursive: true });
+
+    // Write individual files for each provider+model in this run
+    // Merge with existing results from other suites
+    for (const ranking of summary.rankings) {
+      const filename = `${ranking.providerId}_${ranking.model}.json`;
+      const filePath = join(resultsDir, filename);
+
+      // Load existing results for this model (from previous runs on other suites)
+      let existingResults: Record<string, TestResult[]> = {};
+      if (existsSync(filePath)) {
+        try {
+          const raw = await readFile(filePath, "utf-8");
+          const existing = JSON.parse(raw);
+          if (existing.resultsBySuite) existingResults = existing.resultsBySuite;
+        } catch {
+          // Ignore malformed files
+        }
+      }
+
+      // Merge: new suite results overwrite existing ones for same suite
+      const newResults: Record<string, TestResult[]> = {};
+      for (const [suiteId, results] of Object.entries(summary.resultsBySuite)) {
+        const filtered = results.filter(
+          (r) => r.providerId === ranking.providerId && r.model === ranking.model
+        );
+        if (filtered.length > 0) newResults[suiteId] = filtered;
+      }
+
+      const mergedResults = { ...existingResults, ...newResults };
+
+      // Recompute ranking from all accumulated results
+      const allResults = Object.values(mergedResults).flat();
+      const valid = allResults.filter((r) => !r.error);
+      const errors = allResults.filter((r) => r.error);
+      const totalAudioMs = valid.reduce((sum, r) => sum + r.audioDurationMs, 0);
+      const totalCost = valid.reduce((sum, r) => sum + (r.costUsd || 0), 0);
+
+      const mergedRanking: ModelRanking = valid.length > 0 ? {
+        ...ranking,
+        avgWerNormalized: valid.reduce((s, r) => s + r.werNormalized, 0) / valid.length,
+        avgCer: valid.reduce((s, r) => s + r.cer, 0) / valid.length,
+        avgRealtimeFactor: valid.reduce((s, r) => s + r.realtimeFactor, 0) / valid.length,
+        avgDurationMs: valid.reduce((s, r) => s + r.durationMs, 0) / valid.length,
+        costPerHourAudio: totalAudioMs > 0 ? (totalCost / totalAudioMs) * 3600000 : undefined,
+        totalTests: allResults.length,
+        errorCount: errors.length,
+        errorRate: errors.length / allResults.length,
+      } : ranking;
+
+      const modelFile = {
+        ranking: mergedRanking,
+        resultsBySuite: mergedResults,
+      };
+
+      await writeFile(
+        filePath,
+        JSON.stringify(modelFile, null, 2) + "\n",
+        "utf-8"
+      );
+    }
+
+    // Merge all individual files into combined benchmark-results.json
+    await mergeResultFiles(projectRoot);
   } catch {
     // Visualizer may not exist yet
   }
+}
+
+/** Read all per-model files from results/ and merge into benchmark-results.json */
+export async function mergeResultFiles(projectRoot?: string): Promise<void> {
+  const root = projectRoot || resolve(BENCH_ROOT, "..");
+  const resultsDir = join(root, "visualizer", "public", "data", "results");
+  const outFile = join(root, "visualizer", "public", "data", "benchmark-results.json");
+
+  if (!existsSync(resultsDir)) return;
+
+  const { readdir } = await import("fs/promises");
+  const files = (await readdir(resultsDir)).filter((f) => f.endsWith(".json"));
+
+  const rankings: ModelRanking[] = [];
+  const resultsBySuite: Record<string, TestResult[]> = {};
+  const allSuites = new Set<string>();
+  const allLanguages = new Set<string>();
+  const allCategories = new Set<string>();
+
+  for (const file of files) {
+    try {
+      const raw = await readFile(join(resultsDir, file), "utf-8");
+      const data = JSON.parse(raw);
+      if (data.ranking) rankings.push(data.ranking);
+      if (data.resultsBySuite) {
+        for (const [suiteId, results] of Object.entries(data.resultsBySuite)) {
+          (resultsBySuite[suiteId] ||= []).push(...(results as TestResult[]));
+        }
+      }
+    } catch {
+      // Skip malformed files
+    }
+  }
+
+  rankings.sort((a, b) => a.avgWerNormalized - b.avgWerNormalized);
+
+  // Extract metadata from suite IDs (format: category-language, e.g. "clean-speech-en")
+  for (const suiteId of Object.keys(resultsBySuite)) {
+    allSuites.add(suiteId);
+    const lang = suiteId.split("-").pop();
+    if (lang && lang.length === 2) allLanguages.add(lang);
+    const category = suiteId.replace(/-[a-z]{2}$/, "");
+    if (category) allCategories.add(category);
+  }
+
+  const merged: BenchmarkSummary = {
+    rankings,
+    metadata: {
+      timestamp: new Date().toISOString(),
+      version: new Date().toISOString().slice(0, 10),
+      totalModels: rankings.length,
+      totalTests: Object.values(resultsBySuite).reduce((sum, r) => sum + r.length, 0),
+      suites: [...allSuites],
+      languages: [...allLanguages],
+      categories: [...allCategories] as BenchmarkSummary["metadata"]["categories"],
+    },
+    resultsBySuite,
+  };
+
+  await writeFile(outFile, JSON.stringify(merged, null, 2) + "\n", "utf-8");
 }

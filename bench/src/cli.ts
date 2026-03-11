@@ -3,7 +3,7 @@ import cliProgress from "cli-progress";
 import chalk from "chalk";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { runBenchmark } from "./runner.js";
+import { runBenchmark, mergeResultFiles } from "./runner.js";
 import { loadAllSuites, loadSuite } from "./suite-loader.js";
 import {
   getAvailableProviders,
@@ -214,6 +214,14 @@ program
       console.log(`    Models: ${p.models.join(", ")}`);
     }
     console.log();
+  });
+
+program
+  .command("merge")
+  .description("Merge per-model result files into benchmark-results.json")
+  .action(async () => {
+    await mergeResultFiles(PROJECT_ROOT);
+    console.log(chalk.green("Merged results into visualizer/public/data/benchmark-results.json"));
   });
 
 program.parse();
