@@ -119,37 +119,38 @@ async function generateCommonVoiceSuite(): Promise<TestSuite | null> {
   };
 }
 
-interface CVEntry {
-  path: string;
-  sentence: string;
-  upVotes: number;
-  downVotes: number;
-  accent: string;
+interface SPSEntry {
+  audioFile: string;
+  transcription: string;
+  durationMs: number;
+  votes: number;
+  prompt: string;
 }
 
-function parseCVTsv(content: string): CVEntry[] {
+function parseSPSTsv(content: string): SPSEntry[] {
   const lines = content.trim().split("\n");
   const header = lines[0].split("\t");
 
-  const pathIdx = header.indexOf("path");
-  const sentenceIdx = header.indexOf("sentence");
-  const upIdx = header.indexOf("up_votes");
-  const downIdx = header.indexOf("down_votes");
-  const accentIdx = header.indexOf("accents") !== -1
-    ? header.indexOf("accents")
-    : header.indexOf("accent");
+  const audioFileIdx = header.indexOf("audio_file");
+  const transcriptionIdx = header.indexOf("transcription");
+  const durationIdx = header.indexOf("duration_ms");
+  const votesIdx = header.indexOf("votes");
+  const promptIdx = header.indexOf("prompt");
 
-  if (pathIdx === -1 || sentenceIdx === -1) return [];
+  if (audioFileIdx === -1 || transcriptionIdx === -1) return [];
 
-  const entries: CVEntry[] = [];
+  const entries: SPSEntry[] = [];
   for (let i = 1; i < lines.length; i++) {
     const cols = lines[i].split("\t");
+    const transcription = (cols[transcriptionIdx] || "").trim();
+    if (!transcription) continue;
+
     entries.push({
-      path: cols[pathIdx] || "",
-      sentence: cols[sentenceIdx] || "",
-      upVotes: upIdx !== -1 ? parseInt(cols[upIdx] || "0", 10) : 0,
-      downVotes: downIdx !== -1 ? parseInt(cols[downIdx] || "0", 10) : 0,
-      accent: accentIdx !== -1 ? (cols[accentIdx] || "").trim() : "",
+      audioFile: cols[audioFileIdx] || "",
+      transcription,
+      durationMs: durationIdx !== -1 ? parseInt(cols[durationIdx] || "0", 10) : 0,
+      votes: votesIdx !== -1 ? parseInt(cols[votesIdx] || "0", 10) : 0,
+      prompt: promptIdx !== -1 ? (cols[promptIdx] || "").trim() : "",
     });
   }
   return entries;
@@ -159,100 +160,87 @@ async function generateAccentedSpeechSuite(
   lang: "en" | "de"
 ): Promise<TestSuite | null> {
   const datasetDir = join(BENCH_ROOT, "audio", "datasets", `common-voice-${lang}`);
-  const tsvPath = join(datasetDir, "validated.tsv");
+  const tsvPath = join(datasetDir, `ss-corpus-${lang}.tsv`);
 
   if (!existsSync(tsvPath)) {
-    console.log(`Common Voice ${lang.toUpperCase()} not found at ${datasetDir}`);
-    console.log("Download from commonvoice.mozilla.org and place dataset there.");
+    console.log(`Spontaneous Speech ${lang.toUpperCase()} not found at ${datasetDir}`);
     return null;
   }
 
-  console.log(`Processing Common Voice ${lang.toUpperCase()} for accented speech...`);
+  console.log(`Processing Spontaneous Speech ${lang.toUpperCase()}...`);
 
   const content = await readFile(tsvPath, "utf-8");
-  const entries = parseCVTsv(content);
+  const entries = parseSPSTsv(content);
 
-  // Filter for quality
   const quality = entries.filter(
-    (e) => e.upVotes > e.downVotes && e.sentence.length > 10
+    (e) => e.votes >= 0 && e.transcription.length > 10 && e.durationMs >= 3000 && e.durationMs <= 30000
   );
 
-  // Group by accent
-  const accentGroups = new Map<string, CVEntry[]>();
+  // Diversify by prompt via round-robin
+  const byPrompt = new Map<string, SPSEntry[]>();
   for (const entry of quality) {
-    if (!entry.accent) continue;
-    const accents = entry.accent.split(",").map((a) => a.trim().toLowerCase());
-    for (const accent of accents) {
-      if (!accent) continue;
-      const group = accentGroups.get(accent) || [];
-      group.push(entry);
-      accentGroups.set(accent, group);
-    }
+    const group = byPrompt.get(entry.prompt) || [];
+    group.push(entry);
+    byPrompt.set(entry.prompt, group);
   }
 
-  const targetAccents =
-    lang === "en"
-      ? ["indian", "india", "chinese", "china", "german", "germany", "hispanic", "spanish"]
-      : ["austrian", "austria", "swiss", "switzerland", "bavarian"];
+  const selected: SPSEntry[] = [];
+  const promptKeys = [...byPrompt.keys()];
+  let pIdx = 0;
+  const usedPerPrompt = new Map<string, number>();
+
+  while (selected.length < 25 && promptKeys.length > 0) {
+    const prompt = promptKeys[pIdx % promptKeys.length];
+    const used = usedPerPrompt.get(prompt) || 0;
+    const group = byPrompt.get(prompt)!;
+
+    if (used < group.length) {
+      selected.push(group[used]);
+      usedPerPrompt.set(prompt, used + 1);
+    }
+    pIdx++;
+    if (used + 1 >= group.length) {
+      const idx = promptKeys.indexOf(prompt);
+      if (idx !== -1) promptKeys.splice(idx, 1);
+      if (promptKeys.length === 0) break;
+      pIdx = pIdx % promptKeys.length;
+    }
+  }
 
   const audioOutDir = join(BENCH_ROOT, "audio", `samples-accent-${lang}`);
   mkdirSync(audioOutDir, { recursive: true });
 
   const tests: TestCase[] = [];
-  let sampleIdx = 0;
-  const samplesPerAccent = 6;
+  for (let i = 0; i < selected.length; i++) {
+    const entry = selected[i];
+    const sampleNum = (i + 1).toString().padStart(2, "0");
+    const mp3Path = join(datasetDir, "audios", entry.audioFile);
+    const wavFilename = `${lang}-accent-${sampleNum}.wav`;
+    const wavPath = join(audioOutDir, wavFilename);
 
-  for (const target of targetAccents) {
-    let matched: CVEntry[] = [];
-    for (const [accent, group] of accentGroups) {
-      if (accent.includes(target) || target.includes(accent)) {
-        matched.push(...group);
-      }
+    if (!existsSync(mp3Path)) continue;
+
+    if (!existsSync(wavPath)) {
+      try {
+        execSync(`ffmpeg -y -i "${mp3Path}" -ar 16000 -ac 1 "${wavPath}" -loglevel error`, { stdio: "pipe" });
+      } catch { continue; }
     }
 
-    if (matched.length === 0) continue;
-    matched.sort((a, b) => b.upVotes - a.upVotes);
-    const selected = matched.slice(0, samplesPerAccent);
-
-    for (const entry of selected) {
-      sampleIdx++;
-      const mp3Path = join(datasetDir, "clips", entry.path);
-      const wavFilename = `${lang}-accent-${sampleIdx.toString().padStart(2, "0")}.wav`;
-      const wavPath = join(audioOutDir, wavFilename);
-
-      if (!existsSync(mp3Path)) continue;
-
-      if (!existsSync(wavPath)) {
-        try {
-          execSync(
-            `ffmpeg -y -i "${mp3Path}" -ar 16000 -ac 1 "${wavPath}" -loglevel error`,
-            { stdio: "pipe" }
-          );
-        } catch {
-          continue;
-        }
-      }
-
-      tests.push({
-        id: `${lang}-accent-${sampleIdx.toString().padStart(2, "0")}`,
-        audioFile: `samples-accent-${lang}/${wavFilename}`,
-        groundTruth: entry.sentence,
-        tags: ["accented-speech", target],
-        source: "common-voice",
-        metadata: { accent: target },
-      });
-    }
+    tests.push({
+      id: `${lang}-accent-${sampleNum}`,
+      audioFile: `samples-accent-${lang}/${wavFilename}`,
+      groundTruth: entry.transcription,
+      tags: ["spontaneous-speech", "common-voice"],
+      source: "common-voice",
+    });
   }
 
-  if (tests.length === 0) {
-    console.log(`  No accented samples found for ${lang.toUpperCase()}.`);
-    return null;
-  }
+  if (tests.length === 0) return null;
 
   return {
     id: `accented-speech-${lang}`,
     name: `Accented Speech (${lang === "en" ? "English" : "German"})`,
-    description: "Speech with various accents from Mozilla Common Voice",
+    description: "Spontaneous speech from diverse speakers (Common Voice Spontaneous Speech corpus)",
     language: lang,
     category: "accented-speech",
     tests,

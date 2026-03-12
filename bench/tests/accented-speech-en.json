@@ -1,8 +1,334 @@
 {
   "id": "accented-speech-en",
   "name": "Accented Speech (English)",
-  "description": "Speech with various accents. Run bench/scripts/curate-common-voice.ts to populate with Common Voice data.",
+  "description": "Spontaneous speech from diverse speakers (Common Voice Spontaneous Speech corpus)",
   "language": "en",
   "category": "accented-speech",
-  "tests": []
+  "tests": [
+    {
+      "id": "en-accent-01",
+      "audioFile": "samples-accent-en/en-accent-01.wav",
+      "groundTruth": "I think that the kinds of tech that would make our lives better are any technology that helps us to live longer and be healthier, so for example maybe if my watch could tell me to stop eating so much sugar I would be much happier.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What technological advancements do you t"
+      }
+    },
+    {
+      "id": "en-accent-02",
+      "audioFile": "samples-accent-en/en-accent-02.wav",
+      "groundTruth": "Is it easy to travel by train?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Is it easy to travel by train?"
+      }
+    },
+    {
+      "id": "en-accent-03",
+      "audioFile": "samples-accent-en/en-accent-03.wav",
+      "groundTruth": "What can you cook?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What can you cook?"
+      }
+    },
+    {
+      "id": "en-accent-04",
+      "audioFile": "samples-accent-en/en-accent-04.wav",
+      "groundTruth": "People, people annoys me.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What annoys you?"
+      }
+    },
+    {
+      "id": "en-accent-05",
+      "audioFile": "samples-accent-en/en-accent-05.wav",
+      "groundTruth": "uhm mostly dogs",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What kinds of pets are common in your co"
+      }
+    },
+    {
+      "id": "en-accent-06",
+      "audioFile": "samples-accent-en/en-accent-06.wav",
+      "groundTruth": "To Kill A Mockingbird.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What is your favorite book about?"
+      }
+    },
+    {
+      "id": "en-accent-07",
+      "audioFile": "samples-accent-en/en-accent-07.wav",
+      "groundTruth": "It is dark. Find a black.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What color is the sky right now?"
+      }
+    },
+    {
+      "id": "en-accent-08",
+      "audioFile": "samples-accent-en/en-accent-08.wav",
+      "groundTruth": "What is your best traveling experience?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What is your best travelling experience?"
+      }
+    },
+    {
+      "id": "en-accent-09",
+      "audioFile": "samples-accent-en/en-accent-09.wav",
+      "groundTruth": "What is the weather today?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What is the weather today?"
+      }
+    },
+    {
+      "id": "en-accent-10",
+      "audioFile": "samples-accent-en/en-accent-10.wav",
+      "groundTruth": "To take a rest, and have a good rest.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What do you want to do with your next da"
+      }
+    },
+    {
+      "id": "en-accent-11",
+      "audioFile": "samples-accent-en/en-accent-11.wav",
+      "groundTruth": "No, I'm not.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Are you good at growing plants?"
+      }
+    },
+    {
+      "id": "en-accent-12",
+      "audioFile": "samples-accent-en/en-accent-12.wav",
+      "groundTruth": "We really don't even though we should.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Does your family have a strict budget?"
+      }
+    },
+    {
+      "id": "en-accent-13",
+      "audioFile": "samples-accent-en/en-accent-13.wav",
+      "groundTruth": "My parents live upstairs from me.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:How far do you live from your parents?"
+      }
+    },
+    {
+      "id": "en-accent-14",
+      "audioFile": "samples-accent-en/en-accent-14.wav",
+      "groundTruth": "Yes, I drive a vehicle.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Do you drive any vehicles?"
+      }
+    },
+    {
+      "id": "en-accent-15",
+      "audioFile": "samples-accent-en/en-accent-15.wav",
+      "groundTruth": "Hey, what are you—",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What was your favourite subject in schoo"
+      }
+    },
+    {
+      "id": "en-accent-16",
+      "audioFile": "samples-accent-en/en-accent-16.wav",
+      "groundTruth": "I attempt to not mark my birthday.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What do you do to mark your birthday?"
+      }
+    },
+    {
+      "id": "en-accent-17",
+      "audioFile": "samples-accent-en/en-accent-17.wav",
+      "groundTruth": "What was your favorite thing in school?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What was your favorite thing in school?"
+      }
+    },
+    {
+      "id": "en-accent-18",
+      "audioFile": "samples-accent-en/en-accent-18.wav",
+      "groundTruth": "Canned spinach",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Describe some foods that are unhealthy o"
+      }
+    },
+    {
+      "id": "en-accent-19",
+      "audioFile": "samples-accent-en/en-accent-19.wav",
+      "groundTruth": "I lö kapaparat",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What is the biggest insect where you com"
+      }
+    },
+    {
+      "id": "en-accent-20",
+      "audioFile": "samples-accent-en/en-accent-20.wav",
+      "groundTruth": "Were you affected by pandemic?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Were you affected by the pandemic?"
+      }
+    },
+    {
+      "id": "en-accent-21",
+      "audioFile": "samples-accent-en/en-accent-21.wav",
+      "groundTruth": "Sometimes I am diffuse.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What is one bad quality about yourself?"
+      }
+    },
+    {
+      "id": "en-accent-22",
+      "audioFile": "samples-accent-en/en-accent-22.wav",
+      "groundTruth": "When I'm sick I stay in bed.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What do you do when you're sick?"
+      }
+    },
+    {
+      "id": "en-accent-23",
+      "audioFile": "samples-accent-en/en-accent-23.wav",
+      "groundTruth": "What is your favorite song?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:What is your favorite song?"
+      }
+    },
+    {
+      "id": "en-accent-24",
+      "audioFile": "samples-accent-en/en-accent-24.wav",
+      "groundTruth": "No, I don't know this game.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:\"Do you know the game \"\"The Hundred Line"
+      }
+    },
+    {
+      "id": "en-accent-25",
+      "audioFile": "samples-accent-en/en-accent-25.wav",
+      "groundTruth": "No I'm not that good at swimming.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Are you good at swimming?"
+      }
+    }
+  ]
 }
