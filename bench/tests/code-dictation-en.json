@@ -1,0 +1,289 @@
+{
+  "id": "code-dictation-en",
+  "name": "Code Dictation (English)",
+  "description": "Programming-related dictation with camelCase, snake_case, syntax, and technical terms",
+  "language": "en",
+  "category": "code-dictation",
+  "tests": [
+    {
+      "id": "en-code-camel-01",
+      "audioFile": "samples-code-en/en-code-camel-01.wav",
+      "groundTruth": "variable get user name equals fetch user data",
+      "codeGroundTruth": "getUserName = fetchUserData",
+      "tags": ["camelCase", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-camel-02",
+      "audioFile": "samples-code-en/en-code-camel-02.wav",
+      "groundTruth": "function calculate total price takes items and discount",
+      "codeGroundTruth": "calculateTotalPrice(items, discount)",
+      "tags": ["camelCase", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-camel-03",
+      "audioFile": "samples-code-en/en-code-camel-03.wav",
+      "groundTruth": "let is valid email equals validate email address",
+      "codeGroundTruth": "isValidEmail = validateEmailAddress",
+      "tags": ["camelCase", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-camel-04",
+      "audioFile": "samples-code-en/en-code-camel-04.wav",
+      "groundTruth": "const handle click event equals on button press",
+      "codeGroundTruth": "handleClickEvent = onButtonPress",
+      "tags": ["camelCase", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-camel-05",
+      "audioFile": "samples-code-en/en-code-camel-05.wav",
+      "groundTruth": "async function fetch api response from endpoint",
+      "codeGroundTruth": "async fetchApiResponse(endpoint)",
+      "tags": ["camelCase", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-camel-06",
+      "audioFile": "samples-code-en/en-code-camel-06.wav",
+      "groundTruth": "set current user profile to update user settings",
+      "codeGroundTruth": "setCurrentUserProfile(updateUserSettings)",
+      "tags": ["camelCase", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-snake-01",
+      "audioFile": "samples-code-en/en-code-snake-01.wav",
+      "groundTruth": "variable max retry count equals 5",
+      "codeGroundTruth": "max_retry_count = 5",
+      "tags": ["snake_case", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-snake-02",
+      "audioFile": "samples-code-en/en-code-snake-02.wav",
+      "groundTruth": "constant default timeout seconds equals 30",
+      "codeGroundTruth": "DEFAULT_TIMEOUT_SECONDS = 30",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-snake-03",
+      "audioFile": "samples-code-en/en-code-snake-03.wav",
+      "groundTruth": "function get database connection string",
+      "codeGroundTruth": "get_database_connection_string",
+      "tags": ["snake_case", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-snake-04",
+      "audioFile": "samples-code-en/en-code-snake-04.wav",
+      "groundTruth": "constant API base URL equals string",
+      "codeGroundTruth": "API_BASE_URL = \"\"",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-snake-05",
+      "audioFile": "samples-code-en/en-code-snake-05.wav",
+      "groundTruth": "set user access token to null",
+      "codeGroundTruth": "user_access_token = null",
+      "tags": ["snake_case", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-syntax-01",
+      "audioFile": "samples-code-en/en-code-syntax-01.wav",
+      "groundTruth": "if user is authenticated then return user profile",
+      "codeGroundTruth": "if (user.isAuthenticated) { return user.profile; }",
+      "tags": ["syntax", "if-statement"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-syntax-02",
+      "audioFile": "samples-code-en/en-code-syntax-02.wav",
+      "groundTruth": "for let i equals 0 semicolon i less than items length semicolon i plus plus",
+      "codeGroundTruth": "for (let i = 0; i < items.length; i++)",
+      "tags": ["syntax", "for-loop"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-syntax-03",
+      "audioFile": "samples-code-en/en-code-syntax-03.wav",
+      "groundTruth": "try catch error open curly brace console log error message close curly brace",
+      "codeGroundTruth": "try { } catch (error) { console.log(error.message); }",
+      "tags": ["syntax", "try-catch"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-syntax-04",
+      "audioFile": "samples-code-en/en-code-syntax-04.wav",
+      "groundTruth": "switch case type equals string colon return parse string value break",
+      "codeGroundTruth": "switch (type) { case \"string\": return parseStringValue(); break; }",
+      "tags": ["syntax", "switch"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-syntax-05",
+      "audioFile": "samples-code-en/en-code-syntax-05.wav",
+      "groundTruth": "const result equals await fetch data pipe then response arrow response json",
+      "codeGroundTruth": "const result = await fetchData().then(response => response.json())",
+      "tags": ["syntax", "async"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-syntax-06",
+      "audioFile": "samples-code-en/en-code-syntax-06.wav",
+      "groundTruth": "export default class user service extends base service",
+      "codeGroundTruth": "export default class UserService extends BaseService",
+      "tags": ["syntax", "class"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-mixed-01",
+      "audioFile": "samples-code-en/en-code-mixed-01.wav",
+      "groundTruth": "slash slash to do fix the memory leak in the connection pool handler",
+      "codeGroundTruth": "// TODO: fix the memory leak in the connection pool handler",
+      "tags": ["mixed", "comments"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-mixed-02",
+      "audioFile": "samples-code-en/en-code-mixed-02.wav",
+      "groundTruth": "slash star star returns the formatted user display name at param user the user object star slash",
+      "codeGroundTruth": "/** Returns the formatted user display name @param user The user object */",
+      "tags": ["mixed", "docstring"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-mixed-03",
+      "audioFile": "samples-code-en/en-code-mixed-03.wav",
+      "groundTruth": "console log user logged in successfully with role colon admin",
+      "codeGroundTruth": "console.log(\"User logged in successfully with role:\", \"admin\")",
+      "tags": ["mixed", "logging"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-mixed-04",
+      "audioFile": "samples-code-en/en-code-mixed-04.wav",
+      "groundTruth": "slash slash warning this function is deprecated use new handler instead",
+      "codeGroundTruth": "// WARNING: this function is deprecated, use newHandler instead",
+      "tags": ["mixed", "comments"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-mixed-05",
+      "audioFile": "samples-code-en/en-code-mixed-05.wav",
+      "groundTruth": "throw new error invalid configuration missing required field database host",
+      "codeGroundTruth": "throw new Error(\"Invalid configuration: missing required field database_host\")",
+      "tags": ["mixed", "errors"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-tech-01",
+      "audioFile": "samples-code-en/en-code-tech-01.wav",
+      "groundTruth": "import react use state use effect from react",
+      "codeGroundTruth": "import React, { useState, useEffect } from 'react'",
+      "tags": ["technical", "imports"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-tech-02",
+      "audioFile": "samples-code-en/en-code-tech-02.wav",
+      "groundTruth": "npm install at types slash node dash dash save dev",
+      "codeGroundTruth": "npm install @types/node --save-dev",
+      "tags": ["technical", "commands"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-tech-03",
+      "audioFile": "samples-code-en/en-code-tech-03.wav",
+      "groundTruth": "interface API response with generic type T has data of type T and status number",
+      "codeGroundTruth": "interface ApiResponse<T> { data: T; status: number; }",
+      "tags": ["technical", "typescript"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-tech-04",
+      "audioFile": "samples-code-en/en-code-tech-04.wav",
+      "groundTruth": "docker compose up dash d with postgres and redis services",
+      "codeGroundTruth": "docker compose up -d postgres redis",
+      "tags": ["technical", "commands"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-tech-05",
+      "audioFile": "samples-code-en/en-code-tech-05.wav",
+      "groundTruth": "use express router dot get slash api slash users colon id",
+      "codeGroundTruth": "router.get('/api/users/:id')",
+      "tags": ["technical", "api"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-url-01",
+      "audioFile": "samples-code-en/en-code-url-01.wav",
+      "groundTruth": "const base URL equals https colon slash slash api dot example dot com slash v2",
+      "codeGroundTruth": "const baseUrl = \"https://api.example.com/v2\"",
+      "tags": ["urls", "paths"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-url-02",
+      "audioFile": "samples-code-en/en-code-url-02.wav",
+      "groundTruth": "import user model from dot slash models slash user dot ts",
+      "codeGroundTruth": "import { UserModel } from './models/user.ts'",
+      "tags": ["urls", "imports"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-url-03",
+      "audioFile": "samples-code-en/en-code-url-03.wav",
+      "groundTruth": "fetch from slash api slash auth slash login with post method",
+      "codeGroundTruth": "fetch('/api/auth/login', { method: 'POST' })",
+      "tags": ["urls", "api"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-url-04",
+      "audioFile": "samples-code-en/en-code-url-04.wav",
+      "groundTruth": "source path equals home slash user slash dot config slash app dot yaml",
+      "codeGroundTruth": "sourcePath = \"/home/user/.config/app.yaml\"",
+      "tags": ["urls", "paths"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-num-01",
+      "audioFile": "samples-code-en/en-code-num-01.wav",
+      "groundTruth": "server listening on port 3000 with max connections 100",
+      "codeGroundTruth": "server.listen(3000, { maxConnections: 100 })",
+      "tags": ["numbers", "server"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-num-02",
+      "audioFile": "samples-code-en/en-code-num-02.wav",
+      "groundTruth": "set timeout to 5000 milliseconds with retry count 3",
+      "codeGroundTruth": "setTimeout(5000, { retryCount: 3 })",
+      "tags": ["numbers", "config"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-num-03",
+      "audioFile": "samples-code-en/en-code-num-03.wav",
+      "groundTruth": "version 2 dot 4 dot 1 requires node 18 or higher",
+      "codeGroundTruth": "version: \"2.4.1\", engines: { node: \">=18\" }",
+      "tags": ["numbers", "versions"],
+      "source": "custom"
+    },
+    {
+      "id": "en-code-num-04",
+      "audioFile": "samples-code-en/en-code-num-04.wav",
+      "groundTruth": "array slice from index 0 to index 10",
+      "codeGroundTruth": "array.slice(0, 10)",
+      "tags": ["numbers", "arrays"],
+      "source": "custom"
+    }
+  ]
+}

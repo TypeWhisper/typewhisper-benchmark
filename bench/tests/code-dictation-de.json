@@ -1,0 +1,289 @@
+{
+  "id": "code-dictation-de",
+  "name": "Code Dictation (German)",
+  "description": "Programming-related dictation with camelCase, snake_case, syntax, and technical terms",
+  "language": "de",
+  "category": "code-dictation",
+  "tests": [
+    {
+      "id": "de-code-camel-01",
+      "audioFile": "samples-code-de/de-code-camel-01.wav",
+      "groundTruth": "Variable hole Benutzername gleich lade Benutzerdaten",
+      "codeGroundTruth": "holeBenutzername = ladeBenutzerdaten",
+      "tags": ["camelCase", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-camel-02",
+      "audioFile": "samples-code-de/de-code-camel-02.wav",
+      "groundTruth": "Funktion berechne Gesamtpreis mit Artikeln und Rabatt",
+      "codeGroundTruth": "berechneGesamtpreis(artikel, rabatt)",
+      "tags": ["camelCase", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-camel-03",
+      "audioFile": "samples-code-de/de-code-camel-03.wav",
+      "groundTruth": "konstante ist gueltige Email gleich pruefe Email Adresse",
+      "codeGroundTruth": "istGueltigeEmail = pruefeEmailAdresse",
+      "tags": ["camelCase", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-camel-04",
+      "audioFile": "samples-code-de/de-code-camel-04.wav",
+      "groundTruth": "setze aktuelles Benutzerprofil auf aktualisiere Benutzereinstellungen",
+      "codeGroundTruth": "setzeAktuellesBenutzerprofil(aktualisiereBenutzereinstellungen)",
+      "tags": ["camelCase", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-camel-05",
+      "audioFile": "samples-code-de/de-code-camel-05.wav",
+      "groundTruth": "async Funktion lade API Antwort von Endpunkt",
+      "codeGroundTruth": "async ladeApiAntwort(endpunkt)",
+      "tags": ["camelCase", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-camel-06",
+      "audioFile": "samples-code-de/de-code-camel-06.wav",
+      "groundTruth": "behandle Klick Ereignis gleich bei Knopf gedrueckt",
+      "codeGroundTruth": "behandleKlickEreignis = beiKnopfGedrueckt",
+      "tags": ["camelCase", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-snake-01",
+      "audioFile": "samples-code-de/de-code-snake-01.wav",
+      "groundTruth": "Variable maximale Wiederholungen gleich 5",
+      "codeGroundTruth": "maximale_wiederholungen = 5",
+      "tags": ["snake_case", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-snake-02",
+      "audioFile": "samples-code-de/de-code-snake-02.wav",
+      "groundTruth": "Konstante Standard Zeitlimit Sekunden gleich 30",
+      "codeGroundTruth": "STANDARD_ZEITLIMIT_SEKUNDEN = 30",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-snake-03",
+      "audioFile": "samples-code-de/de-code-snake-03.wav",
+      "groundTruth": "Funktion hole Datenbank Verbindung",
+      "codeGroundTruth": "hole_datenbank_verbindung",
+      "tags": ["snake_case", "functions"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-snake-04",
+      "audioFile": "samples-code-de/de-code-snake-04.wav",
+      "groundTruth": "Konstante API Basis URL gleich Zeichenkette",
+      "codeGroundTruth": "API_BASIS_URL = \"\"",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-snake-05",
+      "audioFile": "samples-code-de/de-code-snake-05.wav",
+      "groundTruth": "setze Benutzer Zugangs Token auf null",
+      "codeGroundTruth": "benutzer_zugangs_token = null",
+      "tags": ["snake_case", "variables"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-syntax-01",
+      "audioFile": "samples-code-de/de-code-syntax-01.wav",
+      "groundTruth": "wenn Benutzer ist authentifiziert dann gib Benutzerprofil zurueck",
+      "codeGroundTruth": "if (benutzer.istAuthentifiziert) { return benutzer.profil; }",
+      "tags": ["syntax", "if-statement"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-syntax-02",
+      "audioFile": "samples-code-de/de-code-syntax-02.wav",
+      "groundTruth": "fuer lass i gleich 0 Semikolon i kleiner als Elemente Laenge Semikolon i plus plus",
+      "codeGroundTruth": "for (let i = 0; i < elemente.length; i++)",
+      "tags": ["syntax", "for-loop"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-syntax-03",
+      "audioFile": "samples-code-de/de-code-syntax-03.wav",
+      "groundTruth": "versuche fange Fehler geschweifte Klammer auf Konsole log Fehler Nachricht geschweifte Klammer zu",
+      "codeGroundTruth": "try { } catch (fehler) { console.log(fehler.nachricht); }",
+      "tags": ["syntax", "try-catch"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-syntax-04",
+      "audioFile": "samples-code-de/de-code-syntax-04.wav",
+      "groundTruth": "exportiere Standard Klasse Benutzer Service erweitert Basis Service",
+      "codeGroundTruth": "export default class BenutzerService extends BasisService",
+      "tags": ["syntax", "class"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-syntax-05",
+      "audioFile": "samples-code-de/de-code-syntax-05.wav",
+      "groundTruth": "konstante Ergebnis gleich erwarte lade Daten dann Antwort Pfeil Antwort JSON",
+      "codeGroundTruth": "const ergebnis = await ladeDaten().then(antwort => antwort.json())",
+      "tags": ["syntax", "async"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-syntax-06",
+      "audioFile": "samples-code-de/de-code-syntax-06.wav",
+      "groundTruth": "Schalter Fall Typ gleich Zeichenkette Doppelpunkt gib parse Zeichenkette Wert zurueck",
+      "codeGroundTruth": "switch (typ) { case \"string\": return parseZeichenketteWert(); }",
+      "tags": ["syntax", "switch"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-mixed-01",
+      "audioFile": "samples-code-de/de-code-mixed-01.wav",
+      "groundTruth": "Schrägstrich Schrägstrich Aufgabe behebe den Speicherleck im Verbindungspool",
+      "codeGroundTruth": "// TODO: behebe den Speicherleck im Verbindungspool",
+      "tags": ["mixed", "comments"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-mixed-02",
+      "audioFile": "samples-code-de/de-code-mixed-02.wav",
+      "groundTruth": "Konsole log Benutzer erfolgreich angemeldet mit Rolle Doppelpunkt Administrator",
+      "codeGroundTruth": "console.log(\"Benutzer erfolgreich angemeldet mit Rolle:\", \"Administrator\")",
+      "tags": ["mixed", "logging"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-mixed-03",
+      "audioFile": "samples-code-de/de-code-mixed-03.wav",
+      "groundTruth": "Schrägstrich Stern Stern gibt den formatierten Anzeigenamen zurueck Parameter Benutzer das Benutzerobjekt Stern Schrägstrich",
+      "codeGroundTruth": "/** Gibt den formatierten Anzeigenamen zurueck @param benutzer Das Benutzerobjekt */",
+      "tags": ["mixed", "docstring"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-mixed-04",
+      "audioFile": "samples-code-de/de-code-mixed-04.wav",
+      "groundTruth": "Schrägstrich Schrägstrich Warnung diese Funktion ist veraltet verwende neuen Handler stattdessen",
+      "codeGroundTruth": "// WARNUNG: diese Funktion ist veraltet, verwende neuenHandler stattdessen",
+      "tags": ["mixed", "comments"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-mixed-05",
+      "audioFile": "samples-code-de/de-code-mixed-05.wav",
+      "groundTruth": "wirf neuen Fehler ungueltige Konfiguration fehlendes Pflichtfeld Datenbank Host",
+      "codeGroundTruth": "throw new Error(\"Ungueltige Konfiguration: fehlendes Pflichtfeld datenbank_host\")",
+      "tags": ["mixed", "errors"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-tech-01",
+      "audioFile": "samples-code-de/de-code-tech-01.wav",
+      "groundTruth": "importiere React use State use Effect von react",
+      "codeGroundTruth": "import React, { useState, useEffect } from 'react'",
+      "tags": ["technical", "imports"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-tech-02",
+      "audioFile": "samples-code-de/de-code-tech-02.wav",
+      "groundTruth": "npm installiere at types Schrägstrich node Strich Strich save dev",
+      "codeGroundTruth": "npm install @types/node --save-dev",
+      "tags": ["technical", "commands"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-tech-03",
+      "audioFile": "samples-code-de/de-code-tech-03.wav",
+      "groundTruth": "Schnittstelle API Antwort mit generischem Typ T hat Daten vom Typ T und Status Nummer",
+      "codeGroundTruth": "interface ApiAntwort<T> { daten: T; status: number; }",
+      "tags": ["technical", "typescript"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-tech-04",
+      "audioFile": "samples-code-de/de-code-tech-04.wav",
+      "groundTruth": "Docker Compose hoch Strich d mit Postgres und Redis Diensten",
+      "codeGroundTruth": "docker compose up -d postgres redis",
+      "tags": ["technical", "commands"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-tech-05",
+      "audioFile": "samples-code-de/de-code-tech-05.wav",
+      "groundTruth": "verwende Express Router Punkt get Schrägstrich api Schrägstrich benutzer Doppelpunkt id",
+      "codeGroundTruth": "router.get('/api/benutzer/:id')",
+      "tags": ["technical", "api"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-url-01",
+      "audioFile": "samples-code-de/de-code-url-01.wav",
+      "groundTruth": "konstante Basis URL gleich https Doppelpunkt Schrägstrich Schrägstrich api Punkt beispiel Punkt com Schrägstrich v2",
+      "codeGroundTruth": "const basisUrl = \"https://api.beispiel.com/v2\"",
+      "tags": ["urls", "paths"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-url-02",
+      "audioFile": "samples-code-de/de-code-url-02.wav",
+      "groundTruth": "importiere Benutzer Modell von Punkt Schrägstrich modelle Schrägstrich benutzer Punkt ts",
+      "codeGroundTruth": "import { BenutzerModell } from './modelle/benutzer.ts'",
+      "tags": ["urls", "imports"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-url-03",
+      "audioFile": "samples-code-de/de-code-url-03.wav",
+      "groundTruth": "Quellpfad gleich Home Schrägstrich Benutzer Schrägstrich Punkt config Schrägstrich app Punkt yaml",
+      "codeGroundTruth": "quellpfad = \"/home/benutzer/.config/app.yaml\"",
+      "tags": ["urls", "paths"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-url-04",
+      "audioFile": "samples-code-de/de-code-url-04.wav",
+      "groundTruth": "hole von Schrägstrich api Schrägstrich auth Schrägstrich anmelden mit Post Methode",
+      "codeGroundTruth": "fetch('/api/auth/anmelden', { method: 'POST' })",
+      "tags": ["urls", "api"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-num-01",
+      "audioFile": "samples-code-de/de-code-num-01.wav",
+      "groundTruth": "Server lauscht auf Port 3000 mit maximalen Verbindungen 100",
+      "codeGroundTruth": "server.listen(3000, { maxVerbindungen: 100 })",
+      "tags": ["numbers", "server"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-num-02",
+      "audioFile": "samples-code-de/de-code-num-02.wav",
+      "groundTruth": "setze Zeitlimit auf 5000 Millisekunden mit Wiederholungen 3",
+      "codeGroundTruth": "setTimeout(5000, { wiederholungen: 3 })",
+      "tags": ["numbers", "config"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-num-03",
+      "audioFile": "samples-code-de/de-code-num-03.wav",
+      "groundTruth": "Version 2 Punkt 4 Punkt 1 erfordert Node 18 oder hoeher",
+      "codeGroundTruth": "version: \"2.4.1\", engines: { node: \">=18\" }",
+      "tags": ["numbers", "versions"],
+      "source": "custom"
+    },
+    {
+      "id": "de-code-num-04",
+      "audioFile": "samples-code-de/de-code-num-04.wav",
+      "groundTruth": "Array Ausschnitt von Index 0 bis Index 10",
+      "codeGroundTruth": "array.slice(0, 10)",
+      "tags": ["numbers", "arrays"],
+      "source": "custom"
+    }
+  ]
+}
