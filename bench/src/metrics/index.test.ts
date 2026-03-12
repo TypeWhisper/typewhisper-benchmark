@@ -41,4 +41,36 @@ describe("computeMetrics", () => {
     expect(result.werNormalized).toBe(1);
     expect(result.cer).toBeGreaterThan(0);
   });
+
+  it("computes code metrics when codeReference is provided", () => {
+    const result = computeMetrics({
+      reference: "variable get user name equals fetch user data",
+      hypothesis: "variable get user name equals fetch user data",
+      language: "en",
+      codeReference: "getUserName = fetchUserData",
+    });
+    expect(result.codeWerNormalized).toBeDefined();
+    expect(result.codeCer).toBeDefined();
+  });
+
+  it("does not include code metrics without codeReference", () => {
+    const result = computeMetrics({
+      reference: "hello world",
+      hypothesis: "hello world",
+      language: "en",
+    });
+    expect(result.codeWerNormalized).toBeUndefined();
+    expect(result.codeCer).toBeUndefined();
+  });
+
+  it("code metrics are 0 for perfect match", () => {
+    const result = computeMetrics({
+      reference: "get user name",
+      hypothesis: "getUserName",
+      language: "en",
+      codeReference: "getUserName",
+    });
+    expect(result.codeWerNormalized).toBe(0);
+    expect(result.codeCer).toBe(0);
+  });
 });

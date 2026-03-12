@@ -284,6 +284,26 @@ function numberToWords(n: number, lang: string): string {
   return numberToEnglish(n);
 }
 
+// --- Code text normalization ---
+
+export function normalizeCodeText(text: string): string {
+  if (text === "") return "";
+
+  let result = text;
+
+  // Remove filler words (both EN and DE)
+  const allFillers = new Set([...EN_FILLERS, ...DE_FILLERS]);
+  result = result
+    .split(/\s+/)
+    .filter((word) => !allFillers.has(word.toLowerCase()))
+    .join(" ");
+
+  // Normalize whitespace
+  result = result.replace(/\s+/g, " ").trim();
+
+  return result;
+}
+
 // --- Main normalization ---
 
 export function normalizeText(text: string, lang: string = "en"): string {

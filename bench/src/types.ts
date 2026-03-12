@@ -46,6 +46,7 @@ export interface TestCase {
   audioFile: string;
   groundTruth: string;
   normalizedTruth?: string;
+  codeGroundTruth?: string;
   tags: string[];
   source: "custom" | "librispeech" | "common-voice" | "fleurs" | "recorded";
   metadata?: {
@@ -53,6 +54,8 @@ export interface TestCase {
     noiseType?: string;
     snrDb?: number;
     wordsPerMinute?: number;
+    accent?: string;
+    degradationType?: string;
   };
 }
 
@@ -81,6 +84,8 @@ export interface TestResult {
   werRaw: number;
   werNormalized: number;
   cer: number;
+  codeWerNormalized?: number;
+  codeCer?: number;
   semanticScore?: number;
 
   // Performance

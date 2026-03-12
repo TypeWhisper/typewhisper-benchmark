@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeText } from "./normalize.js";
+import { normalizeText, normalizeCodeText } from "./normalize.js";
 
 describe("normalizeText", () => {
   it("lowercases text", () => {
@@ -81,5 +81,45 @@ describe("normalizeText", () => {
   it("handles zero", () => {
     expect(normalizeText("0 errors", "en")).toBe("zero errors");
     expect(normalizeText("0 Fehler", "de")).toBe("null fehler");
+  });
+});
+
+describe("normalizeCodeText", () => {
+  it("preserves case (camelCase, PascalCase)", () => {
+    expect(normalizeCodeText("getUserName fetchUserData")).toBe(
+      "getUserName fetchUserData",
+    );
+  });
+
+  it("preserves numbers", () => {
+    expect(normalizeCodeText("port 8080 version 3")).toBe(
+      "port 8080 version 3",
+    );
+  });
+
+  it("removes filler words", () => {
+    expect(normalizeCodeText("uh getUserName um equals uhm fetchData")).toBe(
+      "getUserName equals fetchData",
+    );
+  });
+
+  it("removes German filler words", () => {
+    expect(normalizeCodeText("ähm Variable äh getName")).toBe(
+      "Variable getName",
+    );
+  });
+
+  it("normalizes whitespace", () => {
+    expect(normalizeCodeText("  foo   bar  ")).toBe("foo bar");
+  });
+
+  it("handles empty string", () => {
+    expect(normalizeCodeText("")).toBe("");
+  });
+
+  it("preserves snake_case and SCREAMING_CASE", () => {
+    expect(normalizeCodeText("MAX_RETRIES get_user_name")).toBe(
+      "MAX_RETRIES get_user_name",
+    );
   });
 });

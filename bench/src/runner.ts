@@ -182,6 +182,7 @@ export async function runBenchmark(
           reference: test.groundTruth,
           hypothesis: transcription.text,
           language: item.suite.language,
+          codeReference: test.codeGroundTruth,
         });
 
         const result: TestResult = {
@@ -194,6 +195,8 @@ export async function runBenchmark(
           werRaw: metrics.werRaw,
           werNormalized: metrics.werNormalized,
           cer: metrics.cer,
+          codeWerNormalized: metrics.codeWerNormalized,
+          codeCer: metrics.codeCer,
           durationMs: transcription.durationMs,
           realtimeFactor:
             audioInfo.durationSeconds > 0
