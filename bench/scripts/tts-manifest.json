@@ -1,0 +1,852 @@
+{
+  "code-dictation-en": [
+    {
+      "id": "en-code-camel-01",
+      "text": "variable get user name equals fetch user data",
+      "codeGroundTruth": "getUserName = fetchUserData",
+      "tags": ["camelCase", "variables"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-camel-02",
+      "text": "function calculate total price takes items and discount",
+      "codeGroundTruth": "calculateTotalPrice(items, discount)",
+      "tags": ["camelCase", "functions"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-camel-03",
+      "text": "let is valid email equals validate email address",
+      "codeGroundTruth": "isValidEmail = validateEmailAddress",
+      "tags": ["camelCase", "variables"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-camel-04",
+      "text": "const handle click event equals on button press",
+      "codeGroundTruth": "handleClickEvent = onButtonPress",
+      "tags": ["camelCase", "variables"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-camel-05",
+      "text": "async function fetch api response from endpoint",
+      "codeGroundTruth": "async fetchApiResponse(endpoint)",
+      "tags": ["camelCase", "functions"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-camel-06",
+      "text": "set current user profile to update user settings",
+      "codeGroundTruth": "setCurrentUserProfile(updateUserSettings)",
+      "tags": ["camelCase", "functions"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-snake-01",
+      "text": "variable max retry count equals 5",
+      "codeGroundTruth": "max_retry_count = 5",
+      "tags": ["snake_case", "variables"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-snake-02",
+      "text": "constant default timeout seconds equals 30",
+      "codeGroundTruth": "DEFAULT_TIMEOUT_SECONDS = 30",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-snake-03",
+      "text": "function get database connection string",
+      "codeGroundTruth": "get_database_connection_string",
+      "tags": ["snake_case", "functions"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-snake-04",
+      "text": "constant API base URL equals string",
+      "codeGroundTruth": "API_BASE_URL = \"\"",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-snake-05",
+      "text": "set user access token to null",
+      "codeGroundTruth": "user_access_token = null",
+      "tags": ["snake_case", "variables"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-syntax-01",
+      "text": "if user is authenticated then return user profile",
+      "codeGroundTruth": "if (user.isAuthenticated) { return user.profile; }",
+      "tags": ["syntax", "if-statement"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-syntax-02",
+      "text": "for let i equals 0 semicolon i less than items length semicolon i plus plus",
+      "codeGroundTruth": "for (let i = 0; i < items.length; i++)",
+      "tags": ["syntax", "for-loop"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-syntax-03",
+      "text": "try catch error open curly brace console log error message close curly brace",
+      "codeGroundTruth": "try { } catch (error) { console.log(error.message); }",
+      "tags": ["syntax", "try-catch"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-syntax-04",
+      "text": "switch case type equals string colon return parse string value break",
+      "codeGroundTruth": "switch (type) { case \"string\": return parseStringValue(); break; }",
+      "tags": ["syntax", "switch"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-syntax-05",
+      "text": "const result equals await fetch data pipe then response arrow response json",
+      "codeGroundTruth": "const result = await fetchData().then(response => response.json())",
+      "tags": ["syntax", "async"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-syntax-06",
+      "text": "export default class user service extends base service",
+      "codeGroundTruth": "export default class UserService extends BaseService",
+      "tags": ["syntax", "class"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-mixed-01",
+      "text": "slash slash to do fix the memory leak in the connection pool handler",
+      "codeGroundTruth": "// TODO: fix the memory leak in the connection pool handler",
+      "tags": ["mixed", "comments"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-mixed-02",
+      "text": "slash star star returns the formatted user display name at param user the user object star slash",
+      "codeGroundTruth": "/** Returns the formatted user display name @param user The user object */",
+      "tags": ["mixed", "docstring"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-mixed-03",
+      "text": "console log user logged in successfully with role colon admin",
+      "codeGroundTruth": "console.log(\"User logged in successfully with role:\", \"admin\")",
+      "tags": ["mixed", "logging"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-mixed-04",
+      "text": "slash slash warning this function is deprecated use new handler instead",
+      "codeGroundTruth": "// WARNING: this function is deprecated, use newHandler instead",
+      "tags": ["mixed", "comments"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-mixed-05",
+      "text": "throw new error invalid configuration missing required field database host",
+      "codeGroundTruth": "throw new Error(\"Invalid configuration: missing required field database_host\")",
+      "tags": ["mixed", "errors"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-tech-01",
+      "text": "import react use state use effect from react",
+      "codeGroundTruth": "import React, { useState, useEffect } from 'react'",
+      "tags": ["technical", "imports"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-tech-02",
+      "text": "npm install at types slash node dash dash save dev",
+      "codeGroundTruth": "npm install @types/node --save-dev",
+      "tags": ["technical", "commands"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-tech-03",
+      "text": "interface API response with generic type T has data of type T and status number",
+      "codeGroundTruth": "interface ApiResponse<T> { data: T; status: number; }",
+      "tags": ["technical", "typescript"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-tech-04",
+      "text": "docker compose up dash d with postgres and redis services",
+      "codeGroundTruth": "docker compose up -d postgres redis",
+      "tags": ["technical", "commands"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-tech-05",
+      "text": "use express router dot get slash api slash users colon id",
+      "codeGroundTruth": "router.get('/api/users/:id')",
+      "tags": ["technical", "api"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-url-01",
+      "text": "const base URL equals https colon slash slash api dot example dot com slash v2",
+      "codeGroundTruth": "const baseUrl = \"https://api.example.com/v2\"",
+      "tags": ["urls", "paths"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-url-02",
+      "text": "import user model from dot slash models slash user dot ts",
+      "codeGroundTruth": "import { UserModel } from './models/user.ts'",
+      "tags": ["urls", "imports"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-url-03",
+      "text": "fetch from slash api slash auth slash login with post method",
+      "codeGroundTruth": "fetch('/api/auth/login', { method: 'POST' })",
+      "tags": ["urls", "api"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-url-04",
+      "text": "source path equals home slash user slash dot config slash app dot yaml",
+      "codeGroundTruth": "sourcePath = \"/home/user/.config/app.yaml\"",
+      "tags": ["urls", "paths"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-num-01",
+      "text": "server listening on port 3000 with max connections 100",
+      "codeGroundTruth": "server.listen(3000, { maxConnections: 100 })",
+      "tags": ["numbers", "server"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-num-02",
+      "text": "set timeout to 5000 milliseconds with retry count 3",
+      "codeGroundTruth": "setTimeout(5000, { retryCount: 3 })",
+      "tags": ["numbers", "config"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-num-03",
+      "text": "version 2 dot 4 dot 1 requires node 18 or higher",
+      "codeGroundTruth": "version: \"2.4.1\", engines: { node: \">=18\" }",
+      "tags": ["numbers", "versions"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-code-num-04",
+      "text": "array slice from index 0 to index 10",
+      "codeGroundTruth": "array.slice(0, 10)",
+      "tags": ["numbers", "arrays"],
+      "voice": "Samantha"
+    }
+  ],
+  "code-dictation-de": [
+    {
+      "id": "de-code-camel-01",
+      "text": "Variable hole Benutzername gleich lade Benutzerdaten",
+      "codeGroundTruth": "holeBenutzername = ladeBenutzerdaten",
+      "tags": ["camelCase", "variables"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-camel-02",
+      "text": "Funktion berechne Gesamtpreis mit Artikeln und Rabatt",
+      "codeGroundTruth": "berechneGesamtpreis(artikel, rabatt)",
+      "tags": ["camelCase", "functions"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-camel-03",
+      "text": "konstante ist gueltige Email gleich pruefe Email Adresse",
+      "codeGroundTruth": "istGueltigeEmail = pruefeEmailAdresse",
+      "tags": ["camelCase", "variables"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-camel-04",
+      "text": "setze aktuelles Benutzerprofil auf aktualisiere Benutzereinstellungen",
+      "codeGroundTruth": "setzeAktuellesBenutzerprofil(aktualisiereBenutzereinstellungen)",
+      "tags": ["camelCase", "functions"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-camel-05",
+      "text": "async Funktion lade API Antwort von Endpunkt",
+      "codeGroundTruth": "async ladeApiAntwort(endpunkt)",
+      "tags": ["camelCase", "functions"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-camel-06",
+      "text": "behandle Klick Ereignis gleich bei Knopf gedrueckt",
+      "codeGroundTruth": "behandleKlickEreignis = beiKnopfGedrueckt",
+      "tags": ["camelCase", "variables"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-snake-01",
+      "text": "Variable maximale Wiederholungen gleich 5",
+      "codeGroundTruth": "maximale_wiederholungen = 5",
+      "tags": ["snake_case", "variables"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-snake-02",
+      "text": "Konstante Standard Zeitlimit Sekunden gleich 30",
+      "codeGroundTruth": "STANDARD_ZEITLIMIT_SEKUNDEN = 30",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-snake-03",
+      "text": "Funktion hole Datenbank Verbindung",
+      "codeGroundTruth": "hole_datenbank_verbindung",
+      "tags": ["snake_case", "functions"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-snake-04",
+      "text": "Konstante API Basis URL gleich Zeichenkette",
+      "codeGroundTruth": "API_BASIS_URL = \"\"",
+      "tags": ["SCREAMING_CASE", "constants"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-snake-05",
+      "text": "setze Benutzer Zugangs Token auf null",
+      "codeGroundTruth": "benutzer_zugangs_token = null",
+      "tags": ["snake_case", "variables"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-syntax-01",
+      "text": "wenn Benutzer ist authentifiziert dann gib Benutzerprofil zurueck",
+      "codeGroundTruth": "if (benutzer.istAuthentifiziert) { return benutzer.profil; }",
+      "tags": ["syntax", "if-statement"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-syntax-02",
+      "text": "fuer lass i gleich 0 Semikolon i kleiner als Elemente Laenge Semikolon i plus plus",
+      "codeGroundTruth": "for (let i = 0; i < elemente.length; i++)",
+      "tags": ["syntax", "for-loop"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-syntax-03",
+      "text": "versuche fange Fehler geschweifte Klammer auf Konsole log Fehler Nachricht geschweifte Klammer zu",
+      "codeGroundTruth": "try { } catch (fehler) { console.log(fehler.nachricht); }",
+      "tags": ["syntax", "try-catch"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-syntax-04",
+      "text": "exportiere Standard Klasse Benutzer Service erweitert Basis Service",
+      "codeGroundTruth": "export default class BenutzerService extends BasisService",
+      "tags": ["syntax", "class"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-syntax-05",
+      "text": "konstante Ergebnis gleich erwarte lade Daten dann Antwort Pfeil Antwort JSON",
+      "codeGroundTruth": "const ergebnis = await ladeDaten().then(antwort => antwort.json())",
+      "tags": ["syntax", "async"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-syntax-06",
+      "text": "Schalter Fall Typ gleich Zeichenkette Doppelpunkt gib parse Zeichenkette Wert zurueck",
+      "codeGroundTruth": "switch (typ) { case \"string\": return parseZeichenketteWert(); }",
+      "tags": ["syntax", "switch"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-mixed-01",
+      "text": "Schrägstrich Schrägstrich Aufgabe behebe den Speicherleck im Verbindungspool",
+      "codeGroundTruth": "// TODO: behebe den Speicherleck im Verbindungspool",
+      "tags": ["mixed", "comments"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-mixed-02",
+      "text": "Konsole log Benutzer erfolgreich angemeldet mit Rolle Doppelpunkt Administrator",
+      "codeGroundTruth": "console.log(\"Benutzer erfolgreich angemeldet mit Rolle:\", \"Administrator\")",
+      "tags": ["mixed", "logging"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-mixed-03",
+      "text": "Schrägstrich Stern Stern gibt den formatierten Anzeigenamen zurueck Parameter Benutzer das Benutzerobjekt Stern Schrägstrich",
+      "codeGroundTruth": "/** Gibt den formatierten Anzeigenamen zurueck @param benutzer Das Benutzerobjekt */",
+      "tags": ["mixed", "docstring"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-mixed-04",
+      "text": "Schrägstrich Schrägstrich Warnung diese Funktion ist veraltet verwende neuen Handler stattdessen",
+      "codeGroundTruth": "// WARNUNG: diese Funktion ist veraltet, verwende neuenHandler stattdessen",
+      "tags": ["mixed", "comments"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-mixed-05",
+      "text": "wirf neuen Fehler ungueltige Konfiguration fehlendes Pflichtfeld Datenbank Host",
+      "codeGroundTruth": "throw new Error(\"Ungueltige Konfiguration: fehlendes Pflichtfeld datenbank_host\")",
+      "tags": ["mixed", "errors"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-tech-01",
+      "text": "importiere React use State use Effect von react",
+      "codeGroundTruth": "import React, { useState, useEffect } from 'react'",
+      "tags": ["technical", "imports"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-tech-02",
+      "text": "npm installiere at types Schrägstrich node Strich Strich save dev",
+      "codeGroundTruth": "npm install @types/node --save-dev",
+      "tags": ["technical", "commands"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-tech-03",
+      "text": "Schnittstelle API Antwort mit generischem Typ T hat Daten vom Typ T und Status Nummer",
+      "codeGroundTruth": "interface ApiAntwort<T> { daten: T; status: number; }",
+      "tags": ["technical", "typescript"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-tech-04",
+      "text": "Docker Compose hoch Strich d mit Postgres und Redis Diensten",
+      "codeGroundTruth": "docker compose up -d postgres redis",
+      "tags": ["technical", "commands"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-tech-05",
+      "text": "verwende Express Router Punkt get Schrägstrich api Schrägstrich benutzer Doppelpunkt id",
+      "codeGroundTruth": "router.get('/api/benutzer/:id')",
+      "tags": ["technical", "api"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-url-01",
+      "text": "konstante Basis URL gleich https Doppelpunkt Schrägstrich Schrägstrich api Punkt beispiel Punkt com Schrägstrich v2",
+      "codeGroundTruth": "const basisUrl = \"https://api.beispiel.com/v2\"",
+      "tags": ["urls", "paths"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-url-02",
+      "text": "importiere Benutzer Modell von Punkt Schrägstrich modelle Schrägstrich benutzer Punkt ts",
+      "codeGroundTruth": "import { BenutzerModell } from './modelle/benutzer.ts'",
+      "tags": ["urls", "imports"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-url-03",
+      "text": "Quellpfad gleich Home Schrägstrich Benutzer Schrägstrich Punkt config Schrägstrich app Punkt yaml",
+      "codeGroundTruth": "quellpfad = \"/home/benutzer/.config/app.yaml\"",
+      "tags": ["urls", "paths"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-url-04",
+      "text": "hole von Schrägstrich api Schrägstrich auth Schrägstrich anmelden mit Post Methode",
+      "codeGroundTruth": "fetch('/api/auth/anmelden', { method: 'POST' })",
+      "tags": ["urls", "api"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-num-01",
+      "text": "Server lauscht auf Port 3000 mit maximalen Verbindungen 100",
+      "codeGroundTruth": "server.listen(3000, { maxVerbindungen: 100 })",
+      "tags": ["numbers", "server"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-num-02",
+      "text": "setze Zeitlimit auf 5000 Millisekunden mit Wiederholungen 3",
+      "codeGroundTruth": "setTimeout(5000, { wiederholungen: 3 })",
+      "tags": ["numbers", "config"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-num-03",
+      "text": "Version 2 Punkt 4 Punkt 1 erfordert Node 18 oder hoeher",
+      "codeGroundTruth": "version: \"2.4.1\", engines: { node: \">=18\" }",
+      "tags": ["numbers", "versions"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-code-num-04",
+      "text": "Array Ausschnitt von Index 0 bis Index 10",
+      "codeGroundTruth": "array.slice(0, 10)",
+      "tags": ["numbers", "arrays"],
+      "voice": "Anna"
+    }
+  ],
+  "clean-speech-en-extra": [
+    {
+      "id": "en-clean-06",
+      "text": "The library is closed on Sundays and public holidays throughout the year",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-07",
+      "text": "Please remember to turn off all the lights before leaving the office",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-08",
+      "text": "She decided to take the train instead of driving to the conference",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-09",
+      "text": "The new software update includes several important security patches",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-10",
+      "text": "We should discuss the project timeline during tomorrow's team meeting",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-11",
+      "text": "The restaurant around the corner serves excellent Italian food",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-12",
+      "text": "Can you send me the presentation slides before the meeting starts",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-13",
+      "text": "The research team published their findings in a peer reviewed journal",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-14",
+      "text": "Students are required to complete all assignments by the end of the semester",
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-clean-15",
+      "text": "The company announced a new partnership with a leading technology firm",
+      "voice": "Samantha"
+    }
+  ],
+  "clean-speech-de-extra": [
+    {
+      "id": "de-clean-06",
+      "text": "Die Bibliothek ist sonntags und an Feiertagen das ganze Jahr geschlossen",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-07",
+      "text": "Bitte denken Sie daran alle Lichter auszuschalten bevor Sie das Büro verlassen",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-08",
+      "text": "Sie hat sich entschieden den Zug zu nehmen anstatt zur Konferenz zu fahren",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-09",
+      "text": "Das neue Software Update enthält mehrere wichtige Sicherheitskorrekturen",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-10",
+      "text": "Wir sollten den Projektzeitplan während des morgigen Teammeetings besprechen",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-11",
+      "text": "Das Restaurant um die Ecke serviert ausgezeichnetes italienisches Essen",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-12",
+      "text": "Können Sie mir die Präsentationsfolien vor Beginn der Besprechung schicken",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-13",
+      "text": "Das Forschungsteam hat seine Ergebnisse in einer begutachteten Fachzeitschrift veröffentlicht",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-14",
+      "text": "Die Studierenden müssen alle Aufgaben bis Ende des Semesters abschließen",
+      "voice": "Anna"
+    },
+    {
+      "id": "de-clean-15",
+      "text": "Das Unternehmen hat eine neue Partnerschaft mit einem führenden Technologieunternehmen angekündigt",
+      "voice": "Anna"
+    }
+  ],
+  "hard-en-extra": [
+    {
+      "id": "en-hard-fast-02",
+      "text": "The quarterly revenue exceeded expectations reaching two hundred million dollars despite supply chain disruptions",
+      "tags": ["fast-speech", "numbers"],
+      "voice": "Samantha",
+      "rate": 230
+    },
+    {
+      "id": "en-hard-fast-03",
+      "text": "Machine learning algorithms process thousands of data points every second to optimize recommendations",
+      "tags": ["fast-speech", "technical"],
+      "voice": "Samantha",
+      "rate": 240
+    },
+    {
+      "id": "en-hard-fast-04",
+      "text": "The infrastructure team migrated all production databases to the new cloud region over the weekend",
+      "tags": ["fast-speech", "technical"],
+      "voice": "Samantha",
+      "rate": 235
+    },
+    {
+      "id": "en-hard-fast-05",
+      "text": "Autonomous vehicles use lidar sensors combined with neural networks for real time obstacle detection",
+      "tags": ["fast-speech", "technical"],
+      "voice": "Samantha",
+      "rate": 225
+    },
+    {
+      "id": "en-hard-numbers-02",
+      "text": "Invoice number 98765 totals $4,299.50 and is due on December 31st 2025",
+      "tags": ["numbers", "dates"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-numbers-03",
+      "text": "The building is located at 1425 Oak Street apartment 12B floor 7",
+      "tags": ["numbers", "addresses"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-numbers-04",
+      "text": "Flight BA247 departs at 06:45 from gate C23 and arrives at 14:20 local time",
+      "tags": ["numbers", "alphanumeric"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-numbers-05",
+      "text": "The patient's blood pressure was 135 over 88 and heart rate 72 beats per minute",
+      "tags": ["numbers", "medical"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-tech-02",
+      "text": "Configure the PostgreSQL connection pool with SSL mode verify full and a maximum of 25 connections",
+      "tags": ["technical-jargon"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-tech-03",
+      "text": "The CI CD pipeline uses GitHub Actions with Docker Compose for integration testing",
+      "tags": ["technical-jargon"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-tech-04",
+      "text": "WebSocket connections are load balanced using consistent hashing across multiple Redis pub sub channels",
+      "tags": ["technical-jargon"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-tech-05",
+      "text": "The GraphQL API uses Apollo Server with DataLoader for batching and caching database queries",
+      "tags": ["technical-jargon"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-names-02",
+      "text": "Satya Nadella confirmed that Microsoft Azure will integrate with Meta's PyTorch framework",
+      "tags": ["proper-nouns"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-names-03",
+      "text": "The Guggenheim Museum and the Smithsonian Institution announced a joint exhibition program",
+      "tags": ["proper-nouns"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-names-04",
+      "text": "Tim Cook and Sundar Pichai discussed the future of artificial intelligence at Davos",
+      "tags": ["proper-nouns"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-names-05",
+      "text": "The Zurich ETH and MIT collaborated on a quantum computing breakthrough with IBM Research",
+      "tags": ["proper-nouns"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-mixed-01",
+      "text": "Dr. Sarah Chen's research at Stanford analyzed 47000 genome sequences using CRISPR Cas9 technology",
+      "tags": ["mixed-difficulty", "numbers", "proper-nouns", "technical"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-mixed-02",
+      "text": "The Tesla Model Y achieved 0 to 60 miles per hour in 3.5 seconds at the Nürburgring track",
+      "tags": ["mixed-difficulty", "numbers", "proper-nouns"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-mixed-03",
+      "text": "According to UNESCO 773 million adults worldwide lack basic literacy skills as of 2024",
+      "tags": ["mixed-difficulty", "numbers", "proper-nouns"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-hard-mixed-04",
+      "text": "Professor Müller-Schmidt published her findings on mRNA vaccines in the New England Journal of Medicine",
+      "tags": ["mixed-difficulty", "proper-nouns", "technical"],
+      "voice": "Samantha"
+    }
+  ],
+  "hard-de-extra": [
+    {
+      "id": "de-hard-fast-02",
+      "text": "Der Quartalsumsatz übertraf die Erwartungen und erreichte zweihundert Millionen Euro trotz Lieferkettenunterbrechungen",
+      "tags": ["fast-speech", "numbers"],
+      "voice": "Anna",
+      "rate": 230
+    },
+    {
+      "id": "de-hard-fast-03",
+      "text": "Algorithmen des maschinellen Lernens verarbeiten tausende Datenpunkte pro Sekunde zur Optimierung von Empfehlungen",
+      "tags": ["fast-speech", "technical"],
+      "voice": "Anna",
+      "rate": 240
+    },
+    {
+      "id": "de-hard-fast-04",
+      "text": "Das Infrastrukturteam hat alle Produktionsdatenbanken am Wochenende in die neue Cloud Region migriert",
+      "tags": ["fast-speech", "technical"],
+      "voice": "Anna",
+      "rate": 235
+    },
+    {
+      "id": "de-hard-fast-05",
+      "text": "Autonome Fahrzeuge verwenden Lidar Sensoren kombiniert mit neuronalen Netzwerken zur Echtzeit Hinderniserkennung",
+      "tags": ["fast-speech", "technical"],
+      "voice": "Anna",
+      "rate": 225
+    },
+    {
+      "id": "de-hard-numbers-02",
+      "text": "Die Rechnungsnummer 98765 beträgt insgesamt 4299 Euro 50 Cent und ist am 31. Dezember 2025 fällig",
+      "tags": ["numbers", "dates"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-numbers-03",
+      "text": "Das Gebäude befindet sich in der Eichenstraße 1425 Wohnung 12B im 7. Stock",
+      "tags": ["numbers", "addresses"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-numbers-04",
+      "text": "Flug LH247 startet um 06 Uhr 45 von Gate C23 und kommt um 14 Uhr 20 Ortszeit an",
+      "tags": ["numbers", "alphanumeric"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-numbers-05",
+      "text": "Der Blutdruck des Patienten betrug 135 zu 88 und die Herzfrequenz 72 Schläge pro Minute",
+      "tags": ["numbers", "medical"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-tech-02",
+      "text": "Konfigurieren Sie den PostgreSQL Verbindungspool mit SSL Modus verify full und maximal 25 Verbindungen",
+      "tags": ["technical-jargon"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-tech-03",
+      "text": "Die CI CD Pipeline verwendet GitHub Actions mit Docker Compose für Integrationstests",
+      "tags": ["technical-jargon"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-tech-04",
+      "text": "WebSocket Verbindungen werden mittels Consistent Hashing über mehrere Redis Pub Sub Kanäle verteilt",
+      "tags": ["technical-jargon"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-tech-05",
+      "text": "Die GraphQL API verwendet Apollo Server mit DataLoader für Batching und Caching von Datenbankabfragen",
+      "tags": ["technical-jargon"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-names-02",
+      "text": "Die Fraunhofer Gesellschaft und das Max Planck Institut haben ein gemeinsames KI Forschungsprogramm gestartet",
+      "tags": ["proper-nouns"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-names-03",
+      "text": "Herbert Diess bestätigte dass Volkswagen und Bosch gemeinsam an autonomem Fahren arbeiten",
+      "tags": ["proper-nouns"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-names-04",
+      "text": "Das Technische Museum Wien und das Deutsche Museum in München planen eine gemeinsame Sonderausstellung",
+      "tags": ["proper-nouns"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-names-05",
+      "text": "Die ETH Zürich und die TU München haben gemeinsam einen Durchbruch im Quantencomputing erzielt",
+      "tags": ["proper-nouns"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-mixed-01",
+      "text": "Professor Dr. Schmidt-Weber analysierte am Helmholtz Zentrum 47000 Genomsequenzen mit CRISPR Cas9 Technologie",
+      "tags": ["mixed-difficulty", "numbers", "proper-nouns", "technical"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-mixed-02",
+      "text": "Der Porsche Taycan beschleunigt in 2,8 Sekunden von 0 auf 100 Kilometer pro Stunde auf dem Nürburgring",
+      "tags": ["mixed-difficulty", "numbers", "proper-nouns"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-mixed-03",
+      "text": "Laut UNESCO fehlen weltweit 773 Millionen Erwachsenen grundlegende Lese und Schreibfähigkeiten Stand 2024",
+      "tags": ["mixed-difficulty", "numbers", "proper-nouns"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-hard-mixed-04",
+      "text": "Professorin Müller-Schmidt veröffentlichte ihre Ergebnisse über mRNA Impfstoffe im Deutschen Ärzteblatt",
+      "tags": ["mixed-difficulty", "proper-nouns", "technical"],
+      "voice": "Anna"
+    }
+  ]
+}
