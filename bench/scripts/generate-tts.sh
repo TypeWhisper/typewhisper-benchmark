@@ -27,78 +27,81 @@ if [ ! -f "$MANIFEST" ]; then
   exit 1
 fi
 
-# Map manifest keys to output directories
-declare -A DIR_MAP=(
-  ["code-dictation-en"]="samples-code-en"
-  ["code-dictation-de"]="samples-code-de"
-  ["clean-speech-en-extra"]="samples-en"
-  ["clean-speech-de-extra"]="samples-de"
-  ["hard-en-extra"]="samples-hard-en"
-  ["hard-de-extra"]="samples-hard-de"
-)
+# Map manifest keys to output directories (compatible with Bash 3)
+get_out_dir() {
+  case "$1" in
+    code-dictation-en) echo "samples-code-en" ;;
+    code-dictation-de) echo "samples-code-de" ;;
+    clean-speech-en-extra) echo "samples-en" ;;
+    clean-speech-de-extra) echo "samples-de" ;;
+    hard-en-extra) echo "samples-hard-en" ;;
+    hard-de-extra) echo "samples-hard-de" ;;
+    *) echo "" ;;
+  esac
+}
 
-# Extract category keys from manifest
-CATEGORIES=$(python3 -c "
-import json, sys
-with open('$MANIFEST') as f:
+# Use python3 to drive the whole generation to avoid bash compatibility issues
+python3 -c "
+import json, subprocess, os, sys
+
+manifest_path = '$MANIFEST'
+audio_dir = '$AUDIO_DIR'
+
+with open(manifest_path) as f:
     data = json.load(f)
-for key in data:
-    print(key)
-")
 
-generated=0
-skipped=0
+dir_map = {
+    'code-dictation-en': 'samples-code-en',
+    'code-dictation-de': 'samples-code-de',
+    'clean-speech-en-extra': 'samples-en',
+    'clean-speech-de-extra': 'samples-de',
+    'hard-en-extra': 'samples-hard-en',
+    'hard-de-extra': 'samples-hard-de',
+}
 
-for category in $CATEGORIES; do
-  out_dir="${DIR_MAP[$category]:-}"
-  if [ -z "$out_dir" ]; then
-    echo "Warning: No output directory mapping for category '$category', skipping."
-    continue
-  fi
+generated = 0
+skipped = 0
 
-  target_dir="$AUDIO_DIR/$out_dir"
-  mkdir -p "$target_dir"
+for category, entries in data.items():
+    out_dir = dir_map.get(category)
+    if not out_dir:
+        print(f'Warning: No output directory mapping for {category}, skipping.')
+        continue
 
-  # Extract entries for this category
-  entries=$(python3 -c "
-import json, sys
-with open('$MANIFEST') as f:
-    data = json.load(f)
-items = data.get('$category', [])
-for item in items:
-    # id|text|voice|rate (rate is optional, default 180)
-    voice = item.get('voice', 'Samantha')
-    rate = item.get('rate', 180)
-    print(f\"{item['id']}|{item['text']}|{voice}|{rate}\")
-")
+    target_dir = os.path.join(audio_dir, out_dir)
+    os.makedirs(target_dir, exist_ok=True)
 
-  while IFS='|' read -r id text voice rate; do
-    [ -z "$id" ] && continue
+    for item in entries:
+        sample_id = item['id']
+        text = item['text']
+        voice = item.get('voice', 'Samantha')
+        rate = item.get('rate', 180)
 
-    # Derive filename from id (strip language prefix pattern like en-code- or de-clean-)
-    filename="${id}.wav"
-    aiff_file="$target_dir/${id}.aiff"
-    wav_file="$target_dir/$filename"
+        wav_file = os.path.join(target_dir, f'{sample_id}.wav')
+        aiff_file = os.path.join(target_dir, f'{sample_id}.aiff')
 
-    if [ -f "$wav_file" ]; then
-      skipped=$((skipped + 1))
-      continue
-    fi
+        if os.path.exists(wav_file):
+            skipped += 1
+            continue
 
-    echo "Generating: $out_dir/$filename (voice=$voice, rate=$rate)"
+        print(f'Generating: {out_dir}/{sample_id}.wav (voice={voice}, rate={rate})')
 
-    # Generate AIFF with macOS say
-    say -v "$voice" -r "$rate" -o "$aiff_file" "$text"
+        # Generate AIFF with macOS say
+        subprocess.run(
+            ['say', '-v', voice, '-r', str(rate), '-o', aiff_file, text],
+            check=True
+        )
 
-    # Convert to 16kHz mono WAV
-    ffmpeg -y -i "$aiff_file" -ar 16000 -ac 1 "$wav_file" -loglevel error
+        # Convert to 16kHz mono WAV
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', aiff_file, '-ar', '16000', '-ac', '1', wav_file, '-loglevel', 'error'],
+            check=True
+        )
 
-    # Remove intermediate AIFF
-    rm -f "$aiff_file"
+        # Remove intermediate AIFF
+        os.remove(aiff_file)
+        generated += 1
 
-    generated=$((generated + 1))
-  done <<< "$entries"
-done
-
-echo ""
-echo "TTS generation complete: $generated generated, $skipped skipped (already exist)"
+print()
+print(f'TTS generation complete: {generated} generated, {skipped} skipped (already exist)')
+"
