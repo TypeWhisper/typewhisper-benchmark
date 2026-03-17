@@ -20,6 +20,10 @@ export class AppleSpeechProvider implements STTProvider {
     return platform() === "darwin";
   }
 
+  supportsLanguage(_model: string, language: string): boolean {
+    return language !== "auto";
+  }
+
   async transcribe(
     audio: AudioInput,
     _model: string

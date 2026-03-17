@@ -9,4 +9,10 @@ describe("AppleSpeechProvider", () => {
     expect(provider.type).toBe("system");
     expect(provider.models).toEqual(["default"]);
   });
+
+  it("rejects auto language detection", () => {
+    const provider = new AppleSpeechProvider();
+    expect(provider.supportsLanguage("default", "auto")).toBe(false);
+    expect(provider.supportsLanguage("default", "de")).toBe(true);
+  });
 });
