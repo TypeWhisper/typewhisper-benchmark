@@ -1,14 +1,18 @@
 import { calculateWER, calculateCER } from "./wer.js";
 import { normalizeText, normalizeCodeText } from "./normalize.js";
+import { calculatePunctuationScore, calculateFormattingScore } from "./punctuation.js";
 
 export { calculateWER, calculateCER } from "./wer.js";
 export { normalizeText, normalizeCodeText } from "./normalize.js";
+export { calculatePunctuationScore, calculateFormattingScore } from "./punctuation.js";
 
 export interface MetricsInput {
   reference: string;
   hypothesis: string;
   language: string;
   codeReference?: string;
+  formattedReference?: string;
+  alternativeReferences?: string[];
 }
 
 export interface MetricsResult {
@@ -17,10 +21,13 @@ export interface MetricsResult {
   cer: number;
   codeWerNormalized?: number;
   codeCer?: number;
+  punctuationScore?: number;
+  formattingScore?: number;
+  bestAlternativeWer?: number;
 }
 
 export function computeMetrics(input: MetricsInput): MetricsResult {
-  const { reference, hypothesis, language, codeReference } = input;
+  const { reference, hypothesis, language, codeReference, formattedReference, alternativeReferences } = input;
 
   // Raw WER: just lowercase, no other normalization
   const werRaw = calculateWER(
@@ -44,6 +51,21 @@ export function computeMetrics(input: MetricsInput): MetricsResult {
 
     result.codeWerNormalized = calculateWER(normalizedCodeRef, normalizedCodeHyp);
     result.codeCer = calculateCER(normalizedCodeRef, normalizedCodeHyp);
+  }
+
+  // Punctuation & formatting metrics: compare against formatted ground truth
+  if (formattedReference) {
+    result.punctuationScore = calculatePunctuationScore(formattedReference, hypothesis);
+    result.formattingScore = calculateFormattingScore(formattedReference, hypothesis);
+  }
+
+  // Alternative ground truths: find best WER across all alternatives
+  if (alternativeReferences?.length) {
+    const allRefs = [reference, ...alternativeReferences];
+    result.bestAlternativeWer = Math.min(...allRefs.map(ref => {
+      const normRef = normalizeText(ref, language);
+      return calculateWER(normRef, normalizedHyp);
+    }));
   }
 
   return result;

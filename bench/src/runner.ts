@@ -9,13 +9,17 @@ const __dirname = dirname(__filename);
 const BENCH_ROOT = resolve(__dirname, "..");
 import { getAudioInfo } from "./audio.js";
 import { computeMetrics } from "./metrics/index.js";
+import {
+  buildBenchmarkSummary,
+  mergeBenchmarkSummaries,
+} from "./summary.js";
 import type {
   BenchmarkConfig,
   STTProvider,
-  TestSuite,
+  SuiteMetadata,
   TestResult,
   BenchmarkSummary,
-  ModelRanking,
+  TestSuite,
 } from "./types.js";
 
 // === Events ===
@@ -30,6 +34,13 @@ export type RunnerEvent =
       testId: string;
       durationMs: number;
       werNormalized: number;
+    }
+  | {
+      type: "skip";
+      providerId: string;
+      model: string;
+      testId: string;
+      reason: string;
     }
   | {
       type: "error";
@@ -146,13 +157,60 @@ export async function runBenchmark(
       const cached = await readCache(cacheDir, key);
       if (cached && !cached.error) {
         results.push(cached);
+        if (cached.status === "skipped") {
+          onEvent?.({
+            type: "skip",
+            providerId: item.provider.id,
+            model: item.model,
+            testId: test.id,
+            reason: cached.skipReason || "Skipped",
+          });
+        } else {
+          onEvent?.({
+            type: "done",
+            providerId: item.provider.id,
+            model: item.model,
+            testId: test.id,
+            durationMs: cached.durationMs,
+            werNormalized: cached.werNormalized,
+          });
+        }
+        continue;
+      }
+
+      if (!item.provider.supportsLanguage(item.model, item.suite.language)) {
+        const skippedResult: TestResult = {
+          testId: test.id,
+          suiteId: item.suite.id,
+          providerId: item.provider.id,
+          model: item.model,
+          run: item.run,
+          suiteCategory: item.suite.category,
+          suiteLanguage: item.suite.language,
+          testTags: test.tags,
+          testSource: test.source,
+          testMetadata: test.metadata,
+          status: "skipped",
+          transcription: "",
+          werRaw: 0,
+          werNormalized: 0,
+          cer: 0,
+          durationMs: 0,
+          realtimeFactor: 0,
+          audioDurationMs: 0,
+          timestamp: new Date().toISOString(),
+          skipReason: `Model "${item.model}" does not support language "${item.suite.language}"`,
+        };
+
+        results.push(skippedResult);
+        await writeCache(cacheDir, key, skippedResult);
+
         onEvent?.({
-          type: "done",
+          type: "skip",
           providerId: item.provider.id,
           model: item.model,
           testId: test.id,
-          durationMs: cached.durationMs,
-          werNormalized: cached.werNormalized,
+          reason: skippedResult.skipReason || "Skipped",
         });
         continue;
       }
@@ -183,6 +241,8 @@ export async function runBenchmark(
           hypothesis: transcription.text,
           language: item.suite.language,
           codeReference: test.codeGroundTruth,
+          formattedReference: test.formattedGroundTruth,
+          alternativeReferences: test.alternativeGroundTruths,
         });
 
         const result: TestResult = {
@@ -191,12 +251,21 @@ export async function runBenchmark(
           providerId: item.provider.id,
           model: item.model,
           run: item.run,
+          suiteCategory: item.suite.category,
+          suiteLanguage: item.suite.language,
+          testTags: test.tags,
+          testSource: test.source,
+          testMetadata: test.metadata,
+          status: "ok",
           transcription: transcription.text,
           werRaw: metrics.werRaw,
           werNormalized: metrics.werNormalized,
           cer: metrics.cer,
           codeWerNormalized: metrics.codeWerNormalized,
           codeCer: metrics.codeCer,
+          punctuationScore: metrics.punctuationScore,
+          formattingScore: metrics.formattingScore,
+          bestAlternativeWer: metrics.bestAlternativeWer,
           durationMs: transcription.durationMs,
           realtimeFactor:
             audioInfo.durationSeconds > 0
@@ -228,6 +297,12 @@ export async function runBenchmark(
           providerId: item.provider.id,
           model: item.model,
           run: item.run,
+          suiteCategory: item.suite.category,
+          suiteLanguage: item.suite.language,
+          testTags: test.tags,
+          testSource: test.source,
+          testMetadata: test.metadata,
+          status: "error",
           transcription: "",
           werRaw: 1,
           werNormalized: 1,
@@ -264,102 +339,13 @@ export async function runBenchmark(
   await Promise.all(workers);
 
   // Compute summary and rankings
-  const summary = computeSummary(results, suites, providers, version);
+  const summary = buildBenchmarkSummary(results, suites, providers, version);
 
   // Save results
   await saveResults(config.outputDirectory, summary, version);
 
   return summary;
 }
-
-function computeSummary(
-  results: TestResult[],
-  suites: TestSuite[],
-  providers: STTProvider[],
-  version: string
-): BenchmarkSummary {
-  const modelGroups = new Map<string, TestResult[]>();
-
-  for (const r of results) {
-    const key = `${r.providerId}/${r.model}`;
-    const group = modelGroups.get(key) || [];
-    group.push(r);
-    modelGroups.set(key, group);
-  }
-
-  // Build a lookup for provider type
-  const providerTypeMap = new Map<string, "cloud" | "local" | "system">();
-  for (const p of providers) {
-    providerTypeMap.set(p.id, p.type);
-  }
-
-  const rankings: ModelRanking[] = [];
-
-  for (const [key, group] of modelGroups) {
-    const [providerId, model] = key.split("/");
-    const valid = group.filter((r) => !r.error);
-    const errors = group.filter((r) => r.error);
-
-    if (valid.length === 0) {
-      rankings.push({
-        providerId,
-        model,
-        providerType: providerTypeMap.get(providerId) || "cloud",
-        avgWerNormalized: 1,
-        avgCer: 1,
-        avgRealtimeFactor: 0,
-        avgDurationMs: 0,
-        totalTests: group.length,
-        errorCount: errors.length,
-        errorRate: 1,
-      });
-      continue;
-    }
-
-    const totalAudioMs = valid.reduce((sum, r) => sum + r.audioDurationMs, 0);
-    const totalCost = valid.reduce((sum, r) => sum + (r.costUsd || 0), 0);
-
-    rankings.push({
-      providerId,
-      model,
-      providerType: providerTypeMap.get(providerId) || "cloud",
-      avgWerNormalized:
-        valid.reduce((sum, r) => sum + r.werNormalized, 0) / valid.length,
-      avgCer: valid.reduce((sum, r) => sum + r.cer, 0) / valid.length,
-      avgRealtimeFactor:
-        valid.reduce((sum, r) => sum + r.realtimeFactor, 0) / valid.length,
-      avgDurationMs:
-        valid.reduce((sum, r) => sum + r.durationMs, 0) / valid.length,
-      costPerHourAudio:
-        totalAudioMs > 0 ? (totalCost / totalAudioMs) * 3600000 : undefined,
-      totalTests: group.length,
-      errorCount: errors.length,
-      errorRate: errors.length / group.length,
-    });
-  }
-
-  rankings.sort((a, b) => a.avgWerNormalized - b.avgWerNormalized);
-
-  const resultsBySuite: Record<string, TestResult[]> = {};
-  for (const r of results) {
-    (resultsBySuite[r.suiteId] ||= []).push(r);
-  }
-
-  return {
-    rankings,
-    metadata: {
-      timestamp: new Date().toISOString(),
-      version,
-      totalModels: rankings.length,
-      totalTests: results.length,
-      suites: suites.map((s) => s.id),
-      languages: [...new Set(suites.map((s) => s.language))],
-      categories: [...new Set(suites.map((s) => s.category))],
-    },
-    resultsBySuite,
-  };
-}
-
 async function saveResults(
   outputDir: string,
   summary: BenchmarkSummary,
@@ -382,6 +368,8 @@ async function saveResults(
 
 /** Write one JSON file per provider+model, then merge all into benchmark-results.json */
 async function savePerModelResults(summary: BenchmarkSummary): Promise<void> {
+  if (process.env.VITEST) return;
+
   try {
     const projectRoot = resolve(BENCH_ROOT, "..");
     const resultsDir = join(projectRoot, "visualizer", "public", "data", "results");
@@ -395,11 +383,13 @@ async function savePerModelResults(summary: BenchmarkSummary): Promise<void> {
 
       // Load existing results for this model (from previous runs on other suites)
       let existingResults: Record<string, TestResult[]> = {};
+      let existingSuiteMetadata: Partial<Record<string, SuiteMetadata>> = {};
       if (existsSync(filePath)) {
         try {
           const raw = await readFile(filePath, "utf-8");
           const existing = JSON.parse(raw);
           if (existing.resultsBySuite) existingResults = existing.resultsBySuite;
+          if (existing.suiteMetadata) existingSuiteMetadata = existing.suiteMetadata;
         } catch {
           // Ignore malformed files
         }
@@ -415,28 +405,22 @@ async function savePerModelResults(summary: BenchmarkSummary): Promise<void> {
       }
 
       const mergedResults = { ...existingResults, ...newResults };
+      const mergedSuiteMetadata = {
+        ...existingSuiteMetadata,
+        ...summary.suiteMetadata,
+      };
 
-      // Recompute ranking from all accumulated results
-      const allResults = Object.values(mergedResults).flat();
-      const valid = allResults.filter((r) => !r.error);
-      const errors = allResults.filter((r) => r.error);
-      const totalAudioMs = valid.reduce((sum, r) => sum + r.audioDurationMs, 0);
-      const totalCost = valid.reduce((sum, r) => sum + (r.costUsd || 0), 0);
-
-      const mergedRanking: ModelRanking = valid.length > 0 ? {
-        ...ranking,
-        avgWerNormalized: valid.reduce((s, r) => s + r.werNormalized, 0) / valid.length,
-        avgCer: valid.reduce((s, r) => s + r.cer, 0) / valid.length,
-        avgRealtimeFactor: valid.reduce((s, r) => s + r.realtimeFactor, 0) / valid.length,
-        avgDurationMs: valid.reduce((s, r) => s + r.durationMs, 0) / valid.length,
-        costPerHourAudio: totalAudioMs > 0 ? (totalCost / totalAudioMs) * 3600000 : undefined,
-        totalTests: allResults.length,
-        errorCount: errors.length,
-        errorRate: errors.length / allResults.length,
-      } : ranking;
+      const mergedSummary = mergeBenchmarkSummaries({
+        resultsBySuite: mergedResults,
+        suiteMetadata: mergedSuiteMetadata,
+        providerTypeMap: new Map([[ranking.providerId, ranking.providerType]]),
+        version: summary.metadata.version,
+      });
+      const mergedRanking = mergedSummary.rankings[0] ?? ranking;
 
       const modelFile = {
         ranking: mergedRanking,
+        suiteMetadata: mergedSummary.suiteMetadata,
         resultsBySuite: mergedResults,
       };
 
@@ -464,18 +448,20 @@ export async function mergeResultFiles(projectRoot?: string): Promise<void> {
 
   const { readdir } = await import("fs/promises");
   const files = (await readdir(resultsDir)).filter((f) => f.endsWith(".json"));
-
-  const rankings: ModelRanking[] = [];
   const resultsBySuite: Record<string, TestResult[]> = {};
-  const allSuites = new Set<string>();
-  const allLanguages = new Set<string>();
-  const allCategories = new Set<string>();
+  const suiteMetadata: Partial<Record<string, SuiteMetadata>> = {};
+  const providerTypeMap = new Map<string, "cloud" | "local" | "system">();
 
   for (const file of files) {
     try {
       const raw = await readFile(join(resultsDir, file), "utf-8");
       const data = JSON.parse(raw);
-      if (data.ranking) rankings.push(data.ranking);
+      if (data.ranking?.providerId && data.ranking?.providerType) {
+        providerTypeMap.set(data.ranking.providerId, data.ranking.providerType);
+      }
+      if (data.suiteMetadata) {
+        Object.assign(suiteMetadata, data.suiteMetadata);
+      }
       if (data.resultsBySuite) {
         for (const [suiteId, results] of Object.entries(data.resultsBySuite)) {
           (resultsBySuite[suiteId] ||= []).push(...(results as TestResult[]));
@@ -485,31 +471,12 @@ export async function mergeResultFiles(projectRoot?: string): Promise<void> {
       // Skip malformed files
     }
   }
-
-  rankings.sort((a, b) => a.avgWerNormalized - b.avgWerNormalized);
-
-  // Extract metadata from suite IDs (format: category-language, e.g. "clean-speech-en")
-  for (const suiteId of Object.keys(resultsBySuite)) {
-    allSuites.add(suiteId);
-    const lang = suiteId.split("-").pop();
-    if (lang && lang.length === 2) allLanguages.add(lang);
-    const category = suiteId.replace(/-[a-z]{2}$/, "");
-    if (category) allCategories.add(category);
-  }
-
-  const merged: BenchmarkSummary = {
-    rankings,
-    metadata: {
-      timestamp: new Date().toISOString(),
-      version: new Date().toISOString().slice(0, 10),
-      totalModels: rankings.length,
-      totalTests: Object.values(resultsBySuite).reduce((sum, r) => sum + r.length, 0),
-      suites: [...allSuites],
-      languages: [...allLanguages],
-      categories: [...allCategories] as BenchmarkSummary["metadata"]["categories"],
-    },
+  const merged: BenchmarkSummary = mergeBenchmarkSummaries({
     resultsBySuite,
-  };
+    suiteMetadata,
+    providerTypeMap,
+    version: new Date().toISOString().slice(0, 10),
+  });
 
   await writeFile(outFile, JSON.stringify(merged, null, 2) + "\n", "utf-8");
 }

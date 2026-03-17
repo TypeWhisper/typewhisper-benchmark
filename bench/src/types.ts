@@ -1,6 +1,27 @@
 // === Provider Types ===
 
 export type ProviderType = "cloud" | "local" | "system";
+export type BenchmarkTier = "core" | "diagnostic";
+export type BenchmarkOrigin = "public" | "synthetic";
+export type ResultStatus = "ok" | "error" | "skipped";
+
+export interface TestCaseMetadata {
+  speaker?: string;
+  noiseType?: string;
+  snrDb?: number;
+  wordsPerMinute?: number;
+  accent?: string;
+  degradationType?: string;
+  numberType?:
+    | "cardinal"
+    | "ordinal"
+    | "date"
+    | "time"
+    | "phone"
+    | "currency"
+    | "percentage"
+    | "mixed";
+}
 
 export interface AudioInput {
   filePath: string;
@@ -25,6 +46,7 @@ export interface STTProvider {
   models: string[];
   transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult>;
   isAvailable(): Promise<boolean>;
+  supportsLanguage(model: string, language: string): boolean;
 }
 
 // === Test Suite Types ===
@@ -39,7 +61,11 @@ export type TestCategory =
   | "numbers-dates"
   | "proper-nouns"
   | "whispered-speech"
-  | "low-quality-audio";
+  | "low-quality-audio"
+  | "code-switching"
+  | "punctuation-formatting"
+  | "number-formatting"
+  | "long-form-speech";
 
 export interface TestCase {
   id: string;
@@ -48,15 +74,16 @@ export interface TestCase {
   normalizedTruth?: string;
   codeGroundTruth?: string;
   tags: string[];
-  source: "custom" | "librispeech" | "common-voice" | "fleurs" | "recorded";
-  metadata?: {
-    speaker?: string;
-    noiseType?: string;
-    snrDb?: number;
-    wordsPerMinute?: number;
-    accent?: string;
-    degradationType?: string;
-  };
+  source:
+    | "custom"
+    | "librispeech"
+    | "common-voice"
+    | "fleurs"
+    | "recorded"
+    | "voxpopuli";
+  metadata?: TestCaseMetadata;
+  alternativeGroundTruths?: string[];
+  formattedGroundTruth?: string;
 }
 
 export interface TestSuite {
@@ -65,7 +92,18 @@ export interface TestSuite {
   description: string;
   language: string;
   category: TestCategory;
+  benchmarkTier?: BenchmarkTier;
   tests: TestCase[];
+}
+
+export interface SuiteMetadata {
+  name: string;
+  description: string;
+  language: string;
+  category: TestCategory;
+  tier: BenchmarkTier;
+  origin: BenchmarkOrigin;
+  testCount: number;
 }
 
 // === Result Types ===
@@ -76,6 +114,12 @@ export interface TestResult {
   providerId: string;
   model: string;
   run: number;
+  suiteCategory: TestCategory;
+  suiteLanguage: string;
+  testTags: string[];
+  testSource: TestCase["source"];
+  testMetadata?: TestCaseMetadata;
+  status: ResultStatus;
 
   // Raw
   transcription: string;
@@ -86,6 +130,9 @@ export interface TestResult {
   cer: number;
   codeWerNormalized?: number;
   codeCer?: number;
+  punctuationScore?: number;
+  formattingScore?: number;
+  bestAlternativeWer?: number;
   semanticScore?: number;
 
   // Performance
@@ -99,6 +146,7 @@ export interface TestResult {
   // Meta
   timestamp: string;
   error?: string;
+  skipReason?: string;
 }
 
 export interface ModelRanking {
@@ -110,6 +158,8 @@ export interface ModelRanking {
   avgWerNormalized: number;
   avgCer: number;
   avgSemanticScore?: number;
+  avgPunctuationScore?: number;
+  avgFormattingScore?: number;
 
   // Speed
   avgRealtimeFactor: number;
@@ -122,10 +172,15 @@ export interface ModelRanking {
   totalTests: number;
   errorCount: number;
   errorRate: number;
+  skipCount: number;
 }
 
 export interface BenchmarkSummary {
   rankings: ModelRanking[];
+  suiteMetadata: Record<string, SuiteMetadata>;
+  rankingsBySuite: Record<string, ModelRanking[]>;
+  rankingsByCategory: Record<string, ModelRanking[]>;
+  rankingsBySlice: Record<string, ModelRanking[]>;
   metadata: {
     timestamp: string;
     version: string;

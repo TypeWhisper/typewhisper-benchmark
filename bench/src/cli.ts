@@ -30,12 +30,17 @@ program
   .description("Run the benchmark")
   .option("-s, --suite <path>", "Run a specific test suite")
   .option("-p, --provider <id>", "Run only a specific provider")
+  .option("-m, --model <name>", "Run only a specific model (requires --provider)")
   .option("-l, --language <lang>", "Filter suites by language")
   .option("-v, --version <version>", "Version label")
   .option(
     "-r, --runs <number>",
     "Runs per model",
     String(DEFAULT_CONFIG.runsPerModel)
+  )
+  .option(
+    "-c, --concurrency <number>",
+    "Max concurrent tasks (default: 10 cloud, 1 local)",
   )
   .action(async (opts) => {
     console.log(chalk.bold("\nTypeWhisper STT Benchmark\n"));
@@ -95,6 +100,22 @@ program
       providers = [p];
     }
 
+    // Filter to a single model if --model is specified
+    if (opts.model) {
+      if (!opts.provider) {
+        console.log(chalk.red("--model requires --provider"));
+        process.exit(1);
+      }
+      const p = providers[0];
+      if (!p.models.includes(opts.model)) {
+        console.log(
+          chalk.red(`Model "${opts.model}" not found in provider "${opts.provider}"`)
+        );
+        process.exit(1);
+      }
+      p.models = [opts.model];
+    }
+
     if (providers.length === 0) {
       console.log(
         chalk.red(
@@ -126,18 +147,31 @@ program
       if (event.type === "plan") {
         totalTests = event.totalTests;
         bar.start(totalTests, 0, { status: "starting..." });
-      } else if (event.type === "done" || event.type === "error") {
+      } else if (
+        event.type === "done" ||
+        event.type === "error" ||
+        event.type === "skip"
+      ) {
         completed++;
         bar.update(completed, {
-          status: `${event.providerId}/${event.model}`,
+          status:
+            event.type === "skip"
+              ? `${event.providerId}/${event.model} (skip)`
+              : `${event.providerId}/${event.model}`,
         });
       }
     };
+
+    // Auto-detect concurrency: 1 for local providers, 10 for cloud
+    const isLocalOnly = providers.every((p) => p.type === "local" || p.type === "system");
+    const defaultConcurrency = isLocalOnly ? 1 : DEFAULT_CONFIG.maxConcurrency;
 
     const config = {
       ...DEFAULT_CONFIG,
       runsPerModel:
         parseInt(opts.runs) || DEFAULT_CONFIG.runsPerModel,
+      maxConcurrency:
+        parseInt(opts.concurrency) || defaultConcurrency,
     };
 
     console.log(
