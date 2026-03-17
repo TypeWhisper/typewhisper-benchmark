@@ -2,6 +2,20 @@ import { createClient } from "@deepgram/sdk";
 import { readFile } from "fs/promises";
 import type { STTProvider, AudioInput, TranscriptionResult } from "../types.js";
 
+export function createDeepgramRequestOptions(
+  audio: AudioInput,
+  model: string
+): Record<string, unknown> {
+  return {
+    model,
+    ...(audio.language !== "auto"
+      ? { language: audio.language }
+      : { detect_language: true }),
+    smart_format: true,
+    punctuate: true,
+  };
+}
+
 export class DeepgramProvider implements STTProvider {
   id = "deepgram";
   name = "Deepgram";
@@ -10,6 +24,10 @@ export class DeepgramProvider implements STTProvider {
 
   async isAvailable(): Promise<boolean> {
     return !!process.env.DEEPGRAM_API_KEY;
+  }
+
+  supportsLanguage(_model: string, _language: string): boolean {
+    return true;
   }
 
   async transcribe(
@@ -22,12 +40,7 @@ export class DeepgramProvider implements STTProvider {
     const audioBuffer = await readFile(audio.filePath);
     const { result } = await client.listen.prerecorded.transcribeFile(
       audioBuffer,
-      {
-        model,
-        language: audio.language,
-        smart_format: false,
-        punctuate: false,
-      }
+      createDeepgramRequestOptions(audio, model)
     );
 
     const durationMs = Math.round(performance.now() - start);
