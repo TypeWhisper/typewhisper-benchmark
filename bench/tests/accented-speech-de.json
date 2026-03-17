@@ -4,36 +4,11 @@
   "description": "Spontaneous speech from diverse speakers (Common Voice Spontaneous Speech corpus)",
   "language": "de",
   "category": "accented-speech",
+  "benchmarkTier": "core",
   "tests": [
     {
       "id": "de-accent-01",
       "audioFile": "samples-accent-de/de-accent-01.wav",
-      "groundTruth": "Welche Farbe magst du am meisten und warum?",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Welche Farbe magst du am meisten und war"
-      }
-    },
-    {
-      "id": "de-accent-02",
-      "audioFile": "samples-accent-de/de-accent-02.wav",
-      "groundTruth": "Wenn du ein Tier wärst, welches wärst du und warum?",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Wenn du ein Tier wärst, welches wärst du"
-      }
-    },
-    {
-      "id": "de-accent-03",
-      "audioFile": "samples-accent-de/de-accent-03.wav",
       "groundTruth": "Fährst du im Urlaub lieber an neue oder an bekannte Orte.",
       "tags": [
         "spontaneous-speech",
@@ -41,12 +16,12 @@
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Fährst du im Urlaub lieber an neue oder "
+        "speaker": "prompt:Fährst du im Urlaub lieber an neue oder an bekannte Orte?"
       }
     },
     {
-      "id": "de-accent-04",
-      "audioFile": "samples-accent-de/de-accent-04.wav",
+      "id": "de-accent-02",
+      "audioFile": "samples-accent-de/de-accent-02.wav",
       "groundTruth": "Ich koche sehr gerne und sehr unterschiedliche Dinge",
       "tags": [
         "spontaneous-speech",
@@ -58,29 +33,55 @@
       }
     },
     {
-      "id": "de-accent-05",
-      "audioFile": "samples-accent-de/de-accent-05.wav",
-      "groundTruth": "Ich möchte gerne Neugriechisch lernen, weil meine Schwester in Griechenland wohnt.",
+      "id": "de-accent-03",
+      "audioFile": "samples-accent-de/de-accent-03.wav",
+      "groundTruth": "Doch, das ist mir schon einige Male passiert, dass ich die in der Arbeit liegen gelassen habe oder bei Restaurants stehen gelassen habe.",
       "tags": [
         "spontaneous-speech",
         "common-voice"
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welche Sprache würdest du gerne lernen u"
+        "speaker": "prompt:Verlieren Sie Regenschirme oder kommt das nicht vor?"
+      }
+    },
+    {
+      "id": "de-accent-04",
+      "audioFile": "samples-accent-de/de-accent-04.wav",
+      "groundTruth": "Ehrlich gesagt glaube ich nicht, dass es wichtig ist, historische Persönlichkeiten zu studieren. Ich glaube, es ist wichtig, [disfluency]Strukturen zu verstehen, aber die Menschen als Persönlichkeiten sind, glaube ich, nicht so wichtig. Jedenfalls für die Geschichte.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Warum denkst du, ist es wichtig, verschiedene historische Pe"
+      }
+    },
+    {
+      "id": "de-accent-05",
+      "audioFile": "samples-accent-de/de-accent-05.wav",
+      "groundTruth": "Ich weiß nicht, ob das wichtig ist, verschiedene Hobbys zu haben; ich habe verschiedene Hobbys, aber ich kann mir auch vorstellen, dass Leute mit nur einem Hobby sehr glücklich sind.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Warum ist es wichtig, verschiedene Hobbys zu haben?"
       }
     },
     {
       "id": "de-accent-06",
       "audioFile": "samples-accent-de/de-accent-06.wav",
-      "groundTruth": "Ich mag am liebsten den Herbst, weil sich dann alles ein bisschen zurückfaltet.",
+      "groundTruth": "Mein Lieblingsgetränk ist Mineralwasser. Ganz normales Mineralwasser. Sprudelwasser mit Kohlensäure. Ich würde es auch ohne   Kohlensäure trinken. Aber mit Sprudel, ich weiß auch nicht, ist so eine Gewohnheitssache.ein Lieblingsgetränk ist Mineralwasser",
       "tags": [
         "spontaneous-speech",
         "common-voice"
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welche Jahreszeit magst du am liebsten u"
+        "speaker": "prompt:Was ist dein Lieblingsgetränk und warum?"
       }
     },
     {
@@ -93,90 +94,12 @@
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Was ist für dich das Wichtigste in einer"
+        "speaker": "prompt:Was ist für dich das Wichtigste in einer Beziehung?"
       }
     },
     {
       "id": "de-accent-08",
       "audioFile": "samples-accent-de/de-accent-08.wav",
-      "groundTruth": "Ich mag am liebsten die Rauchschwalben. Und zwar deswegen, weil sie so wunderbar singen, wenn sie nach dem Winter zurückkommen.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Welches Tier magst du am meisten und war"
-      }
-    },
-    {
-      "id": "de-accent-09",
-      "audioFile": "samples-accent-de/de-accent-09.wav",
-      "groundTruth": "Ich würde gerne mehr Toleranz und insbesondere mehr Dialog unter unterschiedlichen Gruppen und Menschen sehen.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Welche gesellschaftlichen Veränderungen "
-      }
-    },
-    {
-      "id": "de-accent-10",
-      "audioFile": "samples-accent-de/de-accent-10.wav",
-      "groundTruth": "Ich würde gerne authentisches japanisches Essen ausprobieren, weil ich mir das sehr fein vorstelle.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Welche Art von Essen würdest du gerne ei"
-      }
-    },
-    {
-      "id": "de-accent-11",
-      "audioFile": "samples-accent-de/de-accent-11.wav",
-      "groundTruth": "Ich lebe in der Nähe der Nordseeküste und gefühlt gibt es immer Wind. Mal mehr, mal weniger.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Wie ist das Wetter in deiner Lieblingsst"
-      }
-    },
-    {
-      "id": "de-accent-12",
-      "audioFile": "samples-accent-de/de-accent-12.wav",
-      "groundTruth": "Ich mache nicht gerne Sport. Aber wenn ich einen machen würde, dann wäre es Tanzen",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Welchen Sport machst du am liebsten und "
-      }
-    },
-    {
-      "id": "de-accent-13",
-      "audioFile": "samples-accent-de/de-accent-13.wav",
-      "groundTruth": "Mein Lieblingsgetränk ist Mineralwasser. Ganz normales Mineralwasser. Sprudelwasser mit Kohlensäure. Ich würde es auch ohne   Kohlensäure trinken. Aber mit Sprudel, ich weiß auch nicht, ist so eine Gewohnheitssache.ein Lieblingsgetränk ist Mineralwasser",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Was ist dein Lieblingsgetränk und warum?"
-      }
-    },
-    {
-      "id": "de-accent-14",
-      "audioFile": "samples-accent-de/de-accent-14.wav",
       "groundTruth": "Welche Art von Essen magst du am meisten und warum?",
       "tags": [
         "spontaneous-speech",
@@ -184,25 +107,25 @@
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welche Art von Essen magst du am meisten"
+        "speaker": "prompt:Welche Art von Essen magst du am meisten und warum?"
       }
     },
     {
-      "id": "de-accent-15",
-      "audioFile": "samples-accent-de/de-accent-15.wav",
-      "groundTruth": "Welches Werkzeug benutzt du gerne im Haushalt und warum?",
+      "id": "de-accent-09",
+      "audioFile": "samples-accent-de/de-accent-09.wav",
+      "groundTruth": "Ich würde gerne authentisches japanisches Essen ausprobieren, weil ich mir das sehr fein vorstelle.",
       "tags": [
         "spontaneous-speech",
         "common-voice"
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welches Werkzeug benutzt du gerne im Hau"
+        "speaker": "prompt:Welche Art von Essen würdest du gerne einmal probieren und w"
       }
     },
     {
-      "id": "de-accent-16",
-      "audioFile": "samples-accent-de/de-accent-16.wav",
+      "id": "de-accent-10",
+      "audioFile": "samples-accent-de/de-accent-10.wav",
       "groundTruth": "Welche Art von Sport würdest du gerne einmal ausprobieren? Warum?",
       "tags": [
         "spontaneous-speech",
@@ -210,64 +133,25 @@
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welche Art von Sport würdest du gerne ei"
+        "speaker": "prompt:Welche Art von Sport würdest du gerne einmal ausprobieren un"
       }
     },
     {
-      "id": "de-accent-17",
-      "audioFile": "samples-accent-de/de-accent-17.wav",
-      "groundTruth": "Der Fall der Berliner Mauer, weil er das Ende einer jahrzehntelangen Unrechtsherrschaft war.",
+      "id": "de-accent-11",
+      "audioFile": "samples-accent-de/de-accent-11.wav",
+      "groundTruth": "Welche Farbe magst du am meisten und warum?",
       "tags": [
         "spontaneous-speech",
         "common-voice"
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welches historische Ereignis hat dich am"
+        "speaker": "prompt:Welche Farbe magst du am meisten und warum?"
       }
     },
     {
-      "id": "de-accent-18",
-      "audioFile": "samples-accent-de/de-accent-18.wav",
-      "groundTruth": "Die gesellschaftliche Veränderung, die ich mir wünschen würde, wäre absolute Diskriminierungsfreiheit und ein friedliches Miteinander.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Welche gesellschaftlichen Veränderungen "
-      }
-    },
-    {
-      "id": "de-accent-19",
-      "audioFile": "samples-accent-de/de-accent-19.wav",
-      "groundTruth": "Ehrlich gesagt glaube ich nicht, dass es wichtig ist, historische Persönlichkeiten zu studieren. Ich glaube, es ist wichtig, [disfluency]Strukturen zu verstehen, aber die Menschen als Persönlichkeiten sind, glaube ich, nicht so wichtig. Jedenfalls für die Geschichte.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Warum denkst du, ist es wichtig, verschi"
-      }
-    },
-    {
-      "id": "de-accent-20",
-      "audioFile": "samples-accent-de/de-accent-20.wav",
-      "groundTruth": "Für mich ist die Zukunft von der Arbeiteit mehr im Handwerk zu finden, als im Digitalen. Das heißt, die etwas handwerklich leisten können, haben eine Zukunft in der Arbeitswelt.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Wie siehst du die Zukunft der Arbeit in "
-      }
-    },
-    {
-      "id": "de-accent-21",
-      "audioFile": "samples-accent-de/de-accent-21.wav",
+      "id": "de-accent-12",
+      "audioFile": "samples-accent-de/de-accent-12.wav",
       "groundTruth": "Welche Fähigkeiten sind deiner Meinung nach am wichtigsten für den beruflichen Erfolg?",
       "tags": [
         "spontaneous-speech",
@@ -275,12 +159,142 @@
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welche Fähigkeiten sind deiner Meinung n"
+        "speaker": "prompt:Welche Fähigkeiten sind deiner Meinung nach am wichtigsten f"
+      }
+    },
+    {
+      "id": "de-accent-13",
+      "audioFile": "samples-accent-de/de-accent-13.wav",
+      "groundTruth": "Ich mag am liebsten den Herbst, weil sich dann alles ein bisschen zurückfaltet.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Welche Jahreszeit magst du am liebsten und warum?"
+      }
+    },
+    {
+      "id": "de-accent-14",
+      "audioFile": "samples-accent-de/de-accent-14.wav",
+      "groundTruth": "Ich möchte gerne Neugriechisch lernen, weil meine Schwester in Griechenland wohnt.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Welche Sprache würdest du gerne lernen und warum?"
+      }
+    },
+    {
+      "id": "de-accent-15",
+      "audioFile": "samples-accent-de/de-accent-15.wav",
+      "groundTruth": "Ich würde gerne mehr Toleranz und insbesondere mehr Dialog unter unterschiedlichen Gruppen und Menschen sehen.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Welche gesellschaftlichen Veränderungen würdest du gerne seh"
+      }
+    },
+    {
+      "id": "de-accent-16",
+      "audioFile": "samples-accent-de/de-accent-16.wav",
+      "groundTruth": "Ich mache nicht gerne Sport. Aber wenn ich einen machen würde, dann wäre es Tanzen",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Welchen Sport machst du am liebsten und warum?"
+      }
+    },
+    {
+      "id": "de-accent-17",
+      "audioFile": "samples-accent-de/de-accent-17.wav",
+      "groundTruth": "Ich mag am liebsten die Rauchschwalben. Und zwar deswegen, weil sie so wunderbar singen, wenn sie nach dem Winter zurückkommen.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Welches Tier magst du am meisten und warum?"
+      }
+    },
+    {
+      "id": "de-accent-18",
+      "audioFile": "samples-accent-de/de-accent-18.wav",
+      "groundTruth": "Welches Werkzeug benutzt du gerne im Haushalt und warum?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Welches Werkzeug benutzt du gerne im Haushalt und warum?"
+      }
+    },
+    {
+      "id": "de-accent-19",
+      "audioFile": "samples-accent-de/de-accent-19.wav",
+      "groundTruth": "Der Fall der Berliner Mauer, weil er das Ende einer jahrzehntelangen Unrechtsherrschaft war.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Welches historische Ereignis hat dich am meisten beeinflusst"
+      }
+    },
+    {
+      "id": "de-accent-20",
+      "audioFile": "samples-accent-de/de-accent-20.wav",
+      "groundTruth": "Wenn du ein Tier wärst, welches wärst du und warum?",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Wenn du ein Tier wärst, welches wärst du und warum?"
+      }
+    },
+    {
+      "id": "de-accent-21",
+      "audioFile": "samples-accent-de/de-accent-21.wav",
+      "groundTruth": "Ich lebe in der Nähe der Nordseeküste und gefühlt gibt es immer Wind. Mal mehr, mal weniger.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Wie ist das Wetter in deiner Lieblingsstadt?"
       }
     },
     {
       "id": "de-accent-22",
       "audioFile": "samples-accent-de/de-accent-22.wav",
+      "groundTruth": "Für mich ist die Zukunft von der Arbeiteit mehr im Handwerk zu finden, als im Digitalen. Das heißt, die etwas handwerklich leisten können, haben eine Zukunft in der Arbeitswelt.",
+      "tags": [
+        "spontaneous-speech",
+        "common-voice"
+      ],
+      "source": "common-voice",
+      "metadata": {
+        "speaker": "prompt:Wie siehst du die Zukunft der Arbeit in einer digitalen Welt"
+      }
+    },
+    {
+      "id": "de-accent-23",
+      "audioFile": "samples-accent-de/de-accent-23.wav",
       "groundTruth": "Für mich ist politische Beteiligung wichtig. Nur so kann eine Gemeinschaft [disfluency] wachsen und gedeihen.",
       "tags": [
         "spontaneous-speech",
@@ -288,20 +302,7 @@
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Wie wichtig ist dir politische Beteiligu"
-      }
-    },
-    {
-      "id": "de-accent-23",
-      "audioFile": "samples-accent-de/de-accent-23.wav",
-      "groundTruth": "Ich weiß nicht, ob das wichtig ist, verschiedene Hobbys zu haben; ich habe verschiedene Hobbys, aber ich kann mir auch vorstellen, dass Leute mit nur einem Hobby sehr glücklich sind.",
-      "tags": [
-        "spontaneous-speech",
-        "common-voice"
-      ],
-      "source": "common-voice",
-      "metadata": {
-        "speaker": "prompt:Warum ist es wichtig, verschiedene Hobby"
+        "speaker": "prompt:Wie wichtig ist dir politische Beteiligung?"
       }
     },
     {
@@ -314,20 +315,20 @@
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Welche Jahreszeit magst du am liebsten u"
+        "speaker": "prompt:Welche Jahreszeit magst du am liebsten und warum?"
       }
     },
     {
       "id": "de-accent-25",
       "audioFile": "samples-accent-de/de-accent-25.wav",
-      "groundTruth": "Doch, das ist mir schon einige Male passiert, dass ich die in der Arbeit liegen gelassen habe oder bei Restaurants stehen gelassen habe.",
+      "groundTruth": "Die gesellschaftliche Veränderung, die ich mir wünschen würde, wäre absolute Diskriminierungsfreiheit und ein friedliches Miteinander.",
       "tags": [
         "spontaneous-speech",
         "common-voice"
       ],
       "source": "common-voice",
       "metadata": {
-        "speaker": "prompt:Verlieren Sie Regenschirme oder kommt da"
+        "speaker": "prompt:Welche gesellschaftlichen Veränderungen würdest du gerne seh"
       }
     }
   ]

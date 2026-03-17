@@ -57,6 +57,10 @@ dir_map = {
     'clean-speech-de-extra': 'samples-de',
     'hard-en-extra': 'samples-hard-en',
     'hard-de-extra': 'samples-hard-de',
+    'punctuation-formatting-de': 'samples-punct-de',
+    'punctuation-formatting-en': 'samples-punct-en',
+    'number-formatting-de': 'samples-numfmt-de',
+    'number-formatting-en': 'samples-numfmt-en',
 }
 
 generated = 0

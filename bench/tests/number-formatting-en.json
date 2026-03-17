@@ -1,0 +1,404 @@
+{
+  "id": "number-formatting-en",
+  "name": "Number Formatting (English)",
+  "description": "Intelligent number, date, time, and currency formatting for English",
+  "language": "en",
+  "category": "number-formatting",
+  "benchmarkTier": "core",
+  "tests": [
+    {
+      "id": "en-num-card-01",
+      "audioFile": "samples-numfmt-en/en-num-card-01.wav",
+      "groundTruth": "352 participants registered",
+      "alternativeGroundTruths": [
+        "three hundred and fifty-two participants registered"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "en-num-card-02",
+      "audioFile": "samples-numfmt-en/en-num-card-02.wav",
+      "groundTruth": "the company has 2,400 employees",
+      "alternativeGroundTruths": [
+        "the company has 2400 employees",
+        "the company has two thousand four hundred employees"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "en-num-card-03",
+      "audioFile": "samples-numfmt-en/en-num-card-03.wav",
+      "groundTruth": "there were 17 people in the room",
+      "alternativeGroundTruths": [
+        "there were seventeen people in the room"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "en-num-card-04",
+      "audioFile": "samples-numfmt-en/en-num-card-04.wav",
+      "groundTruth": "revenue reached $578,000",
+      "alternativeGroundTruths": [
+        "revenue reached 578,000 dollars",
+        "revenue reached five hundred seventy-eight thousand dollars"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "en-num-ord-01",
+      "audioFile": "samples-numfmt-en/en-num-ord-01.wav",
+      "groundTruth": "the 15th of March 2026",
+      "alternativeGroundTruths": [
+        "the fifteenth of March 2026",
+        "the fifteenth of March two thousand twenty-six"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "en-num-ord-02",
+      "audioFile": "samples-numfmt-en/en-num-ord-02.wav",
+      "groundTruth": "she lives on the 3rd floor",
+      "alternativeGroundTruths": [
+        "she lives on the third floor"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "en-num-ord-03",
+      "audioFile": "samples-numfmt-en/en-num-ord-03.wav",
+      "groundTruth": "this is the 2nd attempt",
+      "alternativeGroundTruths": [
+        "this is the second attempt"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "en-num-ord-04",
+      "audioFile": "samples-numfmt-en/en-num-ord-04.wav",
+      "groundTruth": "in the 21st century",
+      "alternativeGroundTruths": [
+        "in the twenty-first century"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "en-num-date-01",
+      "audioFile": "samples-numfmt-en/en-num-date-01.wav",
+      "groundTruth": "on March 15, 2026",
+      "alternativeGroundTruths": [
+        "on March 15th, 2026",
+        "on March fifteenth, two thousand twenty-six"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "en-num-date-02",
+      "audioFile": "samples-numfmt-en/en-num-date-02.wav",
+      "groundTruth": "from January 3 to February 7",
+      "alternativeGroundTruths": [
+        "from January 3rd to February 7th",
+        "from January third to February seventh"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "en-num-date-03",
+      "audioFile": "samples-numfmt-en/en-num-date-03.wav",
+      "groundTruth": "the deadline is December 31",
+      "alternativeGroundTruths": [
+        "the deadline is December 31st",
+        "the deadline is December thirty-first"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "en-num-date-04",
+      "audioFile": "samples-numfmt-en/en-num-date-04.wav",
+      "groundTruth": "born on April 20, 1985",
+      "alternativeGroundTruths": [
+        "born on April 20th, 1985",
+        "born on April twentieth, nineteen eighty-five"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "en-num-time-01",
+      "audioFile": "samples-numfmt-en/en-num-time-01.wav",
+      "groundTruth": "at 2:30 PM",
+      "alternativeGroundTruths": [
+        "at 2:30 p.m.",
+        "at two thirty in the afternoon"
+      ],
+      "tags": [
+        "time"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "time"
+      }
+    },
+    {
+      "id": "en-num-time-02",
+      "audioFile": "samples-numfmt-en/en-num-time-02.wav",
+      "groundTruth": "the appointment is at 9:45",
+      "alternativeGroundTruths": [
+        "the appointment is at nine forty-five",
+        "the appointment is at 9:45 AM"
+      ],
+      "tags": [
+        "time"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "time"
+      }
+    },
+    {
+      "id": "en-num-time-03",
+      "audioFile": "samples-numfmt-en/en-num-time-03.wav",
+      "groundTruth": "departure at 11:15 PM",
+      "alternativeGroundTruths": [
+        "departure at 11:15 p.m.",
+        "departure at eleven fifteen PM"
+      ],
+      "tags": [
+        "time"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "time"
+      }
+    },
+    {
+      "id": "en-num-phone-01",
+      "audioFile": "samples-numfmt-en/en-num-phone-01.wav",
+      "groundTruth": "call us at 1-800-555-0123",
+      "alternativeGroundTruths": [
+        "call us at 1 800 555 0123",
+        "call us at 18005550123"
+      ],
+      "tags": [
+        "phone"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "phone"
+      }
+    },
+    {
+      "id": "en-num-phone-02",
+      "audioFile": "samples-numfmt-en/en-num-phone-02.wav",
+      "groundTruth": "my number is 555-345-6789",
+      "alternativeGroundTruths": [
+        "my number is 555 345 6789",
+        "my number is (555) 345-6789"
+      ],
+      "tags": [
+        "phone"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "phone"
+      }
+    },
+    {
+      "id": "en-num-phone-03",
+      "audioFile": "samples-numfmt-en/en-num-phone-03.wav",
+      "groundTruth": "reach me at +1 212-555-0198",
+      "alternativeGroundTruths": [
+        "reach me at +1 (212) 555-0198",
+        "reach me at +12125550198"
+      ],
+      "tags": [
+        "phone"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "phone"
+      }
+    },
+    {
+      "id": "en-num-curr-01",
+      "audioFile": "samples-numfmt-en/en-num-curr-01.wav",
+      "groundTruth": "$99.99",
+      "alternativeGroundTruths": [
+        "99.99 dollars",
+        "ninety-nine dollars and ninety-nine cents"
+      ],
+      "tags": [
+        "currency"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "currency"
+      }
+    },
+    {
+      "id": "en-num-curr-02",
+      "audioFile": "samples-numfmt-en/en-num-curr-02.wav",
+      "groundTruth": "the price is $2,500",
+      "alternativeGroundTruths": [
+        "the price is $2500",
+        "the price is two thousand five hundred dollars"
+      ],
+      "tags": [
+        "currency"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "currency"
+      }
+    },
+    {
+      "id": "en-num-curr-03",
+      "audioFile": "samples-numfmt-en/en-num-curr-03.wav",
+      "groundTruth": "rent is $850 per month",
+      "alternativeGroundTruths": [
+        "rent is 850 dollars per month",
+        "rent is eight hundred fifty dollars per month"
+      ],
+      "tags": [
+        "currency"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "currency"
+      }
+    },
+    {
+      "id": "en-num-pct-01",
+      "audioFile": "samples-numfmt-en/en-num-pct-01.wav",
+      "groundTruth": "25% of respondents agreed",
+      "alternativeGroundTruths": [
+        "25 percent of respondents agreed",
+        "twenty-five percent of respondents agreed"
+      ],
+      "tags": [
+        "percentage"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "percentage"
+      }
+    },
+    {
+      "id": "en-num-pct-02",
+      "audioFile": "samples-numfmt-en/en-num-pct-02.wav",
+      "groundTruth": "the yield increased by 3.5%",
+      "alternativeGroundTruths": [
+        "the yield increased by 3.5 percent",
+        "the yield increased by three point five percent"
+      ],
+      "tags": [
+        "percentage"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "percentage"
+      }
+    },
+    {
+      "id": "en-num-mixed-01",
+      "audioFile": "samples-numfmt-en/en-num-mixed-01.wav",
+      "groundTruth": "on March 15 at 2:30, 300 guests will arrive",
+      "alternativeGroundTruths": [
+        "on March 15th at 2:30 PM, 300 guests will arrive"
+      ],
+      "tags": [
+        "mixed"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "mixed"
+      }
+    },
+    {
+      "id": "en-num-mixed-02",
+      "audioFile": "samples-numfmt-en/en-num-mixed-02.wav",
+      "groundTruth": "invoice number 4322 from January 3 for $999",
+      "alternativeGroundTruths": [
+        "invoice #4322 from January 3rd for $999",
+        "invoice number 4322 from January 3 for 999 dollars"
+      ],
+      "tags": [
+        "mixed"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "mixed"
+      }
+    }
+  ]
+}

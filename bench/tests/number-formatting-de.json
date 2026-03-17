@@ -1,0 +1,399 @@
+{
+  "id": "number-formatting-de",
+  "name": "Number Formatting (German)",
+  "description": "Intelligent number, date, time, and currency formatting for German",
+  "language": "de",
+  "category": "number-formatting",
+  "benchmarkTier": "core",
+  "tests": [
+    {
+      "id": "de-num-card-01",
+      "audioFile": "samples-numfmt-de/de-num-card-01.wav",
+      "groundTruth": "352 Teilnehmer haben sich angemeldet",
+      "alternativeGroundTruths": [
+        "dreihundertzweiundfuenfzig Teilnehmer haben sich angemeldet"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "de-num-card-02",
+      "audioFile": "samples-numfmt-de/de-num-card-02.wav",
+      "groundTruth": "Das Unternehmen hat 2400 Mitarbeiter",
+      "alternativeGroundTruths": [
+        "Das Unternehmen hat zweitausendvierhundert Mitarbeiter"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "de-num-card-03",
+      "audioFile": "samples-numfmt-de/de-num-card-03.wav",
+      "groundTruth": "Es waren 17 Personen im Raum",
+      "alternativeGroundTruths": [
+        "Es waren siebzehn Personen im Raum"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "de-num-card-04",
+      "audioFile": "samples-numfmt-de/de-num-card-04.wav",
+      "groundTruth": "Der Umsatz betrug 578000 Euro",
+      "alternativeGroundTruths": [
+        "Der Umsatz betrug 578.000 Euro",
+        "Der Umsatz betrug fuenfhundertachtundsiebzigtausend Euro"
+      ],
+      "tags": [
+        "cardinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "cardinal"
+      }
+    },
+    {
+      "id": "de-num-ord-01",
+      "audioFile": "samples-numfmt-de/de-num-ord-01.wav",
+      "groundTruth": "der 15. Maerz 2026",
+      "alternativeGroundTruths": [
+        "der fuenfzehnte Maerz 2026",
+        "der fuenfzehnte Maerz zweitausendsechsundzwanzig"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "de-num-ord-02",
+      "audioFile": "samples-numfmt-de/de-num-ord-02.wav",
+      "groundTruth": "Sie wohnt im 3. Stock",
+      "alternativeGroundTruths": [
+        "Sie wohnt im dritten Stock"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "de-num-ord-03",
+      "audioFile": "samples-numfmt-de/de-num-ord-03.wav",
+      "groundTruth": "das ist der 2. Versuch",
+      "alternativeGroundTruths": [
+        "das ist der zweite Versuch"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "de-num-ord-04",
+      "audioFile": "samples-numfmt-de/de-num-ord-04.wav",
+      "groundTruth": "im 21. Jahrhundert",
+      "alternativeGroundTruths": [
+        "im einundzwanzigsten Jahrhundert"
+      ],
+      "tags": [
+        "ordinal"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "ordinal"
+      }
+    },
+    {
+      "id": "de-num-date-01",
+      "audioFile": "samples-numfmt-de/de-num-date-01.wav",
+      "groundTruth": "am 15. Maerz 2026",
+      "alternativeGroundTruths": [
+        "am 15.03.2026",
+        "am fuenfzehnten Maerz zweitausendsechsundzwanzig"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "de-num-date-02",
+      "audioFile": "samples-numfmt-de/de-num-date-02.wav",
+      "groundTruth": "vom 3. Januar bis zum 7. Februar",
+      "alternativeGroundTruths": [
+        "vom dritten Januar bis zum siebten Februar"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "de-num-date-03",
+      "audioFile": "samples-numfmt-de/de-num-date-03.wav",
+      "groundTruth": "die Frist endet am 31. Dezember",
+      "alternativeGroundTruths": [
+        "die Frist endet am einunddreissigsten Dezember"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "de-num-date-04",
+      "audioFile": "samples-numfmt-de/de-num-date-04.wav",
+      "groundTruth": "geboren am 20. April 1985",
+      "alternativeGroundTruths": [
+        "geboren am 20.04.1985",
+        "geboren am zwanzigsten April neunzehnhundertfuenfundachtzig"
+      ],
+      "tags": [
+        "date"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "date"
+      }
+    },
+    {
+      "id": "de-num-time-01",
+      "audioFile": "samples-numfmt-de/de-num-time-01.wav",
+      "groundTruth": "um 14:30",
+      "alternativeGroundTruths": [
+        "um vierzehn Uhr dreissig",
+        "um 14:30 Uhr"
+      ],
+      "tags": [
+        "time"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "time"
+      }
+    },
+    {
+      "id": "de-num-time-02",
+      "audioFile": "samples-numfmt-de/de-num-time-02.wav",
+      "groundTruth": "der Termin ist um 9:45",
+      "alternativeGroundTruths": [
+        "der Termin ist um neun Uhr fuenfundvierzig",
+        "der Termin ist um 9:45 Uhr"
+      ],
+      "tags": [
+        "time"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "time"
+      }
+    },
+    {
+      "id": "de-num-time-03",
+      "audioFile": "samples-numfmt-de/de-num-time-03.wav",
+      "groundTruth": "Abflug um 23:15",
+      "alternativeGroundTruths": [
+        "Abflug um dreiundzwanzig Uhr fuenfzehn",
+        "Abflug um 23:15 Uhr"
+      ],
+      "tags": [
+        "time"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "time"
+      }
+    },
+    {
+      "id": "de-num-phone-01",
+      "audioFile": "samples-numfmt-de/de-num-phone-01.wav",
+      "groundTruth": "0171 345 6789",
+      "alternativeGroundTruths": [
+        "0171 3456789",
+        "01713456789"
+      ],
+      "tags": [
+        "phone"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "phone"
+      }
+    },
+    {
+      "id": "de-num-phone-02",
+      "audioFile": "samples-numfmt-de/de-num-phone-02.wav",
+      "groundTruth": "rufen Sie an unter 0800 1234567",
+      "alternativeGroundTruths": [
+        "rufen Sie an unter 0800 123 4567"
+      ],
+      "tags": [
+        "phone"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "phone"
+      }
+    },
+    {
+      "id": "de-num-phone-03",
+      "audioFile": "samples-numfmt-de/de-num-phone-03.wav",
+      "groundTruth": "meine Nummer ist +49 171 234 56",
+      "alternativeGroundTruths": [
+        "meine Nummer ist +49 171 2345 6",
+        "meine Nummer ist +491712345 6"
+      ],
+      "tags": [
+        "phone"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "phone"
+      }
+    },
+    {
+      "id": "de-num-curr-01",
+      "audioFile": "samples-numfmt-de/de-num-curr-01.wav",
+      "groundTruth": "99,99 Euro",
+      "alternativeGroundTruths": [
+        "99,99 EUR",
+        "neunundneunzig Euro neunundneunzig"
+      ],
+      "tags": [
+        "currency"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "currency"
+      }
+    },
+    {
+      "id": "de-num-curr-02",
+      "audioFile": "samples-numfmt-de/de-num-curr-02.wav",
+      "groundTruth": "der Preis betraegt 2500 Euro",
+      "alternativeGroundTruths": [
+        "der Preis betraegt 2.500 Euro",
+        "der Preis betraegt zweitausendfuenfhundert Euro"
+      ],
+      "tags": [
+        "currency"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "currency"
+      }
+    },
+    {
+      "id": "de-num-curr-03",
+      "audioFile": "samples-numfmt-de/de-num-curr-03.wav",
+      "groundTruth": "die Miete kostet 850 Euro pro Monat",
+      "alternativeGroundTruths": [
+        "die Miete kostet achthundertfuenfzig Euro pro Monat"
+      ],
+      "tags": [
+        "currency"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "currency"
+      }
+    },
+    {
+      "id": "de-num-pct-01",
+      "audioFile": "samples-numfmt-de/de-num-pct-01.wav",
+      "groundTruth": "25% der Befragten stimmten zu",
+      "alternativeGroundTruths": [
+        "25 Prozent der Befragten stimmten zu",
+        "fuenfundzwanzig Prozent der Befragten stimmten zu"
+      ],
+      "tags": [
+        "percentage"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "percentage"
+      }
+    },
+    {
+      "id": "de-num-pct-02",
+      "audioFile": "samples-numfmt-de/de-num-pct-02.wav",
+      "groundTruth": "die Rendite stieg um 3,5%",
+      "alternativeGroundTruths": [
+        "die Rendite stieg um 3,5 Prozent",
+        "die Rendite stieg um drei Komma fuenf Prozent"
+      ],
+      "tags": [
+        "percentage"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "percentage"
+      }
+    },
+    {
+      "id": "de-num-mixed-01",
+      "audioFile": "samples-numfmt-de/de-num-mixed-01.wav",
+      "groundTruth": "am 15. Maerz um 14:30 kommen 300 Gaeste",
+      "alternativeGroundTruths": [
+        "am 15. Maerz um 14:30 Uhr kommen 300 Gaeste"
+      ],
+      "tags": [
+        "mixed"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "mixed"
+      }
+    },
+    {
+      "id": "de-num-mixed-02",
+      "audioFile": "samples-numfmt-de/de-num-mixed-02.wav",
+      "groundTruth": "Rechnung Nummer 4322 vom 3. Januar ueber 999 Euro",
+      "alternativeGroundTruths": [
+        "Rechnung Nr. 4322 vom 3. Januar ueber 999 Euro",
+        "Rechnung Nummer 4322 vom 3. Januar ueber 999,00 Euro"
+      ],
+      "tags": [
+        "mixed"
+      ],
+      "source": "custom",
+      "metadata": {
+        "numberType": "mixed"
+      }
+    }
+  ]
+}

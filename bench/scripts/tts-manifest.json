@@ -848,5 +848,1096 @@
       "tags": ["mixed-difficulty", "proper-nouns", "technical"],
       "voice": "Anna"
     }
+  ],
+  "code-switching": [
+    {
+      "id": "cs-tech-01",
+      "segments": [
+        {"text": "Ich habe den", "voice": "Anna", "lang": "de"},
+        {"text": "Pull Request", "voice": "Samantha", "lang": "en"},
+        {"text": "gemerged und das", "voice": "Anna", "lang": "de"},
+        {"text": "Feature deployed", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Ich habe den Pull Request gemerged und das Feature deployed",
+      "tags": ["tech-talk"]
+    },
+    {
+      "id": "cs-tech-02",
+      "segments": [
+        {"text": "Der", "voice": "Anna", "lang": "de"},
+        {"text": "Build", "voice": "Samantha", "lang": "en"},
+        {"text": "ist durchgelaufen aber der", "voice": "Anna", "lang": "de"},
+        {"text": "Deployment Pipeline", "voice": "Samantha", "lang": "en"},
+        {"text": "hat gefailed", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Der Build ist durchgelaufen aber der Deployment Pipeline hat gefailed",
+      "tags": ["tech-talk"]
+    },
+    {
+      "id": "cs-tech-03",
+      "segments": [
+        {"text": "Wir muessen das", "voice": "Anna", "lang": "de"},
+        {"text": "Refactoring", "voice": "Samantha", "lang": "en"},
+        {"text": "noch vor dem naechsten", "voice": "Anna", "lang": "de"},
+        {"text": "Sprint", "voice": "Samantha", "lang": "en"},
+        {"text": "fertig machen", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Wir muessen das Refactoring noch vor dem naechsten Sprint fertig machen",
+      "tags": ["tech-talk"]
+    },
+    {
+      "id": "cs-tech-04",
+      "segments": [
+        {"text": "Kannst du den", "voice": "Anna", "lang": "de"},
+        {"text": "Branch", "voice": "Samantha", "lang": "en"},
+        {"text": "rebased und dann", "voice": "Anna", "lang": "de"},
+        {"text": "force pushen", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Kannst du den Branch rebasen und dann force pushen",
+      "tags": ["tech-talk"]
+    },
+    {
+      "id": "cs-tech-05",
+      "segments": [
+        {"text": "Das", "voice": "Anna", "lang": "de"},
+        {"text": "Code Review", "voice": "Samantha", "lang": "en"},
+        {"text": "hat gezeigt dass wir", "voice": "Anna", "lang": "de"},
+        {"text": "Unit Tests", "voice": "Samantha", "lang": "en"},
+        {"text": "brauchen", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Das Code Review hat gezeigt dass wir Unit Tests brauchen",
+      "tags": ["tech-talk"]
+    },
+    {
+      "id": "cs-tech-06",
+      "segments": [
+        {"text": "Der", "voice": "Anna", "lang": "de"},
+        {"text": "Hotfix", "voice": "Samantha", "lang": "en"},
+        {"text": "muss heute noch", "voice": "Anna", "lang": "de"},
+        {"text": "live", "voice": "Samantha", "lang": "en"},
+        {"text": "gehen", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Der Hotfix muss heute noch live gehen",
+      "tags": ["tech-talk"]
+    },
+    {
+      "id": "cs-tech-07",
+      "segments": [
+        {"text": "Ich habe das", "voice": "Anna", "lang": "de"},
+        {"text": "Ticket", "voice": "Samantha", "lang": "en"},
+        {"text": "auf", "voice": "Anna", "lang": "de"},
+        {"text": "in progress", "voice": "Samantha", "lang": "en"},
+        {"text": "gesetzt", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Ich habe das Ticket auf in progress gesetzt",
+      "tags": ["tech-talk"]
+    },
+    {
+      "id": "cs-biz-01",
+      "segments": [
+        {"text": "Das", "voice": "Anna", "lang": "de"},
+        {"text": "Meeting", "voice": "Samantha", "lang": "en"},
+        {"text": "wurde auf naechsten Freitag", "voice": "Anna", "lang": "de"},
+        {"text": "rescheduled", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Das Meeting wurde auf naechsten Freitag rescheduled",
+      "tags": ["business"]
+    },
+    {
+      "id": "cs-biz-02",
+      "segments": [
+        {"text": "Wir brauchen noch ein", "voice": "Anna", "lang": "de"},
+        {"text": "Alignment", "voice": "Samantha", "lang": "en"},
+        {"text": "mit den", "voice": "Anna", "lang": "de"},
+        {"text": "Stakeholdern", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Wir brauchen noch ein Alignment mit den Stakeholdern",
+      "tags": ["business"]
+    },
+    {
+      "id": "cs-biz-03",
+      "segments": [
+        {"text": "Der", "voice": "Anna", "lang": "de"},
+        {"text": "Pitch", "voice": "Samantha", "lang": "en"},
+        {"text": "war gut aber das", "voice": "Anna", "lang": "de"},
+        {"text": "Timing", "voice": "Samantha", "lang": "en"},
+        {"text": "hat nicht gepasst", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Der Pitch war gut aber das Timing hat nicht gepasst",
+      "tags": ["business"]
+    },
+    {
+      "id": "cs-biz-04",
+      "segments": [
+        {"text": "Ich schicke dir ein", "voice": "Anna", "lang": "de"},
+        {"text": "Follow-up", "voice": "Samantha", "lang": "en"},
+        {"text": "nach dem", "voice": "Anna", "lang": "de"},
+        {"text": "Call", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Ich schicke dir ein Follow-up nach dem Call",
+      "tags": ["business"]
+    },
+    {
+      "id": "cs-biz-05",
+      "segments": [
+        {"text": "Die", "voice": "Anna", "lang": "de"},
+        {"text": "Deadline", "voice": "Samantha", "lang": "en"},
+        {"text": "fuer den", "voice": "Anna", "lang": "de"},
+        {"text": "Launch", "voice": "Samantha", "lang": "en"},
+        {"text": "ist naechste Woche", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Die Deadline fuer den Launch ist naechste Woche",
+      "tags": ["business"]
+    },
+    {
+      "id": "cs-biz-06",
+      "segments": [
+        {"text": "Das", "voice": "Anna", "lang": "de"},
+        {"text": "Feedback", "voice": "Samantha", "lang": "en"},
+        {"text": "vom", "voice": "Anna", "lang": "de"},
+        {"text": "Customer", "voice": "Samantha", "lang": "en"},
+        {"text": "war sehr positiv", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Das Feedback vom Customer war sehr positiv",
+      "tags": ["business"]
+    },
+    {
+      "id": "cs-casual-01",
+      "segments": [
+        {"text": "Das war echt ein", "voice": "Anna", "lang": "de"},
+        {"text": "nice Event", "voice": "Samantha", "lang": "en"},
+        {"text": "gestern", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Das war echt ein nice Event gestern",
+      "tags": ["casual"]
+    },
+    {
+      "id": "cs-casual-02",
+      "segments": [
+        {"text": "Ich habe das", "voice": "Anna", "lang": "de"},
+        {"text": "Update", "voice": "Samantha", "lang": "en"},
+        {"text": "schon auf meinem", "voice": "Anna", "lang": "de"},
+        {"text": "Phone", "voice": "Samantha", "lang": "en"},
+        {"text": "installiert", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Ich habe das Update schon auf meinem Phone installiert",
+      "tags": ["casual"]
+    },
+    {
+      "id": "cs-casual-03",
+      "segments": [
+        {"text": "Lass uns morgen", "voice": "Anna", "lang": "de"},
+        {"text": "coffee", "voice": "Samantha", "lang": "en"},
+        {"text": "trinken gehen", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Lass uns morgen coffee trinken gehen",
+      "tags": ["casual"]
+    },
+    {
+      "id": "cs-casual-04",
+      "segments": [
+        {"text": "Das ist so", "voice": "Anna", "lang": "de"},
+        {"text": "random", "voice": "Samantha", "lang": "en"},
+        {"text": "aber echt", "voice": "Anna", "lang": "de"},
+        {"text": "funny", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Das ist so random aber echt funny",
+      "tags": ["casual"]
+    },
+    {
+      "id": "cs-casual-05",
+      "segments": [
+        {"text": "Ich bin gerade so", "voice": "Anna", "lang": "de"},
+        {"text": "busy", "voice": "Samantha", "lang": "en"},
+        {"text": "mit dem ganzen", "voice": "Anna", "lang": "de"},
+        {"text": "Stuff", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Ich bin gerade so busy mit dem ganzen Stuff",
+      "tags": ["casual"]
+    },
+    {
+      "id": "cs-casual-06",
+      "segments": [
+        {"text": "Der", "voice": "Anna", "lang": "de"},
+        {"text": "Look", "voice": "Samantha", "lang": "en"},
+        {"text": "ist echt", "voice": "Anna", "lang": "de"},
+        {"text": "stylish", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Der Look ist echt stylish",
+      "tags": ["casual"]
+    },
+    {
+      "id": "cs-embed-01",
+      "segments": [
+        {"text": "Die", "voice": "Anna", "lang": "de"},
+        {"text": "Cloud Migration", "voice": "Samantha", "lang": "en"},
+        {"text": "ist fast abgeschlossen", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Die Cloud Migration ist fast abgeschlossen",
+      "tags": ["embedded-terms"]
+    },
+    {
+      "id": "cs-embed-02",
+      "segments": [
+        {"text": "Unser", "voice": "Anna", "lang": "de"},
+        {"text": "Machine Learning", "voice": "Samantha", "lang": "en"},
+        {"text": "Modell braucht mehr", "voice": "Anna", "lang": "de"},
+        {"text": "Training Data", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Unser Machine Learning Modell braucht mehr Training Data",
+      "tags": ["embedded-terms"]
+    },
+    {
+      "id": "cs-embed-03",
+      "segments": [
+        {"text": "Die", "voice": "Anna", "lang": "de"},
+        {"text": "User Experience", "voice": "Samantha", "lang": "en"},
+        {"text": "muss deutlich besser werden", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Die User Experience muss deutlich besser werden",
+      "tags": ["embedded-terms"]
+    },
+    {
+      "id": "cs-embed-04",
+      "segments": [
+        {"text": "Das", "voice": "Anna", "lang": "de"},
+        {"text": "Open Source", "voice": "Samantha", "lang": "en"},
+        {"text": "Projekt hat viele", "voice": "Anna", "lang": "de"},
+        {"text": "Contributors", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Das Open Source Projekt hat viele Contributors",
+      "tags": ["embedded-terms"]
+    },
+    {
+      "id": "cs-embed-05",
+      "segments": [
+        {"text": "Wir nutzen", "voice": "Anna", "lang": "de"},
+        {"text": "Continuous Integration", "voice": "Samantha", "lang": "en"},
+        {"text": "fuer alle unsere", "voice": "Anna", "lang": "de"},
+        {"text": "Repositories", "voice": "Samantha", "lang": "en"}
+      ],
+      "groundTruth": "Wir nutzen Continuous Integration fuer alle unsere Repositories",
+      "tags": ["embedded-terms"]
+    },
+    {
+      "id": "cs-embed-06",
+      "segments": [
+        {"text": "Der", "voice": "Anna", "lang": "de"},
+        {"text": "Product Owner", "voice": "Samantha", "lang": "en"},
+        {"text": "hat die", "voice": "Anna", "lang": "de"},
+        {"text": "Roadmap", "voice": "Samantha", "lang": "en"},
+        {"text": "aktualisiert", "voice": "Anna", "lang": "de"}
+      ],
+      "groundTruth": "Der Product Owner hat die Roadmap aktualisiert",
+      "tags": ["embedded-terms"]
+    }
+  ],
+  "punctuation-formatting-de": [
+    {
+      "id": "de-punct-meaning-01",
+      "text": "Komm wir essen Opa",
+      "formattedGroundTruth": "Komm, wir essen, Opa!",
+      "tags": ["meaning-changing"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-meaning-02",
+      "text": "Er will sie nicht",
+      "formattedGroundTruth": "Er will sie nicht.",
+      "tags": ["meaning-changing"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-meaning-03",
+      "text": "Der Lehrer sagt der Schueler ist dumm",
+      "formattedGroundTruth": "Der Lehrer, sagt der Schueler, ist dumm.",
+      "tags": ["meaning-changing"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-meaning-04",
+      "text": "Warten Sie bitte nicht weggehen",
+      "formattedGroundTruth": "Warten Sie bitte, nicht weggehen!",
+      "tags": ["meaning-changing"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-meaning-05",
+      "text": "Es ist Zeit zu essen Kinder",
+      "formattedGroundTruth": "Es ist Zeit zu essen, Kinder!",
+      "tags": ["meaning-changing"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-cap-01",
+      "text": "Die Deutsche Bank hat ihren Sitz in Frankfurt",
+      "formattedGroundTruth": "Die Deutsche Bank hat ihren Sitz in Frankfurt.",
+      "tags": ["capitalization"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-cap-02",
+      "text": "Im Schwarzen Meer gibt es viele seltene Fischarten",
+      "formattedGroundTruth": "Im Schwarzen Meer gibt es viele seltene Fischarten.",
+      "tags": ["capitalization"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-cap-03",
+      "text": "Das Rote Kreuz hilft weltweit bei Katastrophen",
+      "formattedGroundTruth": "Das Rote Kreuz hilft weltweit bei Katastrophen.",
+      "tags": ["capitalization"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-cap-04",
+      "text": "Professor Mueller arbeitet an der Technischen Universitaet Muenchen",
+      "formattedGroundTruth": "Professor Mueller arbeitet an der Technischen Universitaet Muenchen.",
+      "tags": ["capitalization"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-cap-05",
+      "text": "Der Erste Weltkrieg begann im Jahr neunzehnhundertvierzehn",
+      "formattedGroundTruth": "Der Erste Weltkrieg begann im Jahr 1914.",
+      "tags": ["capitalization"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-quest-01",
+      "text": "Wann ist das Meeting Um drei Uhr",
+      "formattedGroundTruth": "Wann ist das Meeting? Um drei Uhr.",
+      "tags": ["question-exclamation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-quest-02",
+      "text": "Hast du den Bericht schon fertig Ja seit gestern",
+      "formattedGroundTruth": "Hast du den Bericht schon fertig? Ja, seit gestern.",
+      "tags": ["question-exclamation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-quest-03",
+      "text": "Das ist fantastisch Wann koennen wir anfangen",
+      "formattedGroundTruth": "Das ist fantastisch! Wann koennen wir anfangen?",
+      "tags": ["question-exclamation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-quest-04",
+      "text": "Warum funktioniert das nicht Hast du die Logs geprueft",
+      "formattedGroundTruth": "Warum funktioniert das nicht? Hast du die Logs geprueft?",
+      "tags": ["question-exclamation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-quest-05",
+      "text": "Unglaublich Das haette ich nie gedacht",
+      "formattedGroundTruth": "Unglaublich! Das haette ich nie gedacht.",
+      "tags": ["question-exclamation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-complex-01",
+      "text": "Die Ergebnisse siehe Tabelle drei sind eindeutig",
+      "formattedGroundTruth": "Die Ergebnisse (siehe Tabelle 3) sind eindeutig.",
+      "tags": ["complex-punctuation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-complex-02",
+      "text": "Herr Mueller und ich kennen uns seit langem sagten beide",
+      "formattedGroundTruth": "\"Herr Mueller und ich kennen uns seit langem\", sagten beide.",
+      "tags": ["complex-punctuation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-complex-03",
+      "text": "Es gibt drei Optionen erstens warten zweitens handeln drittens abbrechen",
+      "formattedGroundTruth": "Es gibt drei Optionen: erstens warten, zweitens handeln, drittens abbrechen.",
+      "tags": ["complex-punctuation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-complex-04",
+      "text": "Der Preis zum Beispiel fuenfzig Euro ist verhandelbar",
+      "formattedGroundTruth": "Der Preis - zum Beispiel fuenfzig Euro - ist verhandelbar.",
+      "tags": ["complex-punctuation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-complex-05",
+      "text": "Frankfurt am Main nicht zu verwechseln mit Frankfurt an der Oder",
+      "formattedGroundTruth": "Frankfurt am Main (nicht zu verwechseln mit Frankfurt an der Oder).",
+      "tags": ["complex-punctuation"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-multi-01",
+      "text": "Der Tag war lang. Zuerst hatten wir ein Meeting. Dann kam die Praesentation. Am Ende waren alle zufrieden",
+      "formattedGroundTruth": "Der Tag war lang. Zuerst hatten wir ein Meeting. Dann kam die Praesentation. Am Ende waren alle zufrieden.",
+      "tags": ["multi-sentence"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-multi-02",
+      "text": "Guten Morgen. Wie geht es Ihnen heute. Ich hoffe Sie hatten ein schoenes Wochenende",
+      "formattedGroundTruth": "Guten Morgen. Wie geht es Ihnen heute? Ich hoffe, Sie hatten ein schoenes Wochenende.",
+      "tags": ["multi-sentence"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-multi-03",
+      "text": "Das Projekt hat drei Phasen. Phase eins ist die Planung. Phase zwei ist die Umsetzung. Phase drei ist der Test",
+      "formattedGroundTruth": "Das Projekt hat drei Phasen. Phase eins ist die Planung. Phase zwei ist die Umsetzung. Phase drei ist der Test.",
+      "tags": ["multi-sentence"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-multi-04",
+      "text": "Bitte beachten Sie die folgenden Punkte. Erstens kommen Sie puenktlich. Zweitens bringen Sie Ihre Unterlagen mit",
+      "formattedGroundTruth": "Bitte beachten Sie die folgenden Punkte. Erstens: kommen Sie puenktlich. Zweitens: bringen Sie Ihre Unterlagen mit.",
+      "tags": ["multi-sentence"],
+      "voice": "Anna"
+    },
+    {
+      "id": "de-punct-multi-05",
+      "text": "Die Sonne scheint. Es ist warm draussen. Ein perfekter Tag fuer einen Spaziergang",
+      "formattedGroundTruth": "Die Sonne scheint. Es ist warm draussen. Ein perfekter Tag fuer einen Spaziergang.",
+      "tags": ["multi-sentence"],
+      "voice": "Anna"
+    }
+  ],
+  "punctuation-formatting-en": [
+    {
+      "id": "en-punct-meaning-01",
+      "text": "Lets eat grandma",
+      "formattedGroundTruth": "Let's eat, Grandma!",
+      "tags": ["meaning-changing"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-meaning-02",
+      "text": "A woman without her man is nothing",
+      "formattedGroundTruth": "A woman: without her, man is nothing.",
+      "tags": ["meaning-changing"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-meaning-03",
+      "text": "Stop clubbing baby seals",
+      "formattedGroundTruth": "Stop clubbing, baby seals!",
+      "tags": ["meaning-changing"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-meaning-04",
+      "text": "I like cooking my family and my pets",
+      "formattedGroundTruth": "I like cooking, my family, and my pets.",
+      "tags": ["meaning-changing"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-meaning-05",
+      "text": "Most of the time travelers worry about their luggage",
+      "formattedGroundTruth": "Most of the time, travelers worry about their luggage.",
+      "tags": ["meaning-changing"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-cap-01",
+      "text": "The White House released a statement on Tuesday",
+      "formattedGroundTruth": "The White House released a statement on Tuesday.",
+      "tags": ["capitalization"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-cap-02",
+      "text": "Apple announced the new iPhone at their annual event",
+      "formattedGroundTruth": "Apple announced the new iPhone at their annual event.",
+      "tags": ["capitalization"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-cap-03",
+      "text": "Professor Smith works at the Massachusetts Institute of Technology",
+      "formattedGroundTruth": "Professor Smith works at the Massachusetts Institute of Technology.",
+      "tags": ["capitalization"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-cap-04",
+      "text": "The United Nations held a summit in New York City",
+      "formattedGroundTruth": "The United Nations held a summit in New York City.",
+      "tags": ["capitalization"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-cap-05",
+      "text": "World War Two ended in nineteen forty-five",
+      "formattedGroundTruth": "World War Two ended in 1945.",
+      "tags": ["capitalization"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-quest-01",
+      "text": "When is the meeting At three o'clock",
+      "formattedGroundTruth": "When is the meeting? At three o'clock.",
+      "tags": ["question-exclamation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-quest-02",
+      "text": "Have you finished the report Yes since yesterday",
+      "formattedGroundTruth": "Have you finished the report? Yes, since yesterday.",
+      "tags": ["question-exclamation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-quest-03",
+      "text": "That is amazing When can we start",
+      "formattedGroundTruth": "That is amazing! When can we start?",
+      "tags": ["question-exclamation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-quest-04",
+      "text": "Why isn't this working Have you checked the logs",
+      "formattedGroundTruth": "Why isn't this working? Have you checked the logs?",
+      "tags": ["question-exclamation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-quest-05",
+      "text": "Incredible I never would have thought that",
+      "formattedGroundTruth": "Incredible! I never would have thought that.",
+      "tags": ["question-exclamation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-complex-01",
+      "text": "The results see table three are conclusive",
+      "formattedGroundTruth": "The results (see table 3) are conclusive.",
+      "tags": ["complex-punctuation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-complex-02",
+      "text": "We have known each other for years said both of them",
+      "formattedGroundTruth": "\"We have known each other for years,\" said both of them.",
+      "tags": ["complex-punctuation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-complex-03",
+      "text": "There are three options first wait second act third cancel",
+      "formattedGroundTruth": "There are three options: first, wait; second, act; third, cancel.",
+      "tags": ["complex-punctuation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-complex-04",
+      "text": "The price for example fifty dollars is negotiable",
+      "formattedGroundTruth": "The price - for example, fifty dollars - is negotiable.",
+      "tags": ["complex-punctuation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-complex-05",
+      "text": "New York not to be confused with New York City",
+      "formattedGroundTruth": "New York (not to be confused with New York City).",
+      "tags": ["complex-punctuation"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-multi-01",
+      "text": "The day was long. First we had a meeting. Then came the presentation. In the end everyone was satisfied",
+      "formattedGroundTruth": "The day was long. First, we had a meeting. Then came the presentation. In the end, everyone was satisfied.",
+      "tags": ["multi-sentence"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-multi-02",
+      "text": "Good morning. How are you today. I hope you had a nice weekend",
+      "formattedGroundTruth": "Good morning. How are you today? I hope you had a nice weekend.",
+      "tags": ["multi-sentence"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-multi-03",
+      "text": "The project has three phases. Phase one is planning. Phase two is execution. Phase three is testing",
+      "formattedGroundTruth": "The project has three phases. Phase one is planning. Phase two is execution. Phase three is testing.",
+      "tags": ["multi-sentence"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-multi-04",
+      "text": "Please note the following points. First arrive on time. Second bring your documents",
+      "formattedGroundTruth": "Please note the following points. First: arrive on time. Second: bring your documents.",
+      "tags": ["multi-sentence"],
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-punct-multi-05",
+      "text": "The sun is shining. It is warm outside. A perfect day for a walk",
+      "formattedGroundTruth": "The sun is shining. It is warm outside. A perfect day for a walk.",
+      "tags": ["multi-sentence"],
+      "voice": "Samantha"
+    }
+  ],
+  "number-formatting-de": [
+    {
+      "id": "de-num-card-01",
+      "text": "dreihundertzweiundfuenfzig Teilnehmer haben sich angemeldet",
+      "groundTruth": "352 Teilnehmer haben sich angemeldet",
+      "alternativeGroundTruths": ["dreihundertzweiundfuenfzig Teilnehmer haben sich angemeldet"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-card-02",
+      "text": "Das Unternehmen hat zweitausendvierhundert Mitarbeiter",
+      "groundTruth": "Das Unternehmen hat 2400 Mitarbeiter",
+      "alternativeGroundTruths": ["Das Unternehmen hat zweitausendvierhundert Mitarbeiter"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-card-03",
+      "text": "Es waren siebzehn Personen im Raum",
+      "groundTruth": "Es waren 17 Personen im Raum",
+      "alternativeGroundTruths": ["Es waren siebzehn Personen im Raum"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-card-04",
+      "text": "Der Umsatz betrug fuenfhundertachtundsiebzigtausend Euro",
+      "groundTruth": "Der Umsatz betrug 578000 Euro",
+      "alternativeGroundTruths": ["Der Umsatz betrug 578.000 Euro", "Der Umsatz betrug fuenfhundertachtundsiebzigtausend Euro"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-ord-01",
+      "text": "der fuenfzehnte Maerz zweitausendsechsundzwanzig",
+      "groundTruth": "der 15. Maerz 2026",
+      "alternativeGroundTruths": ["der fuenfzehnte Maerz 2026", "der fuenfzehnte Maerz zweitausendsechsundzwanzig"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-ord-02",
+      "text": "Sie wohnt im dritten Stock",
+      "groundTruth": "Sie wohnt im 3. Stock",
+      "alternativeGroundTruths": ["Sie wohnt im dritten Stock"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-ord-03",
+      "text": "das ist der zweite Versuch",
+      "groundTruth": "das ist der 2. Versuch",
+      "alternativeGroundTruths": ["das ist der zweite Versuch"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-ord-04",
+      "text": "im einundzwanzigsten Jahrhundert",
+      "groundTruth": "im 21. Jahrhundert",
+      "alternativeGroundTruths": ["im einundzwanzigsten Jahrhundert"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-date-01",
+      "text": "am fuenfzehnten Maerz zweitausendsechsundzwanzig",
+      "groundTruth": "am 15. Maerz 2026",
+      "alternativeGroundTruths": ["am 15.03.2026", "am fuenfzehnten Maerz zweitausendsechsundzwanzig"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-date-02",
+      "text": "vom dritten Januar bis zum siebten Februar",
+      "groundTruth": "vom 3. Januar bis zum 7. Februar",
+      "alternativeGroundTruths": ["vom dritten Januar bis zum siebten Februar"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-date-03",
+      "text": "die Frist endet am einunddreissigsten Dezember",
+      "groundTruth": "die Frist endet am 31. Dezember",
+      "alternativeGroundTruths": ["die Frist endet am einunddreissigsten Dezember"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-date-04",
+      "text": "geboren am zwanzigsten April neunzehnhundertfuenfundachtzig",
+      "groundTruth": "geboren am 20. April 1985",
+      "alternativeGroundTruths": ["geboren am 20.04.1985", "geboren am zwanzigsten April neunzehnhundertfuenfundachtzig"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-time-01",
+      "text": "um vierzehn Uhr dreissig",
+      "groundTruth": "um 14:30",
+      "alternativeGroundTruths": ["um vierzehn Uhr dreissig", "um 14:30 Uhr"],
+      "tags": ["time"],
+      "metadata": {"numberType": "time"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-time-02",
+      "text": "der Termin ist um neun Uhr fuenfundvierzig",
+      "groundTruth": "der Termin ist um 9:45",
+      "alternativeGroundTruths": ["der Termin ist um neun Uhr fuenfundvierzig", "der Termin ist um 9:45 Uhr"],
+      "tags": ["time"],
+      "metadata": {"numberType": "time"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-time-03",
+      "text": "Abflug um dreiundzwanzig Uhr fuenfzehn",
+      "groundTruth": "Abflug um 23:15",
+      "alternativeGroundTruths": ["Abflug um dreiundzwanzig Uhr fuenfzehn", "Abflug um 23:15 Uhr"],
+      "tags": ["time"],
+      "metadata": {"numberType": "time"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-phone-01",
+      "text": "null eins sieben eins drei vier fuenf sechs sieben acht neun",
+      "groundTruth": "0171 345 6789",
+      "alternativeGroundTruths": ["0171 3456789", "01713456789"],
+      "tags": ["phone"],
+      "metadata": {"numberType": "phone"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-phone-02",
+      "text": "rufen Sie an unter null acht null null eins zwei drei vier fuenf sechs sieben",
+      "groundTruth": "rufen Sie an unter 0800 1234567",
+      "alternativeGroundTruths": ["rufen Sie an unter 0800 123 4567"],
+      "tags": ["phone"],
+      "metadata": {"numberType": "phone"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-phone-03",
+      "text": "meine Nummer ist plus neunundvierzig eins sieben eins zwei drei vier fuenf sechs",
+      "groundTruth": "meine Nummer ist +49 171 234 56",
+      "alternativeGroundTruths": ["meine Nummer ist +49 171 2345 6", "meine Nummer ist +491712345 6"],
+      "tags": ["phone"],
+      "metadata": {"numberType": "phone"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-curr-01",
+      "text": "neunundneunzig Euro neunundneunzig",
+      "groundTruth": "99,99 Euro",
+      "alternativeGroundTruths": ["99,99 EUR", "neunundneunzig Euro neunundneunzig"],
+      "tags": ["currency"],
+      "metadata": {"numberType": "currency"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-curr-02",
+      "text": "der Preis betraegt zweitausendfuenfhundert Euro",
+      "groundTruth": "der Preis betraegt 2500 Euro",
+      "alternativeGroundTruths": ["der Preis betraegt 2.500 Euro", "der Preis betraegt zweitausendfuenfhundert Euro"],
+      "tags": ["currency"],
+      "metadata": {"numberType": "currency"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-curr-03",
+      "text": "die Miete kostet achthundertfuenfzig Euro pro Monat",
+      "groundTruth": "die Miete kostet 850 Euro pro Monat",
+      "alternativeGroundTruths": ["die Miete kostet achthundertfuenfzig Euro pro Monat"],
+      "tags": ["currency"],
+      "metadata": {"numberType": "currency"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-pct-01",
+      "text": "fuenfundzwanzig Prozent der Befragten stimmten zu",
+      "groundTruth": "25% der Befragten stimmten zu",
+      "alternativeGroundTruths": ["25 Prozent der Befragten stimmten zu", "fuenfundzwanzig Prozent der Befragten stimmten zu"],
+      "tags": ["percentage"],
+      "metadata": {"numberType": "percentage"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-pct-02",
+      "text": "die Rendite stieg um drei Komma fuenf Prozent",
+      "groundTruth": "die Rendite stieg um 3,5%",
+      "alternativeGroundTruths": ["die Rendite stieg um 3,5 Prozent", "die Rendite stieg um drei Komma fuenf Prozent"],
+      "tags": ["percentage"],
+      "metadata": {"numberType": "percentage"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-mixed-01",
+      "text": "am fuenfzehnten Maerz um vierzehn Uhr dreissig kommen dreihundert Gaeste",
+      "groundTruth": "am 15. Maerz um 14:30 kommen 300 Gaeste",
+      "alternativeGroundTruths": ["am 15. Maerz um 14:30 Uhr kommen 300 Gaeste"],
+      "tags": ["mixed"],
+      "metadata": {"numberType": "mixed"},
+      "voice": "Anna"
+    },
+    {
+      "id": "de-num-mixed-02",
+      "text": "Rechnung Nummer viertausenddreihundertzweiundzwanzig vom dritten Januar ueber neunhundertneunundneunzig Euro",
+      "groundTruth": "Rechnung Nummer 4322 vom 3. Januar ueber 999 Euro",
+      "alternativeGroundTruths": ["Rechnung Nr. 4322 vom 3. Januar ueber 999 Euro", "Rechnung Nummer 4322 vom 3. Januar ueber 999,00 Euro"],
+      "tags": ["mixed"],
+      "metadata": {"numberType": "mixed"},
+      "voice": "Anna"
+    }
+  ],
+  "number-formatting-en": [
+    {
+      "id": "en-num-card-01",
+      "text": "three hundred and fifty two participants registered",
+      "groundTruth": "352 participants registered",
+      "alternativeGroundTruths": ["three hundred and fifty-two participants registered"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-card-02",
+      "text": "the company has two thousand four hundred employees",
+      "groundTruth": "the company has 2,400 employees",
+      "alternativeGroundTruths": ["the company has 2400 employees", "the company has two thousand four hundred employees"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-card-03",
+      "text": "there were seventeen people in the room",
+      "groundTruth": "there were 17 people in the room",
+      "alternativeGroundTruths": ["there were seventeen people in the room"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-card-04",
+      "text": "revenue reached five hundred seventy eight thousand dollars",
+      "groundTruth": "revenue reached $578,000",
+      "alternativeGroundTruths": ["revenue reached 578,000 dollars", "revenue reached five hundred seventy-eight thousand dollars"],
+      "tags": ["cardinal"],
+      "metadata": {"numberType": "cardinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-ord-01",
+      "text": "the fifteenth of March two thousand twenty six",
+      "groundTruth": "the 15th of March 2026",
+      "alternativeGroundTruths": ["the fifteenth of March 2026", "the fifteenth of March two thousand twenty-six"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-ord-02",
+      "text": "she lives on the third floor",
+      "groundTruth": "she lives on the 3rd floor",
+      "alternativeGroundTruths": ["she lives on the third floor"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-ord-03",
+      "text": "this is the second attempt",
+      "groundTruth": "this is the 2nd attempt",
+      "alternativeGroundTruths": ["this is the second attempt"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-ord-04",
+      "text": "in the twenty first century",
+      "groundTruth": "in the 21st century",
+      "alternativeGroundTruths": ["in the twenty-first century"],
+      "tags": ["ordinal"],
+      "metadata": {"numberType": "ordinal"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-date-01",
+      "text": "on March fifteenth two thousand twenty six",
+      "groundTruth": "on March 15, 2026",
+      "alternativeGroundTruths": ["on March 15th, 2026", "on March fifteenth, two thousand twenty-six"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-date-02",
+      "text": "from January third to February seventh",
+      "groundTruth": "from January 3 to February 7",
+      "alternativeGroundTruths": ["from January 3rd to February 7th", "from January third to February seventh"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-date-03",
+      "text": "the deadline is December thirty first",
+      "groundTruth": "the deadline is December 31",
+      "alternativeGroundTruths": ["the deadline is December 31st", "the deadline is December thirty-first"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-date-04",
+      "text": "born on April twentieth nineteen eighty five",
+      "groundTruth": "born on April 20, 1985",
+      "alternativeGroundTruths": ["born on April 20th, 1985", "born on April twentieth, nineteen eighty-five"],
+      "tags": ["date"],
+      "metadata": {"numberType": "date"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-time-01",
+      "text": "at two thirty in the afternoon",
+      "groundTruth": "at 2:30 PM",
+      "alternativeGroundTruths": ["at 2:30 p.m.", "at two thirty in the afternoon"],
+      "tags": ["time"],
+      "metadata": {"numberType": "time"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-time-02",
+      "text": "the appointment is at nine forty five",
+      "groundTruth": "the appointment is at 9:45",
+      "alternativeGroundTruths": ["the appointment is at nine forty-five", "the appointment is at 9:45 AM"],
+      "tags": ["time"],
+      "metadata": {"numberType": "time"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-time-03",
+      "text": "departure at eleven fifteen PM",
+      "groundTruth": "departure at 11:15 PM",
+      "alternativeGroundTruths": ["departure at 11:15 p.m.", "departure at eleven fifteen PM"],
+      "tags": ["time"],
+      "metadata": {"numberType": "time"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-phone-01",
+      "text": "call us at one eight hundred five five five zero one two three",
+      "groundTruth": "call us at 1-800-555-0123",
+      "alternativeGroundTruths": ["call us at 1 800 555 0123", "call us at 18005550123"],
+      "tags": ["phone"],
+      "metadata": {"numberType": "phone"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-phone-02",
+      "text": "my number is five five five three four five six seven eight nine",
+      "groundTruth": "my number is 555-345-6789",
+      "alternativeGroundTruths": ["my number is 555 345 6789", "my number is (555) 345-6789"],
+      "tags": ["phone"],
+      "metadata": {"numberType": "phone"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-phone-03",
+      "text": "reach me at plus one two one two five five five zero one nine eight",
+      "groundTruth": "reach me at +1 212-555-0198",
+      "alternativeGroundTruths": ["reach me at +1 (212) 555-0198", "reach me at +12125550198"],
+      "tags": ["phone"],
+      "metadata": {"numberType": "phone"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-curr-01",
+      "text": "ninety nine dollars and ninety nine cents",
+      "groundTruth": "$99.99",
+      "alternativeGroundTruths": ["99.99 dollars", "ninety-nine dollars and ninety-nine cents"],
+      "tags": ["currency"],
+      "metadata": {"numberType": "currency"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-curr-02",
+      "text": "the price is two thousand five hundred dollars",
+      "groundTruth": "the price is $2,500",
+      "alternativeGroundTruths": ["the price is $2500", "the price is two thousand five hundred dollars"],
+      "tags": ["currency"],
+      "metadata": {"numberType": "currency"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-curr-03",
+      "text": "rent is eight hundred fifty dollars per month",
+      "groundTruth": "rent is $850 per month",
+      "alternativeGroundTruths": ["rent is 850 dollars per month", "rent is eight hundred fifty dollars per month"],
+      "tags": ["currency"],
+      "metadata": {"numberType": "currency"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-pct-01",
+      "text": "twenty five percent of respondents agreed",
+      "groundTruth": "25% of respondents agreed",
+      "alternativeGroundTruths": ["25 percent of respondents agreed", "twenty-five percent of respondents agreed"],
+      "tags": ["percentage"],
+      "metadata": {"numberType": "percentage"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-pct-02",
+      "text": "the yield increased by three point five percent",
+      "groundTruth": "the yield increased by 3.5%",
+      "alternativeGroundTruths": ["the yield increased by 3.5 percent", "the yield increased by three point five percent"],
+      "tags": ["percentage"],
+      "metadata": {"numberType": "percentage"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-mixed-01",
+      "text": "on March fifteenth at two thirty three hundred guests will arrive",
+      "groundTruth": "on March 15 at 2:30, 300 guests will arrive",
+      "alternativeGroundTruths": ["on March 15th at 2:30 PM, 300 guests will arrive"],
+      "tags": ["mixed"],
+      "metadata": {"numberType": "mixed"},
+      "voice": "Samantha"
+    },
+    {
+      "id": "en-num-mixed-02",
+      "text": "invoice number four thousand three hundred twenty two from January third for nine hundred ninety nine dollars",
+      "groundTruth": "invoice number 4322 from January 3 for $999",
+      "alternativeGroundTruths": ["invoice #4322 from January 3rd for $999", "invoice number 4322 from January 3 for 999 dollars"],
+      "tags": ["mixed"],
+      "metadata": {"numberType": "mixed"},
+      "voice": "Samantha"
+    }
   ]
 }
