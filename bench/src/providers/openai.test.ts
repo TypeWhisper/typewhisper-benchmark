@@ -19,4 +19,10 @@ describe("OpenAIProvider", () => {
     expect(await provider.isAvailable()).toBe(false);
     if (originalKey) process.env.OPENAI_API_KEY = originalKey;
   });
+
+  it("supports explicit and auto language modes", () => {
+    const provider = new OpenAIProvider();
+    expect(provider.supportsLanguage("whisper-1", "de")).toBe(true);
+    expect(provider.supportsLanguage("gpt-4o-transcribe", "auto")).toBe(true);
+  });
 });
