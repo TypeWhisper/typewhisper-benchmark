@@ -1,6 +1,7 @@
 import { createRequire } from "module";
 import { cpus } from "os";
 import { existsSync } from "fs";
+import { fileURLToPath } from "url";
 import { join, resolve } from "path";
 import type {
   STTProvider,
@@ -54,10 +55,18 @@ const MODEL_REGISTRY: Record<string, ModelEntry> = {
   },
 };
 
-function getModelsBasePath(): string {
-  return resolve(
-    process.env.SHERPA_ONNX_MODELS_PATH || "models/sherpa-onnx"
-  );
+const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
+const DEFAULT_MODELS_BASE_PATH = fileURLToPath(
+  new URL("../../../models/sherpa-onnx", import.meta.url)
+);
+
+export function getSherpaOnnxModelsBasePath(
+  env: NodeJS.ProcessEnv = process.env
+): string {
+  if (!env.SHERPA_ONNX_MODELS_PATH) {
+    return DEFAULT_MODELS_BASE_PATH;
+  }
+  return resolve(REPO_ROOT, env.SHERPA_ONNX_MODELS_PATH);
 }
 
 function getNumThreads(): number {
@@ -67,7 +76,7 @@ function getNumThreads(): number {
 }
 
 function modelFilesExist(entry: ModelEntry): boolean {
-  const basePath = getModelsBasePath();
+  const basePath = getSherpaOnnxModelsBasePath();
   const dir = join(basePath, entry.dirName);
   if (!existsSync(dir)) return false;
   const { encoder, decoder, joiner, tokens } = entry.files;
@@ -96,6 +105,14 @@ export class SherpaOnnxProvider implements STTProvider {
     return Object.values(MODEL_REGISTRY).some(modelFilesExist);
   }
 
+  supportsLanguage(model: string, language: string): boolean {
+    const entry = MODEL_REGISTRY[model];
+    if (!entry) return false;
+    if (entry.languages == null) return true;
+    if (language === "auto") return false;
+    return entry.languages.includes(language);
+  }
+
   async transcribe(
     audio: AudioInput,
     model: string
@@ -118,10 +135,10 @@ export class SherpaOnnxProvider implements STTProvider {
       );
     }
 
-    if (entry.languages && !entry.languages.includes(audio.language)) {
+    if (!this.supportsLanguage(model, audio.language)) {
       throw new Error(
         `Model '${model}' does not support language '${audio.language}'. ` +
-          `Supported: ${entry.languages.join(", ")}`
+          `Supported: ${entry.languages?.join(", ") ?? "auto"}`
       );
     }
 
@@ -160,7 +177,7 @@ export class SherpaOnnxProvider implements STTProvider {
     let recognizer = this.recognizerCache.get(cacheKey);
     if (recognizer) return recognizer;
 
-    const basePath = getModelsBasePath();
+    const basePath = getSherpaOnnxModelsBasePath();
     const dir = join(basePath, entry.dirName);
     const numThreads = getNumThreads();
 
