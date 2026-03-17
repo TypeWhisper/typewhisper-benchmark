@@ -1,6 +1,10 @@
 import type { ModelRanking } from "../types";
 
 export function Leaderboard({ rankings }: { rankings: ModelRanking[] }) {
+  const hasPunctuation = rankings.some(r => r.avgPunctuationScore != null);
+  const hasFormatting = rankings.some(r => r.avgFormattingScore != null);
+  const hasSkips = rankings.some(r => r.skipCount > 0);
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -11,9 +15,12 @@ export function Leaderboard({ rankings }: { rankings: ModelRanking[] }) {
             <th className="p-3">Type</th>
             <th className="p-3 text-right">WER (norm)</th>
             <th className="p-3 text-right">CER</th>
+            {hasPunctuation && <th className="p-3 text-right">Punct</th>}
+            {hasFormatting && <th className="p-3 text-right">Format</th>}
             <th className="p-3 text-right">RTF</th>
             <th className="p-3 text-right">Cost/h</th>
             <th className="p-3 text-right">Tests</th>
+            {hasSkips && <th className="p-3 text-right">Skips</th>}
             <th className="p-3 text-right">Errors</th>
           </tr>
         </thead>
@@ -38,11 +45,26 @@ export function Leaderboard({ rankings }: { rankings: ModelRanking[] }) {
               </td>
               <td className="p-3 text-right font-mono">{(r.avgWerNormalized * 100).toFixed(1)}%</td>
               <td className="p-3 text-right font-mono">{(r.avgCer * 100).toFixed(1)}%</td>
+              {hasPunctuation && (
+                <td className="p-3 text-right font-mono">
+                  {r.avgPunctuationScore != null ? `${(r.avgPunctuationScore * 100).toFixed(1)}%` : "-"}
+                </td>
+              )}
+              {hasFormatting && (
+                <td className="p-3 text-right font-mono">
+                  {r.avgFormattingScore != null ? `${(r.avgFormattingScore * 100).toFixed(1)}%` : "-"}
+                </td>
+              )}
               <td className="p-3 text-right font-mono">{r.avgRealtimeFactor.toFixed(3)}x</td>
               <td className="p-3 text-right font-mono">
                 {r.costPerHourAudio != null ? `$${r.costPerHourAudio.toFixed(2)}` : "free"}
               </td>
               <td className="p-3 text-right">{r.totalTests}</td>
+              {hasSkips && (
+                <td className="p-3 text-right">
+                  {r.skipCount > 0 ? <span className="text-amber-300">{r.skipCount}</span> : "0"}
+                </td>
+              )}
               <td className="p-3 text-right">
                 {r.errorCount > 0 ? <span className="text-red-400">{r.errorCount}</span> : "0"}
               </td>
