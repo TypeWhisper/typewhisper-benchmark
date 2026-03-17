@@ -21,6 +21,10 @@ export class GroqProvider implements STTProvider {
     return !!process.env.GROQ_API_KEY;
   }
 
+  supportsLanguage(_model: string, _language: string): boolean {
+    return true;
+  }
+
   async transcribe(
     audio: AudioInput,
     model: string
@@ -31,7 +35,7 @@ export class GroqProvider implements STTProvider {
     const response = await client.audio.transcriptions.create({
       model,
       file: createReadStream(audio.filePath),
-      language: audio.language,
+      ...(audio.language !== "auto" && { language: audio.language }),
     });
 
     const durationMs = Math.round(performance.now() - start);
