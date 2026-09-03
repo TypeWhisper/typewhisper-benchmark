@@ -1,12 +1,14 @@
 node_modules/
 dist/
-bench/results/
+coverage/
 .env
-*.local
+.env.*
+!.env.example
 .DS_Store
-bench/audio/datasets/
-bench/models/
-models/
-visualizer/public/data/benchmark-results.json
-.claude/
-*.aiff
+
+# Run artifacts are immutable build outputs and must not be committed by accident.
+artifacts/
+
+# Audio enters the repository only after review and an explicit force-add.
+corpus/audio/*
+!corpus/audio/.gitkeep
