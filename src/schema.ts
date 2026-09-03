@@ -147,14 +147,14 @@ const RelativeAudioPathSchema = z.string().min(1).refine(
   "Audio path must be relative and remain inside the corpus directory"
 );
 
-const RightsSchema = z.object({
+export const RightsSchema = z.object({
   license: z.string().min(1),
   redistributable: z.boolean(),
   attribution: z.string().min(1).optional(),
   termsUrl: z.string().url().optional(),
 });
 
-const SourceSchema = z
+export const SourceSchema = z
   .object({
     kind: z.enum([
       "self-recorded",
@@ -166,6 +166,18 @@ const SourceSchema = z
     url: z.string().url().optional(),
     retrievedAt: z.string().datetime().optional(),
     datasetVersion: z.string().min(1).optional(),
+    subset: z.string().min(1).optional(),
+    split: z.string().min(1).optional(),
+    sampleId: z.string().min(1).optional(),
+    segment: z
+      .object({
+        startMs: z.number().nonnegative(),
+        endMs: z.number().positive(),
+      })
+      .refine((segment) => segment.endMs > segment.startMs, {
+        message: "Segment end must be after its start",
+      })
+      .optional(),
     rights: RightsSchema,
   })
   .superRefine((source, context) => {
@@ -186,18 +198,40 @@ const SourceSchema = z
         message: "web-reference requires a retrieval timestamp",
       });
     }
+    if (source.kind === "public-dataset") {
+      for (const field of [
+        "datasetVersion",
+        "subset",
+        "split",
+        "sampleId",
+      ] as const) {
+        if (!source[field]) {
+          context.addIssue({
+            code: "custom",
+            path: [field],
+            message: `public-dataset requires ${field}`,
+          });
+        }
+      }
+    }
   });
 
-const ExpectedValueSchema = z.object({
+export const ExpectedValueSchema = z.object({
   id: InternalIdSchema,
   expected: z.string().min(1),
   alternatives: z.array(z.string().min(1)).default([]),
 });
 
-const CodeExpectationSchema = z.object({
+export const CodeExpectationSchema = z.object({
   language: z.string().min(1),
   reference: z.string().min(1),
   tokens: z.array(ExpectedValueSchema).default([]),
+});
+
+export const EvaluationExpectationsSchema = z.object({
+  numbers: z.array(ExpectedValueSchema).default([]),
+  properNouns: z.array(ExpectedValueSchema).default([]),
+  code: CodeExpectationSchema.optional(),
 });
 
 export const CorpusItemSchema = z
@@ -218,13 +252,10 @@ export const CorpusItemSchema = z
       alternatives: z.array(z.string().min(1)).default([]),
       formatted: z.string().min(1).optional(),
     }),
-    expectations: z
-      .object({
-        numbers: z.array(ExpectedValueSchema).default([]),
-        properNouns: z.array(ExpectedValueSchema).default([]),
-        code: CodeExpectationSchema.optional(),
-      })
-      .default({ numbers: [], properNouns: [] }),
+    expectations: EvaluationExpectationsSchema.default({
+      numbers: [],
+      properNouns: [],
+    }),
     source: SourceSchema,
     recording: z
       .object({
@@ -246,6 +277,126 @@ export const CorpusItemSchema = z
         path: ["recording"],
         message: "self-recorded audio requires recording metadata",
       });
+    }
+  });
+
+export const RecordingCategorySchema = z.enum([
+  "everyday-dictation",
+  "formatting",
+  "numbers",
+  "proper-nouns",
+  "code",
+  "mixed-hard",
+]);
+
+export const RecordingPromptSchema = z.object({
+  id: InternalIdSchema,
+  language: z.string().min(2),
+  category: RecordingCategorySchema,
+  spokenText: z.string().min(1),
+  formattedReference: z.string().min(1),
+  expectations: EvaluationExpectationsSchema.default({
+    numbers: [],
+    properNouns: [],
+  }),
+  notes: z.array(z.string().min(1)).default([]),
+});
+
+export const RecordingCategoryTargetsSchema = z.object({
+  "everyday-dictation": z.number().int().nonnegative(),
+  formatting: z.number().int().nonnegative(),
+  numbers: z.number().int().nonnegative(),
+  "proper-nouns": z.number().int().nonnegative(),
+  code: z.number().int().nonnegative(),
+  "mixed-hard": z.number().int().nonnegative(),
+});
+
+export const RecordingLanguagePackSchema = z.object({
+  language: z.string().min(2),
+  tier: z.enum(["anchor", "coverage"]),
+  selfRecordedTarget: z.number().int().positive(),
+  webReferenceTarget: z.number().int().positive(),
+  categoryTargets: RecordingCategoryTargetsSchema,
+  nativeReviewRequired: z.literal(true),
+});
+
+export const RecordingPlanSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    id: InternalIdSchema,
+    status: z.enum(["draft", "ready"]),
+    languagePacks: z.array(RecordingLanguagePackSchema).min(1),
+    prompts: z.array(RecordingPromptSchema).min(1),
+  })
+  .superRefine((plan, context) => {
+    for (const id of duplicateIds(plan.prompts)) {
+      context.addIssue({
+        code: "custom",
+        path: ["prompts"],
+        message: `Duplicate recording prompt ID: ${id}`,
+      });
+    }
+
+    const packLanguages = new Set<string>();
+    plan.languagePacks.forEach((pack, index) => {
+      if (packLanguages.has(pack.language)) {
+        context.addIssue({
+          code: "custom",
+          path: ["languagePacks", index, "language"],
+          message: `Duplicate language pack: ${pack.language}`,
+        });
+      }
+      packLanguages.add(pack.language);
+    });
+
+    for (const prompt of plan.prompts) {
+      if (!packLanguages.has(prompt.language)) {
+        context.addIssue({
+          code: "custom",
+          path: ["prompts"],
+          message: `Prompt ${prompt.id} uses unknown language pack ${prompt.language}`,
+        });
+      }
+    }
+
+    for (const pack of plan.languagePacks) {
+      const actual = plan.prompts.filter(
+        (prompt) => prompt.language === pack.language
+      ).length;
+      if (actual !== pack.selfRecordedTarget) {
+        context.addIssue({
+          code: "custom",
+          path: ["languagePacks"],
+          message: `Language pack ${pack.language} declares ${pack.selfRecordedTarget} self-recorded prompts but contains ${actual}`,
+        });
+      }
+
+      const declaredCategoryTotal = Object.values(pack.categoryTargets).reduce(
+        (sum, count) => sum + count,
+        0
+      );
+      if (declaredCategoryTotal !== pack.selfRecordedTarget) {
+        context.addIssue({
+          code: "custom",
+          path: ["languagePacks"],
+          message: `Language pack ${pack.language} category targets total ${declaredCategoryTotal}, expected ${pack.selfRecordedTarget}`,
+        });
+      }
+
+      for (const category of RecordingCategorySchema.options) {
+        const categoryActual = plan.prompts.filter(
+          (prompt) =>
+            prompt.language === pack.language && prompt.category === category
+        ).length;
+        const categoryTarget = pack.categoryTargets[category];
+        if (categoryActual !== categoryTarget) {
+          context.addIssue({
+            code: "custom",
+            path: ["languagePacks"],
+            message: `Language pack ${pack.language} declares ${categoryTarget} ${category} prompts but contains ${categoryActual}`,
+          });
+        }
+      }
     }
   });
 
@@ -349,6 +500,8 @@ export type TargetDefinition = z.infer<typeof TargetDefinitionSchema>;
 export type Catalog = z.infer<typeof CatalogSchema>;
 export type CorpusItem = z.infer<typeof CorpusItemSchema>;
 export type CorpusManifest = z.infer<typeof CorpusManifestSchema>;
+export type RecordingPrompt = z.infer<typeof RecordingPromptSchema>;
+export type RecordingPlan = z.infer<typeof RecordingPlanSchema>;
 export type BenchmarkProfile = z.infer<typeof BenchmarkProfileSchema>;
 export type RunEnvironment = z.infer<typeof RunEnvironmentSchema>;
 export type ResultEvent = z.infer<typeof ResultEventSchema>;

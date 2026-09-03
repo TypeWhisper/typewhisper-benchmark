@@ -29,9 +29,11 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
     console.log(`  models:   ${workspace.catalog.models.length}`);
     console.log(`  targets:  ${workspace.catalog.targets.length}`);
     console.log(`  cases:    ${workspace.corpus.items.length}`);
+    console.log(`  prompts:  ${workspace.recordingPlan.prompts.length}`);
     console.log(`  profiles: ${workspace.profiles.length}`);
     console.log(`  catalog:  ${workspace.catalogDigest}`);
     console.log(`  corpus:   ${workspace.corpusDigest}`);
+    console.log(`  rec-plan: ${workspace.recordingPlanDigest}`);
     return;
   }
 

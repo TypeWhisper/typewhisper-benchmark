@@ -25,6 +25,10 @@ The initial benchmark evaluates word error rate (WER), character error rate
 (CER), formatting, numbers, proper nouns, and code dictation. These dimensions
 are declared in profile and sample metadata rather than inferred from filenames.
 
+Core v1 covers `de-DE`, `en-US`, `ja-JP`, `zh-CN`, `fr-FR`, and `es-ES`.
+German and English are the initial anchor packs; the other languages begin as
+native-reviewed coverage packs.
+
 ## Current status
 
 The repository contains only the V2 foundation: schemas, catalog validation,
@@ -42,3 +46,6 @@ npm run benchmark -- validate
 See [docs/architecture.md](docs/architecture.md) for the design.
 Corpus contribution examples are documented in
 [docs/corpus-authoring.md](docs/corpus-authoring.md).
+The planned recording mix is in [docs/corpus-plan.md](docs/corpus-plan.md), and
+web-source admission is defined in
+[docs/web-audio-policy.md](docs/web-audio-policy.md).

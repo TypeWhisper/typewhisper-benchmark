@@ -5,9 +5,11 @@ import {
   BenchmarkProfileSchema,
   CatalogSchema,
   CorpusManifestSchema,
+  RecordingPlanSchema,
   type BenchmarkProfile,
   type Catalog,
   type CorpusManifest,
+  type RecordingPlan,
 } from "./schema.js";
 import { contentDigest } from "./identity.js";
 
@@ -83,9 +85,11 @@ export interface ValidatedWorkspace {
   root: string;
   catalog: Catalog;
   corpus: CorpusManifest;
+  recordingPlan: RecordingPlan;
   profiles: BenchmarkProfile[];
   catalogDigest: string;
   corpusDigest: string;
+  recordingPlanDigest: string;
 }
 
 export async function loadWorkspace(
@@ -97,6 +101,9 @@ export async function loadWorkspace(
   );
   const corpus = CorpusManifestSchema.parse(
     await readJson(resolve(root, "corpus", "manifest.json"))
+  );
+  const recordingPlan = RecordingPlanSchema.parse(
+    await readJson(resolve(root, "corpus", "recording-plan.v1.json"))
   );
 
   const profilesDirectory = resolve(root, "profiles");
@@ -117,8 +124,10 @@ export async function loadWorkspace(
     root,
     catalog,
     corpus,
+    recordingPlan,
     profiles,
     catalogDigest: contentDigest(catalog),
     corpusDigest: contentDigest(corpus),
+    recordingPlanDigest: contentDigest(recordingPlan),
   };
 }

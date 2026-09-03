@@ -80,6 +80,10 @@ without being publishable alongside the results.
     "name": "Stable source title",
     "url": "https://example.com/source",
     "retrievedAt": "2026-09-03T00:00:00.000Z",
+    "segment": {
+      "startMs": 125000,
+      "endMs": 137500
+    },
     "rights": {
       "license": "Exact license identifier or terms description",
       "redistributable": true,
@@ -105,3 +109,7 @@ without being publishable alongside the results.
    genuinely apply.
 6. Record source and rights information.
 7. Run `npm run validate` before admitting the item to a profile.
+
+For dataset-backed samples, also record the immutable dataset version, subset,
+split, and sample ID. See `docs/web-audio-policy.md` for the complete admission
+rules and initial source allocation.

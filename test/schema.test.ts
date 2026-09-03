@@ -3,6 +3,7 @@ import {
   CatalogSchema,
   CorpusItemSchema,
   CorpusManifestSchema,
+  RecordingPlanSchema,
   ResultEventSchema,
 } from "../src/schema.js";
 import { fixtureCatalog, fixtureCorpus } from "./fixtures.js";
@@ -61,6 +62,96 @@ describe("corpus schema", () => {
         items: [],
       })
     ).toThrow(/cannot be empty/);
+  });
+
+  it("requires stable public-dataset locators", () => {
+    const item = fixtureCorpus().items[0]!;
+    expect(() =>
+      CorpusItemSchema.parse({
+        ...item,
+        source: {
+          kind: "public-dataset",
+          name: "Dataset fixture",
+          url: "https://example.com/dataset",
+          rights: { license: "CC-BY-4.0", redistributable: true },
+        },
+      })
+    ).toThrow(/requires datasetVersion/);
+  });
+});
+
+describe("recording plan schema", () => {
+  it("accepts a concrete recording prompt", () => {
+    const plan = RecordingPlanSchema.parse({
+      schemaVersion: 1,
+      id: "recording-plan-v1",
+      status: "draft",
+      languagePacks: [
+        {
+          language: "de-DE",
+          tier: "anchor",
+          selfRecordedTarget: 1,
+          webReferenceTarget: 1,
+          categoryTargets: {
+            "everyday-dictation": 0,
+            formatting: 0,
+            numbers: 1,
+            "proper-nouns": 0,
+            code: 0,
+            "mixed-hard": 0,
+          },
+          nativeReviewRequired: true,
+        },
+      ],
+      prompts: [
+        {
+          id: "de-own-001",
+          language: "de-DE",
+          category: "numbers",
+          spokenText: "Der Termin ist am zwölften September um neun Uhr dreißig",
+          formattedReference: "Der Termin ist am 12. September um 9:30 Uhr.",
+          expectations: {
+            numbers: [{ id: "time", expected: "9:30" }],
+          },
+        },
+      ],
+    });
+    expect(plan.prompts).toHaveLength(1);
+  });
+
+  it("rejects duplicate prompt IDs", () => {
+    const prompt = {
+      id: "de-own-001",
+      language: "de-DE",
+      category: "everyday-dictation",
+      spokenText: "Bitte verschiebe den Termin auf morgen",
+      formattedReference: "Bitte verschiebe den Termin auf morgen.",
+    };
+    expect(() =>
+      RecordingPlanSchema.parse({
+        schemaVersion: 1,
+        id: "recording-plan-v1",
+        status: "draft",
+        languagePacks: [
+          {
+            language: "de-DE",
+            tier: "anchor",
+            selfRecordedTarget: 2,
+            webReferenceTarget: 1,
+            categoryTargets: {
+              "everyday-dictation": 2,
+              formatting: 0,
+              numbers: 0,
+              "proper-nouns": 0,
+              code: 0,
+              "mixed-hard": 0,
+            },
+            nativeReviewRequired: true,
+          },
+        ],
+        prompts: [prompt, prompt],
+      })
+    ).toThrow(/Duplicate recording prompt ID/);
   });
 });
 
