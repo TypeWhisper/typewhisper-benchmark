@@ -51,6 +51,11 @@ describe("recorder server", () => {
     });
     expect(recorderHead.status).toBe(200);
     expect(recorderHead.headers.get("content-type")).toContain("text/html");
+
+    const results = await fetch(`${baseUrl}/results?release=results-detail-v2`);
+    const resultsHtml = await results.text();
+    expect(resultsHtml).toContain('/styles.css?v=results-detail-v2');
+    expect(resultsHtml).toContain('/results.js?v=results-detail-v2');
   });
 
   it("stores audio takes only in the configured storage root", async () => {
