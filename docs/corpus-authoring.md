@@ -110,6 +110,25 @@ without being publishable alongside the results.
 6. Record source and rights information.
 7. Run `npm run validate` before admitting the item to a profile.
 
+## Private self-recorded corpus
+
+Self-recorded voice samples marked `redistributable: false` must not be added to
+the public Git repository. After the speaker has approved a batch, admit its
+single selected take per prompt into the persistent private corpus instead:
+
+```bash
+npm run admit:recordings -- de-de-pilot-01 \
+  --storage /home/marco/.local/state/typewhisper-benchmark \
+  --reviewer marco \
+  --device "Exact device or transparent capture-path description" \
+  --environment "Room and relevant recording conditions"
+```
+
+The command preserves the original encoded bytes, records measured media
+metadata and SHA-256, stores audio with mode `0600`, and atomically writes the
+private draft manifest under the storage root. It refuses ambiguous batches
+with zero or multiple takes. The public repository receives no voice data.
+
 For dataset-backed samples, also record the immutable dataset version, subset,
 split, and sample ID. See `docs/web-audio-policy.md` for the complete admission
 rules and initial source allocation.
