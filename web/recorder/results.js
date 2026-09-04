@@ -9,8 +9,19 @@ const metricLabels = {
 
 const lowerIsBetter = new Set(["wer", "cer"]);
 
+const categoryLabels = {
+  "everyday-dictation": "Alltag",
+  formatting: "Formatierung",
+  numbers: "Zahlen",
+  "proper-nouns": "Eigennamen",
+  code: "Code",
+  "mixed-hard": "Gemischt",
+};
+
 const elements = {
   caseCount: document.querySelector("#caseCount"),
+  caseList: document.querySelector("#caseList"),
+  caseTagSelect: document.querySelector("#caseTagSelect"),
   corpusValue: document.querySelector("#corpusValue"),
   directionNote: document.querySelector("#directionNote"),
   emptyResults: document.querySelector("#emptyResults"),
@@ -207,6 +218,224 @@ function renderMatrix() {
   });
 }
 
+function categoryForCase(testCase) {
+  return testCase.tags.find((tag) => categoryLabels[tag]) ?? testCase.tags[0] ?? "test";
+}
+
+function diffTokens(value) {
+  return value.match(/\s+|[\p{L}\p{N}_]+|[^\s\p{L}\p{N}_]/gu) ?? [];
+}
+
+function comparableToken(value) {
+  return value.normalize("NFKC").toLocaleLowerCase("und");
+}
+
+function alignTranscript(reference, transcript) {
+  const referenceTokens = diffTokens(reference).filter((token) => !/^\s+$/u.test(token));
+  const transcriptTokens = diffTokens(transcript).filter((token) => !/^\s+$/u.test(token));
+  const rows = Array.from({ length: referenceTokens.length + 1 }, () =>
+    Array(transcriptTokens.length + 1).fill(0)
+  );
+
+  for (let left = referenceTokens.length - 1; left >= 0; left -= 1) {
+    for (let right = transcriptTokens.length - 1; right >= 0; right -= 1) {
+      rows[left][right] =
+        comparableToken(referenceTokens[left]) === comparableToken(transcriptTokens[right])
+          ? rows[left + 1][right + 1] + 1
+          : Math.max(rows[left + 1][right], rows[left][right + 1]);
+    }
+  }
+
+  const matchedTranscript = new Set();
+  const matchedReference = new Set();
+  let left = 0;
+  let right = 0;
+  while (left < referenceTokens.length && right < transcriptTokens.length) {
+    if (comparableToken(referenceTokens[left]) === comparableToken(transcriptTokens[right])) {
+      matchedReference.add(left);
+      matchedTranscript.add(right);
+      left += 1;
+      right += 1;
+    } else if (rows[left + 1][right] >= rows[left][right + 1]) {
+      left += 1;
+    } else {
+      right += 1;
+    }
+  }
+
+  return {
+    transcriptTokens,
+    matchedTranscript,
+    missing: referenceTokens.filter((_, index) => !matchedReference.has(index)),
+  };
+}
+
+function renderTranscriptDiff(reference, transcript) {
+  const wrapper = document.createElement("div");
+  const transcriptLine = document.createElement("p");
+  const { transcriptTokens, matchedTranscript, missing } = alignTranscript(
+    reference,
+    transcript
+  );
+  transcriptLine.className = "transcript-copy";
+  transcriptTokens.forEach((token, index) => {
+    if (index > 0 && !/^[,.;:!?%)}\]]$/u.test(token)) {
+      transcriptLine.append(document.createTextNode(" "));
+    }
+    const span = document.createElement("span");
+    span.className = matchedTranscript.has(index) ? "diff-exact" : "diff-changed";
+    span.textContent = token;
+    transcriptLine.append(span);
+  });
+  wrapper.append(transcriptLine);
+
+  if (missing.length > 0) {
+    const missingLine = document.createElement("p");
+    const label = document.createElement("span");
+    const deleted = document.createElement("del");
+    missingLine.className = "missing-copy";
+    label.textContent = "Fehlt im Ergebnis";
+    deleted.textContent = missing.join(" ");
+    missingLine.append(label, deleted);
+    wrapper.append(missingLine);
+  }
+  return wrapper;
+}
+
+function metricById(result, metricId) {
+  return result.metrics.find((metric) => metric.metricId === metricId);
+}
+
+function renderCaseResult(testCase, result, bestWer) {
+  const target = targetById(result.targetId);
+  const card = document.createElement("article");
+  const heading = document.createElement("header");
+  const title = document.createElement("div");
+  const name = document.createElement("h4");
+  const runtime = document.createElement("span");
+  const wer = metricById(result, "wer");
+  card.className = "case-result";
+  name.textContent = target?.displayName ?? result.targetId;
+  runtime.textContent =
+    result.durationMs === undefined
+      ? `Durchlauf ${result.trial}`
+      : `${formatLatency(result.durationMs)} · Durchlauf ${result.trial}`;
+  title.append(name, runtime);
+  heading.append(title);
+  if (wer && wer.value === bestWer) {
+    const best = document.createElement("span");
+    best.className = "best-result";
+    best.textContent = "Niedrigste WER";
+    heading.append(best);
+  }
+  card.append(heading, renderTranscriptDiff(testCase.reference.verbatim, result.transcript));
+
+  const metrics = document.createElement("dl");
+  metrics.className = "case-metrics";
+  result.metrics.forEach((metric) => {
+    const group = document.createElement("div");
+    const label = document.createElement("dt");
+    const value = document.createElement("dd");
+    label.textContent = metricLabels[metric.metricId] ?? metric.metricId;
+    value.textContent = formatMetric(metric.metricId, metric.value);
+    group.append(label, value);
+    metrics.append(group);
+  });
+  card.append(metrics);
+  return card;
+}
+
+function renderCases() {
+  const language = elements.languageSelect.value;
+  const selectedTag = elements.caseTagSelect.value;
+  const cases = (snapshot.cases ?? []).filter(
+    (testCase) =>
+      testCase.language === language &&
+      (selectedTag === "all" || testCase.tags.includes(selectedTag))
+  );
+  elements.caseList.replaceChildren();
+
+  if (cases.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "table-empty";
+    empty.textContent =
+      snapshot.cases?.length > 0
+        ? "Für diesen Filter gibt es keine Einzeltests."
+        : "Dieser Snapshot enthält noch keine freigegebenen Einzeltest-Details.";
+    elements.caseList.append(empty);
+    return;
+  }
+
+  cases.forEach((testCase, index) => {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    const number = document.createElement("span");
+    const copy = document.createElement("span");
+    const label = document.createElement("span");
+    const reference = document.createElement("strong");
+    const werValues = testCase.results
+      .map((result) => metricById(result, "wer")?.value)
+      .filter((value) => value !== undefined);
+    const range = document.createElement("span");
+    details.className = "case-item";
+    details.open = index === 0;
+    number.className = "case-number";
+    number.textContent = String(index + 1).padStart(2, "0");
+    copy.className = "case-summary-copy";
+    label.className = "case-category";
+    label.textContent = `${categoryLabels[categoryForCase(testCase)] ?? categoryForCase(testCase)} · ${testCase.id}`;
+    reference.textContent = testCase.reference.verbatim;
+    copy.append(label, reference);
+    range.className = "case-range";
+    if (werValues.length > 0) {
+      const minimum = Math.min(...werValues);
+      const maximum = Math.max(...werValues);
+      range.textContent =
+        minimum === maximum
+          ? `${formatMetric("wer", minimum)} WER`
+          : `${formatMetric("wer", minimum)}–${formatMetric("wer", maximum)} WER`;
+    } else {
+      range.textContent = "Keine WER";
+    }
+    summary.append(number, copy, range);
+
+    const body = document.createElement("div");
+    const references = document.createElement("div");
+    const raw = document.createElement("div");
+    const rawLabel = document.createElement("span");
+    const rawText = document.createElement("p");
+    body.className = "case-body";
+    references.className = "case-references";
+    rawLabel.textContent = "Gesprochen · Rohtext";
+    rawText.textContent = testCase.reference.verbatim;
+    raw.append(rawLabel, rawText);
+    references.append(raw);
+    if (
+      testCase.reference.formatted &&
+      testCase.reference.formatted !== testCase.reference.verbatim
+    ) {
+      const formatted = document.createElement("div");
+      const formattedLabel = document.createElement("span");
+      const formattedText = document.createElement("p");
+      formattedLabel.textContent = "Erwartetes Zielformat";
+      formattedText.textContent = testCase.reference.formatted;
+      formatted.append(formattedLabel, formattedText);
+      references.append(formatted);
+    }
+    body.append(references);
+
+    const resultGrid = document.createElement("div");
+    const bestWer = werValues.length > 0 ? Math.min(...werValues) : undefined;
+    resultGrid.className = "case-results-grid";
+    testCase.results.forEach((result) =>
+      resultGrid.append(renderCaseResult(testCase, result, bestWer))
+    );
+    body.append(resultGrid);
+    details.append(summary, body);
+    elements.caseList.append(details);
+  });
+}
+
 function renderReady() {
   elements.snapshotStatus.textContent = "Veröffentlicht";
   elements.snapshotStatus.classList.add("is-ready");
@@ -239,12 +468,28 @@ function renderReady() {
     elements.metricSelect.append(option);
   });
 
+  elements.caseTagSelect.replaceChildren();
+  const allOption = document.createElement("option");
+  allOption.value = "all";
+  allOption.textContent = "Alle Tests";
+  elements.caseTagSelect.append(allOption);
+  const categoryTags = [
+    ...new Set((snapshot.cases ?? []).map((testCase) => categoryForCase(testCase))),
+  ];
+  categoryTags.forEach((tag) => {
+    const option = document.createElement("option");
+    option.value = tag;
+    option.textContent = categoryLabels[tag] ?? tag;
+    elements.caseTagSelect.append(option);
+  });
+
   elements.emptyResults.hidden = true;
   elements.readyResults.hidden = false;
   elements.resultsStatus.textContent = `Snapshot ${snapshot.snapshotId.slice(0, 10)} · ausschließlich freigegebene Runs`;
   renderLeaderboard();
   renderLatency();
   renderMatrix();
+  renderCases();
 }
 
 function renderEmpty(planned) {
@@ -283,7 +528,9 @@ elements.languageSelect.addEventListener("change", () => {
   renderLeaderboard();
   renderLatency();
   renderMatrix();
+  renderCases();
 });
 elements.metricSelect.addEventListener("change", renderLeaderboard);
+elements.caseTagSelect.addEventListener("change", renderCases);
 
 initialize();

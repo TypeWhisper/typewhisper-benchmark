@@ -135,6 +135,31 @@
             </table>
           </div>
         </section>
+
+        <section class="dashboard-card cases-card" aria-labelledby="casesTitle">
+          <div class="card-heading cases-heading">
+            <div>
+              <p class="review-kicker">Einzeltest-Evidenz</p>
+              <h2 id="casesTitle">Was wurde tatsächlich erkannt?</h2>
+              <p class="cases-intro">
+                Gesprochener Rohtext, Zielformat und alle Modellantworten aus
+                demselben freigegebenen Snapshot.
+              </p>
+            </div>
+            <label class="case-filter">
+              Kategorie
+              <select id="caseTagSelect">
+                <option value="all">Alle Tests</option>
+              </select>
+            </label>
+          </div>
+          <div class="case-legend" aria-label="Legende">
+            <span><i class="legend-mark exact"></i>Übereinstimmung</span>
+            <span><i class="legend-mark changed"></i>Abweichung</span>
+            <span>WER und CER: niedriger ist besser</span>
+          </div>
+          <div class="case-list" id="caseList"></div>
+        </section>
       </div>
 
       <p class="system-status dashboard-status" id="resultsStatus" aria-live="polite">

@@ -478,6 +478,49 @@ export const VisualizationLatencySchema = z.object({
   p95Ms: z.number().finite().nonnegative().optional(),
 });
 
+export const VisualizationCaseMetricSchema = z
+  .object({
+    metricId: MetricIdSchema,
+    value: z.number().finite().nonnegative(),
+    errors: z.number().int().nonnegative().optional(),
+    units: z.number().int().positive().optional(),
+  })
+  .superRefine((metric, context) => {
+    if (!["wer", "cer"].includes(metric.metricId) && metric.value > 1) {
+      context.addIssue({
+        code: "custom",
+        path: ["value"],
+        message: `${metric.metricId} scores must be between 0 and 1`,
+      });
+    }
+    if ((metric.errors === undefined) !== (metric.units === undefined)) {
+      context.addIssue({
+        code: "custom",
+        message: "Case metric errors and units must be provided together",
+      });
+    }
+  });
+
+export const VisualizationCaseResultSchema = z.object({
+  targetId: InternalIdSchema,
+  runId: InternalIdSchema,
+  trial: z.number().int().positive(),
+  transcript: z.string(),
+  durationMs: z.number().finite().nonnegative().optional(),
+  metrics: z.array(VisualizationCaseMetricSchema),
+});
+
+export const VisualizationCaseSchema = z.object({
+  id: InternalIdSchema,
+  language: z.string().min(2),
+  tags: z.array(InternalIdSchema),
+  reference: z.object({
+    verbatim: z.string().min(1),
+    formatted: z.string().min(1).optional(),
+  }),
+  results: z.array(VisualizationCaseResultSchema).min(1),
+});
+
 export const VisualizationSnapshotSchema = z
   .object({
     schemaVersion: z.literal(1),
@@ -492,6 +535,7 @@ export const VisualizationSnapshotSchema = z
     targets: z.array(VisualizationTargetSchema).min(1),
     aggregates: z.array(VisualizationAggregateSchema).min(1),
     latency: z.array(VisualizationLatencySchema).default([]),
+    cases: z.array(VisualizationCaseSchema).default([]),
   })
   .superRefine((snapshot, context) => {
     for (const id of duplicateIds(snapshot.targets)) {
@@ -587,6 +631,58 @@ export const VisualizationSnapshotSchema = z
         });
       }
       latencyKeys.add(key);
+    });
+
+    if (snapshot.cases.length > 0 && snapshot.cases.length !== snapshot.caseCount) {
+      context.addIssue({
+        code: "custom",
+        path: ["cases"],
+        message: "Visualization case details must match the declared case count",
+      });
+    }
+    const caseIds = new Set<string>();
+    snapshot.cases.forEach((testCase, caseIndex) => {
+      if (caseIds.has(testCase.id)) {
+        context.addIssue({
+          code: "custom",
+          path: ["cases", caseIndex, "id"],
+          message: `Duplicate visualization case: ${testCase.id}`,
+        });
+      }
+      caseIds.add(testCase.id);
+      if (!languages.has(testCase.language)) {
+        context.addIssue({
+          code: "custom",
+          path: ["cases", caseIndex, "language"],
+          message: `Unknown visualization case language: ${testCase.language}`,
+        });
+      }
+      const resultKeys = new Set<string>();
+      testCase.results.forEach((result, resultIndex) => {
+        if (!targetIds.has(result.targetId)) {
+          context.addIssue({
+            code: "custom",
+            path: ["cases", caseIndex, "results", resultIndex, "targetId"],
+            message: `Unknown visualization case target: ${result.targetId}`,
+          });
+        }
+        if (!snapshot.runIds.includes(result.runId)) {
+          context.addIssue({
+            code: "custom",
+            path: ["cases", caseIndex, "results", resultIndex, "runId"],
+            message: `Unknown visualization case run: ${result.runId}`,
+          });
+        }
+        const key = `${result.targetId}:${result.trial}`;
+        if (resultKeys.has(key)) {
+          context.addIssue({
+            code: "custom",
+            path: ["cases", caseIndex, "results", resultIndex],
+            message: `Duplicate visualization case result: ${key}`,
+          });
+        }
+        resultKeys.add(key);
+      });
     });
   });
 

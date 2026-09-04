@@ -105,6 +105,25 @@ describe("snapshot scoring", () => {
     expect(snapshot.targets).toHaveLength(1);
     expect(snapshot.aggregates.find((entry) => entry.metricId === "formatting")?.value).toBe(1);
     expect(snapshot.latency[0]?.medianMs).toBe(200);
+    expect(snapshot.cases).toEqual([
+      expect.objectContaining({
+        id: "fixture-de-1",
+        reference: expect.objectContaining({
+          verbatim: "TypeWhisper kostet im Beispiel zwölf Euro.",
+        }),
+        results: [
+          expect.objectContaining({
+            targetId: "fixture-target",
+            runId: "fixture-run",
+            transcript: "TypeWhisper kostet im Beispiel 12 Euro.",
+            durationMs: 200,
+            metrics: expect.arrayContaining([
+              expect.objectContaining({ metricId: "wer", value: 0 }),
+            ]),
+          }),
+        ],
+      }),
+    ]);
     expect(snapshot.snapshotId).toMatch(/^[a-f0-9]{64}$/);
   });
 

@@ -254,6 +254,44 @@ export function createVisualizationSnapshot(options: {
       revision: model.revision,
     };
   });
+  const runIdsByTarget = new Map(
+    kits.map((kit, index) => [kit.targetId, bundles[index]!.manifest.runId])
+  );
+  const targetOrder = new Map(targetIds.map((targetId, index) => [targetId, index]));
+  const cases: VisualizationSnapshot["cases"] = selectedItems.map((item) => ({
+    id: item.id,
+    language: item.language,
+    tags: item.tags,
+    reference: {
+      verbatim: item.references.verbatim,
+      ...(item.references.formatted
+        ? { formatted: item.references.formatted }
+        : {}),
+    },
+    results: scored
+      .filter((entry) => entry.result.caseId === item.id)
+      .sort(
+        (left, right) =>
+          targetOrder.get(left.result.targetId)! -
+            targetOrder.get(right.result.targetId)! ||
+          left.result.trial - right.result.trial
+      )
+      .map((entry) => ({
+        targetId: entry.result.targetId,
+        runId: runIdsByTarget.get(entry.result.targetId)!,
+        trial: entry.result.trial,
+        transcript: entry.result.transcript!,
+        ...(entry.result.durationMs === undefined
+          ? {}
+          : { durationMs: entry.result.durationMs }),
+        metrics: entry.outcomes.map((outcome) => ({
+          metricId: outcome.metricId,
+          value: outcome.value,
+          ...(outcome.errors === undefined ? {} : { errors: outcome.errors }),
+          ...(outcome.units === undefined ? {} : { units: outcome.units }),
+        })),
+      })),
+  }));
   const generatedAt = options.generatedAt ?? new Date().toISOString();
   const snapshotContent = {
     schemaVersion: 1 as const,
@@ -267,6 +305,7 @@ export function createVisualizationSnapshot(options: {
     targets,
     aggregates,
     latency,
+    cases,
   };
   return VisualizationSnapshotSchema.parse({
     ...snapshotContent,
