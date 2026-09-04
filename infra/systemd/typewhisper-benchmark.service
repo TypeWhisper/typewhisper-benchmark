@@ -5,7 +5,7 @@ After=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/home/marco/.local/share/typewhisper-benchmark/current
-EnvironmentFile=/home/marco/.config/typewhisper-benchmark/app.env
+EnvironmentFile=/home/marco/.local/share/typewhisper-benchmark/current/app.env
 Environment=PATH=/home/linuxbrew/.linuxbrew/opt/node@24/bin:/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin
 ExecStart=/home/linuxbrew/.linuxbrew/opt/node@24/bin/node dist/recorder-server.js
 Restart=always

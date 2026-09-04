@@ -25,12 +25,10 @@ The protected web interface is available at:
 
 `https://typewhisper-benchmark.hlab.cloud/upload`
 
-For automation on macOS, Windows, or Linux, configure credentials in the local
-shell and use the cross-platform Node uploader:
+For automation on macOS, Windows, or Linux, use the cross-platform Node
+uploader from a machine that can pass the reverse proxy protection:
 
 ```bash
-export BENCHMARK_UPLOAD_USERNAME=benchmark
-export BENCHMARK_UPLOAD_PASSWORD='<password>'
 npm run upload:run -- path/to/run.bundle.json
 ```
 

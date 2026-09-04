@@ -8,8 +8,6 @@ import {
   extensionForMimeType,
 } from "../src/recorder-server.js";
 
-const authorization = `Basic ${Buffer.from("benchmark:test-password").toString("base64")}`;
-
 describe("recorder server", () => {
   let storageRoot: string;
   let server: ReturnType<typeof createRecorderServer>;
@@ -17,10 +15,7 @@ describe("recorder server", () => {
 
   beforeEach(async () => {
     storageRoot = await mkdtemp(join(tmpdir(), "typewhisper-recorder-test-"));
-    server = createRecorderServer(process.cwd(), storageRoot, {
-      username: "benchmark",
-      password: "test-password",
-    });
+    server = createRecorderServer(process.cwd(), storageRoot);
     await new Promise<void>((resolveListen) =>
       server.listen(0, "127.0.0.1", resolveListen)
     );
@@ -39,27 +34,20 @@ describe("recorder server", () => {
     expect(extensionForMimeType("text/plain")).toBeUndefined();
   });
 
-  it("keeps health public and protects the application", async () => {
+  it("serves health and the application without a second app login", async () => {
     const health = await fetch(`${baseUrl}/api/health`);
     expect(health.status).toBe(200);
     expect(await health.json()).toMatchObject({ ok: true, batches: 1 });
 
     const recorder = await fetch(`${baseUrl}/`);
-    expect(recorder.status).toBe(401);
-    expect(recorder.headers.get("www-authenticate")).toContain("TypeWhisper Benchmark");
+    expect(recorder.status).toBe(200);
     expect(recorder.headers.get("x-content-type-options")).toBe("nosniff");
-
-    const authenticatedRecorder = await fetch(`${baseUrl}/`, {
-      headers: { Authorization: authorization },
-    });
-    expect(authenticatedRecorder.status).toBe(200);
-    expect(authenticatedRecorder.headers.get("content-security-policy")).toContain(
+    expect(recorder.headers.get("content-security-policy")).toContain(
       "frame-ancestors 'none'"
     );
 
     const recorderHead = await fetch(`${baseUrl}/results`, {
       method: "HEAD",
-      headers: { Authorization: authorization },
     });
     expect(recorderHead.status).toBe(200);
     expect(recorderHead.headers.get("content-type")).toContain("text/html");
@@ -71,7 +59,6 @@ describe("recorder server", () => {
       {
         method: "POST",
         headers: {
-          Authorization: authorization,
           "Content-Type": "audio/webm;codecs=opus",
         },
         body: Buffer.from("fixture-audio"),
@@ -127,7 +114,6 @@ describe("recorder server", () => {
       fetch(`${baseUrl}/api/uploads/runs`, {
         method: "POST",
         headers: {
-          Authorization: authorization,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(bundle),
@@ -145,9 +131,7 @@ describe("recorder server", () => {
     expect(second.status).toBe(201);
     expect(await second.json()).toMatchObject({ duplicate: true });
 
-    const listing = await fetch(`${baseUrl}/api/uploads/runs`, {
-      headers: { Authorization: authorization },
-    });
+    const listing = await fetch(`${baseUrl}/api/uploads/runs`);
     const payload = (await listing.json()) as { uploads: unknown[] };
     expect(payload.uploads).toHaveLength(1);
   });

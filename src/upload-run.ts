@@ -6,8 +6,6 @@ import { ExternalRunBundleSchema } from "./schema.js";
 export async function uploadRunBundle(options: {
   path: string;
   baseUrl: string;
-  username: string;
-  password: string;
 }): Promise<unknown> {
   const raw = await readFile(options.path);
   let decoded: unknown;
@@ -17,15 +15,10 @@ export async function uploadRunBundle(options: {
     throw new Error(`${basename(options.path)} is not valid JSON`);
   }
   const bundle = ExternalRunBundleSchema.parse(decoded);
-  const authorization = Buffer.from(
-    `${options.username}:${options.password}`,
-    "utf8"
-  ).toString("base64");
   const endpoint = new URL("/api/uploads/runs", options.baseUrl);
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${authorization}`,
       "Content-Type": "application/json",
     },
     body: raw,
@@ -48,19 +41,9 @@ async function main(args = process.argv.slice(2)): Promise<void> {
   const baseUrl =
     process.env.BENCHMARK_UPLOAD_URL ??
     "https://typewhisper-benchmark.hlab.cloud";
-  const username = process.env.BENCHMARK_UPLOAD_USERNAME;
-  const password = process.env.BENCHMARK_UPLOAD_PASSWORD;
-  if (!username || !password) {
-    throw new Error(
-      "Set BENCHMARK_UPLOAD_USERNAME and BENCHMARK_UPLOAD_PASSWORD before uploading"
-    );
-  }
-
   const receipt = await uploadRunBundle({
     path,
     baseUrl,
-    username,
-    password,
   });
   console.log(JSON.stringify(receipt, null, 2));
 }

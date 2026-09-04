@@ -1,4 +1,4 @@
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash } from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import {
   mkdir,
@@ -94,11 +94,6 @@ interface SavedTake {
   url: string;
 }
 
-export interface RecorderAuth {
-  username: string;
-  password: string;
-}
-
 export function extensionForMimeType(mimeType: string): string | undefined {
   return MIME_EXTENSIONS[mimeType.split(";", 1)[0]!.trim().toLowerCase()];
 }
@@ -109,44 +104,6 @@ function isInside(root: string, candidate: string): boolean {
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function equalSecret(actual: string, expected: string): boolean {
-  const actualBuffer = Buffer.from(actual);
-  const expectedBuffer = Buffer.from(expected);
-  return (
-    actualBuffer.length === expectedBuffer.length &&
-    timingSafeEqual(actualBuffer, expectedBuffer)
-  );
-}
-
-function isAuthorized(request: IncomingMessage, auth?: RecorderAuth): boolean {
-  if (!auth) return true;
-  const header = request.headers.authorization;
-  if (!header?.startsWith("Basic ")) return false;
-
-  try {
-    const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
-    const separator = decoded.indexOf(":");
-    if (separator < 0) return false;
-    return (
-      equalSecret(decoded.slice(0, separator), auth.username) &&
-      equalSecret(decoded.slice(separator + 1), auth.password)
-    );
-  } catch {
-    return false;
-  }
-}
-
-function requestAuthorization(response: ServerResponse): void {
-  response.writeHead(401, {
-    "Cache-Control": "no-store",
-    "Content-Type": "text/plain; charset=utf-8",
-    "Referrer-Policy": "no-referrer",
-    "WWW-Authenticate": 'Basic realm="TypeWhisper Benchmark", charset="UTF-8"',
-    "X-Content-Type-Options": "nosniff",
-  });
-  response.end("Authentication required");
 }
 
 async function readJson(path: string): Promise<unknown> {
@@ -501,8 +458,7 @@ async function sendStatic(
 
 export function createRecorderServer(
   root = process.cwd(),
-  storage = root,
-  auth?: RecorderAuth
+  storage = root
 ) {
   const workspaceRoot = resolve(root);
   const storageRoot = resolve(storage);
@@ -510,11 +466,6 @@ export function createRecorderServer(
     try {
       const url = new URL(request.url ?? "/", "http://localhost");
       const parts = url.pathname.split("/").filter(Boolean).map(decodeURIComponent);
-
-      if (url.pathname !== "/api/health" && !isAuthorized(request, auth)) {
-        requestAuthorization(response);
-        return;
-      }
 
       if (request.method === "GET" && url.pathname === "/api/batches") {
         sendJson(response, 200, {
@@ -644,7 +595,6 @@ export async function startRecorderServer(options?: {
   storageRoot?: string;
   host?: string;
   port?: number;
-  auth?: RecorderAuth;
 }) {
   const root = options?.root ?? process.cwd();
   const storageRoot = options?.storageRoot ?? root;
@@ -662,7 +612,7 @@ export async function startRecorderServer(options?: {
     recursive: true,
     mode: 0o700,
   });
-  const server = createRecorderServer(root, storageRoot, options?.auth);
+  const server = createRecorderServer(root, storageRoot);
 
   await new Promise<void>((resolveListen, reject) => {
     server.once("error", reject);
@@ -683,19 +633,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const configuredPort = Number(process.env.RECORDER_PORT ?? DEFAULT_PORT);
   const configuredHost = process.env.RECORDER_HOST ?? DEFAULT_HOST;
   const configuredStorageRoot = process.env.RECORDER_STORAGE_ROOT;
-  const configuredUsername = process.env.RECORDER_AUTH_USERNAME;
-  const configuredPassword = process.env.RECORDER_AUTH_PASSWORD;
-  if (Boolean(configuredUsername) !== Boolean(configuredPassword)) {
-    throw new Error(
-      "RECORDER_AUTH_USERNAME and RECORDER_AUTH_PASSWORD must be configured together"
-    );
-  }
   startRecorderServer({
     host: configuredHost,
     port: configuredPort,
-    ...(configuredUsername && configuredPassword
-      ? { auth: { username: configuredUsername, password: configuredPassword } }
-      : {}),
     ...(configuredStorageRoot ? { storageRoot: configuredStorageRoot } : {}),
   })
     .then(({ url }) => {

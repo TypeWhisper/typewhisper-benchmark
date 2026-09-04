@@ -2,7 +2,8 @@
 
 The production service combines the recording room, run intake, and result
 visualizer. It binds to `192.168.199.253:4192`; the reverse proxy terminates TLS
-for `typewhisper-benchmark.hlab.cloud`.
+and supplies the access protection for `typewhisper-benchmark.hlab.cloud`. The
+application deliberately does not add a second username/password prompt.
 
 Run the installer from the repository root:
 
@@ -16,9 +17,10 @@ the `current` symlink, installs the user systemd service, and waits for the
 health endpoint.
 
 Persistent recordings, pending uploads, and published snapshots live under
-`/home/marco/.local/state/typewhisper-benchmark`. Credentials live in the
-mode-0600 file `/home/marco/.config/typewhisper-benchmark/app.env` and are
-preserved across deployments. Do not copy credentials into the repository.
+`/home/marco/.local/state/typewhisper-benchmark`. The non-secret runtime settings
+are packaged with each release and loaded from
+`/home/marco/.local/share/typewhisper-benchmark/current/app.env`. Access control
+belongs to the reverse proxy and must not be duplicated here.
 
 Useful checks:
 
