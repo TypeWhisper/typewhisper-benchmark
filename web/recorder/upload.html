@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171714" />
+    <title>TypeWhisper Benchmark — Runs hochladen</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/upload.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#uploadMain">Zum Upload</a>
+
+    <header class="topbar">
+      <div class="brand" aria-label="TypeWhisper Benchmark">
+        <span class="brand-mark" aria-hidden="true">TW</span>
+        <span class="brand-copy">
+          <strong>Benchmark</strong>
+          <span>Run-Eingang</span>
+        </span>
+      </div>
+      <nav class="site-nav" aria-label="Bereiche">
+        <a href="/">Aufnehmen</a>
+        <a href="/results">Ergebnisse</a>
+        <a href="/upload" aria-current="page">Runs hochladen</a>
+      </nav>
+      <div class="batch-meta">
+        <span class="status-badge">Geschützt</span>
+      </div>
+    </header>
+
+    <main class="upload-shell" id="uploadMain">
+      <section class="upload-hero">
+        <div>
+          <p class="prompt-counter">Externe Runner</p>
+          <h1>Runs einsammeln, ohne ihnen blind zu vertrauen.</h1>
+          <p>
+            Ergebnisse vom Mac, von Windows mit CUDA oder anderen Maschinen
+            werden validiert und unveränderlich in einer Prüfwarteschlange
+            gespeichert. Erst eine separate Freigabe macht daraus sichtbare
+            Benchmark-Ergebnisse.
+          </p>
+        </div>
+        <div class="trust-sequence" aria-label="Upload-Ablauf">
+          <span>1 · Validieren</span>
+          <span>2 · Einfrieren</span>
+          <span>3 · Prüfen</span>
+          <span>4 · Veröffentlichen</span>
+        </div>
+      </section>
+
+      <section class="upload-layout">
+        <article class="upload-card">
+          <div class="card-heading">
+            <div>
+              <p class="review-kicker">Neuer Eingang</p>
+              <h2>Run-Bundle auswählen</h2>
+            </div>
+            <span class="direction-note">JSON · maximal 50 MB</span>
+          </div>
+
+          <input id="fileInput" type="file" accept="application/json,.json" hidden />
+          <button class="drop-zone" id="dropZone" type="button">
+            <span class="upload-arrow" aria-hidden="true">↑</span>
+            <strong>JSON-Bundle hier ablegen</strong>
+            <span>oder klicken, um eine Datei auszuwählen</span>
+          </button>
+
+          <section class="file-summary" id="fileSummary" hidden>
+            <div>
+              <p class="review-kicker">Ausgewählt</p>
+              <strong id="fileName"></strong>
+              <span id="fileSize"></span>
+            </div>
+            <dl>
+              <div><dt>Run</dt><dd id="runIdValue">—</dd></div>
+              <div><dt>System</dt><dd id="systemValue">—</dd></div>
+              <div><dt>Resultate</dt><dd id="resultCountValue">—</dd></div>
+            </dl>
+          </section>
+
+          <div class="upload-actions">
+            <button class="button secondary" id="clearFileButton" type="button" disabled>
+              Auswahl löschen
+            </button>
+            <button class="button primary" id="uploadButton" type="button" disabled>
+              In Prüfwarteschlange laden
+            </button>
+          </div>
+          <p class="system-status upload-status" id="uploadStatus" aria-live="polite">
+            Noch keine Datei ausgewählt.
+          </p>
+        </article>
+
+        <aside class="upload-card bundle-contract">
+          <p class="review-kicker">Bundle-Vertrag</p>
+          <h2>Was ein Runner liefern muss</h2>
+          <ul>
+            <li>exakte Plan-ID und Git-Commit</li>
+            <li>Target- und Modellrevisionen aus dem Run-Plan</li>
+            <li>Betriebssystem, CPU, Accelerator und Runtime-Versionen</li>
+            <li>ein Ereignis pro Target, Testfall und Trial</li>
+            <li>Transkript, Laufzeit und Fehlerstatus ohne nachträgliche Glättung</li>
+          </ul>
+          <div class="cli-example">
+            <span>Direkter Upload</span>
+            <code>curl -H 'Content-Type: application/json' --data-binary @run.bundle.json https://benchmark.example.com/api/uploads/runs</code>
+          </div>
+        </aside>
+      </section>
+
+      <section class="upload-card recent-uploads">
+        <div class="card-heading">
+          <div>
+            <p class="review-kicker">Pending</p>
+            <h2>Letzte Eingänge</h2>
+          </div>
+          <span class="direction-note">Noch nicht veröffentlicht</span>
+        </div>
+        <div class="table-scroll">
+          <table class="uploads-table">
+            <thead>
+              <tr><th>Eingang</th><th>Run</th><th>Umgebung</th><th>Resultate</th><th>SHA-256</th></tr>
+            </thead>
+            <tbody id="uploadsBody">
+              <tr><td colspan="5" class="table-empty">Eingänge werden geladen …</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

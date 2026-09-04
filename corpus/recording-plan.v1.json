@@ -1,0 +1,1666 @@
+{
+  "schemaVersion": 1,
+  "id": "core-v1-self-recorded",
+  "status": "draft",
+  "languagePacks": [
+    {
+      "language": "de-DE",
+      "tier": "anchor",
+      "selfRecordedTarget": 40,
+      "webReferenceTarget": 20,
+      "categoryTargets": {
+        "everyday-dictation": 8,
+        "formatting": 8,
+        "numbers": 8,
+        "proper-nouns": 6,
+        "code": 6,
+        "mixed-hard": 4
+      },
+      "nativeReviewRequired": true
+    },
+    {
+      "language": "en-US",
+      "tier": "anchor",
+      "selfRecordedTarget": 40,
+      "webReferenceTarget": 20,
+      "categoryTargets": {
+        "everyday-dictation": 8,
+        "formatting": 8,
+        "numbers": 8,
+        "proper-nouns": 6,
+        "code": 6,
+        "mixed-hard": 4
+      },
+      "nativeReviewRequired": true
+    },
+    {
+      "language": "ja-JP",
+      "tier": "coverage",
+      "selfRecordedTarget": 16,
+      "webReferenceTarget": 12,
+      "categoryTargets": {
+        "everyday-dictation": 3,
+        "formatting": 3,
+        "numbers": 3,
+        "proper-nouns": 2,
+        "code": 3,
+        "mixed-hard": 2
+      },
+      "nativeReviewRequired": true
+    },
+    {
+      "language": "zh-CN",
+      "tier": "coverage",
+      "selfRecordedTarget": 16,
+      "webReferenceTarget": 12,
+      "categoryTargets": {
+        "everyday-dictation": 3,
+        "formatting": 3,
+        "numbers": 3,
+        "proper-nouns": 2,
+        "code": 3,
+        "mixed-hard": 2
+      },
+      "nativeReviewRequired": true
+    },
+    {
+      "language": "fr-FR",
+      "tier": "coverage",
+      "selfRecordedTarget": 16,
+      "webReferenceTarget": 12,
+      "categoryTargets": {
+        "everyday-dictation": 3,
+        "formatting": 3,
+        "numbers": 3,
+        "proper-nouns": 2,
+        "code": 3,
+        "mixed-hard": 2
+      },
+      "nativeReviewRequired": true
+    },
+    {
+      "language": "es-ES",
+      "tier": "coverage",
+      "selfRecordedTarget": 16,
+      "webReferenceTarget": 12,
+      "categoryTargets": {
+        "everyday-dictation": 3,
+        "formatting": 3,
+        "numbers": 3,
+        "proper-nouns": 2,
+        "code": 3,
+        "mixed-hard": 2
+      },
+      "nativeReviewRequired": true
+    }
+  ],
+  "prompts": [
+    {
+      "id": "de-own-dictation-001",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Bitte schick mir den Entwurf sobald du mit der Überarbeitung fertig bist",
+      "formattedReference": "Bitte schick mir den Entwurf, sobald du mit der Überarbeitung fertig bist."
+    },
+    {
+      "id": "de-own-dictation-002",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Ich melde mich später noch einmal wenn ich eine ruhige Minute habe",
+      "formattedReference": "Ich melde mich später noch einmal, wenn ich eine ruhige Minute habe."
+    },
+    {
+      "id": "de-own-dictation-003",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Kannst du bitte prüfen ob die Datei vollständig hochgeladen wurde",
+      "formattedReference": "Kannst du bitte prüfen, ob die Datei vollständig hochgeladen wurde?"
+    },
+    {
+      "id": "de-own-dictation-004",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Der neue Ablauf fühlt sich deutlich schneller und weniger umständlich an",
+      "formattedReference": "Der neue Ablauf fühlt sich deutlich schneller und weniger umständlich an."
+    },
+    {
+      "id": "de-own-dictation-005",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Lass uns die offenen Punkte morgen gemeinsam durchgehen und danach entscheiden",
+      "formattedReference": "Lass uns die offenen Punkte morgen gemeinsam durchgehen und danach entscheiden."
+    },
+    {
+      "id": "de-own-dictation-006",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Im Hintergrund läuft gerade Musik aber ich kann dich trotzdem gut verstehen",
+      "formattedReference": "Im Hintergrund läuft gerade Musik, aber ich kann dich trotzdem gut verstehen."
+    },
+    {
+      "id": "de-own-dictation-007",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Die Zusammenfassung sollte kurz bleiben und trotzdem alle wichtigen Entscheidungen enthalten",
+      "formattedReference": "Die Zusammenfassung sollte kurz bleiben und trotzdem alle wichtigen Entscheidungen enthalten."
+    },
+    {
+      "id": "de-own-dictation-008",
+      "language": "de-DE",
+      "category": "everyday-dictation",
+      "spokenText": "Falls etwas unklar ist hinterlasse bitte direkt an der betreffenden Stelle einen Kommentar",
+      "formattedReference": "Falls etwas unklar ist, hinterlasse bitte direkt an der betreffenden Stelle einen Kommentar."
+    },
+    {
+      "id": "de-own-formatting-001",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Hast du den Bericht schon abgeschickt Ich warte seit gestern darauf",
+      "formattedReference": "Hast du den Bericht schon abgeschickt? Ich warte seit gestern darauf."
+    },
+    {
+      "id": "de-own-formatting-002",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Wichtig sind drei Dinge Tempo Zuverlässigkeit und eine klare Dokumentation",
+      "formattedReference": "Wichtig sind drei Dinge: Tempo, Zuverlässigkeit und eine klare Dokumentation."
+    },
+    {
+      "id": "de-own-formatting-003",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Ehrlich gesagt das Ergebnis ist besser als ich erwartet hatte",
+      "formattedReference": "Ehrlich gesagt: Das Ergebnis ist besser, als ich erwartet hatte."
+    },
+    {
+      "id": "de-own-formatting-004",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Das funktioniert oder etwa nicht",
+      "formattedReference": "Das funktioniert – oder etwa nicht?"
+    },
+    {
+      "id": "de-own-formatting-005",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Sie sagte wir testen erst lokal und veröffentlichen später",
+      "formattedReference": "Sie sagte: „Wir testen erst lokal und veröffentlichen später.“"
+    },
+    {
+      "id": "de-own-formatting-006",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Obwohl der Build erfolgreich war sollten wir die Ausgabe noch einmal manuell prüfen",
+      "formattedReference": "Obwohl der Build erfolgreich war, sollten wir die Ausgabe noch einmal manuell prüfen."
+    },
+    {
+      "id": "de-own-formatting-007",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Kurze Frage können wir das heute noch fertigstellen oder brauchen wir mehr Zeit",
+      "formattedReference": "Kurze Frage: Können wir das heute noch fertigstellen, oder brauchen wir mehr Zeit?"
+    },
+    {
+      "id": "de-own-formatting-008",
+      "language": "de-DE",
+      "category": "formatting",
+      "spokenText": "Der Plan klingt gut allerdings fehlt noch die Freigabe für den letzten Schritt",
+      "formattedReference": "Der Plan klingt gut; allerdings fehlt noch die Freigabe für den letzten Schritt."
+    },
+    {
+      "id": "de-own-numbers-001",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Der Termin ist am zwölften September zweitausendsechsundzwanzig um neun Uhr dreißig",
+      "formattedReference": "Der Termin ist am 12. September 2026 um 9:30 Uhr.",
+      "expectations": {
+        "numbers": [
+          { "id": "date", "expected": "12. September 2026", "alternatives": ["12.09.2026"] },
+          { "id": "time", "expected": "9:30", "alternatives": ["09:30"] }
+        ]
+      }
+    },
+    {
+      "id": "de-own-numbers-002",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Die Rechnung beträgt eintausendzweihundertvierunddreißig Euro und sechsundfünfzig Cent",
+      "formattedReference": "Die Rechnung beträgt 1.234,56 €.",
+      "expectations": {
+        "numbers": [
+          { "id": "amount", "expected": "1.234,56 €", "alternatives": ["1.234,56 Euro"] }
+        ]
+      }
+    },
+    {
+      "id": "de-own-numbers-003",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Meine Telefonnummer ist null eins sieben sechs neun acht vier zwei null fünf drei eins",
+      "formattedReference": "Meine Telefonnummer ist 0176 98420531.",
+      "expectations": {
+        "numbers": [
+          { "id": "phone", "expected": "0176 98420531", "alternatives": ["017698420531"] }
+        ]
+      }
+    },
+    {
+      "id": "de-own-numbers-004",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Die Erfolgsquote stieg von siebenundachtzig Komma fünf auf dreiundneunzig Komma zwei Prozent",
+      "formattedReference": "Die Erfolgsquote stieg von 87,5 auf 93,2 Prozent.",
+      "expectations": {
+        "numbers": [
+          { "id": "before", "expected": "87,5", "alternatives": ["87.5"] },
+          { "id": "after", "expected": "93,2 Prozent", "alternatives": ["93,2 %", "93.2%"] }
+        ]
+      }
+    },
+    {
+      "id": "de-own-numbers-005",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Die Datei ist vierhundertzwölf Komma acht Megabyte groß und wurde in drei Komma sieben Sekunden verarbeitet",
+      "formattedReference": "Die Datei ist 412,8 Megabyte groß und wurde in 3,7 Sekunden verarbeitet.",
+      "expectations": {
+        "numbers": [
+          { "id": "size", "expected": "412,8", "alternatives": ["412.8"] },
+          { "id": "duration", "expected": "3,7", "alternatives": ["3.7"] }
+        ]
+      }
+    },
+    {
+      "id": "de-own-numbers-006",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Wir aktualisieren von Version zwei Punkt neun Punkt vier auf Version drei Punkt null Punkt eins",
+      "formattedReference": "Wir aktualisieren von Version 2.9.4 auf Version 3.0.1.",
+      "expectations": {
+        "numbers": [
+          { "id": "old-version", "expected": "2.9.4" },
+          { "id": "new-version", "expected": "3.0.1" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-numbers-007",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Der Messwert liegt zwischen minus zwölf und plus achtzehn Grad Celsius",
+      "formattedReference": "Der Messwert liegt zwischen −12 und +18 Grad Celsius.",
+      "expectations": {
+        "numbers": [
+          { "id": "minimum", "expected": "−12", "alternatives": ["-12"] },
+          { "id": "maximum", "expected": "+18", "alternatives": ["18"] }
+        ]
+      }
+    },
+    {
+      "id": "de-own-numbers-008",
+      "language": "de-DE",
+      "category": "numbers",
+      "spokenText": "Bitte liefere das Paket an Hausnummer siebenundzwanzig in der Postleitzahl eins null eins sieben neun",
+      "formattedReference": "Bitte liefere das Paket an Hausnummer 27 in der Postleitzahl 10179.",
+      "expectations": {
+        "numbers": [
+          { "id": "house-number", "expected": "27" },
+          { "id": "postal-code", "expected": "10179" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-proper-nouns-001",
+      "language": "de-DE",
+      "category": "proper-nouns",
+      "spokenText": "TypeWhisper nutzt für diesen Test ein Modell von OpenAI",
+      "formattedReference": "TypeWhisper nutzt für diesen Test ein Modell von OpenAI.",
+      "expectations": {
+        "properNouns": [
+          { "id": "product", "expected": "TypeWhisper" },
+          { "id": "provider", "expected": "OpenAI" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-proper-nouns-002",
+      "language": "de-DE",
+      "category": "proper-nouns",
+      "spokenText": "Die Anwendung verbindet PostgreSQL mit einem Cluster in Kubernetes",
+      "formattedReference": "Die Anwendung verbindet PostgreSQL mit einem Cluster in Kubernetes.",
+      "expectations": {
+        "properNouns": [
+          { "id": "database", "expected": "PostgreSQL" },
+          { "id": "orchestrator", "expected": "Kubernetes" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-proper-nouns-003",
+      "language": "de-DE",
+      "category": "proper-nouns",
+      "spokenText": "Wir treffen uns in Berlin Friedrichshain und fahren später zum Alexanderplatz",
+      "formattedReference": "Wir treffen uns in Berlin-Friedrichshain und fahren später zum Alexanderplatz.",
+      "expectations": {
+        "properNouns": [
+          { "id": "district", "expected": "Berlin-Friedrichshain", "alternatives": ["Berlin Friedrichshain"] },
+          { "id": "place", "expected": "Alexanderplatz" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-proper-nouns-004",
+      "language": "de-DE",
+      "category": "proper-nouns",
+      "spokenText": "Saoirse Ronan spielte in einem Film von Greta Gerwig",
+      "formattedReference": "Saoirse Ronan spielte in einem Film von Greta Gerwig.",
+      "expectations": {
+        "properNouns": [
+          { "id": "actor", "expected": "Saoirse Ronan" },
+          { "id": "director", "expected": "Greta Gerwig" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-proper-nouns-005",
+      "language": "de-DE",
+      "category": "proper-nouns",
+      "spokenText": "Der Fehler wurde auf GitHub für Mozilla Firefox dokumentiert",
+      "formattedReference": "Der Fehler wurde auf GitHub für Mozilla Firefox dokumentiert.",
+      "expectations": {
+        "properNouns": [
+          { "id": "platform", "expected": "GitHub" },
+          { "id": "browser", "expected": "Mozilla Firefox" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-proper-nouns-006",
+      "language": "de-DE",
+      "category": "proper-nouns",
+      "spokenText": "Die Modelle Claude Gemini und Whisper werden getrennt ausgewertet",
+      "formattedReference": "Die Modelle Claude, Gemini und Whisper werden getrennt ausgewertet.",
+      "expectations": {
+        "properNouns": [
+          { "id": "model-claude", "expected": "Claude" },
+          { "id": "model-gemini", "expected": "Gemini" },
+          { "id": "model-whisper", "expected": "Whisper" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-code-001",
+      "language": "de-DE",
+      "category": "code",
+      "spokenText": "Erstelle eine Konstante retry count mit dem Wert drei",
+      "formattedReference": "Erstelle eine Konstante `retryCount` mit dem Wert 3.",
+      "expectations": {
+        "numbers": [{ "id": "value", "expected": "3" }],
+        "code": {
+          "language": "typescript",
+          "reference": "const retryCount = 3;",
+          "tokens": [{ "id": "identifier", "expected": "retryCount" }]
+        }
+      }
+    },
+    {
+      "id": "de-own-code-002",
+      "language": "de-DE",
+      "category": "code",
+      "spokenText": "Schreibe in Python for item in results Doppelpunkt",
+      "formattedReference": "Schreibe in Python `for item in results:`.",
+      "expectations": {
+        "code": {
+          "language": "python",
+          "reference": "for item in results:",
+          "tokens": [{ "id": "collection", "expected": "results" }]
+        }
+      }
+    },
+    {
+      "id": "de-own-code-003",
+      "language": "de-DE",
+      "category": "code",
+      "spokenText": "Die SQL Abfrage lautet select name from users where active equals true",
+      "formattedReference": "Die SQL-Abfrage lautet `SELECT name FROM users WHERE active = true;`.",
+      "expectations": {
+        "code": {
+          "language": "sql",
+          "reference": "SELECT name FROM users WHERE active = true;",
+          "tokens": [
+            { "id": "column", "expected": "name" },
+            { "id": "table", "expected": "users" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "de-own-code-004",
+      "language": "de-DE",
+      "category": "code",
+      "spokenText": "Führe npm run benchmark doppelt minus validate aus",
+      "formattedReference": "Führe `npm run benchmark -- validate` aus.",
+      "expectations": {
+        "code": {
+          "language": "shell",
+          "reference": "npm run benchmark -- validate",
+          "tokens": [{ "id": "flag-separator", "expected": "--" }]
+        }
+      }
+    },
+    {
+      "id": "de-own-code-005",
+      "language": "de-DE",
+      "category": "code",
+      "spokenText": "Setze im JSON Feld enabled den booleschen Wert true",
+      "formattedReference": "Setze im JSON-Feld `enabled` den booleschen Wert `true`.",
+      "expectations": {
+        "code": {
+          "language": "json",
+          "reference": "\"enabled\": true",
+          "tokens": [{ "id": "property", "expected": "enabled" }]
+        }
+      }
+    },
+    {
+      "id": "de-own-code-006",
+      "language": "de-DE",
+      "category": "code",
+      "spokenText": "Rufe die Funktion parse result mit await auf und übergib response data",
+      "formattedReference": "Rufe die Funktion mit `await parseResult(response.data)` auf.",
+      "expectations": {
+        "code": {
+          "language": "typescript",
+          "reference": "await parseResult(response.data);",
+          "tokens": [
+            { "id": "function", "expected": "parseResult" },
+            { "id": "argument", "expected": "response.data" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "de-own-mixed-001",
+      "language": "de-DE",
+      "category": "mixed-hard",
+      "spokenText": "Der TypeScript Build für Version vier Punkt zwei schlug auf GitHub Actions zweimal fehl",
+      "formattedReference": "Der TypeScript-Build für Version 4.2 schlug auf GitHub Actions zweimal fehl.",
+      "expectations": {
+        "numbers": [{ "id": "version", "expected": "4.2" }],
+        "properNouns": [
+          { "id": "language", "expected": "TypeScript" },
+          { "id": "ci", "expected": "GitHub Actions" }
+        ]
+      }
+    },
+    {
+      "id": "de-own-mixed-002",
+      "language": "de-DE",
+      "category": "mixed-hard",
+      "spokenText": "Schicke den Logauszug an qa plus benchmark at example Punkt org",
+      "formattedReference": "Schicke den Logauszug an qa+benchmark@example.org.",
+      "expectations": {
+        "properNouns": [{ "id": "email", "expected": "qa+benchmark@example.org" }]
+      }
+    },
+    {
+      "id": "de-own-mixed-003",
+      "language": "de-DE",
+      "category": "mixed-hard",
+      "spokenText": "Auf der NVIDIA GPU dauerte der erste Durchlauf null Komma acht Sekunden der zweite nur vierhundert Millisekunden",
+      "formattedReference": "Auf der NVIDIA-GPU dauerte der erste Durchlauf 0,8 Sekunden, der zweite nur 400 Millisekunden.",
+      "expectations": {
+        "numbers": [
+          { "id": "first-run", "expected": "0,8 Sekunden", "alternatives": ["0.8 Sekunden"] },
+          { "id": "second-run", "expected": "400 Millisekunden", "alternatives": ["400 ms"] }
+        ],
+        "properNouns": [{ "id": "gpu-vendor", "expected": "NVIDIA" }]
+      }
+    },
+    {
+      "id": "de-own-mixed-004",
+      "language": "de-DE",
+      "category": "mixed-hard",
+      "spokenText": "Öffne https Doppelpunkt Schrägstrich Schrägstrich docs Punkt example Punkt com Schrägstrich api minus v zwei",
+      "formattedReference": "Öffne https://docs.example.com/api-v2.",
+      "expectations": {
+        "code": {
+          "language": "url",
+          "reference": "https://docs.example.com/api-v2",
+          "tokens": [{ "id": "path", "expected": "api-v2" }]
+        }
+      }
+    },
+    {
+      "id": "en-own-dictation-001",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "Please send me the draft as soon as you finish the revision",
+      "formattedReference": "Please send me the draft as soon as you finish the revision."
+    },
+    {
+      "id": "en-own-dictation-002",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "I will get back to you later when I have a quiet minute",
+      "formattedReference": "I will get back to you later when I have a quiet minute."
+    },
+    {
+      "id": "en-own-dictation-003",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "Could you check whether the file finished uploading correctly",
+      "formattedReference": "Could you check whether the file finished uploading correctly?"
+    },
+    {
+      "id": "en-own-dictation-004",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "The new workflow feels noticeably faster and much less awkward",
+      "formattedReference": "The new workflow feels noticeably faster and much less awkward."
+    },
+    {
+      "id": "en-own-dictation-005",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "Let us review the open questions together tomorrow and decide afterward",
+      "formattedReference": "Let us review the open questions together tomorrow and decide afterward."
+    },
+    {
+      "id": "en-own-dictation-006",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "There is music playing in the background but I can still hear you clearly",
+      "formattedReference": "There is music playing in the background, but I can still hear you clearly."
+    },
+    {
+      "id": "en-own-dictation-007",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "The summary should stay concise while preserving every important decision",
+      "formattedReference": "The summary should stay concise while preserving every important decision."
+    },
+    {
+      "id": "en-own-dictation-008",
+      "language": "en-US",
+      "category": "everyday-dictation",
+      "spokenText": "If anything is unclear leave a comment directly beside the relevant sentence",
+      "formattedReference": "If anything is unclear, leave a comment directly beside the relevant sentence."
+    },
+    {
+      "id": "en-own-formatting-001",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "Did you send the report yet I have been waiting since yesterday",
+      "formattedReference": "Did you send the report yet? I have been waiting since yesterday."
+    },
+    {
+      "id": "en-own-formatting-002",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "Three things matter speed reliability and clear documentation",
+      "formattedReference": "Three things matter: speed, reliability, and clear documentation."
+    },
+    {
+      "id": "en-own-formatting-003",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "Honestly the result is better than I expected",
+      "formattedReference": "Honestly, the result is better than I expected."
+    },
+    {
+      "id": "en-own-formatting-004",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "This works or does it",
+      "formattedReference": "This works—or does it?"
+    },
+    {
+      "id": "en-own-formatting-005",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "She said we will test locally first and publish later",
+      "formattedReference": "She said, “We will test locally first and publish later.”"
+    },
+    {
+      "id": "en-own-formatting-006",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "Although the build passed we should inspect the output manually",
+      "formattedReference": "Although the build passed, we should inspect the output manually."
+    },
+    {
+      "id": "en-own-formatting-007",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "Quick question can we finish this today or do we need more time",
+      "formattedReference": "Quick question: Can we finish this today, or do we need more time?"
+    },
+    {
+      "id": "en-own-formatting-008",
+      "language": "en-US",
+      "category": "formatting",
+      "spokenText": "The plan sounds good however the final step still needs approval",
+      "formattedReference": "The plan sounds good; however, the final step still needs approval."
+    },
+    {
+      "id": "en-own-numbers-001",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "The appointment is on September twelfth twenty twenty six at nine thirty a m",
+      "formattedReference": "The appointment is on September 12, 2026, at 9:30 a.m.",
+      "expectations": {
+        "numbers": [
+          { "id": "date", "expected": "September 12, 2026", "alternatives": ["09/12/2026"] },
+          { "id": "time", "expected": "9:30 a.m.", "alternatives": ["9:30 AM"] }
+        ]
+      }
+    },
+    {
+      "id": "en-own-numbers-002",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "The invoice total is one thousand two hundred thirty four dollars and fifty six cents",
+      "formattedReference": "The invoice total is $1,234.56.",
+      "expectations": {
+        "numbers": [
+          { "id": "amount", "expected": "$1,234.56", "alternatives": ["1,234.56 dollars"] }
+        ]
+      }
+    },
+    {
+      "id": "en-own-numbers-003",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "My phone number is plus one four one five five five five zero one eight seven",
+      "formattedReference": "My phone number is +1 415-555-0187.",
+      "expectations": {
+        "numbers": [
+          { "id": "phone", "expected": "+1 415-555-0187", "alternatives": ["+14155550187"] }
+        ]
+      }
+    },
+    {
+      "id": "en-own-numbers-004",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "The success rate rose from eighty seven point five to ninety three point two percent",
+      "formattedReference": "The success rate rose from 87.5 to 93.2 percent.",
+      "expectations": {
+        "numbers": [
+          { "id": "before", "expected": "87.5" },
+          { "id": "after", "expected": "93.2 percent", "alternatives": ["93.2%"] }
+        ]
+      }
+    },
+    {
+      "id": "en-own-numbers-005",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "The file is four hundred twelve point eight megabytes and took three point seven seconds to process",
+      "formattedReference": "The file is 412.8 megabytes and took 3.7 seconds to process.",
+      "expectations": {
+        "numbers": [
+          { "id": "size", "expected": "412.8" },
+          { "id": "duration", "expected": "3.7" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-numbers-006",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "We are upgrading from version two point nine point four to version three point zero point one",
+      "formattedReference": "We are upgrading from version 2.9.4 to version 3.0.1.",
+      "expectations": {
+        "numbers": [
+          { "id": "old-version", "expected": "2.9.4" },
+          { "id": "new-version", "expected": "3.0.1" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-numbers-007",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "The reading is between minus twelve and plus eighteen degrees Celsius",
+      "formattedReference": "The reading is between −12 and +18 degrees Celsius.",
+      "expectations": {
+        "numbers": [
+          { "id": "minimum", "expected": "−12", "alternatives": ["-12"] },
+          { "id": "maximum", "expected": "+18", "alternatives": ["18"] }
+        ]
+      }
+    },
+    {
+      "id": "en-own-numbers-008",
+      "language": "en-US",
+      "category": "numbers",
+      "spokenText": "Deliver the parcel to apartment twenty seven in postal code nine four one zero seven",
+      "formattedReference": "Deliver the parcel to apartment 27 in postal code 94107.",
+      "expectations": {
+        "numbers": [
+          { "id": "apartment", "expected": "27" },
+          { "id": "postal-code", "expected": "94107" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-proper-nouns-001",
+      "language": "en-US",
+      "category": "proper-nouns",
+      "spokenText": "TypeWhisper uses an OpenAI model for this test",
+      "formattedReference": "TypeWhisper uses an OpenAI model for this test.",
+      "expectations": {
+        "properNouns": [
+          { "id": "product", "expected": "TypeWhisper" },
+          { "id": "provider", "expected": "OpenAI" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-proper-nouns-002",
+      "language": "en-US",
+      "category": "proper-nouns",
+      "spokenText": "The application connects PostgreSQL to a cluster running Kubernetes",
+      "formattedReference": "The application connects PostgreSQL to a cluster running Kubernetes.",
+      "expectations": {
+        "properNouns": [
+          { "id": "database", "expected": "PostgreSQL" },
+          { "id": "orchestrator", "expected": "Kubernetes" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-proper-nouns-003",
+      "language": "en-US",
+      "category": "proper-nouns",
+      "spokenText": "We are meeting in Berlin Friedrichshain before taking the train to Potsdam",
+      "formattedReference": "We are meeting in Berlin-Friedrichshain before taking the train to Potsdam.",
+      "expectations": {
+        "properNouns": [
+          { "id": "district", "expected": "Berlin-Friedrichshain", "alternatives": ["Berlin Friedrichshain"] },
+          { "id": "city", "expected": "Potsdam" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-proper-nouns-004",
+      "language": "en-US",
+      "category": "proper-nouns",
+      "spokenText": "Saoirse Ronan appeared in a film directed by Greta Gerwig",
+      "formattedReference": "Saoirse Ronan appeared in a film directed by Greta Gerwig.",
+      "expectations": {
+        "properNouns": [
+          { "id": "actor", "expected": "Saoirse Ronan" },
+          { "id": "director", "expected": "Greta Gerwig" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-proper-nouns-005",
+      "language": "en-US",
+      "category": "proper-nouns",
+      "spokenText": "The bug was documented on GitHub for Mozilla Firefox",
+      "formattedReference": "The bug was documented on GitHub for Mozilla Firefox.",
+      "expectations": {
+        "properNouns": [
+          { "id": "platform", "expected": "GitHub" },
+          { "id": "browser", "expected": "Mozilla Firefox" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-proper-nouns-006",
+      "language": "en-US",
+      "category": "proper-nouns",
+      "spokenText": "The models Claude Gemini and Whisper are evaluated separately",
+      "formattedReference": "The models Claude, Gemini, and Whisper are evaluated separately.",
+      "expectations": {
+        "properNouns": [
+          { "id": "model-claude", "expected": "Claude" },
+          { "id": "model-gemini", "expected": "Gemini" },
+          { "id": "model-whisper", "expected": "Whisper" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-code-001",
+      "language": "en-US",
+      "category": "code",
+      "spokenText": "Create a constant named retry count with the value three",
+      "formattedReference": "Create a constant named `retryCount` with the value 3.",
+      "expectations": {
+        "numbers": [{ "id": "value", "expected": "3" }],
+        "code": {
+          "language": "typescript",
+          "reference": "const retryCount = 3;",
+          "tokens": [{ "id": "identifier", "expected": "retryCount" }]
+        }
+      }
+    },
+    {
+      "id": "en-own-code-002",
+      "language": "en-US",
+      "category": "code",
+      "spokenText": "In Python write for item in results colon",
+      "formattedReference": "In Python, write `for item in results:`.",
+      "expectations": {
+        "code": {
+          "language": "python",
+          "reference": "for item in results:",
+          "tokens": [{ "id": "collection", "expected": "results" }]
+        }
+      }
+    },
+    {
+      "id": "en-own-code-003",
+      "language": "en-US",
+      "category": "code",
+      "spokenText": "The SQL query is select name from users where active equals true",
+      "formattedReference": "The SQL query is `SELECT name FROM users WHERE active = true;`.",
+      "expectations": {
+        "code": {
+          "language": "sql",
+          "reference": "SELECT name FROM users WHERE active = true;",
+          "tokens": [
+            { "id": "column", "expected": "name" },
+            { "id": "table", "expected": "users" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "en-own-code-004",
+      "language": "en-US",
+      "category": "code",
+      "spokenText": "Run npm run benchmark double dash validate",
+      "formattedReference": "Run `npm run benchmark -- validate`.",
+      "expectations": {
+        "code": {
+          "language": "shell",
+          "reference": "npm run benchmark -- validate",
+          "tokens": [{ "id": "flag-separator", "expected": "--" }]
+        }
+      }
+    },
+    {
+      "id": "en-own-code-005",
+      "language": "en-US",
+      "category": "code",
+      "spokenText": "Set the JSON field enabled to the Boolean value true",
+      "formattedReference": "Set the JSON field `enabled` to the Boolean value `true`.",
+      "expectations": {
+        "code": {
+          "language": "json",
+          "reference": "\"enabled\": true",
+          "tokens": [{ "id": "property", "expected": "enabled" }]
+        }
+      }
+    },
+    {
+      "id": "en-own-code-006",
+      "language": "en-US",
+      "category": "code",
+      "spokenText": "Await the function parse result and pass response dot data",
+      "formattedReference": "Call `await parseResult(response.data)`.",
+      "expectations": {
+        "code": {
+          "language": "typescript",
+          "reference": "await parseResult(response.data);",
+          "tokens": [
+            { "id": "function", "expected": "parseResult" },
+            { "id": "argument", "expected": "response.data" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "en-own-mixed-001",
+      "language": "en-US",
+      "category": "mixed-hard",
+      "spokenText": "The TypeScript build for version four point two failed twice on GitHub Actions",
+      "formattedReference": "The TypeScript build for version 4.2 failed twice on GitHub Actions.",
+      "expectations": {
+        "numbers": [{ "id": "version", "expected": "4.2" }],
+        "properNouns": [
+          { "id": "language", "expected": "TypeScript" },
+          { "id": "ci", "expected": "GitHub Actions" }
+        ]
+      }
+    },
+    {
+      "id": "en-own-mixed-002",
+      "language": "en-US",
+      "category": "mixed-hard",
+      "spokenText": "Send the log excerpt to qa plus benchmark at example dot org",
+      "formattedReference": "Send the log excerpt to qa+benchmark@example.org.",
+      "expectations": {
+        "properNouns": [{ "id": "email", "expected": "qa+benchmark@example.org" }]
+      }
+    },
+    {
+      "id": "en-own-mixed-003",
+      "language": "en-US",
+      "category": "mixed-hard",
+      "spokenText": "On the NVIDIA GPU the first run took zero point eight seconds and the second took only four hundred milliseconds",
+      "formattedReference": "On the NVIDIA GPU, the first run took 0.8 seconds, and the second took only 400 milliseconds.",
+      "expectations": {
+        "numbers": [
+          { "id": "first-run", "expected": "0.8 seconds" },
+          { "id": "second-run", "expected": "400 milliseconds", "alternatives": ["400 ms"] }
+        ],
+        "properNouns": [{ "id": "gpu-vendor", "expected": "NVIDIA" }]
+      }
+    },
+    {
+      "id": "en-own-mixed-004",
+      "language": "en-US",
+      "category": "mixed-hard",
+      "spokenText": "Open https colon slash slash docs dot example dot com slash api dash v two",
+      "formattedReference": "Open https://docs.example.com/api-v2.",
+      "expectations": {
+        "code": {
+          "language": "url",
+          "reference": "https://docs.example.com/api-v2",
+          "tokens": [{ "id": "path", "expected": "api-v2" }]
+        }
+      }
+    },
+    {
+      "id": "ja-own-dictation-001",
+      "language": "ja-JP",
+      "category": "everyday-dictation",
+      "spokenText": "下書きの修正が終わったらすぐに送ってください",
+      "formattedReference": "下書きの修正が終わったら、すぐに送ってください。"
+    },
+    {
+      "id": "ja-own-dictation-002",
+      "language": "ja-JP",
+      "category": "everyday-dictation",
+      "spokenText": "ファイルが正しくアップロードされたか確認してもらえますか",
+      "formattedReference": "ファイルが正しくアップロードされたか、確認してもらえますか。"
+    },
+    {
+      "id": "ja-own-dictation-003",
+      "language": "ja-JP",
+      "category": "everyday-dictation",
+      "spokenText": "明日残っている課題を一緒に確認してから決めましょう",
+      "formattedReference": "明日、残っている課題を一緒に確認してから決めましょう。"
+    },
+    {
+      "id": "ja-own-formatting-001",
+      "language": "ja-JP",
+      "category": "formatting",
+      "spokenText": "レポートはもう送りましたか 昨日から待っています",
+      "formattedReference": "レポートはもう送りましたか？ 昨日から待っています。"
+    },
+    {
+      "id": "ja-own-formatting-002",
+      "language": "ja-JP",
+      "category": "formatting",
+      "spokenText": "大切なのは三つです 速度 安定性 そして明確な文書です",
+      "formattedReference": "大切なのは三つです。速度、安定性、そして明確な文書です。"
+    },
+    {
+      "id": "ja-own-formatting-003",
+      "language": "ja-JP",
+      "category": "formatting",
+      "spokenText": "彼女はまずローカルでテストして後で公開すると言いました",
+      "formattedReference": "彼女は「まずローカルでテストして、後で公開する」と言いました。"
+    },
+    {
+      "id": "ja-own-numbers-001",
+      "language": "ja-JP",
+      "category": "numbers",
+      "spokenText": "予約は二千二十六年九月十二日の午前九時三十分です",
+      "formattedReference": "予約は2026年9月12日の午前9時30分です。",
+      "expectations": {
+        "numbers": [
+          { "id": "date", "expected": "2026年9月12日" },
+          { "id": "time", "expected": "午前9時30分", "alternatives": ["9:30"] }
+        ]
+      }
+    },
+    {
+      "id": "ja-own-numbers-002",
+      "language": "ja-JP",
+      "category": "numbers",
+      "spokenText": "請求額は一万二千三百四十五円です",
+      "formattedReference": "請求額は12,345円です。",
+      "expectations": {
+        "numbers": [{ "id": "amount", "expected": "12,345円", "alternatives": ["12345円"] }]
+      }
+    },
+    {
+      "id": "ja-own-numbers-003",
+      "language": "ja-JP",
+      "category": "numbers",
+      "spokenText": "電話番号はゼロ三の一二三四の五六七八です",
+      "formattedReference": "電話番号は03-1234-5678です。",
+      "expectations": {
+        "numbers": [{ "id": "phone", "expected": "03-1234-5678", "alternatives": ["0312345678"] }]
+      }
+    },
+    {
+      "id": "ja-own-proper-nouns-001",
+      "language": "ja-JP",
+      "category": "proper-nouns",
+      "spokenText": "このテストではTypeWhisperがOpenAIのモデルを使います",
+      "formattedReference": "このテストでは、TypeWhisperがOpenAIのモデルを使います。",
+      "expectations": {
+        "properNouns": [
+          { "id": "product", "expected": "TypeWhisper" },
+          { "id": "provider", "expected": "OpenAI" }
+        ]
+      }
+    },
+    {
+      "id": "ja-own-proper-nouns-002",
+      "language": "ja-JP",
+      "category": "proper-nouns",
+      "spokenText": "このアプリはPostgreSQLをKubernetesのクラスターに接続します",
+      "formattedReference": "このアプリはPostgreSQLをKubernetesのクラスターに接続します。",
+      "expectations": {
+        "properNouns": [
+          { "id": "database", "expected": "PostgreSQL" },
+          { "id": "orchestrator", "expected": "Kubernetes" }
+        ]
+      }
+    },
+    {
+      "id": "ja-own-code-001",
+      "language": "ja-JP",
+      "category": "code",
+      "spokenText": "retry countという定数を作り値を三にしてください",
+      "formattedReference": "`retryCount`という定数を作り、値を3にしてください。",
+      "expectations": {
+        "numbers": [{ "id": "value", "expected": "3" }],
+        "code": {
+          "language": "typescript",
+          "reference": "const retryCount = 3;",
+          "tokens": [{ "id": "identifier", "expected": "retryCount" }]
+        }
+      }
+    },
+    {
+      "id": "ja-own-code-002",
+      "language": "ja-JP",
+      "category": "code",
+      "spokenText": "Pythonでfor item in resultsコロンと書いてください",
+      "formattedReference": "Pythonで`for item in results:`と書いてください。",
+      "expectations": {
+        "code": {
+          "language": "python",
+          "reference": "for item in results:",
+          "tokens": [{ "id": "collection", "expected": "results" }]
+        }
+      }
+    },
+    {
+      "id": "ja-own-code-003",
+      "language": "ja-JP",
+      "category": "code",
+      "spokenText": "SQLクエリはselect name from users where active equals trueです",
+      "formattedReference": "SQLクエリは`SELECT name FROM users WHERE active = true;`です。",
+      "expectations": {
+        "code": {
+          "language": "sql",
+          "reference": "SELECT name FROM users WHERE active = true;",
+          "tokens": [{ "id": "table", "expected": "users" }]
+        }
+      }
+    },
+    {
+      "id": "ja-own-mixed-001",
+      "language": "ja-JP",
+      "category": "mixed-hard",
+      "spokenText": "バージョン四点二のTypeScriptビルドがGitHub Actionsで二回失敗しました",
+      "formattedReference": "バージョン4.2のTypeScriptビルドが、GitHub Actionsで2回失敗しました。",
+      "expectations": {
+        "numbers": [
+          { "id": "version", "expected": "4.2" },
+          { "id": "attempts", "expected": "2回", "alternatives": ["二回"] }
+        ],
+        "properNouns": [
+          { "id": "language", "expected": "TypeScript" },
+          { "id": "ci", "expected": "GitHub Actions" }
+        ]
+      }
+    },
+    {
+      "id": "ja-own-mixed-002",
+      "language": "ja-JP",
+      "category": "mixed-hard",
+      "spokenText": "httpsコロンスラッシュスラッシュdocsドットexampleドットcomスラッシュapiハイフンv二を開いてください",
+      "formattedReference": "https://docs.example.com/api-v2を開いてください。",
+      "expectations": {
+        "code": {
+          "language": "url",
+          "reference": "https://docs.example.com/api-v2",
+          "tokens": [{ "id": "path", "expected": "api-v2" }]
+        }
+      }
+    },
+    {
+      "id": "zh-own-dictation-001",
+      "language": "zh-CN",
+      "category": "everyday-dictation",
+      "spokenText": "修改完草稿以后请马上发给我",
+      "formattedReference": "修改完草稿以后，请马上发给我。"
+    },
+    {
+      "id": "zh-own-dictation-002",
+      "language": "zh-CN",
+      "category": "everyday-dictation",
+      "spokenText": "你能检查一下文件是不是已经正确上传了吗",
+      "formattedReference": "你能检查一下文件是不是已经正确上传了吗？"
+    },
+    {
+      "id": "zh-own-dictation-003",
+      "language": "zh-CN",
+      "category": "everyday-dictation",
+      "spokenText": "我们明天一起讨论剩下的问题然后再做决定",
+      "formattedReference": "我们明天一起讨论剩下的问题，然后再做决定。"
+    },
+    {
+      "id": "zh-own-formatting-001",
+      "language": "zh-CN",
+      "category": "formatting",
+      "spokenText": "你已经把报告发出去了吗 我从昨天开始就在等",
+      "formattedReference": "你已经把报告发出去了吗？我从昨天开始就在等。"
+    },
+    {
+      "id": "zh-own-formatting-002",
+      "language": "zh-CN",
+      "category": "formatting",
+      "spokenText": "最重要的是三点 速度 稳定性和清晰的文档",
+      "formattedReference": "最重要的是三点：速度、稳定性和清晰的文档。"
+    },
+    {
+      "id": "zh-own-formatting-003",
+      "language": "zh-CN",
+      "category": "formatting",
+      "spokenText": "她说我们先在本地测试之后再发布",
+      "formattedReference": "她说：“我们先在本地测试，之后再发布。”"
+    },
+    {
+      "id": "zh-own-numbers-001",
+      "language": "zh-CN",
+      "category": "numbers",
+      "spokenText": "预约时间是二零二六年九月十二日上午九点三十分",
+      "formattedReference": "预约时间是2026年9月12日上午9:30。",
+      "expectations": {
+        "numbers": [
+          { "id": "date", "expected": "2026年9月12日" },
+          { "id": "time", "expected": "上午9:30", "alternatives": ["上午9点30分"] }
+        ]
+      }
+    },
+    {
+      "id": "zh-own-numbers-002",
+      "language": "zh-CN",
+      "category": "numbers",
+      "spokenText": "发票总额是一千二百三十四元五角六分",
+      "formattedReference": "发票总额是¥1,234.56。",
+      "expectations": {
+        "numbers": [{ "id": "amount", "expected": "¥1,234.56", "alternatives": ["1,234.56元"] }]
+      }
+    },
+    {
+      "id": "zh-own-numbers-003",
+      "language": "zh-CN",
+      "category": "numbers",
+      "spokenText": "我的手机号码是一三八零零一三八零零零",
+      "formattedReference": "我的手机号码是138 0013 8000。",
+      "expectations": {
+        "numbers": [{ "id": "phone", "expected": "138 0013 8000", "alternatives": ["13800138000"] }]
+      }
+    },
+    {
+      "id": "zh-own-proper-nouns-001",
+      "language": "zh-CN",
+      "category": "proper-nouns",
+      "spokenText": "这次测试中TypeWhisper使用OpenAI的模型",
+      "formattedReference": "这次测试中，TypeWhisper使用OpenAI的模型。",
+      "expectations": {
+        "properNouns": [
+          { "id": "product", "expected": "TypeWhisper" },
+          { "id": "provider", "expected": "OpenAI" }
+        ]
+      }
+    },
+    {
+      "id": "zh-own-proper-nouns-002",
+      "language": "zh-CN",
+      "category": "proper-nouns",
+      "spokenText": "这个应用把PostgreSQL连接到Kubernetes集群",
+      "formattedReference": "这个应用把PostgreSQL连接到Kubernetes集群。",
+      "expectations": {
+        "properNouns": [
+          { "id": "database", "expected": "PostgreSQL" },
+          { "id": "orchestrator", "expected": "Kubernetes" }
+        ]
+      }
+    },
+    {
+      "id": "zh-own-code-001",
+      "language": "zh-CN",
+      "category": "code",
+      "spokenText": "创建一个名为retry count的常量值设为三",
+      "formattedReference": "创建一个名为`retryCount`的常量，值设为3。",
+      "expectations": {
+        "numbers": [{ "id": "value", "expected": "3" }],
+        "code": {
+          "language": "typescript",
+          "reference": "const retryCount = 3;",
+          "tokens": [{ "id": "identifier", "expected": "retryCount" }]
+        }
+      }
+    },
+    {
+      "id": "zh-own-code-002",
+      "language": "zh-CN",
+      "category": "code",
+      "spokenText": "用Python写for item in results冒号",
+      "formattedReference": "用Python写`for item in results:`。",
+      "expectations": {
+        "code": {
+          "language": "python",
+          "reference": "for item in results:",
+          "tokens": [{ "id": "collection", "expected": "results" }]
+        }
+      }
+    },
+    {
+      "id": "zh-own-code-003",
+      "language": "zh-CN",
+      "category": "code",
+      "spokenText": "SQL查询是select name from users where active equals true",
+      "formattedReference": "SQL查询是`SELECT name FROM users WHERE active = true;`。",
+      "expectations": {
+        "code": {
+          "language": "sql",
+          "reference": "SELECT name FROM users WHERE active = true;",
+          "tokens": [{ "id": "table", "expected": "users" }]
+        }
+      }
+    },
+    {
+      "id": "zh-own-mixed-001",
+      "language": "zh-CN",
+      "category": "mixed-hard",
+      "spokenText": "四点二版本的TypeScript构建在GitHub Actions上失败了两次",
+      "formattedReference": "4.2版本的TypeScript构建在GitHub Actions上失败了2次。",
+      "expectations": {
+        "numbers": [
+          { "id": "version", "expected": "4.2" },
+          { "id": "attempts", "expected": "2次", "alternatives": ["两次"] }
+        ],
+        "properNouns": [
+          { "id": "language", "expected": "TypeScript" },
+          { "id": "ci", "expected": "GitHub Actions" }
+        ]
+      }
+    },
+    {
+      "id": "zh-own-mixed-002",
+      "language": "zh-CN",
+      "category": "mixed-hard",
+      "spokenText": "打开https冒号双斜杠docs点example点com斜杠api短横线v二",
+      "formattedReference": "打开https://docs.example.com/api-v2。",
+      "expectations": {
+        "code": {
+          "language": "url",
+          "reference": "https://docs.example.com/api-v2",
+          "tokens": [{ "id": "path", "expected": "api-v2" }]
+        }
+      }
+    },
+    {
+      "id": "fr-own-dictation-001",
+      "language": "fr-FR",
+      "category": "everyday-dictation",
+      "spokenText": "Envoie-moi le brouillon dès que tu as terminé les corrections",
+      "formattedReference": "Envoie-moi le brouillon dès que tu as terminé les corrections."
+    },
+    {
+      "id": "fr-own-dictation-002",
+      "language": "fr-FR",
+      "category": "everyday-dictation",
+      "spokenText": "Peux-tu vérifier si le fichier a été correctement téléversé",
+      "formattedReference": "Peux-tu vérifier si le fichier a été correctement téléversé ?"
+    },
+    {
+      "id": "fr-own-dictation-003",
+      "language": "fr-FR",
+      "category": "everyday-dictation",
+      "spokenText": "Nous examinerons les questions restantes demain avant de prendre une décision",
+      "formattedReference": "Nous examinerons les questions restantes demain avant de prendre une décision."
+    },
+    {
+      "id": "fr-own-formatting-001",
+      "language": "fr-FR",
+      "category": "formatting",
+      "spokenText": "As-tu déjà envoyé le rapport Je l'attends depuis hier",
+      "formattedReference": "As-tu déjà envoyé le rapport ? Je l'attends depuis hier."
+    },
+    {
+      "id": "fr-own-formatting-002",
+      "language": "fr-FR",
+      "category": "formatting",
+      "spokenText": "Trois éléments comptent la rapidité la fiabilité et une documentation claire",
+      "formattedReference": "Trois éléments comptent : la rapidité, la fiabilité et une documentation claire."
+    },
+    {
+      "id": "fr-own-formatting-003",
+      "language": "fr-FR",
+      "category": "formatting",
+      "spokenText": "Elle a dit nous testerons d'abord en local puis nous publierons",
+      "formattedReference": "Elle a dit : « Nous testerons d'abord en local, puis nous publierons. »"
+    },
+    {
+      "id": "fr-own-numbers-001",
+      "language": "fr-FR",
+      "category": "numbers",
+      "spokenText": "Le rendez-vous est fixé au douze septembre deux mille vingt-six à neuf heures trente",
+      "formattedReference": "Le rendez-vous est fixé au 12 septembre 2026 à 9 h 30.",
+      "expectations": {
+        "numbers": [
+          { "id": "date", "expected": "12 septembre 2026", "alternatives": ["12/09/2026"] },
+          { "id": "time", "expected": "9 h 30", "alternatives": ["9:30"] }
+        ]
+      }
+    },
+    {
+      "id": "fr-own-numbers-002",
+      "language": "fr-FR",
+      "category": "numbers",
+      "spokenText": "Le montant de la facture est de mille deux cent trente-quatre euros et cinquante-six centimes",
+      "formattedReference": "Le montant de la facture est de 1 234,56 €.",
+      "expectations": {
+        "numbers": [{ "id": "amount", "expected": "1 234,56 €", "alternatives": ["1.234,56 €"] }]
+      }
+    },
+    {
+      "id": "fr-own-numbers-003",
+      "language": "fr-FR",
+      "category": "numbers",
+      "spokenText": "Mon numéro de téléphone est le zéro six douze trente-quatre cinquante-six soixante-dix-huit",
+      "formattedReference": "Mon numéro de téléphone est le 06 12 34 56 78.",
+      "expectations": {
+        "numbers": [{ "id": "phone", "expected": "06 12 34 56 78", "alternatives": ["0612345678"] }]
+      }
+    },
+    {
+      "id": "fr-own-proper-nouns-001",
+      "language": "fr-FR",
+      "category": "proper-nouns",
+      "spokenText": "TypeWhisper utilise un modèle OpenAI pour ce test",
+      "formattedReference": "TypeWhisper utilise un modèle OpenAI pour ce test.",
+      "expectations": {
+        "properNouns": [
+          { "id": "product", "expected": "TypeWhisper" },
+          { "id": "provider", "expected": "OpenAI" }
+        ]
+      }
+    },
+    {
+      "id": "fr-own-proper-nouns-002",
+      "language": "fr-FR",
+      "category": "proper-nouns",
+      "spokenText": "L'application relie PostgreSQL à un cluster Kubernetes",
+      "formattedReference": "L'application relie PostgreSQL à un cluster Kubernetes.",
+      "expectations": {
+        "properNouns": [
+          { "id": "database", "expected": "PostgreSQL" },
+          { "id": "orchestrator", "expected": "Kubernetes" }
+        ]
+      }
+    },
+    {
+      "id": "fr-own-code-001",
+      "language": "fr-FR",
+      "category": "code",
+      "spokenText": "Crée une constante retry count avec la valeur trois",
+      "formattedReference": "Crée une constante `retryCount` avec la valeur 3.",
+      "expectations": {
+        "numbers": [{ "id": "value", "expected": "3" }],
+        "code": {
+          "language": "typescript",
+          "reference": "const retryCount = 3;",
+          "tokens": [{ "id": "identifier", "expected": "retryCount" }]
+        }
+      }
+    },
+    {
+      "id": "fr-own-code-002",
+      "language": "fr-FR",
+      "category": "code",
+      "spokenText": "En Python écris for item in results deux-points",
+      "formattedReference": "En Python, écris `for item in results:`.",
+      "expectations": {
+        "code": {
+          "language": "python",
+          "reference": "for item in results:",
+          "tokens": [{ "id": "collection", "expected": "results" }]
+        }
+      }
+    },
+    {
+      "id": "fr-own-code-003",
+      "language": "fr-FR",
+      "category": "code",
+      "spokenText": "La requête SQL est select name from users where active égale true",
+      "formattedReference": "La requête SQL est `SELECT name FROM users WHERE active = true;`.",
+      "expectations": {
+        "code": {
+          "language": "sql",
+          "reference": "SELECT name FROM users WHERE active = true;",
+          "tokens": [{ "id": "table", "expected": "users" }]
+        }
+      }
+    },
+    {
+      "id": "fr-own-mixed-001",
+      "language": "fr-FR",
+      "category": "mixed-hard",
+      "spokenText": "Le build TypeScript de la version quatre point deux a échoué deux fois sur GitHub Actions",
+      "formattedReference": "Le build TypeScript de la version 4.2 a échoué deux fois sur GitHub Actions.",
+      "expectations": {
+        "numbers": [{ "id": "version", "expected": "4.2" }],
+        "properNouns": [
+          { "id": "language", "expected": "TypeScript" },
+          { "id": "ci", "expected": "GitHub Actions" }
+        ]
+      }
+    },
+    {
+      "id": "fr-own-mixed-002",
+      "language": "fr-FR",
+      "category": "mixed-hard",
+      "spokenText": "Ouvre https deux-points barre oblique barre oblique docs point example point com barre oblique api tiret v deux",
+      "formattedReference": "Ouvre https://docs.example.com/api-v2.",
+      "expectations": {
+        "code": {
+          "language": "url",
+          "reference": "https://docs.example.com/api-v2",
+          "tokens": [{ "id": "path", "expected": "api-v2" }]
+        }
+      }
+    },
+    {
+      "id": "es-own-dictation-001",
+      "language": "es-ES",
+      "category": "everyday-dictation",
+      "spokenText": "Envíame el borrador en cuanto termines las correcciones",
+      "formattedReference": "Envíame el borrador en cuanto termines las correcciones."
+    },
+    {
+      "id": "es-own-dictation-002",
+      "language": "es-ES",
+      "category": "everyday-dictation",
+      "spokenText": "Puedes comprobar si el archivo se ha subido correctamente",
+      "formattedReference": "¿Puedes comprobar si el archivo se ha subido correctamente?"
+    },
+    {
+      "id": "es-own-dictation-003",
+      "language": "es-ES",
+      "category": "everyday-dictation",
+      "spokenText": "Mañana revisaremos juntos las cuestiones pendientes antes de decidir",
+      "formattedReference": "Mañana revisaremos juntos las cuestiones pendientes antes de decidir."
+    },
+    {
+      "id": "es-own-formatting-001",
+      "language": "es-ES",
+      "category": "formatting",
+      "spokenText": "Ya has enviado el informe Llevo esperando desde ayer",
+      "formattedReference": "¿Ya has enviado el informe? Llevo esperando desde ayer."
+    },
+    {
+      "id": "es-own-formatting-002",
+      "language": "es-ES",
+      "category": "formatting",
+      "spokenText": "Hay tres cosas importantes la velocidad la fiabilidad y una documentación clara",
+      "formattedReference": "Hay tres cosas importantes: la velocidad, la fiabilidad y una documentación clara."
+    },
+    {
+      "id": "es-own-formatting-003",
+      "language": "es-ES",
+      "category": "formatting",
+      "spokenText": "Ella dijo primero probaremos en local y después publicaremos",
+      "formattedReference": "Ella dijo: «Primero probaremos en local y después publicaremos».",
+      "notes": ["Confirm quotation-mark convention during native review."]
+    },
+    {
+      "id": "es-own-numbers-001",
+      "language": "es-ES",
+      "category": "numbers",
+      "spokenText": "La cita es el doce de septiembre de dos mil veintiséis a las nueve y media",
+      "formattedReference": "La cita es el 12 de septiembre de 2026 a las 9:30.",
+      "expectations": {
+        "numbers": [
+          { "id": "date", "expected": "12 de septiembre de 2026", "alternatives": ["12/09/2026"] },
+          { "id": "time", "expected": "9:30" }
+        ]
+      }
+    },
+    {
+      "id": "es-own-numbers-002",
+      "language": "es-ES",
+      "category": "numbers",
+      "spokenText": "El importe de la factura es de mil doscientos treinta y cuatro euros con cincuenta y seis céntimos",
+      "formattedReference": "El importe de la factura es de 1.234,56 €.",
+      "expectations": {
+        "numbers": [{ "id": "amount", "expected": "1.234,56 €", "alternatives": ["1234,56 €"] }]
+      }
+    },
+    {
+      "id": "es-own-numbers-003",
+      "language": "es-ES",
+      "category": "numbers",
+      "spokenText": "Mi número de teléfono es el seis doce treinta y cuatro cincuenta y seis setenta y ocho",
+      "formattedReference": "Mi número de teléfono es el 612 34 56 78.",
+      "expectations": {
+        "numbers": [{ "id": "phone", "expected": "612 34 56 78", "alternatives": ["612345678"] }]
+      }
+    },
+    {
+      "id": "es-own-proper-nouns-001",
+      "language": "es-ES",
+      "category": "proper-nouns",
+      "spokenText": "TypeWhisper utiliza un modelo de OpenAI para esta prueba",
+      "formattedReference": "TypeWhisper utiliza un modelo de OpenAI para esta prueba.",
+      "expectations": {
+        "properNouns": [
+          { "id": "product", "expected": "TypeWhisper" },
+          { "id": "provider", "expected": "OpenAI" }
+        ]
+      }
+    },
+    {
+      "id": "es-own-proper-nouns-002",
+      "language": "es-ES",
+      "category": "proper-nouns",
+      "spokenText": "La aplicación conecta PostgreSQL con un clúster de Kubernetes",
+      "formattedReference": "La aplicación conecta PostgreSQL con un clúster de Kubernetes.",
+      "expectations": {
+        "properNouns": [
+          { "id": "database", "expected": "PostgreSQL" },
+          { "id": "orchestrator", "expected": "Kubernetes" }
+        ]
+      }
+    },
+    {
+      "id": "es-own-code-001",
+      "language": "es-ES",
+      "category": "code",
+      "spokenText": "Crea una constante retry count con el valor tres",
+      "formattedReference": "Crea una constante `retryCount` con el valor 3.",
+      "expectations": {
+        "numbers": [{ "id": "value", "expected": "3" }],
+        "code": {
+          "language": "typescript",
+          "reference": "const retryCount = 3;",
+          "tokens": [{ "id": "identifier", "expected": "retryCount" }]
+        }
+      }
+    },
+    {
+      "id": "es-own-code-002",
+      "language": "es-ES",
+      "category": "code",
+      "spokenText": "En Python escribe for item in results dos puntos",
+      "formattedReference": "En Python, escribe `for item in results:`.",
+      "expectations": {
+        "code": {
+          "language": "python",
+          "reference": "for item in results:",
+          "tokens": [{ "id": "collection", "expected": "results" }]
+        }
+      }
+    },
+    {
+      "id": "es-own-code-003",
+      "language": "es-ES",
+      "category": "code",
+      "spokenText": "La consulta SQL es select name from users where active igual a true",
+      "formattedReference": "La consulta SQL es `SELECT name FROM users WHERE active = true;`.",
+      "expectations": {
+        "code": {
+          "language": "sql",
+          "reference": "SELECT name FROM users WHERE active = true;",
+          "tokens": [{ "id": "table", "expected": "users" }]
+        }
+      }
+    },
+    {
+      "id": "es-own-mixed-001",
+      "language": "es-ES",
+      "category": "mixed-hard",
+      "spokenText": "El build de TypeScript para la versión cuatro punto dos falló dos veces en GitHub Actions",
+      "formattedReference": "El build de TypeScript para la versión 4.2 falló dos veces en GitHub Actions.",
+      "expectations": {
+        "numbers": [{ "id": "version", "expected": "4.2" }],
+        "properNouns": [
+          { "id": "language", "expected": "TypeScript" },
+          { "id": "ci", "expected": "GitHub Actions" }
+        ]
+      }
+    },
+    {
+      "id": "es-own-mixed-002",
+      "language": "es-ES",
+      "category": "mixed-hard",
+      "spokenText": "Abre https dos puntos barra barra docs punto example punto com barra api guion v dos",
+      "formattedReference": "Abre https://docs.example.com/api-v2.",
+      "expectations": {
+        "code": {
+          "language": "url",
+          "reference": "https://docs.example.com/api-v2",
+          "tokens": [{ "id": "path", "expected": "api-v2" }]
+        }
+      }
+    }
+  ]
+}

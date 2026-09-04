@@ -1,10 +1,30 @@
 {
   "name": "typewhisper-benchmark",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
-  "workspaces": ["bench", "visualizer"],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "bench": "npm run start --workspace=bench",
-    "visualizer": "npm run dev --workspace=visualizer"
+    "admit:recordings": "tsx src/admit-recording-batch.ts",
+    "benchmark": "tsx src/cli.ts",
+    "build:recorder": "tsc -p tsconfig.build.json",
+    "recorder": "tsx src/recorder-server.ts",
+    "start:recorder": "node dist/recorder-server.js",
+    "upload:run": "tsx src/upload-run.ts",
+    "validate": "tsx src/cli.ts validate",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test && npm run validate"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
   }
 }

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171714" />
+    <title>TypeWhisper Benchmark — Ergebnisse</title>
+    <link rel="stylesheet" href="/styles.css?v=results-detail-v3" />
+    <script src="/results.js?v=results-detail-v3" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#resultsMain">Zu den Ergebnissen</a>
+
+    <header class="topbar">
+      <div class="brand" aria-label="TypeWhisper Benchmark">
+        <span class="brand-mark" aria-hidden="true">TW</span>
+        <span class="brand-copy">
+          <strong>Benchmark</strong>
+          <span>Ergebnisse</span>
+        </span>
+      </div>
+      <nav class="site-nav" aria-label="Bereiche">
+        <a href="/">Aufnehmen</a>
+        <a href="/results" aria-current="page">Ergebnisse</a>
+        <a href="/upload">Runs hochladen</a>
+      </nav>
+      <div class="batch-meta">
+        <span class="status-badge" id="snapshotStatus">Wird geladen</span>
+      </div>
+    </header>
+
+    <main class="dashboard-shell" id="resultsMain">
+      <section class="dashboard-hero">
+        <div>
+          <p class="prompt-counter">Veröffentlichte Evidenz</p>
+          <h1>Modelle im direkten Vergleich.</h1>
+          <p>
+            Pro Sprache, pro Fähigkeit und mit sichtbarer Abdeckung. Kein Wert
+            aus alten oder unvollständigen Läufen fließt hier ein.
+          </p>
+        </div>
+        <dl class="snapshot-meta" id="snapshotMeta" hidden>
+          <div><dt>Profil</dt><dd id="profileValue">—</dd></div>
+          <div><dt>Corpus</dt><dd id="corpusValue">—</dd></div>
+          <div><dt>Stand</dt><dd id="generatedValue">—</dd></div>
+        </dl>
+      </section>
+
+      <section class="empty-results" id="emptyResults" hidden>
+        <div class="empty-signal" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <p class="review-kicker">Sauberer Start</p>
+        <h2>Noch keine vertrauenswürdigen Ergebnisse.</h2>
+        <p>
+          Sobald ein neuer Lauf geprüft und als Snapshot freigegeben wurde,
+          erscheinen hier Rangliste, Metrikmatrix und Latenzen. Bis dahin bleibt
+          der Visualizer absichtlich leer.
+        </p>
+        <div class="planned-grid">
+          <div>
+            <span>Sprachen</span>
+            <div class="chip-list" id="plannedLanguages"></div>
+          </div>
+          <div>
+            <span>Metriken</span>
+            <div class="chip-list" id="plannedMetrics"></div>
+          </div>
+        </div>
+        <a class="button primary inline-button" href="/upload">Ersten Run hochladen</a>
+      </section>
+
+      <div id="readyResults" hidden>
+        <section class="stat-strip" aria-label="Snapshot-Übersicht">
+          <div><span>Modelle</span><strong id="targetCount">0</strong></div>
+          <div><span>Sprachen</span><strong id="languageCount">0</strong></div>
+          <div><span>Testfälle</span><strong id="caseCount">0</strong></div>
+          <div><span>Runs</span><strong id="runCount">0</strong></div>
+        </section>
+
+        <section class="dashboard-controls" aria-label="Ergebnisfilter">
+          <label>
+            Sprache
+            <select id="languageSelect"></select>
+          </label>
+          <label>
+            Ranglistenmetrik
+            <select id="metricSelect"></select>
+          </label>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="dashboard-card leaderboard-card">
+            <div class="card-heading">
+              <div>
+                <p class="review-kicker">Rangliste</p>
+                <h2 id="leaderboardTitle">WER</h2>
+              </div>
+              <span class="direction-note" id="directionNote">Niedriger ist besser</span>
+            </div>
+            <div class="table-scroll">
+              <table class="leaderboard-table">
+                <thead>
+                  <tr><th>Rang</th><th>Modell</th><th>Wert</th><th>Abdeckung</th></tr>
+                </thead>
+                <tbody id="leaderboardBody"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="dashboard-card latency-card">
+            <div class="card-heading">
+              <div>
+                <p class="review-kicker">Geschwindigkeit</p>
+                <h2>Median-Latenz</h2>
+              </div>
+              <span class="direction-note">Niedriger ist besser</span>
+            </div>
+            <div class="latency-list" id="latencyList"></div>
+          </article>
+        </section>
+
+        <section class="dashboard-card matrix-card">
+          <div class="card-heading">
+            <div>
+              <p class="review-kicker">Fähigkeitsprofil</p>
+              <h2>Metrikmatrix</h2>
+            </div>
+            <p class="matrix-note">Farbe ist nur innerhalb einer Spalte vergleichbar.</p>
+          </div>
+          <div class="table-scroll">
+            <table class="matrix-table">
+              <thead id="matrixHead"></thead>
+              <tbody id="matrixBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="dashboard-card cases-card" aria-labelledby="casesTitle">
+          <div class="card-heading cases-heading">
+            <div>
+              <p class="review-kicker">Einzeltest-Evidenz</p>
+              <h2 id="casesTitle">Was wurde tatsächlich erkannt?</h2>
+              <p class="cases-intro">
+                Gesprochener Rohtext, Zielformat und alle Modellantworten aus
+                demselben freigegebenen Snapshot.
+              </p>
+            </div>
+            <label class="case-filter">
+              Kategorie
+              <select id="caseTagSelect">
+                <option value="all">Alle Tests</option>
+              </select>
+            </label>
+          </div>
+          <div class="case-legend" aria-label="Legende">
+            <span><i class="legend-mark exact"></i>Übereinstimmung</span>
+            <span><i class="legend-mark changed"></i>Abweichung</span>
+            <span>Vergleich mit erwarteter Ausgabe</span>
+            <span>WER und CER: niedriger ist besser</span>
+          </div>
+          <div class="case-list" id="caseList"></div>
+        </section>
+      </div>
+
+      <p class="system-status dashboard-status" id="resultsStatus" aria-live="polite">
+        Snapshot wird geladen …
+      </p>
+    </main>
+  </body>
+</html>

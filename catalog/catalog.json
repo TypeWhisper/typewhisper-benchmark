@@ -1,0 +1,437 @@
+{
+  "schemaVersion": 1,
+  "adapters": [
+    {
+      "id": "typewhisper-http",
+      "displayName": "TypeWhisper Local HTTP API",
+      "kind": "system",
+      "protocolVersion": "typewhisper-http-v1",
+      "modes": ["batch"]
+    }
+  ],
+  "models": [
+    {
+      "id": "parakeet-v3-fluid-coreml-9c915286",
+      "displayName": "Parakeet TDT 0.6B v3 (FluidInference Core ML)",
+      "provider": "fluidinference",
+      "upstreamModelId": "FluidInference/parakeet-tdt-0.6b-v3-coreml",
+      "revision": "artifact-tree-sha256:9c9152869119430ebdf5139015546778743a16c1cdf223b62f5ae3a370292161",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "parakeet-v3-sherpa-int8-1fa1182d",
+      "displayName": "Parakeet TDT 0.6B v3 (sherpa-onnx INT8)",
+      "provider": "sherpa-onnx",
+      "upstreamModelId": "csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8",
+      "revision": "artifact-tree-sha256:1fa1182dac99a2191e7df563a180ab7bdfeda4215e6e73d0967e223f9a25a65b",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "whisper-large-v3-turbo-whisperkit-e86b1803",
+      "displayName": "Whisper Large v3 Turbo (WhisperKit Core ML)",
+      "provider": "whisperkit",
+      "upstreamModelId": "argmaxinc/whisperkit-coreml/openai_whisper-large-v3_turbo",
+      "revision": "artifact-tree-sha256:e86b1803a0f367050abb18c00d9b7238176c09bb97e2ac84cf15e614594fb3b0",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "whisper-large-v3-turbo-ggml-1fc70f77",
+      "displayName": "Whisper Large v3 Turbo (whisper.cpp GGML)",
+      "provider": "whisper.cpp",
+      "upstreamModelId": "ggerganov/whisper.cpp/ggml-large-v3-turbo.bin",
+      "revision": "sha256:1fc70f774d38eb169993ac391eea357ef47c88757ef72ee5943879b7e8e2bc69",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "whisper-large-v3-turbo-groq-api",
+      "displayName": "Whisper Large v3 Turbo (Groq API)",
+      "provider": "groq",
+      "upstreamModelId": "whisper-large-v3-turbo",
+      "revision": "groq-api-model-id:whisper-large-v3-turbo",
+      "releaseChannel": "stable",
+      "languages": ["de-DE"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "mai-transcribe-2-azure-speech-api",
+      "displayName": "MAI Transcribe 2 (Azure Speech API)",
+      "provider": "microsoft-ai",
+      "upstreamModelId": "MAI-Transcribe-2",
+      "revision": "azure-speech-model-id:MAI-Transcribe-2",
+      "releaseChannel": "stable",
+      "languages": ["de-DE"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "gpt-transcribe-openai-api",
+      "displayName": "GPT Transcribe (OpenAI API)",
+      "provider": "openai",
+      "upstreamModelId": "gpt-transcribe",
+      "revision": "openai-api-model-id:gpt-transcribe",
+      "releaseChannel": "stable",
+      "languages": ["de-DE"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "qwen3-asr-1.7b-mlx-4bit-78a389c7",
+      "displayName": "Qwen3 ASR 1.7B (MLX 4-bit)",
+      "provider": "mlx-community",
+      "upstreamModelId": "mlx-community/Qwen3-ASR-1.7B-4bit",
+      "revision": "hf-revision:78a389c776a5483b2d0d4ea5494e11012e0d6159",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "qwen3-asr-1.7b-onnx-int4-df916193",
+      "displayName": "Qwen3 ASR 1.7B (ONNX INT4)",
+      "provider": "onnxruntime",
+      "upstreamModelId": "andrewleech/qwen3-asr-1.7b-onnx",
+      "revision": "hf-revision:df916193ac67e59347769891a21e10d81d12acdd",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
+    }
+  ],
+  "targets": [
+    {
+      "id": "parakeet-v3-macos-coreml-tw-1.7.0",
+      "displayName": "Parakeet v3 · macOS Core ML",
+      "adapterId": "typewhisper-http",
+      "modelId": "parakeet-v3-fluid-coreml-9c915286",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS",
+        "version": "1.7.0+1188"
+      },
+      "parameters": {
+        "typewhisperEngine": "parakeet",
+        "typewhisperModel": "parakeet-tdt-0.6b-v3",
+        "typewhisperAppSha256": "7c29120cf37b09bb8649fc98912eaa5ffdba423bb0330aaf126c1e1d21f070e2",
+        "typewhisperPluginSha256": "d2f8a4e88ee43702e2944b8b774ad800fdb1cc86d7041aa4328dee0860c24062",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "parakeet-v3-windows-cuda-tw-4523e6bf",
+      "displayName": "Parakeet v3 · Windows CUDA",
+      "adapterId": "typewhisper-http",
+      "modelId": "parakeet-v3-sherpa-int8-1fa1182d",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "quantization": "int8"
+      },
+      "parameters": {
+        "typewhisperEngine": "sherpa-onnx",
+        "typewhisperModel": "parakeet-tdt-0.6b",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "d137d8eba8b1557a8e1280d730217f803750bd614be24605a2c8974a5a3f0419",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "requiredActiveBackend": "nvidia-cuda",
+        "useSelectedModel": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-macos-coreml-tw-4b9b6421",
+      "displayName": "Whisper Large v3 Turbo · macOS WhisperKit",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-whisperkit-e86b1803",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "whisper",
+        "typewhisperModel": "openai_whisper-large-v3_turbo",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "443b941fbe910831c86094340786967eadf471962535e1a629bfa074240c49a5",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-windows-cuda-tw-4523e6bf",
+      "displayName": "Whisper Large v3 Turbo · Windows CUDA",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-ggml-1fc70f77",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "quantization": "unquantized"
+      },
+      "parameters": {
+        "typewhisperEngine": "whisper-cpp",
+        "typewhisperModel": "large-v3-turbo",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "6c0f3c5784ba1181a99828fc6462e43fcfb5031dc5ea1ded14386b1344bc73d2",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "requiredActiveBackend": "nvidia-cuda",
+        "useSelectedModel": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-groq-macos-tw-4b9b6421",
+      "displayName": "Whisper Large v3 Turbo · Groq macOS",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-groq-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + Groq 1.0.24",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "groq",
+        "typewhisperModel": "whisper-large-v3-turbo",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "ef63891dc24ee3028fc2bc1c56c8c14c34e2569d147643243093cb1ce1cdff61",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 7000,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-groq-windows-tw-4523e6bf",
+      "displayName": "Whisper Large v3 Turbo · Groq Windows",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-groq-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + Groq 1.0.6",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087"
+      },
+      "parameters": {
+        "typewhisperEngine": "groq",
+        "typewhisperModel": "whisper-large-v3-turbo",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "dd07a368e4c8736f2819161186e216de1bc224b02bf70c44d7e8c639d0f0486e",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 7000,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "mai-transcribe-2-microsoft-macos-tw-4b9b6421",
+      "displayName": "MAI Transcribe 2 · Microsoft AI macOS",
+      "adapterId": "typewhisper-http",
+      "modelId": "mai-transcribe-2-azure-speech-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + Microsoft AI 1.0.0",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "microsoft-ai",
+        "typewhisperModel": "MAI-Transcribe-2",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "4951301d999777acc25003f419bfac9717fdbd04df8fd33ad5017411ef208dc6",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 7000,
+        "transcriptStyle": "clean",
+        "azureRegion": "eastus",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "mai-transcribe-2-microsoft-windows-tw-4523e6bf",
+      "displayName": "MAI Transcribe 2 · Microsoft AI Windows",
+      "adapterId": "typewhisper-http",
+      "modelId": "mai-transcribe-2-azure-speech-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + Microsoft AI 1.0.0",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087"
+      },
+      "parameters": {
+        "typewhisperEngine": "microsoft-ai",
+        "typewhisperModel": "MAI-Transcribe-2",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "df52704728ce1bf7bb6dc51f41af1fe9943b6cf9704b4fa029bb2b34abb07042",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 7000,
+        "transcriptStyle": "clean",
+        "azureRegion": "eastus",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "gpt-transcribe-openai-macos-tw-4b9b6421",
+      "displayName": "GPT Transcribe · OpenAI macOS",
+      "adapterId": "typewhisper-http",
+      "modelId": "gpt-transcribe-openai-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + OpenAI 1.3.3",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "openai",
+        "typewhisperModel": "gpt-transcribe",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "cc03388f87e2b6f35afec5254c23738791e8e65189bf756c4f10c119b002f0a1",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 1000,
+        "transcriptionContext": "",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "gpt-transcribe-openai-windows-tw-4523e6bf",
+      "displayName": "GPT Transcribe · OpenAI Windows",
+      "adapterId": "typewhisper-http",
+      "modelId": "gpt-transcribe-openai-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + OpenAI 1.1.2",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087"
+      },
+      "parameters": {
+        "typewhisperEngine": "openai",
+        "typewhisperModel": "gpt-transcribe",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "b0c7883c7d8a550667b2705dc7930e7185cf2e961c7a13fb395db07bcdc99b17",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 1000,
+        "transcriptionContext": "",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "qwen3-asr-1.7b-4bit-macos-mlx-tw-4b9b6421",
+      "displayName": "Qwen3 ASR 1.7B 4-bit · macOS MLX",
+      "adapterId": "typewhisper-http",
+      "modelId": "qwen3-asr-1.7b-mlx-4bit-78a389c7",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + Qwen3 ASR 1.1.8 (MLX)",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "quantization": "4-bit"
+      },
+      "parameters": {
+        "typewhisperEngine": "qwen3",
+        "typewhisperModel": "qwen3-asr-1.7b-4bit",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "ceb4745dfa20fb6b708d72dddd4dc99339878ca5bd9c06c277b260d98c074c5c",
+        "modelArtifactTreeSha256": "2de7d75f6c94a880d760e67e66801ce6312e676ee842b71bf98d8c2439c35710",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "local",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "qwen3-asr-1.7b-int4-windows-onnx-cpu-tw-4523e6bf",
+      "displayName": "Qwen3 ASR 1.7B int4 · Windows ONNX CPU",
+      "adapterId": "typewhisper-http",
+      "modelId": "qwen3-asr-1.7b-onnx-int4-df916193",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + Qwen3 ASR 1.1.0 (ONNX Runtime)",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "quantization": "int4 RTN"
+      },
+      "parameters": {
+        "typewhisperEngine": "qwen3-stt",
+        "typewhisperModel": "qwen3-asr-1.7b-int4",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "9bf7401024113d71690271c8ce492ac24b1658b13f7a0b7e052826d42bbcc857",
+        "modelArtifactTreeSha256": "f159462df69d53347f34527efed37b8a07f25d11c184b20b3a3ecdda8482e032",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "requiredActiveBackend": "cpu",
+        "inferenceLocation": "local",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    }
+  ]
+}
