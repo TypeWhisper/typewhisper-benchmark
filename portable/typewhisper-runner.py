@@ -259,6 +259,8 @@ def main() -> int:
     expected_terms_digest = kit["execution"].get("expectedDictionaryTermsSha256")
     if expected_terms_digest and dictionary_terms_digest != expected_terms_digest:
         raise RuntimeError("TypeWhisper dictionary term configuration changed")
+    if kit["execution"].get("requireNoDictionaryTerms") and terms:
+        raise RuntimeError("This target requires an empty dictionary term list")
 
     corrections = request_json(base_url, "/v1/dictionary/corrections", token)
     correction_count = corrections.get("count")

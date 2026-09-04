@@ -124,6 +124,12 @@ function validateRun(options: {
     throw new Error(`Run ${bundle.manifest.runId} used an unexpected dictionary context`);
   }
   if (
+    kit.execution.requireNoDictionaryTerms &&
+    runtime.dictionaryTermCount !== "0"
+  ) {
+    throw new Error(`Run ${bundle.manifest.runId} used dictionary recognition terms`);
+  }
+  if (
     kit.execution.requireNoCorrections &&
     runtime.dictionaryCorrectionCount !== "0"
   ) {

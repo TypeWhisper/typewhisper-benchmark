@@ -99,8 +99,9 @@ writes one external bundle. The runner also records the backend reported after
 inference; merely detecting a GPU never turns a CPU run into a CUDA run.
 One unscored, attested warm-up request loads the target before latency samples
 begin. Configured dictionary-term identity is pinned without putting the terms
-themselves in the run bundle; targets whose API cannot disable corrections can
-require an empty correction set.
+themselves in the run bundle. Raw targets additionally require zero recognition
+terms and zero correction entries, so backend-specific vocabulary boosting
+cannot silently enter a baseline run.
 
 ## Planned artifact layout
 

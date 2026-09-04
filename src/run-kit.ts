@@ -185,6 +185,11 @@ export async function prepareTypeWhisperRunKit(options: {
         false
       ),
       warmup: booleanParameter(target.parameters, "warmup", true),
+      requireNoDictionaryTerms: booleanParameter(
+        target.parameters,
+        "requireNoDictionaryTerms",
+        false
+      ),
       requireNoCorrections: booleanParameter(
         target.parameters,
         "requireNoCorrections",

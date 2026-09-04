@@ -4,7 +4,9 @@ param(
     [string]$Action,
 
     [Parameter(Mandatory = $true)]
-    [string]$BackupDirectory
+    [string]$BackupDirectory,
+
+    [string]$ExecutablePath
 )
 
 $ErrorActionPreference = "Stop"
@@ -52,11 +54,17 @@ if ($Action -eq "Enable") {
     if (Test-Path $backupPath) {
         throw "A benchmark settings backup already exists at $backupPath. Restore it first."
     }
-    $process = Get-Process TypeWhisper -ErrorAction Stop | Select-Object -First 1
-    $executablePath = $process.Path
+    $process = Get-Process TypeWhisper -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($process) {
+        $resolvedExecutablePath = $process.Path
+    } elseif (-not [string]::IsNullOrWhiteSpace($ExecutablePath) -and (Test-Path -LiteralPath $ExecutablePath)) {
+        $resolvedExecutablePath = (Resolve-Path -LiteralPath $ExecutablePath).Path
+    } else {
+        throw "TypeWhisper is not running. Pass -ExecutablePath with the exact executable to start."
+    }
     New-Item -ItemType Directory -Path $BackupDirectory -Force | Out-Null
     Copy-Item -LiteralPath $settingsPath -Destination $backupPath
-    Set-Content -LiteralPath $executablePathFile -Value $executablePath -Encoding UTF8
+    Set-Content -LiteralPath $executablePathFile -Value $resolvedExecutablePath -Encoding UTF8
     Stop-TypeWhisper
 
     $settings = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json
@@ -65,7 +73,7 @@ if ($Action -eq "Enable") {
     $temporaryPath = "$settingsPath.benchmark.tmp"
     $settings | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $temporaryPath -Encoding UTF8
     Move-Item -LiteralPath $temporaryPath -Destination $settingsPath -Force
-    Start-TypeWhisper $executablePath
+    Start-TypeWhisper $resolvedExecutablePath
     Write-Output "benchmark-mode-enabled"
     exit 0
 }

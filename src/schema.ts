@@ -776,6 +776,7 @@ export const RunKitSchema = z
       useSelectedModel: z.boolean().default(false),
       warmup: z.boolean().default(true),
       expectedDictionaryTermsSha256: Sha256Schema.optional(),
+      requireNoDictionaryTerms: z.boolean().default(false),
       requireNoCorrections: z.boolean().default(false),
       requiredActiveBackend: z.string().min(1).optional(),
     }),

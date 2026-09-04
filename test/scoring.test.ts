@@ -37,6 +37,7 @@ function fixtureRun() {
       normalizeNumbers: false as const,
       useSelectedModel: false,
       warmup: true,
+      requireNoDictionaryTerms: false,
       requireNoCorrections: false,
     },
     tasks: [
@@ -122,5 +123,24 @@ describe("snapshot scoring", () => {
         scoringGitCommit: "c".repeat(40),
       })
     ).toThrow(/incomplete/);
+  });
+
+  it("rejects dictionary terms for a raw target", () => {
+    const fixture = fixtureRun();
+    const { kitDigest: _oldDigest, ...kitContent } = fixture.kit;
+    kitContent.execution.requireNoDictionaryTerms = true;
+    fixture.kit = RunKitSchema.parse({
+      ...kitContent,
+      kitDigest: contentDigest(kitContent),
+    });
+    fixture.bundle.manifest.runKitDigest = fixture.kit.kitDigest;
+    fixture.bundle.manifest.environment.runtimeVersions.dictionaryTermCount = "1";
+    expect(() =>
+      createVisualizationSnapshot({
+        ...fixture,
+        runs: [{ kit: fixture.kit, bundle: fixture.bundle }],
+        scoringGitCommit: "c".repeat(40),
+      })
+    ).toThrow(/dictionary recognition terms/);
   });
 });
