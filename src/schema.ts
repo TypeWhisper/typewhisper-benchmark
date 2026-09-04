@@ -485,6 +485,7 @@ export const VisualizationSnapshotSchema = z
     generatedAt: z.string().datetime(),
     profileId: InternalIdSchema,
     corpusVersion: z.string().min(1),
+    scoringGitCommit: z.string().regex(/^[a-f0-9]{40}$/),
     caseCount: z.number().int().positive(),
     runIds: z.array(InternalIdSchema).min(1),
     languages: z.array(z.string().min(2)).min(1),

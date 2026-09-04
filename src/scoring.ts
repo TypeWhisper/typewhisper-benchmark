@@ -73,6 +73,9 @@ function validateRun(options: {
   const expected = new Set(
     plan.tasks.map((task) => `${task.targetId}:${task.caseId}:${task.trial}`)
   );
+  const kitTasks = new Map(
+    kit.tasks.map((task) => [`${kit.targetId}:${task.caseId}:${task.trial}`, task])
+  );
   const actual = new Set(
     bundle.results.map(
       (result) => `${result.targetId}:${result.caseId}:${result.trial}`
@@ -90,6 +93,47 @@ function validateRun(options: {
     throw new Error(
       `Run ${bundle.manifest.runId} is incomplete: ${errors.length} task(s) failed`
     );
+  }
+
+  for (const result of bundle.results) {
+    const key = `${result.targetId}:${result.caseId}:${result.trial}`;
+    const task = kitTasks.get(key)!;
+    const metadata = result.providerMetadata;
+    if (metadata?.audioSha256 !== task.audio.sha256) {
+      throw new Error(`Run ${bundle.manifest.runId} used unverified audio for ${key}`);
+    }
+    if (
+      metadata.engine !== kit.execution.engine ||
+      metadata.model !== kit.execution.model
+    ) {
+      throw new Error(`Run ${bundle.manifest.runId} used the wrong engine/model for ${key}`);
+    }
+    if (
+      kit.execution.requiredActiveBackend &&
+      metadata.activeBackend !== kit.execution.requiredActiveBackend
+    ) {
+      throw new Error(`Run ${bundle.manifest.runId} used the wrong backend for ${key}`);
+    }
+  }
+
+  const runtime = bundle.manifest.environment.runtimeVersions;
+  if (
+    kit.execution.expectedDictionaryTermsSha256 &&
+    runtime.dictionaryTermsSha256 !== kit.execution.expectedDictionaryTermsSha256
+  ) {
+    throw new Error(`Run ${bundle.manifest.runId} used an unexpected dictionary context`);
+  }
+  if (
+    kit.execution.requireNoCorrections &&
+    runtime.dictionaryCorrectionCount !== "0"
+  ) {
+    throw new Error(`Run ${bundle.manifest.runId} used dictionary corrections`);
+  }
+  if (kit.execution.warmup) {
+    const warmupMs = Number(runtime.warmupMs);
+    if (!Number.isFinite(warmupMs) || warmupMs < 0) {
+      throw new Error(`Run ${bundle.manifest.runId} has no valid warm-up attestation`);
+    }
   }
 }
 
@@ -110,6 +154,7 @@ export function createVisualizationSnapshot(options: {
   corpus: CorpusManifest;
   profile: BenchmarkProfile;
   runs: Array<{ kit: RunKit; bundle: ExternalRunBundle }>;
+  scoringGitCommit: string;
   generatedAt?: string;
 }): VisualizationSnapshot {
   const metricIds = options.profile.metrics.map((metric) => {
@@ -209,6 +254,7 @@ export function createVisualizationSnapshot(options: {
     generatedAt,
     profileId: options.profile.id,
     corpusVersion: options.corpus.corpusVersion,
+    scoringGitCommit: options.scoringGitCommit,
     caseCount: selectedItems.length,
     runIds,
     languages,

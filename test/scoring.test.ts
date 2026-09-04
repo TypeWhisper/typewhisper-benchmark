@@ -62,6 +62,12 @@ function fixtureRun() {
     status: "ok",
     transcript: "TypeWhisper kostet im Beispiel 12 Euro.",
     durationMs: 200,
+    providerMetadata: {
+      audioSha256: "b".repeat(64),
+      engine: "fixture",
+      model: "fixture-model",
+      activeBackend: "not-reported",
+    },
   };
   const bundle = ExternalRunBundleSchema.parse({
     schemaVersion: 1,
@@ -77,7 +83,7 @@ function fixtureRun() {
         environmentId: "fixture-machine",
         os: "Fixture OS",
         architecture: "fixture",
-        runtimeVersions: {},
+        runtimeVersions: { warmupMs: "100" },
       },
     },
     results: [result],
@@ -91,6 +97,7 @@ describe("snapshot scoring", () => {
     const snapshot = createVisualizationSnapshot({
       ...fixture,
       runs: [{ kit: fixture.kit, bundle: fixture.bundle }],
+      scoringGitCommit: "c".repeat(40),
       generatedAt: "2026-09-04T13:00:00.000Z",
     });
     expect(snapshot.caseCount).toBe(1);
@@ -112,6 +119,7 @@ describe("snapshot scoring", () => {
       createVisualizationSnapshot({
         ...fixture,
         runs: [{ kit: fixture.kit, bundle: fixture.bundle }],
+        scoringGitCommit: "c".repeat(40),
       })
     ).toThrow(/incomplete/);
   });

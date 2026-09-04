@@ -126,7 +126,13 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
         bundle: ExternalRunBundleSchema.parse(await readJson(runPaths[index + 1]!)),
       });
     }
-    const snapshot = createVisualizationSnapshot({ catalog, corpus, profile, runs });
+    const snapshot = createVisualizationSnapshot({
+      catalog,
+      corpus,
+      profile,
+      runs,
+      scoringGitCommit: await exactGitCommit(),
+    });
     await writeFile(resolve(outputPath), `${JSON.stringify(snapshot, null, 2)}\n`, {
       encoding: "utf8",
       mode: 0o600,

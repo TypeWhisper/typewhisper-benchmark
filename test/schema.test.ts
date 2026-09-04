@@ -252,6 +252,7 @@ describe("visualization snapshot schema", () => {
       generatedAt: "2026-09-04T08:00:00.000Z",
       profileId: "core-v1",
       corpusVersion: "core-v1",
+      scoringGitCommit: "d".repeat(40),
       caseCount: 10,
       runIds: ["run-1"],
       languages: ["de-DE"],

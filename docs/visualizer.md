@@ -8,6 +8,7 @@ browser.
 The `VisualizationSnapshotSchema` in `src/schema.ts` requires:
 
 - snapshot, profile, corpus, and run identities;
+- the exact Git commit containing the scorer implementation;
 - explicit target names, provider names, model IDs, and revisions;
 - language-specific metric aggregates with eligible and total case counts;
 - optional language-specific latency summaries.
