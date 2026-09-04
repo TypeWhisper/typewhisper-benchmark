@@ -59,6 +59,16 @@
       "releaseChannel": "stable",
       "languages": ["de-DE"],
       "modes": ["batch"]
+    },
+    {
+      "id": "mai-transcribe-2-azure-speech-api",
+      "displayName": "MAI Transcribe 2 (Azure Speech API)",
+      "provider": "microsoft-ai",
+      "upstreamModelId": "MAI-Transcribe-2",
+      "revision": "azure-speech-model-id:MAI-Transcribe-2",
+      "releaseChannel": "stable",
+      "languages": ["de-DE"],
+      "modes": ["batch"]
     }
   ],
   "targets": [
@@ -216,6 +226,64 @@
         "requireNoCorrections": true,
         "inferenceLocation": "remote",
         "minimumRequestIntervalMs": 7000,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "mai-transcribe-2-microsoft-macos-tw-4b9b6421",
+      "displayName": "MAI Transcribe 2 · Microsoft AI macOS",
+      "adapterId": "typewhisper-http",
+      "modelId": "mai-transcribe-2-azure-speech-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + Microsoft AI 1.0.0",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "microsoft-ai",
+        "typewhisperModel": "MAI-Transcribe-2",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "4951301d999777acc25003f419bfac9717fdbd04df8fd33ad5017411ef208dc6",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 2000,
+        "transcriptStyle": "clean",
+        "azureRegion": "eastus",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "mai-transcribe-2-microsoft-windows-tw-4523e6bf",
+      "displayName": "MAI Transcribe 2 · Microsoft AI Windows",
+      "adapterId": "typewhisper-http",
+      "modelId": "mai-transcribe-2-azure-speech-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + Microsoft AI 1.0.0",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087"
+      },
+      "parameters": {
+        "typewhisperEngine": "microsoft-ai",
+        "typewhisperModel": "MAI-Transcribe-2",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "df52704728ce1bf7bb6dc51f41af1fe9943b6cf9704b4fa029bb2b34abb07042",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 2000,
+        "transcriptStyle": "clean",
+        "azureRegion": "eastus",
         "awaitDownload": false,
         "applyCorrections": false,
         "normalizeNumbers": false,
