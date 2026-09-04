@@ -71,6 +71,16 @@
       "modes": ["batch"]
     },
     {
+      "id": "gpt-transcribe-openai-api",
+      "displayName": "GPT Transcribe (OpenAI API)",
+      "provider": "openai",
+      "upstreamModelId": "gpt-transcribe",
+      "revision": "openai-api-model-id:gpt-transcribe",
+      "releaseChannel": "stable",
+      "languages": ["de-DE"],
+      "modes": ["batch"]
+    },
+    {
       "id": "qwen3-asr-1.7b-mlx-4bit-78a389c7",
       "displayName": "Qwen3 ASR 1.7B (MLX 4-bit)",
       "provider": "mlx-community",
@@ -304,6 +314,62 @@
         "minimumRequestIntervalMs": 7000,
         "transcriptStyle": "clean",
         "azureRegion": "eastus",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "gpt-transcribe-openai-macos-tw-4b9b6421",
+      "displayName": "GPT Transcribe · OpenAI macOS",
+      "adapterId": "typewhisper-http",
+      "modelId": "gpt-transcribe-openai-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + OpenAI 1.3.3",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "openai",
+        "typewhisperModel": "gpt-transcribe",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "cc03388f87e2b6f35afec5254c23738791e8e65189bf756c4f10c119b002f0a1",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 1000,
+        "transcriptionContext": "",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "gpt-transcribe-openai-windows-tw-4523e6bf",
+      "displayName": "GPT Transcribe · OpenAI Windows",
+      "adapterId": "typewhisper-http",
+      "modelId": "gpt-transcribe-openai-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + OpenAI 1.1.2",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087"
+      },
+      "parameters": {
+        "typewhisperEngine": "openai",
+        "typewhisperModel": "gpt-transcribe",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "b0c7883c7d8a550667b2705dc7930e7185cf2e961c7a13fb395db07bcdc99b17",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "remote",
+        "minimumRequestIntervalMs": 1000,
+        "transcriptionContext": "",
         "awaitDownload": false,
         "applyCorrections": false,
         "normalizeNumbers": false,
