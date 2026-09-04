@@ -66,6 +66,18 @@ function stringParameter(
   return value;
 }
 
+function optionalStringParameter(
+  parameters: Record<string, unknown>,
+  name: string
+): string | undefined {
+  const value = parameters[name];
+  if (value === undefined) return undefined;
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`Target parameter ${name} must be a non-empty string`);
+  }
+  return value;
+}
+
 function booleanParameter(
   parameters: Record<string, unknown>,
   name: string,
@@ -167,6 +179,14 @@ export async function prepareTypeWhisperRunKit(options: {
       awaitDownload: booleanParameter(target.parameters, "awaitDownload", false),
       applyCorrections: false,
       normalizeNumbers: false,
+      ...(optionalStringParameter(target.parameters, "requiredActiveBackend")
+        ? {
+            requiredActiveBackend: optionalStringParameter(
+              target.parameters,
+              "requiredActiveBackend"
+            ),
+          }
+        : {}),
     },
     tasks: plan.tasks.map((task) => {
       const item = items.get(task.caseId)!;

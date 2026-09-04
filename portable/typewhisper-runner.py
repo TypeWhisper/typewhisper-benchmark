@@ -229,9 +229,34 @@ def main() -> int:
             text = response.get("text")
             if not isinstance(text, str):
                 raise RuntimeError("TypeWhisper response contains no text")
+            if response.get("engine") != kit["execution"]["engine"]:
+                raise RuntimeError(
+                    f"TypeWhisper used unexpected engine: {response.get('engine')}"
+                )
+            response_model = response.get("model")
+            if response_model not in (
+                kit["execution"]["model"],
+                f"plugin:{kit['execution']['engine']}:{kit['execution']['model']}",
+            ):
+                raise RuntimeError(f"TypeWhisper used unexpected model: {response_model}")
+            status_after = request_json(base_url, "/v1/status", token)
+            acceleration = status_after.get("acceleration")
+            event_backend = (
+                acceleration.get("active_backend")
+                if isinstance(acceleration, dict)
+                else None
+            )
+            required_backend = kit["execution"].get("requiredActiveBackend")
+            if required_backend and event_backend != required_backend:
+                raise RuntimeError(
+                    f"Required backend {required_backend}, active backend is {event_backend or 'not reported'}"
+                )
             provider_metadata: dict[str, Any] = {
                 "audioSha256": actual_digest,
                 "apiVersion": status_before.get("api_version", "unknown"),
+                "engine": response.get("engine"),
+                "model": response_model,
+                "activeBackend": event_backend or "not-reported",
             }
             for source, destination in (
                 ("duration", "audioDurationSeconds"),
@@ -249,7 +274,6 @@ def main() -> int:
                     "providerMetadata": provider_metadata,
                 }
             )
-            status_after = request_json(base_url, "/v1/status", token)
         except Exception as error:  # Keep the complete plan append-only.
             event.update(
                 {

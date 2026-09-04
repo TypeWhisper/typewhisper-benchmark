@@ -772,6 +772,7 @@ export const RunKitSchema = z
       awaitDownload: z.boolean().default(false),
       applyCorrections: z.literal(false),
       normalizeNumbers: z.literal(false),
+      requiredActiveBackend: z.string().min(1).optional(),
     }),
     tasks: z.array(RunKitTaskSchema).min(1),
   })
