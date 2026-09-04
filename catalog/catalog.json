@@ -49,6 +49,16 @@
       "releaseChannel": "stable",
       "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
       "modes": ["batch"]
+    },
+    {
+      "id": "whisper-large-v3-turbo-groq-api",
+      "displayName": "Whisper Large v3 Turbo (Groq API)",
+      "provider": "groq",
+      "upstreamModelId": "whisper-large-v3-turbo",
+      "revision": "groq-api-model-id:whisper-large-v3-turbo",
+      "releaseChannel": "stable",
+      "languages": ["de-DE"],
+      "modes": ["batch"]
     }
   ],
   "targets": [
@@ -151,6 +161,57 @@
         "requireNoDictionaryTerms": true,
         "requireNoCorrections": true,
         "requiredActiveBackend": "nvidia-cuda",
+        "useSelectedModel": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-groq-macos-tw-4b9b6421",
+      "displayName": "Whisper Large v3 Turbo · Groq macOS",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-groq-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + Groq 1.0.24",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "groq",
+        "typewhisperModel": "whisper-large-v3-turbo",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "ef63891dc24ee3028fc2bc1c56c8c14c34e2569d147643243093cb1ce1cdff61",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-groq-windows-tw-4523e6bf",
+      "displayName": "Whisper Large v3 Turbo · Groq Windows",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-groq-api",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + Groq 1.0.6",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087"
+      },
+      "parameters": {
+        "typewhisperEngine": "groq",
+        "typewhisperModel": "whisper-large-v3-turbo",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "dd07a368e4c8736f2819161186e216de1bc224b02bf70c44d7e8c639d0f0486e",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
         "useSelectedModel": true,
         "awaitDownload": false,
         "applyCorrections": false,
