@@ -214,11 +214,12 @@ def main() -> int:
             "language": str(task["language"]).split("-")[0].lower(),
             "task": "transcribe",
             "response_format": "verbose_json",
-            "engine": kit["execution"]["engine"],
-            "model": kit["execution"]["model"],
             "apply_corrections": False,
             "normalize_numbers": False,
         }
+        if not kit["execution"].get("useSelectedModel"):
+            payload["engine"] = kit["execution"]["engine"]
+            payload["model"] = kit["execution"]["model"]
         endpoint = "/v1/transcribe/local-file"
         if kit["execution"].get("awaitDownload"):
             endpoint += "?await_download=1"
@@ -237,6 +238,7 @@ def main() -> int:
             if response_model not in (
                 kit["execution"]["model"],
                 f"plugin:{kit['execution']['engine']}:{kit['execution']['model']}",
+                f"plugin:com.typewhisper.{kit['execution']['engine']}:{kit['execution']['model']}",
             ):
                 raise RuntimeError(f"TypeWhisper used unexpected model: {response_model}")
             status_after = request_json(base_url, "/v1/status", token)

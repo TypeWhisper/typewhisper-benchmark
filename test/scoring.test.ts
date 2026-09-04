@@ -35,6 +35,7 @@ function fixtureRun() {
       awaitDownload: false,
       applyCorrections: false as const,
       normalizeNumbers: false as const,
+      useSelectedModel: false,
     },
     tasks: [
       {

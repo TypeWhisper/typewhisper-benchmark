@@ -179,6 +179,11 @@ export async function prepareTypeWhisperRunKit(options: {
       awaitDownload: booleanParameter(target.parameters, "awaitDownload", false),
       applyCorrections: false,
       normalizeNumbers: false,
+      useSelectedModel: booleanParameter(
+        target.parameters,
+        "useSelectedModel",
+        false
+      ),
       ...(optionalStringParameter(target.parameters, "requiredActiveBackend")
         ? {
             requiredActiveBackend: optionalStringParameter(

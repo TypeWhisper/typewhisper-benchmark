@@ -23,13 +23,23 @@ function Stop-TypeWhisper {
 }
 
 function Start-TypeWhisper([string]$ExecutablePath) {
-    Start-Process -FilePath $ExecutablePath
+    $taskName = "TypeWhisperBenchmarkStart-$([Guid]::NewGuid().ToString('N'))"
+    $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    $action = New-ScheduledTaskAction -Execute $ExecutablePath
+    $principal = New-ScheduledTaskPrincipal -UserId $identity -LogonType Interactive
+    try {
+        Register-ScheduledTask -TaskName $taskName -Action $action -Principal $principal -Force | Out-Null
+        Start-ScheduledTask -TaskName $taskName
+    } finally {
+        Start-Sleep -Seconds 1
+        Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
+    }
     $deadline = [DateTime]::UtcNow.AddSeconds(90)
     do {
         Start-Sleep -Milliseconds 500
         try {
             $status = Invoke-RestMethod -Uri "http://127.0.0.1:8978/v1/status" -TimeoutSec 2
-            if ($status.status -eq "ready") {
+            if ($status.status -in @("ready", "no_model")) {
                 return
             }
         } catch {
