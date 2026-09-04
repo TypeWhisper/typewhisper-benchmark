@@ -306,7 +306,7 @@ function render() {
   elements.localeBadge.textContent = state.batch.language.split("-")[0].toUpperCase();
   elements.promptCounter.textContent = `Satz ${state.currentIndex + 1} von ${state.batch.items.length}`;
   elements.categoryBadge.textContent = categoryLabels[item.category] ?? item.category;
-  elements.promptText.textContent = item.displayText;
+  elements.promptText.textContent = item.spokenText;
   elements.timer.textContent = "00:00.0";
   elements.recordButton.disabled = Boolean(state.pendingBlob);
   elements.reviewPanel.hidden = !state.pendingBlob;

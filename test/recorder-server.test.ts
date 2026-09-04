@@ -54,6 +54,14 @@ describe("recorder server", () => {
   });
 
   it("stores audio takes only in the configured storage root", async () => {
+    const batchResponse = await fetch(`${baseUrl}/api/batches/de-de-pilot-01`);
+    const batch = (await batchResponse.json()) as {
+      items: Array<{ spokenText: string; formattedReference?: string }>;
+    };
+    expect(batch.items[4]?.spokenText).toContain("zwölften September");
+    expect(batch.items[4]?.spokenText).toContain("neun Uhr dreißig");
+    expect(batch.items[4]?.formattedReference).toBeUndefined();
+
     const response = await fetch(
       `${baseUrl}/api/batches/de-de-pilot-01/recordings/de-own-dictation-001`,
       {

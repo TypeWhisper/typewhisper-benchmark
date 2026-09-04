@@ -421,7 +421,6 @@ export const RecordingBatchSchema = z
         z.object({
           promptId: InternalIdSchema,
           fileBase: SafeFileBaseSchema,
-          displayText: z.string().min(1),
         })
       )
       .min(1),

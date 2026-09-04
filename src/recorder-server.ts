@@ -184,7 +184,7 @@ async function batchPayload(root: string, storageRoot: string, batchId: string) 
         index: index + 1,
         promptId: item.promptId,
         fileBase: item.fileBase,
-        displayText: item.displayText,
+        spokenText: prompt.spokenText,
         category: prompt.category,
         takes: await takeFiles(loaded, item.fileBase),
       };
