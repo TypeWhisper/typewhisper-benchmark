@@ -69,6 +69,26 @@
       "releaseChannel": "stable",
       "languages": ["de-DE"],
       "modes": ["batch"]
+    },
+    {
+      "id": "qwen3-asr-1.7b-mlx-4bit-78a389c7",
+      "displayName": "Qwen3 ASR 1.7B (MLX 4-bit)",
+      "provider": "mlx-community",
+      "upstreamModelId": "mlx-community/Qwen3-ASR-1.7B-4bit",
+      "revision": "hf-revision:78a389c776a5483b2d0d4ea5494e11012e0d6159",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "qwen3-asr-1.7b-onnx-int4-df916193",
+      "displayName": "Qwen3 ASR 1.7B (ONNX INT4)",
+      "provider": "onnxruntime",
+      "upstreamModelId": "andrewleech/qwen3-asr-1.7b-onnx",
+      "revision": "hf-revision:df916193ac67e59347769891a21e10d81d12acdd",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
     }
   ],
   "targets": [
@@ -284,6 +304,63 @@
         "minimumRequestIntervalMs": 7000,
         "transcriptStyle": "clean",
         "azureRegion": "eastus",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "qwen3-asr-1.7b-4bit-macos-mlx-tw-4b9b6421",
+      "displayName": "Qwen3 ASR 1.7B 4-bit · macOS MLX",
+      "adapterId": "typewhisper-http",
+      "modelId": "qwen3-asr-1.7b-mlx-4bit-78a389c7",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build + Qwen3 ASR 1.1.8 (MLX)",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "quantization": "4-bit"
+      },
+      "parameters": {
+        "typewhisperEngine": "qwen3",
+        "typewhisperModel": "qwen3-asr-1.7b-4bit",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "ceb4745dfa20fb6b708d72dddd4dc99339878ca5bd9c06c277b260d98c074c5c",
+        "modelArtifactTreeSha256": "2de7d75f6c94a880d760e67e66801ce6312e676ee842b71bf98d8c2439c35710",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "inferenceLocation": "local",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "qwen3-asr-1.7b-int4-windows-onnx-cpu-tw-4523e6bf",
+      "displayName": "Qwen3 ASR 1.7B int4 · Windows ONNX CPU",
+      "adapterId": "typewhisper-http",
+      "modelId": "qwen3-asr-1.7b-onnx-int4-df916193",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build + Qwen3 ASR 1.1.0 (ONNX Runtime)",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "quantization": "int4 RTN"
+      },
+      "parameters": {
+        "typewhisperEngine": "qwen3-stt",
+        "typewhisperModel": "qwen3-asr-1.7b-int4",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "9bf7401024113d71690271c8ce492ac24b1658b13f7a0b7e052826d42bbcc857",
+        "modelArtifactTreeSha256": "f159462df69d53347f34527efed37b8a07f25d11c184b20b3a3ecdda8482e032",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "requiredActiveBackend": "cpu",
+        "inferenceLocation": "local",
         "awaitDownload": false,
         "applyCorrections": false,
         "normalizeNumbers": false,
