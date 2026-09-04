@@ -273,19 +273,20 @@ function alignTranscript(reference, transcript) {
 function renderTranscriptDiff(reference, transcript) {
   const wrapper = document.createElement("div");
   const transcriptLine = document.createElement("p");
-  const { transcriptTokens, matchedTranscript, missing } = alignTranscript(
-    reference,
-    transcript
-  );
+  const { matchedTranscript, missing } = alignTranscript(reference, transcript);
+  const transcriptChunks = diffTokens(transcript);
   transcriptLine.className = "transcript-copy";
-  transcriptTokens.forEach((token, index) => {
-    if (index > 0 && !/^[,.;:!?%)}\]]$/u.test(token)) {
-      transcriptLine.append(document.createTextNode(" "));
+  let tokenIndex = 0;
+  transcriptChunks.forEach((token) => {
+    if (/^\s+$/u.test(token)) {
+      transcriptLine.append(document.createTextNode(token));
+      return;
     }
     const span = document.createElement("span");
-    span.className = matchedTranscript.has(index) ? "diff-exact" : "diff-changed";
+    span.className = matchedTranscript.has(tokenIndex) ? "diff-exact" : "diff-changed";
     span.textContent = token;
     transcriptLine.append(span);
+    tokenIndex += 1;
   });
   wrapper.append(transcriptLine);
 
