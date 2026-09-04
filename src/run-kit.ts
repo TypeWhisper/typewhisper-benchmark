@@ -184,6 +184,23 @@ export async function prepareTypeWhisperRunKit(options: {
         "useSelectedModel",
         false
       ),
+      warmup: booleanParameter(target.parameters, "warmup", true),
+      requireNoCorrections: booleanParameter(
+        target.parameters,
+        "requireNoCorrections",
+        false
+      ),
+      ...(optionalStringParameter(
+        target.parameters,
+        "expectedDictionaryTermsSha256"
+      )
+        ? {
+            expectedDictionaryTermsSha256: optionalStringParameter(
+              target.parameters,
+              "expectedDictionaryTermsSha256"
+            ),
+          }
+        : {}),
       ...(optionalStringParameter(target.parameters, "requiredActiveBackend")
         ? {
             requiredActiveBackend: optionalStringParameter(

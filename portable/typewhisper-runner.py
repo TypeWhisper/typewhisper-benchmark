@@ -152,6 +152,65 @@ def compact_id(value: str) -> str:
     return cleaned[:128]
 
 
+def audio_for_task(root: Path, task: dict[str, Any]) -> tuple[Path, str]:
+    audio = (root / task["audio"]["path"]).resolve()
+    if root not in audio.parents or not audio.is_file():
+        raise RuntimeError(f"Run-kit audio is missing or outside the kit: {audio}")
+    actual_digest = sha256(audio)
+    if actual_digest != task["audio"]["sha256"]:
+        raise RuntimeError(f"Run-kit audio digest mismatch: {task['caseId']}")
+    return audio, actual_digest
+
+
+def transcription_payload(
+    kit: dict[str, Any], task: dict[str, Any], audio: Path
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "path": str(audio),
+        "language": str(task["language"]).split("-")[0].lower(),
+        "task": "transcribe",
+        "response_format": "verbose_json",
+        "apply_corrections": False,
+        "normalize_numbers": False,
+    }
+    if not kit["execution"].get("useSelectedModel"):
+        payload["engine"] = kit["execution"]["engine"]
+        payload["model"] = kit["execution"]["model"]
+    return payload
+
+
+def validate_response(
+    base_url: str,
+    token: str | None,
+    kit: dict[str, Any],
+    response: dict[str, Any],
+) -> tuple[dict[str, Any], Any, Any]:
+    if response.get("engine") != kit["execution"]["engine"]:
+        raise RuntimeError(
+            f"TypeWhisper used unexpected engine: {response.get('engine')}"
+        )
+    response_model = response.get("model")
+    if response_model not in (
+        kit["execution"]["model"],
+        f"plugin:{kit['execution']['engine']}:{kit['execution']['model']}",
+        f"plugin:com.typewhisper.{kit['execution']['engine']}:{kit['execution']['model']}",
+    ):
+        raise RuntimeError(f"TypeWhisper used unexpected model: {response_model}")
+    status = request_json(base_url, "/v1/status", token)
+    acceleration = status.get("acceleration")
+    backend = (
+        acceleration.get("active_backend")
+        if isinstance(acceleration, dict)
+        else None
+    )
+    required_backend = kit["execution"].get("requiredActiveBackend")
+    if required_backend and backend != required_backend:
+        raise RuntimeError(
+            f"Required backend {required_backend}, active backend is {backend or 'not reported'}"
+        )
+    return status, response_model, backend
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--kit", default="run-kit.json")
@@ -186,20 +245,56 @@ def main() -> int:
     if model_entry.get("status") not in ("ready", "downloaded") and not kit["execution"].get("awaitDownload"):
         raise RuntimeError(f"Target model is not ready: {model_entry.get('status')}")
 
+    dictionary_terms = request_json(base_url, "/v1/dictionary/terms", token)
+    terms = dictionary_terms.get("terms")
+    if not isinstance(terms, list) or not all(isinstance(term, str) for term in terms):
+        raise RuntimeError("TypeWhisper returned an invalid dictionary term list")
+    dictionary_terms_digest = hashlib.sha256(
+        json.dumps(
+            sorted(terms),
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    expected_terms_digest = kit["execution"].get("expectedDictionaryTermsSha256")
+    if expected_terms_digest and dictionary_terms_digest != expected_terms_digest:
+        raise RuntimeError("TypeWhisper dictionary term configuration changed")
+
+    corrections = request_json(base_url, "/v1/dictionary/corrections", token)
+    correction_count = corrections.get("count")
+    if not isinstance(correction_count, int) or correction_count < 0:
+        raise RuntimeError("TypeWhisper returned an invalid dictionary correction count")
+    if kit["execution"].get("requireNoCorrections") and correction_count != 0:
+        raise RuntimeError("This target requires an empty dictionary correction set")
+
+    endpoint = "/v1/transcribe/local-file"
+    if kit["execution"].get("awaitDownload"):
+        endpoint += "?await_download=1"
+    status_after = status_before
+    warmup_ms: float | None = None
+    if kit["execution"].get("warmup", True):
+        warmup_task = kit["tasks"][0]
+        warmup_audio, _ = audio_for_task(root, warmup_task)
+        warmup_started = time.perf_counter()
+        warmup_response = request_json(
+            base_url,
+            endpoint,
+            token,
+            transcription_payload(kit, warmup_task, warmup_audio),
+        )
+        warmup_ms = (time.perf_counter() - warmup_started) * 1000
+        status_after, _, _ = validate_response(
+            base_url, token, kit, warmup_response
+        )
+
     timestamp = datetime.now(timezone.utc)
     run_id = compact_id(
         f"{args.environment_id}-{kit['targetId']}-{timestamp.strftime('%Y%m%dT%H%M%SZ')}-{kit['planId'][:8]}"
     )
     results: list[dict[str, Any]] = []
-    status_after = status_before
 
     for task in kit["tasks"]:
-        audio = (root / task["audio"]["path"]).resolve()
-        if root not in audio.parents or not audio.is_file():
-            raise RuntimeError(f"Run-kit audio is missing or outside the kit: {audio}")
-        actual_digest = sha256(audio)
-        if actual_digest != task["audio"]["sha256"]:
-            raise RuntimeError(f"Run-kit audio digest mismatch: {task['caseId']}")
+        audio, actual_digest = audio_for_task(root, task)
 
         event: dict[str, Any] = {
             "schemaVersion": 1,
@@ -209,20 +304,7 @@ def main() -> int:
             "caseId": task["caseId"],
             "trial": task["trial"],
         }
-        payload = {
-            "path": str(audio),
-            "language": str(task["language"]).split("-")[0].lower(),
-            "task": "transcribe",
-            "response_format": "verbose_json",
-            "apply_corrections": False,
-            "normalize_numbers": False,
-        }
-        if not kit["execution"].get("useSelectedModel"):
-            payload["engine"] = kit["execution"]["engine"]
-            payload["model"] = kit["execution"]["model"]
-        endpoint = "/v1/transcribe/local-file"
-        if kit["execution"].get("awaitDownload"):
-            endpoint += "?await_download=1"
+        payload = transcription_payload(kit, task, audio)
         started = time.perf_counter()
         try:
             response = request_json(base_url, endpoint, token, payload)
@@ -230,29 +312,9 @@ def main() -> int:
             text = response.get("text")
             if not isinstance(text, str):
                 raise RuntimeError("TypeWhisper response contains no text")
-            if response.get("engine") != kit["execution"]["engine"]:
-                raise RuntimeError(
-                    f"TypeWhisper used unexpected engine: {response.get('engine')}"
-                )
-            response_model = response.get("model")
-            if response_model not in (
-                kit["execution"]["model"],
-                f"plugin:{kit['execution']['engine']}:{kit['execution']['model']}",
-                f"plugin:com.typewhisper.{kit['execution']['engine']}:{kit['execution']['model']}",
-            ):
-                raise RuntimeError(f"TypeWhisper used unexpected model: {response_model}")
-            status_after = request_json(base_url, "/v1/status", token)
-            acceleration = status_after.get("acceleration")
-            event_backend = (
-                acceleration.get("active_backend")
-                if isinstance(acceleration, dict)
-                else None
+            status_after, response_model, event_backend = validate_response(
+                base_url, token, kit, response
             )
-            required_backend = kit["execution"].get("requiredActiveBackend")
-            if required_backend and event_backend != required_backend:
-                raise RuntimeError(
-                    f"Required backend {required_backend}, active backend is {event_backend or 'not reported'}"
-                )
             provider_metadata: dict[str, Any] = {
                 "audioSha256": actual_digest,
                 "apiVersion": status_before.get("api_version", "unknown"),
@@ -305,6 +367,10 @@ def main() -> int:
             "typewhisperEngine": str(kit["execution"]["engine"]),
             "typewhisperModel": str(kit["execution"]["model"]),
             "activeBackend": str(active_backend or "not-reported"),
+            "dictionaryTermsSha256": dictionary_terms_digest,
+            "dictionaryTermCount": str(len(terms)),
+            "dictionaryCorrectionCount": str(correction_count),
+            "warmupMs": "disabled" if warmup_ms is None else f"{warmup_ms:.3f}",
         },
     }
     if cpu:

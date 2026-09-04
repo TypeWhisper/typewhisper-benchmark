@@ -79,12 +79,14 @@ metric IDs and versions it requires.
 
 Metric version `1` uses Unicode NFKC normalization. WER is word-level
 Levenshtein distance after lowercasing and removing punctuation/symbols; CER is
-the same normalized edit distance over non-whitespace characters. WER and CER
-are micro-averaged by reference units. Formatting is character similarity to
-the reviewed formatted reference. Number and proper-noun scores are exact
-annotation recall (proper nouns remain case-sensitive). Code combines character
-similarity to the code reference with exact annotated-token recall. A metric is
-omitted for samples without the required annotation.
+the same normalized edit distance over non-whitespace characters. The scorer
+uses the best reviewed verbatim, alternative, or formatted reference so correct
+number rendering is not counted as a recognition error. WER and CER are
+micro-averaged by reference units. Formatting is character similarity to the
+reviewed formatted reference. Number and proper-noun scores are exact annotation
+recall (proper nouns remain case-sensitive). Code combines character similarity
+to the code reference with exact annotated-token recall. A metric is omitted for
+samples without the required annotation.
 
 ## Portable execution
 
@@ -95,6 +97,10 @@ the exact per-request engine/model, disables dictionary corrections and number
 normalization, verifies every audio hash, measures wall-clock completion, and
 writes one external bundle. The runner also records the backend reported after
 inference; merely detecting a GPU never turns a CPU run into a CUDA run.
+One unscored, attested warm-up request loads the target before latency samples
+begin. Configured dictionary-term identity is pinned without putting the terms
+themselves in the run bundle; targets whose API cannot disable corrections can
+require an empty correction set.
 
 ## Planned artifact layout
 

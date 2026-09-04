@@ -36,6 +36,8 @@ function fixtureRun() {
       applyCorrections: false as const,
       normalizeNumbers: false as const,
       useSelectedModel: false,
+      warmup: true,
+      requireNoCorrections: false,
     },
     tasks: [
       {

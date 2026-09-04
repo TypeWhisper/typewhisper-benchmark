@@ -135,7 +135,11 @@ export function scoreResult(
   if (result.status !== "ok" || result.transcript === undefined) return [];
 
   const transcript = result.transcript;
-  const references = [item.references.verbatim, ...item.references.alternatives];
+  const references = [
+    item.references.verbatim,
+    ...item.references.alternatives,
+    ...(item.references.formatted ? [item.references.formatted] : []),
+  ];
   const outcomes: MetricOutcome[] = [];
 
   for (const metricId of metricIds) {
@@ -199,4 +203,3 @@ export function scoreResult(
 
   return outcomes;
 }
-

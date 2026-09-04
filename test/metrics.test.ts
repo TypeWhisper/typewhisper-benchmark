@@ -30,7 +30,7 @@ describe("metric scoring", () => {
       ["wer", "cer", "formatting", "numbers", "proper-nouns"]
     );
 
-    expect(scores.find((score) => score.metricId === "wer")?.value).toBeCloseTo(1 / 6);
+    expect(scores.find((score) => score.metricId === "wer")?.value).toBe(0);
     expect(scores.find((score) => score.metricId === "formatting")?.value).toBe(1);
     expect(scores.find((score) => score.metricId === "numbers")?.value).toBe(1);
     expect(scores.find((score) => score.metricId === "proper-nouns")?.value).toBe(1);
