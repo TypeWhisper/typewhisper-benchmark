@@ -480,7 +480,8 @@ async function sendRecording(
 async function sendStatic(
   root: string,
   pathname: string,
-  response: ServerResponse
+  response: ServerResponse,
+  headOnly = false
 ): Promise<boolean> {
   const entry = STATIC_FILES[pathname];
   if (!entry) return false;
@@ -494,7 +495,7 @@ async function sendStatic(
     "Referrer-Policy": "same-origin",
     "X-Content-Type-Options": "nosniff",
   });
-  response.end(content);
+  response.end(headOnly ? undefined : content);
   return true;
 }
 
@@ -613,7 +614,15 @@ export function createRecorderServer(
         return;
       }
 
-      if (request.method === "GET" && (await sendStatic(workspaceRoot, url.pathname, response))) {
+      if (
+        (request.method === "GET" || request.method === "HEAD") &&
+        (await sendStatic(
+          workspaceRoot,
+          url.pathname,
+          response,
+          request.method === "HEAD"
+        ))
+      ) {
         return;
       }
 

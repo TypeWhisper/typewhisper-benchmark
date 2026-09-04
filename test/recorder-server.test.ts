@@ -56,6 +56,13 @@ describe("recorder server", () => {
     expect(authenticatedRecorder.headers.get("content-security-policy")).toContain(
       "frame-ancestors 'none'"
     );
+
+    const recorderHead = await fetch(`${baseUrl}/results`, {
+      method: "HEAD",
+      headers: { Authorization: authorization },
+    });
+    expect(recorderHead.status).toBe(200);
+    expect(recorderHead.headers.get("content-type")).toContain("text/html");
   });
 
   it("stores audio takes only in the configured storage root", async () => {
