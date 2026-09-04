@@ -1,8 +1,9 @@
 # Profiles
 
-Profiles are versioned JSON files validated by the benchmark schema. The initial
-profiles will be created after the corpus and metric definitions are approved.
+Profiles are versioned JSON files validated by the benchmark schema. Profiles
+for non-redistributable recordings live beside the private corpus instead of in
+this public repository.
 
-Expected profiles include a small integration smoke test, a public dictation
-core, diagnostic slices, a file-transcription core, and eventually a streaming
-profile.
+Expected public profiles include a small integration smoke test, a public
+dictation core, diagnostic slices, a file-transcription core, and eventually a
+streaming profile.

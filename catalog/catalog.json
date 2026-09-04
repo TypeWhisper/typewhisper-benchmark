@@ -1,6 +1,77 @@
 {
   "schemaVersion": 1,
-  "adapters": [],
-  "models": [],
-  "targets": []
+  "adapters": [
+    {
+      "id": "typewhisper-http",
+      "displayName": "TypeWhisper Local HTTP API",
+      "kind": "system",
+      "protocolVersion": "typewhisper-http-v1",
+      "modes": ["batch"]
+    }
+  ],
+  "models": [
+    {
+      "id": "parakeet-v3-fluid-coreml-9c915286",
+      "displayName": "Parakeet TDT 0.6B v3 (FluidInference Core ML)",
+      "provider": "fluidinference",
+      "upstreamModelId": "FluidInference/parakeet-tdt-0.6b-v3-coreml",
+      "revision": "artifact-tree-sha256:9c9152869119430ebdf5139015546778743a16c1cdf223b62f5ae3a370292161",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "parakeet-v3-sherpa-int8-1fa1182d",
+      "displayName": "Parakeet TDT 0.6B v3 (sherpa-onnx INT8)",
+      "provider": "sherpa-onnx",
+      "upstreamModelId": "csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8",
+      "revision": "artifact-tree-sha256:1fa1182dac99a2191e7df563a180ab7bdfeda4215e6e73d0967e223f9a25a65b",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES"],
+      "modes": ["batch"]
+    }
+  ],
+  "targets": [
+    {
+      "id": "parakeet-v3-macos-coreml-tw-1.7.0",
+      "displayName": "Parakeet v3 · macOS Core ML",
+      "adapterId": "typewhisper-http",
+      "modelId": "parakeet-v3-fluid-coreml-9c915286",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS",
+        "version": "1.7.0+1188"
+      },
+      "parameters": {
+        "typewhisperEngine": "parakeet",
+        "typewhisperModel": "parakeet-tdt-0.6b-v3",
+        "typewhisperAppSha256": "7c29120cf37b09bb8649fc98912eaa5ffdba423bb0330aaf126c1e1d21f070e2",
+        "typewhisperPluginSha256": "d2f8a4e88ee43702e2944b8b774ad800fdb1cc86d7041aa4328dee0860c24062",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false
+      }
+    },
+    {
+      "id": "parakeet-v3-windows-auto-tw-4523e6bf",
+      "displayName": "Parakeet v3 · Windows (backend verified at run time)",
+      "adapterId": "typewhisper-http",
+      "modelId": "parakeet-v3-sherpa-int8-1fa1182d",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "quantization": "int8"
+      },
+      "parameters": {
+        "typewhisperEngine": "sherpa-onnx",
+        "typewhisperModel": "parakeet-tdt-0.6b",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "d137d8eba8b1557a8e1280d730217f803750bd614be24605a2c8974a5a3f0419",
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false
+      }
+    }
+  ]
 }

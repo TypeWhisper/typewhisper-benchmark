@@ -645,6 +645,7 @@ export const RunManifestSchema = z.object({
   schemaVersion: z.literal(1),
   runId: InternalIdSchema,
   planId: Sha256Schema,
+  runKitDigest: Sha256Schema,
   createdAt: z.string().datetime(),
   gitCommit: z.string().regex(/^[a-f0-9]{40}$/),
   targetIds: z.array(InternalIdSchema).min(1),
@@ -745,6 +746,50 @@ export const ExternalRunBundleSchema = z
     }
   });
 
+export const RunKitTaskSchema = z.object({
+  caseId: InternalIdSchema,
+  trial: z.number().int().min(1),
+  language: z.string().min(2),
+  audio: z.object({
+    path: RelativeAudioPathSchema,
+    sha256: Sha256Schema,
+  }),
+});
+
+export const RunKitSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    runnerProtocol: z.literal("typewhisper-http-v1"),
+    kitDigest: Sha256Schema,
+    planId: Sha256Schema,
+    profileId: InternalIdSchema,
+    corpusVersion: z.string().min(1),
+    gitCommit: z.string().regex(/^[a-f0-9]{40}$/),
+    targetId: InternalIdSchema,
+    execution: z.object({
+      engine: z.string().min(1),
+      model: z.string().min(1),
+      awaitDownload: z.boolean().default(false),
+      applyCorrections: z.literal(false),
+      normalizeNumbers: z.literal(false),
+    }),
+    tasks: z.array(RunKitTaskSchema).min(1),
+  })
+  .superRefine((kit, context) => {
+    const keys = new Set<string>();
+    kit.tasks.forEach((task, index) => {
+      const key = `${task.caseId}:${task.trial}`;
+      if (keys.has(key)) {
+        context.addIssue({
+          code: "custom",
+          path: ["tasks", index],
+          message: `Duplicate run-kit task: ${key}`,
+        });
+      }
+      keys.add(key);
+    });
+  });
+
 export type AdapterDefinition = z.infer<typeof AdapterDefinitionSchema>;
 export type ModelDefinition = z.infer<typeof ModelDefinitionSchema>;
 export type TargetDefinition = z.infer<typeof TargetDefinitionSchema>;
@@ -759,3 +804,4 @@ export type BenchmarkProfile = z.infer<typeof BenchmarkProfileSchema>;
 export type RunEnvironment = z.infer<typeof RunEnvironmentSchema>;
 export type ResultEvent = z.infer<typeof ResultEventSchema>;
 export type ExternalRunBundle = z.infer<typeof ExternalRunBundleSchema>;
+export type RunKit = z.infer<typeof RunKitSchema>;

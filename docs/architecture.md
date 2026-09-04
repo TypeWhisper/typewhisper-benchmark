@@ -77,6 +77,25 @@ The website displays published snapshots and never calculates rankings itself.
 Normalization and scoring rules are independently versioned. A profile pins the
 metric IDs and versions it requires.
 
+Metric version `1` uses Unicode NFKC normalization. WER is word-level
+Levenshtein distance after lowercasing and removing punctuation/symbols; CER is
+the same normalized edit distance over non-whitespace characters. WER and CER
+are micro-averaged by reference units. Formatting is character similarity to
+the reviewed formatted reference. Number and proper-noun scores are exact
+annotation recall (proper nouns remain case-sensitive). Code combines character
+similarity to the code reference with exact annotated-token recall. A metric is
+omitted for samples without the required annotation.
+
+## Portable execution
+
+`prepare-kit` converts each reviewed source once to mono 16 kHz PCM WAV and
+hashes the derived input. The same private kit is copied to each machine. Its
+dependency-free Python executor discovers the local TypeWhisper API, selects
+the exact per-request engine/model, disables dictionary corrections and number
+normalization, verifies every audio hash, measures wall-clock completion, and
+writes one external bundle. The runner also records the backend reported after
+inference; merely detecting a GPU never turns a CPU run into a CUDA run.
+
 ## Planned artifact layout
 
 ```text

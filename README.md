@@ -31,10 +31,12 @@ native-reviewed coverage packs.
 
 ## Current status
 
-The repository contains the V2 foundation, a protected recording room, external
-run intake, and a snapshot-driven result visualizer. The model catalog and
-admitted corpus are deliberately empty. There are no trusted benchmark results
-yet.
+The repository contains the V2 foundation, a protected recording room, private
+corpus admission, portable macOS/Windows run kits, metric scoring, external run
+intake, and a snapshot-driven result visualizer. The public corpus remains
+empty because the first self-recorded German pilot is private. Two locally
+verified Parakeet v3 targets are catalogued; a pilot result is not a final
+benchmark ranking.
 
 ## Commands
 
@@ -43,6 +45,7 @@ npm install
 npm run check
 npm run benchmark -- validate
 npm run recorder
+npm run benchmark -- --help
 ```
 
 See [docs/architecture.md](docs/architecture.md) for the design.

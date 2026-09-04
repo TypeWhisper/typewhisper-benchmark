@@ -93,6 +93,7 @@ describe("recorder server", () => {
         schemaVersion: 1,
         runId: "windows-cuda-run-1",
         planId: "a".repeat(64),
+        runKitDigest: "c".repeat(64),
         createdAt: "2026-09-04T08:00:00.000Z",
         gitCommit: "b".repeat(40),
         targetIds: ["parakeet-cuda"],
