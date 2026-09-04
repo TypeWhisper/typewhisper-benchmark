@@ -91,6 +91,29 @@ function booleanParameter(
   return value;
 }
 
+function nonnegativeIntegerParameter(
+  parameters: Record<string, unknown>,
+  name: string,
+  fallback: number
+): number {
+  const value = parameters[name];
+  if (value === undefined) return fallback;
+  if (!Number.isInteger(value) || (value as number) < 0) {
+    throw new Error(`Target parameter ${name} must be a non-negative integer`);
+  }
+  return value as number;
+}
+
+function inferenceLocationParameter(
+  parameters: Record<string, unknown>
+): "local" | "remote" {
+  const value = parameters.inferenceLocation ?? "local";
+  if (value !== "local" && value !== "remote") {
+    throw new Error("Target parameter inferenceLocation must be local or remote");
+  }
+  return value;
+}
+
 export function runKitDigest(kit: Omit<RunKit, "kitDigest">): string {
   return contentDigest(kit);
 }
@@ -185,6 +208,12 @@ export async function prepareTypeWhisperRunKit(options: {
         false
       ),
       warmup: booleanParameter(target.parameters, "warmup", true),
+      inferenceLocation: inferenceLocationParameter(target.parameters),
+      minimumRequestIntervalMs: nonnegativeIntegerParameter(
+        target.parameters,
+        "minimumRequestIntervalMs",
+        0
+      ),
       requireNoDictionaryTerms: booleanParameter(
         target.parameters,
         "requireNoDictionaryTerms",

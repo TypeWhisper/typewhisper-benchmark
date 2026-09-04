@@ -37,6 +37,8 @@ function fixtureRun() {
       normalizeNumbers: false as const,
       useSelectedModel: false,
       warmup: true,
+      inferenceLocation: "local" as const,
+      minimumRequestIntervalMs: 0,
       requireNoDictionaryTerms: false,
       requireNoCorrections: false,
     },

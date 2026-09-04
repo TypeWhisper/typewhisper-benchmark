@@ -6,6 +6,7 @@ import {
   ExternalRunBundleSchema,
   RecordingPlanSchema,
   ResultEventSchema,
+  RunKitSchema,
   VisualizationSnapshotSchema,
 } from "../src/schema.js";
 import { fixtureCatalog, fixtureCorpus } from "./fixtures.js";
@@ -241,6 +242,40 @@ describe("result schema", () => {
         ],
       })
     ).toThrow(/does not match manifest run/);
+  });
+});
+
+describe("run kit schema", () => {
+  it("records remote inference and provider pacing", () => {
+    const kit = RunKitSchema.parse({
+      schemaVersion: 1,
+      runnerProtocol: "typewhisper-http-v1",
+      kitDigest: "a".repeat(64),
+      planId: "b".repeat(64),
+      profileId: "fixture-profile",
+      corpusVersion: "fixture-corpus-1",
+      gitCommit: "c".repeat(40),
+      targetId: "fixture-target",
+      execution: {
+        engine: "groq",
+        model: "whisper-large-v3-turbo",
+        applyCorrections: false,
+        normalizeNumbers: false,
+        inferenceLocation: "remote",
+        minimumRequestIntervalMs: 7000,
+      },
+      tasks: [
+        {
+          caseId: "fixture-de-1",
+          trial: 1,
+          language: "de-DE",
+          audio: { path: "audio/fixture.wav", sha256: "d".repeat(64) },
+        },
+      ],
+    });
+
+    expect(kit.execution.inferenceLocation).toBe("remote");
+    expect(kit.execution.minimumRequestIntervalMs).toBe(7000);
   });
 });
 

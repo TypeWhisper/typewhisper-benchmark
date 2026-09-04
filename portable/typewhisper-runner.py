@@ -198,7 +198,8 @@ def validate_response(
         raise RuntimeError(f"TypeWhisper used unexpected model: {response_model}")
     status = request_json(base_url, "/v1/status", token)
     acceleration = status.get("acceleration")
-    backend = (
+    inference_location = kit["execution"].get("inferenceLocation", "local")
+    backend = "remote-api" if inference_location == "remote" else (
         acceleration.get("active_backend")
         if isinstance(acceleration, dict)
         else None
@@ -273,10 +274,25 @@ def main() -> int:
     if kit["execution"].get("awaitDownload"):
         endpoint += "?await_download=1"
     status_after = status_before
+    minimum_request_interval = (
+        kit["execution"].get("minimumRequestIntervalMs", 0) / 1000
+    )
+    last_request_started: float | None = None
+
+    def wait_for_request_slot() -> None:
+        nonlocal last_request_started
+        now = time.perf_counter()
+        if last_request_started is not None:
+            remaining = minimum_request_interval - (now - last_request_started)
+            if remaining > 0:
+                time.sleep(remaining)
+        last_request_started = time.perf_counter()
+
     warmup_ms: float | None = None
     if kit["execution"].get("warmup", True):
         warmup_task = kit["tasks"][0]
         warmup_audio, _ = audio_for_task(root, warmup_task)
+        wait_for_request_slot()
         warmup_started = time.perf_counter()
         warmup_response = request_json(
             base_url,
@@ -307,6 +323,7 @@ def main() -> int:
             "trial": task["trial"],
         }
         payload = transcription_payload(kit, task, audio)
+        wait_for_request_slot()
         started = time.perf_counter()
         try:
             response = request_json(base_url, endpoint, token, payload)
@@ -353,7 +370,10 @@ def main() -> int:
 
     cpu, physical_accelerator = hardware()
     acceleration = status_after.get("acceleration")
-    active_backend = acceleration.get("active_backend") if isinstance(acceleration, dict) else None
+    inference_location = kit["execution"].get("inferenceLocation", "local")
+    active_backend = "remote-api" if inference_location == "remote" else (
+        acceleration.get("active_backend") if isinstance(acceleration, dict) else None
+    )
     accelerator = physical_accelerator
     if active_backend:
         accelerator = f"{physical_accelerator or 'local'}; active backend={active_backend}"
@@ -368,6 +388,7 @@ def main() -> int:
             "typewhisperApi": str(status_before.get("api_version", "unknown")),
             "typewhisperEngine": str(kit["execution"]["engine"]),
             "typewhisperModel": str(kit["execution"]["model"]),
+            "inferenceLocation": str(inference_location),
             "activeBackend": str(active_backend or "not-reported"),
             "dictionaryTermsSha256": dictionary_terms_digest,
             "dictionaryTermCount": str(len(terms)),
