@@ -5,10 +5,12 @@ import {
   BenchmarkProfileSchema,
   CatalogSchema,
   CorpusManifestSchema,
+  RecordingBatchSchema,
   RecordingPlanSchema,
   type BenchmarkProfile,
   type Catalog,
   type CorpusManifest,
+  type RecordingBatch,
   type RecordingPlan,
 } from "./schema.js";
 import { contentDigest } from "./identity.js";
@@ -81,11 +83,39 @@ function validateProfileReferences(
   }
 }
 
+function validateRecordingBatches(
+  batches: RecordingBatch[],
+  recordingPlan: RecordingPlan
+): void {
+  const batchIds = new Set<string>();
+  const prompts = new Map(
+    recordingPlan.prompts.map((prompt) => [prompt.id, prompt])
+  );
+
+  for (const batch of batches) {
+    if (batchIds.has(batch.id)) throw new Error(`Duplicate recording batch ID: ${batch.id}`);
+    batchIds.add(batch.id);
+
+    for (const item of batch.items) {
+      const prompt = prompts.get(item.promptId);
+      if (!prompt) {
+        throw new Error(`Recording batch ${batch.id} references unknown prompt ${item.promptId}`);
+      }
+      if (prompt.language !== batch.language) {
+        throw new Error(
+          `Recording batch ${batch.id} uses ${batch.language}, prompt ${prompt.id} uses ${prompt.language}`
+        );
+      }
+    }
+  }
+}
+
 export interface ValidatedWorkspace {
   root: string;
   catalog: Catalog;
   corpus: CorpusManifest;
   recordingPlan: RecordingPlan;
+  recordingBatches: RecordingBatch[];
   profiles: BenchmarkProfile[];
   catalogDigest: string;
   corpusDigest: string;
@@ -106,6 +136,19 @@ export async function loadWorkspace(
     await readJson(resolve(root, "corpus", "recording-plan.v1.json"))
   );
 
+  const recordingBatchesDirectory = resolve(root, "corpus", "recording-batches");
+  const recordingBatchFiles = (await readdir(recordingBatchesDirectory))
+    .filter((file) => file.endsWith(".json"))
+    .sort();
+  const recordingBatches: RecordingBatch[] = [];
+  for (const file of recordingBatchFiles) {
+    recordingBatches.push(
+      RecordingBatchSchema.parse(
+        await readJson(resolve(recordingBatchesDirectory, file))
+      )
+    );
+  }
+
   const profilesDirectory = resolve(root, "profiles");
   const profileFiles = (await readdir(profilesDirectory))
     .filter((file) => file.endsWith(".json"))
@@ -118,6 +161,7 @@ export async function loadWorkspace(
   }
 
   validateProfileReferences(profiles, corpus);
+  validateRecordingBatches(recordingBatches, recordingPlan);
   await validateAudioFiles(root, corpus);
 
   return {
@@ -125,6 +169,7 @@ export async function loadWorkspace(
     catalog,
     corpus,
     recordingPlan,
+    recordingBatches,
     profiles,
     catalogDigest: contentDigest(catalog),
     corpusDigest: contentDigest(corpus),

@@ -8,6 +8,10 @@
   },
   "scripts": {
     "benchmark": "tsx src/cli.ts",
+    "build:recorder": "tsc -p tsconfig.build.json",
+    "recorder": "tsx src/recorder-server.ts",
+    "start:recorder": "node dist/recorder-server.js",
+    "upload:run": "tsx src/upload-run.ts",
     "validate": "tsx src/cli.ts validate",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

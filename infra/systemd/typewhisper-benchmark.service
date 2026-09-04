@@ -1,0 +1,19 @@
+[Unit]
+Description=TypeWhisper Benchmark recorder, visualizer, and run intake
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/marco/.local/share/typewhisper-benchmark/current
+EnvironmentFile=/home/marco/.config/typewhisper-benchmark/app.env
+Environment=PATH=/home/linuxbrew/.linuxbrew/opt/node@24/bin:/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/linuxbrew/.linuxbrew/opt/node@24/bin/node dist/recorder-server.js
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0077
+
+[Install]
+WantedBy=default.target

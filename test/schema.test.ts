@@ -3,8 +3,10 @@ import {
   CatalogSchema,
   CorpusItemSchema,
   CorpusManifestSchema,
+  ExternalRunBundleSchema,
   RecordingPlanSchema,
   ResultEventSchema,
+  VisualizationSnapshotSchema,
 } from "../src/schema.js";
 import { fixtureCatalog, fixtureCorpus } from "./fixtures.js";
 
@@ -168,5 +170,139 @@ describe("result schema", () => {
         status: "ok",
       })
     ).toThrow(/requires a transcript/);
+  });
+
+  it("accepts a self-contained external run bundle", () => {
+    const bundle = ExternalRunBundleSchema.parse({
+      schemaVersion: 1,
+      manifest: {
+        schemaVersion: 1,
+        runId: "windows-cuda-run-1",
+        planId: "a".repeat(64),
+        createdAt: "2026-09-04T08:00:00.000Z",
+        gitCommit: "b".repeat(40),
+        targetIds: ["parakeet-cuda"],
+        environment: {
+          environmentId: "windows-cuda-1",
+          os: "Windows 11",
+          architecture: "x64",
+          accelerator: "NVIDIA fixture GPU",
+          runtimeVersions: { cuda: "fixture" },
+        },
+      },
+      results: [
+        {
+          schemaVersion: 1,
+          runId: "windows-cuda-run-1",
+          planId: "a".repeat(64),
+          targetId: "parakeet-cuda",
+          caseId: "fixture-de-1",
+          trial: 1,
+          status: "ok",
+          transcript: "Test",
+          durationMs: 100,
+        },
+      ],
+    });
+    expect(bundle.results).toHaveLength(1);
+  });
+
+  it("rejects results from a different run", () => {
+    expect(() =>
+      ExternalRunBundleSchema.parse({
+        schemaVersion: 1,
+        manifest: {
+          schemaVersion: 1,
+          runId: "run-a",
+          planId: "a".repeat(64),
+          createdAt: "2026-09-04T08:00:00.000Z",
+          gitCommit: "b".repeat(40),
+          targetIds: ["target-a"],
+          environment: {
+            environmentId: "machine-a",
+            os: "macOS",
+            architecture: "arm64",
+            runtimeVersions: {},
+          },
+        },
+        results: [
+          {
+            schemaVersion: 1,
+            runId: "run-b",
+            planId: "a".repeat(64),
+            targetId: "target-a",
+            caseId: "case-a",
+            trial: 1,
+            status: "ok",
+            transcript: "Test",
+          },
+        ],
+      })
+    ).toThrow(/does not match manifest run/);
+  });
+});
+
+describe("visualization snapshot schema", () => {
+  function fixtureSnapshot() {
+    return {
+      schemaVersion: 1,
+      snapshotId: "c".repeat(64),
+      generatedAt: "2026-09-04T08:00:00.000Z",
+      profileId: "core-v1",
+      corpusVersion: "core-v1",
+      caseCount: 10,
+      runIds: ["run-1"],
+      languages: ["de-DE"],
+      targets: [
+        {
+          id: "target-a",
+          displayName: "Target A",
+          provider: "Fixture",
+          modelId: "fixture/model",
+          revision: "revision-1",
+        },
+      ],
+      aggregates: [
+        {
+          targetId: "target-a",
+          language: "de-DE",
+          metricId: "wer",
+          value: 0.1,
+          eligibleCases: 10,
+          totalCases: 10,
+        },
+      ],
+    };
+  }
+
+  it("accepts a referenced aggregate", () => {
+    const snapshot = VisualizationSnapshotSchema.parse(fixtureSnapshot());
+    expect(snapshot.aggregates[0]?.value).toBe(0.1);
+  });
+
+  it("rejects percentage scores outside the normalized range", () => {
+    const snapshot = fixtureSnapshot();
+    snapshot.aggregates[0]!.metricId = "formatting";
+    snapshot.aggregates[0]!.value = 1.1;
+    expect(() => VisualizationSnapshotSchema.parse(snapshot)).toThrow(
+      /scores must be between 0 and 1/
+    );
+  });
+
+  it("rejects a p95 latency below its median", () => {
+    const snapshot = {
+      ...fixtureSnapshot(),
+      latency: [
+        {
+          targetId: "target-a",
+          language: "de-DE",
+          medianMs: 500,
+          p95Ms: 400,
+        },
+      ],
+    };
+    expect(() => VisualizationSnapshotSchema.parse(snapshot)).toThrow(
+      /P95 latency cannot be lower/
+    );
   });
 });

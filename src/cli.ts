@@ -30,6 +30,7 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
     console.log(`  targets:  ${workspace.catalog.targets.length}`);
     console.log(`  cases:    ${workspace.corpus.items.length}`);
     console.log(`  prompts:  ${workspace.recordingPlan.prompts.length}`);
+    console.log(`  batches:  ${workspace.recordingBatches.length}`);
     console.log(`  profiles: ${workspace.profiles.length}`);
     console.log(`  catalog:  ${workspace.catalogDigest}`);
     console.log(`  corpus:   ${workspace.corpusDigest}`);

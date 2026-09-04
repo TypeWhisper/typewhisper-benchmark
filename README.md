@@ -31,9 +31,10 @@ native-reviewed coverage packs.
 
 ## Current status
 
-The repository contains only the V2 foundation: schemas, catalog validation,
-content identities, execution planning, and adapter contracts. The catalog and
-corpus are deliberately empty. There are no trusted benchmark results yet.
+The repository contains the V2 foundation, a protected recording room, external
+run intake, and a snapshot-driven result visualizer. The model catalog and
+admitted corpus are deliberately empty. There are no trusted benchmark results
+yet.
 
 ## Commands
 
@@ -41,6 +42,7 @@ corpus are deliberately empty. There are no trusted benchmark results yet.
 npm install
 npm run check
 npm run benchmark -- validate
+npm run recorder
 ```
 
 See [docs/architecture.md](docs/architecture.md) for the design.
@@ -49,3 +51,7 @@ Corpus contribution examples are documented in
 The planned recording mix is in [docs/corpus-plan.md](docs/corpus-plan.md), and
 web-source admission is defined in
 [docs/web-audio-policy.md](docs/web-audio-policy.md).
+External bundles and their review boundary are documented in
+[docs/external-runs.md](docs/external-runs.md). The visualizer contract and
+deployment layout are in [docs/visualizer.md](docs/visualizer.md) and
+[docs/deployment.md](docs/deployment.md).

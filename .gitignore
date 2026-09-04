@@ -1,5 +1,6 @@
 node_modules/
 dist/
+release/
 coverage/
 .env
 .env.*
@@ -12,3 +13,10 @@ artifacts/
 # Audio enters the repository only after review and an explicit force-add.
 corpus/audio/*
 !corpus/audio/.gitkeep
+
+# Raw recording uploads stay local until they have been reviewed and admitted.
+corpus/inbox/**
+!corpus/inbox/README.md
+
+# Local deployment configuration can contain authentication credentials.
+infra/systemd/app.env

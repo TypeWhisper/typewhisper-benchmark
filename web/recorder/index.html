@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171714" />
+    <title>TypeWhisper Benchmark — Aufnahmeraum</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#prompt">Zum Sprechtext</a>
+
+    <header class="topbar">
+      <div class="brand" aria-label="TypeWhisper Benchmark">
+        <span class="brand-mark" aria-hidden="true">TW</span>
+        <span class="brand-copy">
+          <strong>Benchmark</strong>
+          <span>Aufnahmeraum</span>
+        </span>
+      </div>
+      <nav class="site-nav" aria-label="Bereiche">
+        <a href="/" aria-current="page">Aufnehmen</a>
+        <a href="/results">Ergebnisse</a>
+        <a href="/upload">Runs hochladen</a>
+      </nav>
+      <div class="batch-meta">
+        <span class="locale-badge" id="localeBadge">DE</span>
+        <span id="batchTitle">Batch wird geladen</span>
+      </div>
+    </header>
+
+    <main class="recorder-shell">
+      <nav class="progress-panel" aria-label="Aufnahmefortschritt">
+        <div class="progress-heading">
+          <span>Fortschritt</span>
+          <strong id="progressLabel">0 / 0</strong>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <span id="progressBar"></span>
+        </div>
+        <ol class="progress-steps" id="progressSteps"></ol>
+        <p class="storage-note">
+          <span class="storage-dot" aria-hidden="true"></span>
+          Lokal und unveröffentlicht
+        </p>
+      </nav>
+
+      <section class="recording-stage" aria-labelledby="promptCounter">
+        <div class="prompt-header">
+          <p class="prompt-counter" id="promptCounter">Satz 1 von 12</p>
+          <span class="category-badge" id="categoryBadge">Diktat</span>
+        </div>
+
+        <div class="prompt-card" id="prompt" tabindex="-1">
+          <span class="quote-mark" aria-hidden="true">“</span>
+          <p id="promptText">Der Sprechtext wird geladen …</p>
+        </div>
+
+        <p class="speaking-hint">
+          Natürlich sprechen. Satzzeichen nicht benennen – außer sie stehen als
+          gesprochenes Wort im Text.
+        </p>
+
+        <section class="transport" aria-label="Aufnahmesteuerung">
+          <div class="signal" aria-label="Mikrofonpegel">
+            <span class="signal-label">Pegel</span>
+            <div class="meter" aria-hidden="true">
+              <span id="meterFill"></span>
+            </div>
+            <span class="timer" id="timer">00:00.0</span>
+          </div>
+
+          <button class="record-button" id="recordButton" type="button" disabled>
+            <span class="record-icon" aria-hidden="true"></span>
+            <span id="recordLabel">Aufnahme starten</span>
+          </button>
+
+          <p class="system-status" id="systemStatus" aria-live="polite">
+            Aufnahmeoberfläche wird vorbereitet …
+          </p>
+        </section>
+
+        <section class="review-panel" id="reviewPanel" hidden>
+          <div>
+            <p class="review-kicker">Neuer Take</p>
+            <strong>Einmal anhören, dann speichern</strong>
+          </div>
+          <audio id="reviewAudio" controls></audio>
+          <div class="review-actions">
+            <button class="button secondary" id="discardButton" type="button">
+              Verwerfen
+            </button>
+            <button class="button primary" id="saveButton" type="button">
+              Take speichern
+            </button>
+          </div>
+        </section>
+
+        <section class="saved-panel" id="savedPanel" hidden>
+          <div>
+            <p class="review-kicker">Gespeichert</p>
+            <strong id="savedFileName"></strong>
+          </div>
+          <audio id="savedAudio" controls></audio>
+        </section>
+
+        <footer class="stage-footer">
+          <button class="text-button" id="previousButton" type="button">
+            <span aria-hidden="true">←</span> Vorheriger
+          </button>
+          <p><kbd>Leertaste</kbd> Aufnahme · <kbd>S</kbd> Speichern</p>
+          <button class="text-button" id="nextButton" type="button">
+            Nächster <span aria-hidden="true">→</span>
+          </button>
+        </footer>
+      </section>
+    </main>
+
+    <dialog class="complete-dialog" id="completeDialog">
+      <div class="complete-mark" aria-hidden="true">✓</div>
+      <p class="review-kicker">Pilot vollständig</p>
+      <h2>Alle zwölf Sätze sind aufgenommen.</h2>
+      <p>Die Takes liegen sicher im lokalen Aufnahme-Inbox-Ordner.</p>
+      <button class="button primary" id="closeCompleteButton" type="button">
+        Aufnahmen prüfen
+      </button>
+    </dialog>
+  </body>
+</html>
