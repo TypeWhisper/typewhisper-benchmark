@@ -309,6 +309,8 @@ function metricById(result, metricId) {
 
 function renderCaseResult(testCase, result, bestWer) {
   const target = targetById(result.targetId);
+  const comparisonReference =
+    testCase.reference.formatted ?? testCase.reference.verbatim;
   const card = document.createElement("article");
   const heading = document.createElement("header");
   const title = document.createElement("div");
@@ -329,7 +331,7 @@ function renderCaseResult(testCase, result, bestWer) {
     best.textContent = "Niedrigste WER";
     heading.append(best);
   }
-  card.append(heading, renderTranscriptDiff(testCase.reference.verbatim, result.transcript));
+  card.append(heading, renderTranscriptDiff(comparisonReference, result.transcript));
 
   const metrics = document.createElement("dl");
   metrics.className = "case-metrics";
