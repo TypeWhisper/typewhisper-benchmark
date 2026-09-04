@@ -38,9 +38,10 @@ async function main(args = process.argv.slice(2)): Promise<void> {
   if (!path) {
     throw new Error("Usage: npm run upload:run -- <run.bundle.json>");
   }
-  const baseUrl =
-    process.env.BENCHMARK_UPLOAD_URL ??
-    "https://typewhisper-benchmark.hlab.cloud";
+  const baseUrl = process.env.BENCHMARK_UPLOAD_URL;
+  if (!baseUrl) {
+    throw new Error("BENCHMARK_UPLOAD_URL is required");
+  }
   const receipt = await uploadRunBundle({
     path,
     baseUrl,

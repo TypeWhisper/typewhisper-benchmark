@@ -1,9 +1,9 @@
 # Recorder Service Deployment
 
 The production service combines the recording room, run intake, and result
-visualizer. It binds to `192.168.199.253:4192`; the reverse proxy terminates TLS
-and supplies the access protection for `typewhisper-benchmark.hlab.cloud`. The
-application deliberately does not add a second username/password prompt.
+visualizer. Its bind address and public hostname are deployment-specific; the
+reverse proxy terminates TLS and supplies the access protection. The application
+deliberately does not add a second username/password prompt.
 
 Run the installer from the repository root:
 
@@ -26,6 +26,6 @@ Useful checks:
 
 ```bash
 systemctl --user status typewhisper-benchmark.service
-curl http://192.168.199.253:4192/api/health
-curl -I https://typewhisper-benchmark.hlab.cloud/
+curl http://127.0.0.1:4192/api/health
+curl -I https://benchmark.example.com/
 ```

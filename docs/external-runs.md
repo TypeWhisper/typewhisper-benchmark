@@ -61,15 +61,15 @@ npm run benchmark -- score \
 
 ## Upload methods
 
-The protected web interface is available at:
-
-`https://typewhisper-benchmark.hlab.cloud/upload`
+The protected web interface is available at `/upload` on the configured
+deployment host.
 
 For automation on macOS, Windows, or Linux, use the cross-platform Node
 uploader from a machine that can pass the reverse proxy protection:
 
 ```bash
-npm run upload:run -- path/to/run.bundle.json
+BENCHMARK_UPLOAD_URL=https://benchmark.example.com \
+  npm run upload:run -- path/to/run.bundle.json
 ```
 
 The endpoint is `POST /api/uploads/runs` with `Content-Type:
