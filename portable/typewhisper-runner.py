@@ -375,7 +375,9 @@ def main() -> int:
         acceleration.get("active_backend") if isinstance(acceleration, dict) else None
     )
     accelerator = physical_accelerator
-    if active_backend:
+    if inference_location == "remote":
+        accelerator = f"Remote API ({kit['execution']['engine']})"
+    elif active_backend:
         accelerator = f"{physical_accelerator or 'local'}; active backend={active_backend}"
 
     environment: dict[str, Any] = {
