@@ -29,6 +29,26 @@
       "releaseChannel": "stable",
       "languages": ["de-DE", "en-US", "fr-FR", "es-ES"],
       "modes": ["batch"]
+    },
+    {
+      "id": "whisper-large-v3-turbo-whisperkit-e86b1803",
+      "displayName": "Whisper Large v3 Turbo (WhisperKit Core ML)",
+      "provider": "whisperkit",
+      "upstreamModelId": "argmaxinc/whisperkit-coreml/openai_whisper-large-v3_turbo",
+      "revision": "artifact-tree-sha256:e86b1803a0f367050abb18c00d9b7238176c09bb97e2ac84cf15e614594fb3b0",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
+    },
+    {
+      "id": "whisper-large-v3-turbo-ggml-1fc70f77",
+      "displayName": "Whisper Large v3 Turbo (whisper.cpp GGML)",
+      "provider": "whisper.cpp",
+      "upstreamModelId": "ggerganov/whisper.cpp/ggml-large-v3-turbo.bin",
+      "revision": "sha256:1fc70f774d38eb169993ac391eea357ef47c88757ef72ee5943879b7e8e2bc69",
+      "releaseChannel": "stable",
+      "languages": ["de-DE", "en-US", "fr-FR", "es-ES", "ja-JP", "zh-CN"],
+      "modes": ["batch"]
     }
   ],
   "targets": [
@@ -73,6 +93,59 @@
         "typewhisperModel": "parakeet-tdt-0.6b",
         "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
         "typewhisperPluginSha256": "d137d8eba8b1557a8e1280d730217f803750bd614be24605a2c8974a5a3f0419",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "requiredActiveBackend": "nvidia-cuda",
+        "useSelectedModel": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-macos-coreml-tw-4b9b6421",
+      "displayName": "Whisper Large v3 Turbo · macOS WhisperKit",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-whisperkit-e86b1803",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper macOS development build",
+        "version": "sha256:4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34"
+      },
+      "parameters": {
+        "typewhisperEngine": "whisper",
+        "typewhisperModel": "openai_whisper-large-v3_turbo",
+        "typewhisperAppSha256": "4b9b64217123059377c44cfc585c0908d4ef56f02e69afb52cdde86294d04b34",
+        "typewhisperPluginSha256": "443b941fbe910831c86094340786967eadf471962535e1a629bfa074240c49a5",
+        "dictionaryMode": "off",
+        "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "requireNoDictionaryTerms": true,
+        "requireNoCorrections": true,
+        "awaitDownload": false,
+        "applyCorrections": false,
+        "normalizeNumbers": false,
+        "warmup": true
+      }
+    },
+    {
+      "id": "whisper-large-v3-turbo-windows-cuda-tw-4523e6bf",
+      "displayName": "Whisper Large v3 Turbo · Windows CUDA",
+      "adapterId": "typewhisper-http",
+      "modelId": "whisper-large-v3-turbo-ggml-1fc70f77",
+      "mode": "batch",
+      "runtime": {
+        "engine": "TypeWhisper Windows development build",
+        "version": "sha256:4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "quantization": "unquantized"
+      },
+      "parameters": {
+        "typewhisperEngine": "whisper-cpp",
+        "typewhisperModel": "large-v3-turbo",
+        "typewhisperAppSha256": "4523e6bf35574635a42cd2f3757578b54a29a0516aad5002462c03787ac29087",
+        "typewhisperPluginSha256": "6c0f3c5784ba1181a99828fc6462e43fcfb5031dc5ea1ded14386b1344bc73d2",
         "dictionaryMode": "off",
         "expectedDictionaryTermsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
         "requireNoDictionaryTerms": true,

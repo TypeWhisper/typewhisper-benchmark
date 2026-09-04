@@ -1,12 +1,14 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("Enable", "Restore")]
+    [ValidateSet("Enable", "Restart", "Restore")]
     [string]$Action,
 
     [Parameter(Mandatory = $true)]
     [string]$BackupDirectory,
 
-    [string]$ExecutablePath
+    [string]$ExecutablePath,
+
+    [string]$SelectedModelId = "plugin:com.typewhisper.sherpa-onnx:parakeet-tdt-0.6b"
 )
 
 $ErrorActionPreference = "Stop"
@@ -69,12 +71,26 @@ if ($Action -eq "Enable") {
 
     $settings = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json
     $settings.localModelAcceleration = "nvidia-cuda"
-    $settings.selectedModelId = "plugin:com.typewhisper.sherpa-onnx:parakeet-tdt-0.6b"
+    $settings.selectedModelId = $SelectedModelId
     $temporaryPath = "$settingsPath.benchmark.tmp"
     $settings | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $temporaryPath -Encoding UTF8
     Move-Item -LiteralPath $temporaryPath -Destination $settingsPath -Force
     Start-TypeWhisper $resolvedExecutablePath
     Write-Output "benchmark-mode-enabled"
+    exit 0
+}
+
+if ($Action -eq "Restart") {
+    if (Test-Path $executablePathFile) {
+        $resolvedExecutablePath = (Get-Content -LiteralPath $executablePathFile -Raw).Trim()
+    } elseif (-not [string]::IsNullOrWhiteSpace($ExecutablePath) -and (Test-Path -LiteralPath $ExecutablePath)) {
+        $resolvedExecutablePath = (Resolve-Path -LiteralPath $ExecutablePath).Path
+    } else {
+        throw "Executable path is unavailable. Pass -ExecutablePath or use an existing backup directory."
+    }
+    Stop-TypeWhisper
+    Start-TypeWhisper $resolvedExecutablePath
+    Write-Output "app-restarted"
     exit 0
 }
 
