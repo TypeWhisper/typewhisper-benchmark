@@ -80,7 +80,8 @@ export interface TestCase {
     | "common-voice"
     | "fleurs"
     | "recorded"
-    | "voxpopuli";
+    | "voxpopuli"
+    | "mls";
   metadata?: TestCaseMetadata;
   alternativeGroundTruths?: string[];
   formattedGroundTruth?: string;

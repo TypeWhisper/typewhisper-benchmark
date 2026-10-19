@@ -17,6 +17,7 @@ const PUBLIC_SOURCES = new Set<TestCase["source"]>([
   "common-voice",
   "fleurs",
   "voxpopuli",
+  "mls",
 ]);
 
 const SLICE_DEFINITIONS = [
