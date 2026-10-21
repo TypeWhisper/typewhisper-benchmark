@@ -10,7 +10,35 @@ import type { STTProvider, AudioInput, TranscriptionResult } from "../types.js";
 const execFileAsync = promisify(execFile);
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_MODELS_BASE_PATH = fileURLToPath(new URL("../../../models/bark", import.meta.url));
-const WORKER_SCRIPT = fileURLToPath(new URL("../../scripts/bark-coreml-worker.py", import.meta.url));
+
+export type BarkRuntime = "coreml" | "mlx";
+
+interface BarkRuntimeConfig {
+  id: string;
+  name: string;
+  models: string[];
+  workerScript: string;
+  /** The runner shipped with the pinned model revision, below the models folder. */
+  runnerPath: (model: string) => string[];
+}
+
+const RUNTIMES: Record<BarkRuntime, BarkRuntimeConfig> = {
+  coreml: {
+    id: "bark",
+    name: "Underdog Bark (Core ML)",
+    models: ["3.0", "3.0-plus"],
+    workerScript: fileURLToPath(new URL("../../scripts/bark-coreml-worker.py", import.meta.url)),
+    runnerPath: (model) => [model, "coreml", "ane", "bark_coreml.py"],
+  },
+  // model.bark: the 163 MB file the model card's numbers and download size refer to.
+  mlx: {
+    id: "bark-mlx",
+    name: "Underdog Bark (MLX)",
+    models: ["3.0"],
+    workerScript: fileURLToPath(new URL("../../scripts/bark-mlx-worker.py", import.meta.url)),
+    runnerPath: (model) => ["mlx", model, "bark_mlx.py"],
+  },
+};
 
 export function getBarkModelsBasePath(env: NodeJS.ProcessEnv = process.env): string {
   if (!env.BARK_MODELS_PATH) return DEFAULT_MODELS_BASE_PATH;
@@ -20,9 +48,10 @@ export function getBarkModelsBasePath(env: NodeJS.ProcessEnv = process.env): str
 export function hasBarkModelFiles(
   model: string,
   env: NodeJS.ProcessEnv = process.env,
-  fileExists: (path: string) => boolean = existsSync
+  fileExists: (path: string) => boolean = existsSync,
+  runtime: BarkRuntime = "coreml"
 ): boolean {
-  return fileExists(join(getBarkModelsBasePath(env), model, "coreml", "ane", "bark_coreml.py"));
+  return fileExists(join(getBarkModelsBasePath(env), ...RUNTIMES[runtime].runnerPath(model)));
 }
 
 interface WorkerResponse {
@@ -34,33 +63,43 @@ interface WorkerResponse {
 }
 
 /**
- * Underdog Bark 3.0 and 3.0 Plus (ConwayResearch) through the Core ML runner their model repos
- * ship, in a long-lived Python worker (started via uv). Their encoder takes features rather than
- * FluidAudio's mel contract, so they cannot run through FluidAudio; Bark 3.0 Pro can and lives in
- * the fluidaudio provider. Timing is measured inside the worker and excludes Python startup,
- * model loading and reading the audio file, but includes the numpy feature extraction and decoder.
+ * Underdog Bark (ConwayResearch) through the runners their model repos ship, in a long-lived
+ * Python worker (started via uv).
+ * - "coreml" (provider `bark`): Bark 3.0 and 3.0 Plus as Core ML encoder plus numpy decoder. Their
+ *   encoder takes features rather than FluidAudio's mel contract, so they cannot run through
+ *   FluidAudio; Bark 3.0 Pro can and lives in the fluidaudio provider.
+ * - "mlx" (provider `bark-mlx`): Bark 3.0's 163 MB model.bark, unpacked to fp16 and run on
+ *   mlx-audio's Parakeet graph, as the model card describes.
+ * Timing is measured inside the worker and excludes Python startup, model loading and reading the
+ * audio file, but includes feature extraction and decoding.
  */
 export class BarkProvider implements STTProvider {
-  id = "bark";
-  name = "Underdog Bark (Core ML)";
+  id: string;
+  name: string;
   type = "local" as const;
-  models = ["3.0", "3.0-plus"];
+  models: string[];
 
   private uvPath: string;
+  private runtime: BarkRuntime;
   private worker?: ChildProcess;
   private ready?: Promise<void>;
   private pending = new Map<number, (res: WorkerResponse) => void>();
   private nextId = 1;
 
-  constructor(uvPath?: string) {
+  constructor(uvPath?: string, runtime: BarkRuntime = "coreml") {
     this.uvPath = uvPath || process.env.BARK_UV_PATH || "uv";
+    this.runtime = runtime;
+    const config = RUNTIMES[runtime];
+    this.id = config.id;
+    this.name = config.name;
+    this.models = [...config.models];
   }
 
   async isAvailable(): Promise<boolean> {
     if (platform() !== "darwin" || arch() !== "arm64") return false;
     try {
       await execFileAsync(this.uvPath, ["--version"]);
-      return this.models.some((model) => hasBarkModelFiles(model));
+      return this.models.some((model) => hasBarkModelFiles(model, process.env, existsSync, this.runtime));
     } catch {
       return false;
     }
@@ -103,7 +142,7 @@ export class BarkProvider implements STTProvider {
     if (!this.models.includes(model)) {
       throw new Error(`Unknown Bark model '${model}'. Available: ${this.models.join(", ")}`);
     }
-    if (!hasBarkModelFiles(model)) {
+    if (!hasBarkModelFiles(model, process.env, existsSync, this.runtime)) {
       throw new Error(`Model files not found for '${model}'. Run: bash bench/scripts/download-bark-models.sh`);
     }
     return model;
@@ -142,7 +181,7 @@ export class BarkProvider implements STTProvider {
     this.ready = new Promise((resolveReady, rejectReady) => {
       const worker = spawn(
         this.uvPath,
-        ["run", "--quiet", "--script", WORKER_SCRIPT, getBarkModelsBasePath()],
+        ["run", "--quiet", "--script", RUNTIMES[this.runtime].workerScript, getBarkModelsBasePath()],
         { stdio: ["pipe", "pipe", "inherit"] }
       );
       this.worker = worker;

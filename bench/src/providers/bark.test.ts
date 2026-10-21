@@ -11,6 +11,17 @@ describe("BarkProvider", () => {
     expect(provider.models).toEqual(["3.0", "3.0-plus"]);
   });
 
+  it("runs Bark 3.0's 163 MB file on MLX as its own provider", () => {
+    const provider = new BarkProvider(undefined, "mlx");
+    expect(provider.id).toBe("bark-mlx");
+    expect(provider.name).toBe("Underdog Bark (MLX)");
+    expect(provider.type).toBe("local");
+    expect(provider.models).toEqual(["3.0"]);
+    expect(provider.supportsLanguage("3.0", "en")).toBe(true);
+    expect(provider.supportsLanguage("3.0", "auto")).toBe(false);
+    expect(provider.supportsLanguage("3.0-plus", "en")).toBe(false);
+  });
+
   it("runs on explicit languages but not auto-detect", () => {
     const provider = new BarkProvider();
     expect(provider.supportsLanguage("3.0", "en")).toBe(true);
@@ -30,5 +41,16 @@ describe("BarkProvider", () => {
     expect(
       hasBarkModelFiles("3.0", {}, (path) => path.endsWith("3.0/coreml/ane/bark_coreml.py"))
     ).toBe(true);
+  });
+
+  it("looks for the MLX runner in its own folder", () => {
+    const base = getBarkModelsBasePath({});
+    const mlxRunner = resolve(base, "mlx/3.0/bark_mlx.py");
+    expect(hasBarkModelFiles("3.0", {}, (path) => path === mlxRunner, "mlx")).toBe(true);
+    // The Core ML files alone do not make the MLX model available, and the reverse.
+    expect(
+      hasBarkModelFiles("3.0", {}, (path) => path.endsWith("3.0/coreml/ane/bark_coreml.py"), "mlx")
+    ).toBe(false);
+    expect(hasBarkModelFiles("3.0", {}, (path) => path === mlxRunner, "coreml")).toBe(false);
   });
 });
