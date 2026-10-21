@@ -7,6 +7,8 @@ import { AppleSpeechProvider } from "./apple-speech.js";
 import { SherpaOnnxProvider } from "./sherpa-onnx.js";
 import { AuroraAsrProvider } from "./aurora-asr.js";
 import { MlxAudioProvider } from "./mlx-audio.js";
+import { FluidAudioProvider } from "./fluidaudio.js";
+import { BarkProvider } from "./bark.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -17,6 +19,8 @@ const ALL_PROVIDERS: STTProvider[] = [
   new SherpaOnnxProvider(),
   new AuroraAsrProvider(),
   new MlxAudioProvider(),
+  new FluidAudioProvider(),
+  new BarkProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {
