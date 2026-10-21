@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   FLUIDAUDIO_MODELS,
   FluidAudioProvider,
+  LOCAL_MODEL_FILES,
   getFluidAudioModelsBasePath,
   hasFluidAudioModelFiles,
 } from "./fluidaudio.js";
@@ -47,14 +48,17 @@ describe("FluidAudioProvider", () => {
     );
   });
 
-  it("needs a compiled encoder only for local folders", () => {
+  it("needs every compiled component only for local folders", () => {
     expect(hasFluidAudioModelFiles("parakeet-ultra", {}, () => false)).toBe(true);
     expect(hasFluidAudioModelFiles("fluid-speech-mini", {}, () => false)).toBe(false);
+    const inBarkPro = (path: string) => path.includes("/bark-3.0-pro/");
+    expect(hasFluidAudioModelFiles("bark-3.0-pro", {}, inBarkPro)).toBe(true);
+    // A folder left behind by an interrupted install, with only some components.
     expect(
       hasFluidAudioModelFiles("bark-3.0-pro", {}, (path) =>
-        path.endsWith("bark-3.0-pro/Encoder.mlmodelc")
+        inBarkPro(path) && !path.endsWith(LOCAL_MODEL_FILES[2])
       )
-    ).toBe(true);
+    ).toBe(false);
     expect(hasFluidAudioModelFiles("unknown", {}, () => true)).toBe(false);
   });
 });

@@ -54,7 +54,16 @@ export function getFluidAudioModelsBasePath(env: NodeJS.ProcessEnv = process.env
   return resolve(REPO_ROOT, env.FLUIDAUDIO_MODELS_PATH);
 }
 
-/** Local folders need a compiled encoder; official models download on first use. */
+/** Files the worker loads from a local folder (FluidAudio's v3-family names). */
+export const LOCAL_MODEL_FILES = [
+  "Preprocessor.mlmodelc",
+  "Encoder.mlmodelc",
+  "Decoder.mlmodelc",
+  "JointDecisionv3.mlmodelc",
+  "parakeet_vocab.json",
+];
+
+/** Local folders need every compiled component; official models download on first use. */
 export function hasFluidAudioModelFiles(
   model: string,
   env: NodeJS.ProcessEnv = process.env,
@@ -63,7 +72,8 @@ export function hasFluidAudioModelFiles(
   const entry = FLUIDAUDIO_MODELS[model];
   if (!entry) return false;
   if (!entry.local) return true;
-  return fileExists(join(getFluidAudioModelsBasePath(env), entry.local, "Encoder.mlmodelc"));
+  const folder = join(getFluidAudioModelsBasePath(env), entry.local);
+  return LOCAL_MODEL_FILES.every((file) => fileExists(join(folder, file)));
 }
 
 interface WorkerResponse {
@@ -209,11 +219,17 @@ export class FluidAudioProvider implements STTProvider {
           const worker = spawn(WORKER_BINARY, [], { stdio: ["pipe", "pipe", "inherit"] });
           this.worker = worker;
           const fail = (error: string) => {
+            // A start that is still waiting must fail, even for a replaced worker.
             rejectReady(new Error(error));
+            // An error and the exit that follows, or a late exit after dispose(), must not
+            // touch the state of a worker that replaced this one.
+            if (this.worker !== worker) return;
             for (const resolvePending of this.pending.values()) resolvePending({ error });
             this.pending.clear();
             this.worker = undefined;
             this.ready = undefined;
+            // After a broken pipe the process may still run; do not leave it behind.
+            worker.kill();
           };
           // A dead pipe must fail the requests, not crash the benchmark.
           worker.on("error", (err) => fail(`FluidAudio worker failed to start: ${err.message}`));
@@ -239,11 +255,13 @@ export class FluidAudioProvider implements STTProvider {
           worker.on("exit", (code) => fail(`FluidAudio worker exited with code ${code}`));
         })
     );
-    this.ready.catch(() => {
+    const ready = this.ready;
+    ready.catch(() => {
+      if (this.ready !== ready) return;
       this.ready = undefined;
       this.built = undefined;
     });
 
-    return this.ready;
+    return ready;
   }
 }

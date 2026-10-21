@@ -147,11 +147,17 @@ export class BarkProvider implements STTProvider {
       );
       this.worker = worker;
       const fail = (error: string) => {
+        // A start that is still waiting must fail, even for a replaced worker.
         rejectReady(new Error(error));
+        // An error and the exit that follows, or a late exit after dispose(), must not
+        // touch the state of a worker that replaced this one.
+        if (this.worker !== worker) return;
         for (const resolvePending of this.pending.values()) resolvePending({ error });
         this.pending.clear();
         this.worker = undefined;
         this.ready = undefined;
+        // After a broken pipe the process may still run; do not leave it behind.
+        worker.kill();
       };
       // A missing uv binary or a dead pipe must fail the requests, not crash the benchmark.
       worker.on("error", (err) => fail(`Bark worker failed to start: ${err.message}`));
