@@ -11,7 +11,7 @@ import type {
 export type Scope = "global" | "category" | "suite" | "slice";
 export type TierFilter = BenchmarkTier | "all";
 export type OriginFilter = BenchmarkOrigin | "all";
-export type LanguageFilter = "all" | "de" | "en" | "auto";
+export type LanguageFilter = "all" | "de" | "en" | "ru" | "auto";
 
 export interface ViewFilters {
   scope: Scope;
@@ -57,7 +57,7 @@ function inferLegacyCategory(suiteId: string): string {
 }
 
 function inferLegacyLanguage(suiteId: string): string {
-  return suiteId.match(/-(de|en|auto)$/)?.[1] ?? "de";
+  return suiteId.match(/-(de|en|ru|auto)$/)?.[1] ?? "de";
 }
 
 function inferLegacyTier(suiteId: string, category: string): BenchmarkTier {
@@ -84,7 +84,7 @@ function inferLegacyOrigin(suiteId: string, category: string): BenchmarkOrigin {
 
 function inferLegacyName(suiteId: string, language: string, category: string): string {
   const langLabel =
-    language === "de" ? "German" : language === "en" ? "English" : "Auto";
+    language === "de" ? "German" : language === "en" ? "English" : language === "ru" ? "Russian" : "Auto";
 
   switch (category) {
     case "clean-speech":

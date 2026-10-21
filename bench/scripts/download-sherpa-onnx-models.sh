@@ -35,6 +35,20 @@ download_model() {
   echo "=> Done: $dir_name"
 }
 
+# Models that k2-fsa only publishes as release tarballs
+download_release() {
+  local dir_name="$1"
+  if [ -d "$MODELS_DIR/$dir_name" ]; then
+    echo "=> Skipping $dir_name (already exists)"
+    return
+  fi
+  echo "=> Downloading $dir_name ..."
+  curl -fSL --progress-bar \
+    "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/$dir_name.tar.bz2" \
+    | tar -xj -C "$MODELS_DIR"
+  echo "=> Done: $dir_name"
+}
+
 mkdir -p "$MODELS_DIR"
 
 # Parakeet TDT 0.6B (~640 MB)
@@ -48,6 +62,11 @@ download_model \
   "csukuangfj/sherpa-onnx-nemo-canary-180m-flash-en-es-de-fr-int8" \
   "sherpa-onnx-nemo-canary-180m-flash-en-es-de-fr-int8" \
   encoder.int8.onnx decoder.int8.onnx tokens.txt
+
+# GigaAM v3, Russian (~165 MB each): CTC and RNN-T, each with and without punctuation
+for variant in nemo-ctc nemo-ctc-punct nemo-transducer nemo-transducer-punct; do
+  download_release "sherpa-onnx-$variant-giga-am-v3-russian-2025-12-16"
+done
 
 echo ""
 echo "All models downloaded to $MODELS_DIR"

@@ -78,6 +78,18 @@ describe("normalizeText", () => {
     expect(normalizeText("Über die Straße", "de")).toBe("über die straße");
   });
 
+  it("folds ё into е for Russian", () => {
+    expect(normalizeText("Зелёный ёжик", "ru")).toBe("зеленый ежик");
+  });
+
+  it("keeps digits for languages without a number speller", () => {
+    expect(normalizeText("В 1990 году", "ru")).toBe("в 1990 году");
+  });
+
+  it("removes Russian hesitations but keeps real words", () => {
+    expect(normalizeText("Ну, э, мм, вот так", "ru")).toBe("ну вот так");
+  });
+
   it("handles zero", () => {
     expect(normalizeText("0 errors", "en")).toBe("zero errors");
     expect(normalizeText("0 Fehler", "de")).toBe("null fehler");
