@@ -135,6 +135,17 @@ export async function runBenchmark(
     providers: providers.flatMap((p) => p.models.map((m) => `${p.id}/${m}`)),
   });
 
+  // Download and load local models before timing starts, so first-use setup does not
+  // count against the per-request timeout.
+  for (const provider of providers) {
+    if (!provider.prepare) continue;
+    for (const model of provider.models) {
+      if (workQueue.some((w) => w.provider === provider && w.model === model)) {
+        await provider.prepare(model);
+      }
+    }
+  }
+
   // Process with concurrency limit using atomic index
   let queueIndex = 0;
 
@@ -226,15 +237,17 @@ export async function runBenchmark(
         const audioPath = join(BENCH_ROOT, "audio", test.audioFile);
         const audioInfo = await getAudioInfo(audioPath, item.suite.language);
 
+        // Clear the timer afterwards, or it keeps the process alive after the run ends.
+        let timer: NodeJS.Timeout | undefined;
         const transcription = await Promise.race([
           item.provider.transcribe(audioInfo, item.model),
-          new Promise<never>((_, reject) =>
-            setTimeout(
+          new Promise<never>((_, reject) => {
+            timer = setTimeout(
               () => reject(new Error("Timeout")),
               config.timeoutSeconds * 1000
-            )
-          ),
-        ]);
+            );
+          }),
+        ]).finally(() => clearTimeout(timer));
 
         const metrics = computeMetrics({
           reference: test.groundTruth,

@@ -21,6 +21,7 @@ Prerequisites (all land in the gitignored bench/audio/datasets/):
     https://huggingface.co/datasets/fsicoli/common_voice_17_0/resolve/main/transcript/ru/test.tsv
     https://huggingface.co/datasets/fsicoli/common_voice_17_0/resolve/main/transcript/ru/clip_durations.tsv
     https://huggingface.co/datasets/fsicoli/common_voice_17_0/resolve/main/audio/ru/test/ru_test_0.tar
+    (all ru_test_*.tar shards; the Russian test split currently fits in one)
 
 Usage: uv run --script bench/scripts/curate-russian.py [--target 100]
 """
@@ -154,8 +155,9 @@ def curate_ruls(target):
 
 def curate_common_voice(target):
     root = DATASETS / "common-voice-ru"
-    tsv, durations, tar_path = root / "test.tsv", root / "clip_durations.tsv", root / "ru_test_0.tar"
-    if not (tsv.exists() and durations.exists() and tar_path.exists()):
+    tsv, durations = root / "test.tsv", root / "clip_durations.tsv"
+    tar_paths = sorted(root.glob("ru_test_*.tar"))
+    if not (tsv.exists() and durations.exists() and tar_paths):
         print("Common Voice Russian test files not found under", root)
         return
     with durations.open() as f:
@@ -173,13 +175,17 @@ def curate_common_voice(target):
     out_dir = BENCH_ROOT / "audio" / "samples-commonvoice-ru"
     out_dir.mkdir(parents=True, exist_ok=True)
     wanted = {e["path"]: e for e in selected}
-    with tarfile.open(tar_path) as tar:
-        for member in tar:
-            name = Path(member.name).name
-            if name in wanted:
-                wav = out_dir / f"{wanted[name]['id']}.wav"
-                if not wav.exists():
-                    ffmpeg_to_wav(wav, data=tar.extractfile(member).read())
+    for tar_path in tar_paths:
+        with tarfile.open(tar_path) as tar:
+            for member in tar:
+                name = Path(member.name).name
+                if name in wanted:
+                    wav = out_dir / f"{wanted[name]['id']}.wav"
+                    if not wav.exists():
+                        ffmpeg_to_wav(wav, data=tar.extractfile(member).read())
+    missing = [e["path"] for e in selected if not (out_dir / f"{e['id']}.wav").exists()]
+    if missing:
+        raise SystemExit(f"Common Voice audio missing from {[p.name for p in tar_paths]}: {missing[:5]}")
     speakers = {}
     tests = []
     for e in selected:

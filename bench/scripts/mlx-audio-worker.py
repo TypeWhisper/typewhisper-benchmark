@@ -10,6 +10,7 @@ Runs the MLX models that TypeWhisper's Qwen3 and Voxtral plugins use. Reads one 
 per line from stdin and answers with one JSON line on stdout:
   -> {"id": 1, "repo": "mlx-community/...", "revision": "<sha>", "file": "/abs/path.wav", "language": "Russian"}
   <- {"id": 1, "text": "...", "durationMs": 12.3}
+A request with "load" set only downloads and loads the model.
 Models download from Hugging Face on first use and stay loaded for the process lifetime.
 """
 import json
@@ -30,6 +31,8 @@ def model_for(repo, revision):
 
 def handle(req):
     model = model_for(req["repo"], req.get("revision"))
+    if req.get("load"):
+        return {"loaded": True}
     kwargs = {"temperature": 0.0}
     if req.get("language"):
         kwargs["language"] = req["language"]
@@ -42,10 +45,11 @@ print(json.dumps({"ready": True}), flush=True)
 for line in sys.stdin:
     if not line.strip():
         continue
-    req = json.loads(line)
+    req = {}
     try:
+        req = json.loads(line)
         res = handle(req)
     except Exception as e:  # report per-request failures without killing the worker
         res = {"error": f"{type(e).__name__}: {e}"}
-    res["id"] = req.get("id")
+    res["id"] = req.get("id") if isinstance(req, dict) else None
     print(json.dumps(res), flush=True)

@@ -47,7 +47,7 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     repo: "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
     revision: "fdebf7b2af834a1db4b8a3c99ab7480b333adf9e",
     takesLanguage: false,
-    languages: ["en", "de", "ru", "fr", "es", "it", "pt"],
+    languages: ["en", "de", "ru", "fr", "es", "it", "pt", "auto"],
   },
 };
 
@@ -93,11 +93,14 @@ export class MlxAudioProvider implements STTProvider {
     return MLX_MODELS[model]?.languages.includes(language) ?? false;
   }
 
+  async prepare(model: string): Promise<void> {
+    const entry = this.entry(model);
+    const res = await this.request({ load: "1", repo: entry.repo, revision: entry.revision });
+    if (res.error) throw new Error(String(res.error));
+  }
+
   async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
-    const entry = MLX_MODELS[model];
-    if (!entry) {
-      throw new Error(`Unknown MLX model '${model}'. Available: ${this.models.join(", ")}`);
-    }
+    const entry = this.entry(model);
 
     const res = await this.request({
       repo: entry.repo,
@@ -105,7 +108,7 @@ export class MlxAudioProvider implements STTProvider {
       file: audio.filePath,
       language: entry.takesLanguage ? QWEN3_LANGUAGES[audio.language] : undefined,
     });
-    if (res.error) throw new Error(res.error);
+    if (res.error) throw new Error(String(res.error));
 
     return {
       text: (res.text ?? "").trim(),
@@ -115,13 +118,39 @@ export class MlxAudioProvider implements STTProvider {
     };
   }
 
+  private entry(model: string): MlxModel {
+    const entry = MLX_MODELS[model];
+    if (!entry) {
+      throw new Error(`Unknown MLX model '${model}'. Available: ${this.models.join(", ")}`);
+    }
+    return entry;
+  }
+
   private async request(payload: Record<string, string | undefined>): Promise<WorkerResponse> {
     await this.startWorker();
+    const stdin = this.worker?.stdin;
+    if (!stdin || stdin.destroyed) return { error: "mlx-audio worker is not running" };
     const id = this.nextId++;
     return new Promise((resolvePromise) => {
       this.pending.set(id, resolvePromise);
-      this.worker!.stdin!.write(JSON.stringify({ id, ...payload }) + "\n");
+      this.keepAlive(true);
+      stdin.write(JSON.stringify({ id, ...payload }) + "\n", (err) => {
+        if (!err) return;
+        this.settle(id, { error: `mlx-audio worker write failed: ${err.message}` });
+      });
     });
+  }
+
+  private settle(id: number, res: WorkerResponse): void {
+    this.pending.get(id)?.(res);
+    this.pending.delete(id);
+    if (this.pending.size === 0) this.keepAlive(false);
+  }
+
+  /** Keep the benchmark alive while the worker starts or has requests, not once it is idle. */
+  private keepAlive(active: boolean): void {
+    const handles = [this.worker, this.worker?.stdin, this.worker?.stdout] as any[];
+    for (const handle of handles) active ? handle?.ref?.() : handle?.unref?.();
   }
 
   private startWorker(): Promise<void> {
@@ -132,11 +161,17 @@ export class MlxAudioProvider implements STTProvider {
         stdio: ["pipe", "pipe", "inherit"],
       });
       this.worker = worker;
+      const fail = (error: string) => {
+        rejectReady(new Error(error));
+        for (const resolvePending of this.pending.values()) resolvePending({ error });
+        this.pending.clear();
+        this.worker = undefined;
+        this.ready = undefined;
+      };
+      // A missing uv binary or a dead pipe must fail the requests, not crash the benchmark.
+      worker.on("error", (err) => fail(`mlx-audio worker failed to start: ${err.message}`));
+      worker.stdin?.on("error", (err) => fail(`mlx-audio worker stdin error: ${err.message}`));
 
-      // Do not keep the benchmark process alive once all work is done.
-      worker.unref();
-      (worker.stdin as any)?.unref?.();
-      (worker.stdout as any)?.unref?.();
       process.once("exit", () => worker.kill());
 
       createInterface({ input: worker.stdout! }).on("line", (line) => {
@@ -147,23 +182,14 @@ export class MlxAudioProvider implements STTProvider {
           return; // ignore stray library output
         }
         if (res.ready) {
+          if (this.pending.size === 0) this.keepAlive(false);
           resolveReady();
           return;
         }
-        if (res.id != null) {
-          this.pending.get(res.id)?.(res);
-          this.pending.delete(res.id);
-        }
+        if (res.id != null) this.settle(res.id, res);
       });
 
-      worker.on("exit", (code) => {
-        const error = `mlx-audio worker exited with code ${code}`;
-        rejectReady(new Error(error));
-        for (const resolvePending of this.pending.values()) resolvePending({ error });
-        this.pending.clear();
-        this.worker = undefined;
-        this.ready = undefined;
-      });
+      worker.on("exit", (code) => fail(`mlx-audio worker exited with code ${code}`));
     });
 
     return this.ready;

@@ -43,10 +43,22 @@ download_release() {
     return
   fi
   echo "=> Downloading $dir_name ..."
-  curl -fSL --progress-bar \
-    "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/$dir_name.tar.bz2" \
-    | tar -xj -C "$MODELS_DIR"
-  echo "=> Done: $dir_name"
+  # Download and extract into a temporary directory first, so an interrupted run does not
+  # leave a partial model directory that later runs would skip.
+  local tmp
+  tmp="$(mktemp -d "$MODELS_DIR/.download.XXXXXX")"
+  if fetch "$tmp/model.tar.bz2" \
+      "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/$dir_name.tar.bz2" \
+    && tar -xjf "$tmp/model.tar.bz2" -C "$tmp" \
+    && [ -d "$tmp/$dir_name" ]; then
+    mv "$tmp/$dir_name" "$MODELS_DIR/$dir_name"
+    rm -rf "$tmp"
+    echo "=> Done: $dir_name"
+  else
+    rm -rf "$tmp"
+    echo "ERROR: failed to download $dir_name" >&2
+    return 1
+  fi
 }
 
 mkdir -p "$MODELS_DIR"

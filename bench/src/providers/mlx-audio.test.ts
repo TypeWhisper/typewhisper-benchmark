@@ -23,6 +23,7 @@ describe("MlxAudioProvider", () => {
     const provider = new MlxAudioProvider();
     expect(provider.supportsLanguage("qwen3-asr-0.6b-8bit", "ru")).toBe(true);
     expect(provider.supportsLanguage("qwen3-asr-0.6b-8bit", "auto")).toBe(false);
+    expect(provider.supportsLanguage("voxtral-mini-4b-realtime-4bit", "auto")).toBe(true);
     expect(provider.supportsLanguage("unknown", "ru")).toBe(false);
   });
 });
