@@ -21,6 +21,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new MlxAudioProvider(),
   new FluidAudioProvider(),
   new BarkProvider(),
+  new BarkProvider(undefined, "mlx"),
 ];
 
 export function getAllProviders(): STTProvider[] {
