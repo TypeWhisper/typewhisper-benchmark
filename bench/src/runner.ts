@@ -137,11 +137,22 @@ export async function runBenchmark(
 
   // Download and load local models before timing starts, so first-use setup does not
   // count against the per-request timeout.
+  // A failed preparation is reported and the model's requests then fail individually,
+  // instead of aborting the whole run.
   for (const provider of providers) {
     if (!provider.prepare) continue;
     for (const model of provider.models) {
-      if (workQueue.some((w) => w.provider === provider && w.model === model)) {
+      const willRun = workQueue.some(
+        (w) =>
+          w.provider === provider &&
+          w.model === model &&
+          provider.supportsLanguage(model, w.suite.language)
+      );
+      if (!willRun) continue;
+      try {
         await provider.prepare(model);
+      } catch (error) {
+        console.warn(`Could not prepare ${provider.id}/${model}: ${(error as Error).message}`);
       }
     }
   }
@@ -349,7 +360,11 @@ export async function runBenchmark(
     ).then(() => worker())
   );
 
-  await Promise.all(workers);
+  try {
+    await Promise.all(workers);
+  } finally {
+    for (const provider of providers) provider.dispose?.();
+  }
 
   // Compute summary and rankings
   const summary = buildBenchmarkSummary(results, suites, providers, version);

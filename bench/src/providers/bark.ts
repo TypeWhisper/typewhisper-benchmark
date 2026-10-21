@@ -88,6 +88,17 @@ export class BarkProvider implements STTProvider {
     };
   }
 
+  /** Stops the worker after a run, including one stuck on a request that timed out. */
+  dispose(): void {
+    const worker = this.worker;
+    if (!worker) return;
+    for (const resolvePending of this.pending.values()) resolvePending({ error: "Bark worker stopped" });
+    this.pending.clear();
+    this.worker = undefined;
+    this.ready = undefined;
+    worker.kill();
+  }
+
   private checked(model: string): string {
     if (!this.models.includes(model)) {
       throw new Error(`Unknown Bark model '${model}'. Available: ${this.models.join(", ")}`);
