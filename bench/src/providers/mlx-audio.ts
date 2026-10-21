@@ -162,6 +162,8 @@ export class MlxAudioProvider implements STTProvider {
       });
       this.worker = worker;
       const fail = (error: string) => {
+        // Several events can report the same dead worker; only the current one resets state.
+        if (this.worker !== worker) return;
         rejectReady(new Error(error));
         for (const resolvePending of this.pending.values()) resolvePending({ error });
         this.pending.clear();

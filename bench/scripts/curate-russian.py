@@ -248,7 +248,8 @@ def curate_noisy_fleurs(target):
             "audioFile": f"samples-noisy-ru/{file_id}.wav",
             "groundTruth": t["groundTruth"],
             "tags": ["noisy-environment", noise_type, f"snr-{snr}", "real-speech"],
-            "source": "fleurs",
+            # Mixed audio is generated, so the suite counts as synthetic even though the speech is real.
+            "source": "custom",
             "metadata": {"noiseType": noise_type, "snrDb": snr},
         })
     suite = {
