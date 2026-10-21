@@ -131,7 +131,7 @@ export default function App() {
             <div className="grid gap-2 text-sm text-zinc-300 md:text-right">
               <span>{data.metadata.totalModels} models tracked</span>
               <span>{visibleTestCount} benchmark tests in current filter</span>
-              <span>Languages: {language === "all" ? "DE, EN, AUTO" : language.toUpperCase()}</span>
+              <span>Languages: {language === "all" ? "DE, EN, RU, AUTO" : language.toUpperCase()}</span>
             </div>
           </div>
         </div>
@@ -173,6 +173,7 @@ export default function App() {
                 { value: "all", label: "All" },
                 { value: "de", label: "DE" },
                 { value: "en", label: "EN" },
+                { value: "ru", label: "RU" },
                 { value: "auto", label: "Auto" },
               ]}
               onChange={(value) => setLanguage(value as LanguageFilter)}

@@ -19,14 +19,18 @@ try {
 }
 
 interface ModelEntry {
-  type: "transducer" | "canary";
+  type: "transducer" | "canary" | "nemo-ctc";
   dirName: string;
   files: {
     encoder: string;
-    decoder: string;
+    decoder?: string;
     joiner?: string;
     tokens: string;
   };
+  /** Fbank feature dimension; NeMo models default to 80, GigaAM uses 64 */
+  featureDim?: number;
+  /** sherpa-onnx modelType hint, needed for NeMo-style transducers such as GigaAM */
+  modelType?: string;
   /** Supported languages, or null for auto-detect (multilingual transducer) */
   languages: string[] | null;
 }
@@ -53,7 +57,35 @@ const MODEL_REGISTRY: Record<string, ModelEntry> = {
     },
     languages: ["en", "de", "es", "fr"],
   },
+  // GigaAM v3 (Russian only). The "-punct" variants are the end-to-end models that also
+  // restore punctuation and capitalization.
+  "gigaam-v3-ctc": gigaAm("ctc", "sherpa-onnx-nemo-ctc-giga-am-v3-russian-2025-12-16"),
+  "gigaam-v3-ctc-punct": gigaAm("ctc", "sherpa-onnx-nemo-ctc-punct-giga-am-v3-russian-2025-12-16"),
+  "gigaam-v3-rnnt": gigaAm("rnnt", "sherpa-onnx-nemo-transducer-giga-am-v3-russian-2025-12-16"),
+  "gigaam-v3-rnnt-punct": gigaAm(
+    "rnnt",
+    "sherpa-onnx-nemo-transducer-punct-giga-am-v3-russian-2025-12-16"
+  ),
 };
+
+function gigaAm(kind: "ctc" | "rnnt", dirName: string): ModelEntry {
+  return {
+    type: kind === "ctc" ? "nemo-ctc" : "transducer",
+    dirName,
+    files:
+      kind === "ctc"
+        ? { encoder: "model.int8.onnx", tokens: "tokens.txt" }
+        : {
+            encoder: "encoder.int8.onnx",
+            decoder: "decoder.onnx",
+            joiner: "joiner.onnx",
+            tokens: "tokens.txt",
+          },
+    featureDim: 64,
+    modelType: kind === "rnnt" ? "nemo_transducer" : undefined,
+    languages: ["ru"],
+  };
+}
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_MODELS_BASE_PATH = fileURLToPath(
@@ -172,8 +204,8 @@ export class SherpaOnnxProvider implements STTProvider {
     model: string,
     language: string
   ): any {
-    // Transducer auto-detects language, canary needs lang in config
-    const cacheKey = entry.languages ? `${model}:${language}` : model;
+    // Only canary needs the language in its config
+    const cacheKey = entry.type === "canary" ? `${model}:${language}` : model;
     let recognizer = this.recognizerCache.get(cacheKey);
     if (recognizer) return recognizer;
 
@@ -184,7 +216,7 @@ export class SherpaOnnxProvider implements STTProvider {
     const config: any = {
       featConfig: {
         sampleRate: 16000,
-        featureDim: 80,
+        featureDim: entry.featureDim ?? 80,
       },
       modelConfig: {
         numThreads,
@@ -198,15 +230,18 @@ export class SherpaOnnxProvider implements STTProvider {
     if (entry.type === "transducer") {
       config.modelConfig.transducer = {
         encoder: join(dir, entry.files.encoder),
-        decoder: join(dir, entry.files.decoder),
+        decoder: join(dir, entry.files.decoder!),
         joiner: join(dir, entry.files.joiner!),
       };
+      if (entry.modelType) config.modelConfig.modelType = entry.modelType;
+    } else if (entry.type === "nemo-ctc") {
+      config.modelConfig.nemoCtc = { model: join(dir, entry.files.encoder) };
     } else {
       // canary / encoder-decoder
       const lang = toCanaryLang(language);
       config.modelConfig.canary = {
         encoder: join(dir, entry.files.encoder),
-        decoder: join(dir, entry.files.decoder),
+        decoder: join(dir, entry.files.decoder!),
         srcLang: lang,
         tgtLang: lang,
         usePnc: 0,

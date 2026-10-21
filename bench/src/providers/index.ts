@@ -6,6 +6,7 @@ import { WhisperCppProvider } from "./whisper-cpp.js";
 import { AppleSpeechProvider } from "./apple-speech.js";
 import { SherpaOnnxProvider } from "./sherpa-onnx.js";
 import { AuroraAsrProvider } from "./aurora-asr.js";
+import { MlxAudioProvider } from "./mlx-audio.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -15,6 +16,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new AppleSpeechProvider(),
   new SherpaOnnxProvider(),
   new AuroraAsrProvider(),
+  new MlxAudioProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {

@@ -47,6 +47,10 @@ export interface STTProvider {
   transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult>;
   isAvailable(): Promise<boolean>;
   supportsLanguage(model: string, language: string): boolean;
+  /** Optional one-time setup (download, load) that runs before timed requests */
+  prepare?(model: string): Promise<void>;
+  /** Optional cleanup after the run, e.g. stopping a worker with requests that timed out */
+  dispose?(): void;
 }
 
 // === Test Suite Types ===

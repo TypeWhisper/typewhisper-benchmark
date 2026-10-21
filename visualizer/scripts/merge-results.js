@@ -34,7 +34,7 @@ function inferCategory(suiteId) {
 }
 
 function inferLanguage(suiteId) {
-  return suiteId.match(/-(de|en|auto)$/)?.[1] ?? "de";
+  return suiteId.match(/-(de|en|ru|auto)$/)?.[1] ?? "de";
 }
 
 function inferTier(suiteId, category) {
@@ -60,7 +60,7 @@ function inferOrigin(suiteId, category) {
 }
 
 function inferName(suiteId, language, category) {
-  const langLabel = language === "de" ? "German" : language === "en" ? "English" : "Auto";
+  const langLabel = language === "de" ? "German" : language === "en" ? "English" : language === "ru" ? "Russian" : "Auto";
   switch (category) {
     case "clean-speech":
       return `Clean Speech (${langLabel})`;

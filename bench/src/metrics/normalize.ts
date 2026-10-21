@@ -111,6 +111,15 @@ const DE_FILLERS = new Set([
   "mmm",
 ]);
 
+// Hesitations only; "ну" and "вот" are real words and stay.
+const RU_FILLERS = new Set(["э", "ээ", "эээ", "эм", "мм", "ммм", "хм"]);
+
+function fillersFor(lang: string): Set<string> {
+  if (lang === "de") return DE_FILLERS;
+  if (lang === "ru") return RU_FILLERS;
+  return EN_FILLERS;
+}
+
 // --- Number to words (English) ---
 
 const EN_ONES = [
@@ -312,6 +321,12 @@ export function normalizeText(text: string, lang: string = "en"): string {
   // 1. Lowercase
   let result = text.toLowerCase();
 
+  // Russian writing omits the diaeresis on "ё" most of the time, so models and references
+  // disagree on it without any recognition error.
+  if (lang === "ru") {
+    result = result.replace(/ё/g, "е");
+  }
+
   // 2. Expand English contractions (before punctuation removal so apostrophes are still present)
   if (lang === "en") {
     // Use word-boundary-aware replacement. We match the contraction forms as whole words.
@@ -328,8 +343,10 @@ export function normalizeText(text: string, lang: string = "en"): string {
   // 3. Remove punctuation (replace with space) - keep letters, digits, whitespace, and common Unicode letters
   result = result.replace(/[^\p{L}\p{N}\s]/gu, " ");
 
-  // 4. Convert numbers to words
+  // 4. Convert numbers to words (only English and German have a number speller; other
+  // languages keep digits rather than being spelled out in English)
   result = result.replace(/\b\d+\b/g, (match: string) => {
+    if (lang !== "en" && lang !== "de") return match;
     const n = parseInt(match, 10);
     if (n >= 0 && n <= 999999) {
       return numberToWords(n, lang);
@@ -338,7 +355,7 @@ export function normalizeText(text: string, lang: string = "en"): string {
   });
 
   // 5. Remove filler words
-  const fillers = lang === "de" ? DE_FILLERS : EN_FILLERS;
+  const fillers = fillersFor(lang);
   result = result
     .split(/\s+/)
     .filter((word) => !fillers.has(word))
