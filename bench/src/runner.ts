@@ -360,7 +360,11 @@ export async function runBenchmark(
     ).then(() => worker())
   );
 
-  await Promise.all(workers);
+  try {
+    await Promise.all(workers);
+  } finally {
+    for (const provider of providers) provider.dispose?.();
+  }
 
   // Compute summary and rankings
   const summary = buildBenchmarkSummary(results, suites, providers, version);

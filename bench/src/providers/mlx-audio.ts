@@ -118,6 +118,17 @@ export class MlxAudioProvider implements STTProvider {
     };
   }
 
+  /** Stops the worker, so requests that timed out in the runner cannot keep the process alive. */
+  dispose(): void {
+    const worker = this.worker;
+    if (!worker) return;
+    for (const resolvePending of this.pending.values()) resolvePending({ error: "mlx-audio worker stopped" });
+    this.pending.clear();
+    this.worker = undefined;
+    this.ready = undefined;
+    worker.kill();
+  }
+
   private entry(model: string): MlxModel {
     const entry = MLX_MODELS[model];
     if (!entry) {
