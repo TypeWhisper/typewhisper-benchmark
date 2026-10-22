@@ -42,24 +42,25 @@ def stable_key(value):
     return hashlib.sha256(str(value).encode()).hexdigest()
 
 
-def select_balanced(entries, target):
-    """Round-robin over speakers (sorted), hash order within each speaker."""
+def select_one_per_speaker(entries, target):
+    """The first clip (hash order) of the first `target` speakers (sorted), never two from one speaker."""
     groups = defaultdict(list)
     for e in entries:
         groups[e["group"]].append(e)
-    queues = [sorted(groups[g], key=lambda e: stable_key(e["id"])) for g in sorted(groups)]
-    selected = []
-    while len(selected) < target and any(queues):
-        for q in queues:
-            if q and len(selected) < target:
-                selected.append(q.pop(0))
+    if target > len(groups):
+        raise SystemExit(f"--target {target} exceeds the {len(groups)} eligible speakers")
+    selected = [min(groups[g], key=lambda e: stable_key(e["id"])) for g in sorted(groups)[:target]]
     return sorted(selected, key=lambda e: e["id"])
 
 
 def ffmpeg_to_wav(out_path, data):
+    # Convert into a temporary file first, so an interrupted run never leaves a partial WAV
+    # that a later run would accept because it exists.
+    partial = out_path.with_name(out_path.name + ".partial")
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", "pipe:0",
-           "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", str(out_path)]
+           "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", "-f", "wav", str(partial)]
     subprocess.run(cmd, input=data, check=True)
+    partial.replace(out_path)
 
 
 def main(target):
@@ -78,7 +79,7 @@ def main(target):
         and int(r["down_votes"] or 0) == 0
         and len(r["sentence"].split()) >= MIN_WORDS
     ]
-    selected = select_balanced(candidates, target)
+    selected = select_one_per_speaker(candidates, target)
 
     out_dir = BENCH_ROOT / "audio" / SAMPLE_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
