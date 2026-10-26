@@ -22,7 +22,7 @@ enum VocabularyGuard {
         guard original != rescored else { return original }
         let before = original.split(whereSeparator: \.isWhitespace).map(String.init)
         let after = rescored.split(whereSeparator: \.isWhitespace).map(String.init)
-        let difference = after.map(key).difference(from: before.map(key))
+        let difference = after.difference(from: before)
         var removed = Set<Int>()
         var inserted = Set<Int>()
         for change in difference {
@@ -80,11 +80,14 @@ enum VocabularyGuard {
         }
     }
 
+    /// Symbols such as "+" and "#" belong to terms ("C++", "C#"), so only these are carried over.
+    private static let sentencePunctuation: Set<Character> = [".", ",", ";", ":", "!", "?", "…"]
+
     /// The rescorer drops the punctuation of a word it replaces: "to Tasmine." becomes "to Tasmeen".
     static func carryingTrailingPunctuation(from replaced: [String], to replacement: [String]) -> [String] {
         guard let last = replaced.last, let newLast = replacement.last else { return replacement }
-        let trailing = String(last.reversed().prefix { $0.isPunctuation }.reversed())
-        guard !trailing.isEmpty, !(newLast.last?.isPunctuation ?? false) else { return replacement }
+        let trailing = String(last.reversed().prefix { sentencePunctuation.contains($0) }.reversed())
+        guard !trailing.isEmpty, !sentencePunctuation.contains(newLast.last ?? " ") else { return replacement }
         return replacement.dropLast() + [newLast + trailing]
     }
 
