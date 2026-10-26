@@ -64,7 +64,7 @@ enum VocabularyGuard {
         isKnownWord: (String) -> Bool
     ) -> Bool {
         guard !replaced.isEmpty, !replacement.isEmpty else { return false }
-        if letters(replaced.joined()) == letters(replacement.joined()) { return true }
+        if joiningKey(replaced) == joiningKey(replacement) { return true }
         let known = replaced.map { word in
             let bare = key(word)
             return !bare.contains(where: \.isLetter) || isKnownWord(bare)
@@ -93,6 +93,14 @@ enum VocabularyGuard {
 
     private static func key(_ word: String) -> String {
         word.trimmingCharacters(in: .punctuationCharacters.union(.symbols))
+    }
+
+    /// Ignores case, spaces and the symbols at the outer edges ("C" -> "C++", "NET" -> ".NET"),
+    /// but not punctuation inside a word, so "can't" -> "cant" is not a mere recasing.
+    private static func joiningKey(_ words: [String]) -> String {
+        words.joined()
+            .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "en_US_POSIX"))
+            .trimmingCharacters(in: .punctuationCharacters.union(.symbols))
     }
 
     private static func letters(_ text: String) -> String {
