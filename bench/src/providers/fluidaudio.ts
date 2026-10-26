@@ -20,6 +20,8 @@ export interface FluidAudioModel {
   official?: "v2" | "v3" | "ultra";
   /** Folder under the models path, prepared by download-fluidaudio-models.sh */
   local?: string;
+  /** Nemotron streaming folder under the models path (decodes in FluidAudio streams, not TDT) */
+  nemotron?: string;
   /** FluidAudio decode contract for local folders */
   version?: "v3" | "ultra";
   /** Leading silence the model card evaluated with */
@@ -47,7 +49,31 @@ export const FLUIDAUDIO_MODELS: Record<string, FluidAudioModel> = {
     shortFunction: "short8",
     languages: ["en"],
   },
+  // TypeWhisper's Parakeet plugin offers it as "Nemotron 3.5 ASR Streaming": the multilingual
+  // 1120 ms variant of FluidInference's Core ML conversion, prompted with the dictation language.
+  "nemotron-3.5-asr-streaming-0.6b": {
+    nemotron: "nemotron-3.5-asr-streaming-1120ms",
+    languages: null,
+  },
 };
+
+/**
+ * Nemotron's language prompt, like ParakeetPlugin.nemotronLanguagePrompt: the first locale the
+ * model card lists for the language, or undefined (the model detects it) for auto-detect.
+ */
+const NEMOTRON_PROMPT_LOCALES: Record<string, string> = {
+  en: "en-US",
+  de: "de-DE",
+  ru: "ru-RU",
+  fr: "fr-FR",
+  es: "es-US",
+  it: "it-IT",
+  pt: "pt-BR",
+};
+
+export function nemotronLanguagePrompt(language: string): string | undefined {
+  return NEMOTRON_PROMPT_LOCALES[language];
+}
 
 export function getFluidAudioModelsBasePath(env: NodeJS.ProcessEnv = process.env): string {
   if (!env.FLUIDAUDIO_MODELS_PATH) return DEFAULT_MODELS_BASE_PATH;
@@ -63,6 +89,16 @@ export const LOCAL_MODEL_FILES = [
   "parakeet_vocab.json",
 ];
 
+/** Files the worker loads from a Nemotron streaming folder (FluidAudio 0.17.5 names). */
+export const NEMOTRON_MODEL_FILES = [
+  "encoder.mlmodelc",
+  "decoder.mlmodelc",
+  "joint.mlmodelc",
+  "decoder_joint.mlmodelc",
+  "metadata.json",
+  "tokenizer.json",
+];
+
 /** Local folders need every compiled component; official models download on first use. */
 export function hasFluidAudioModelFiles(
   model: string,
@@ -71,6 +107,10 @@ export function hasFluidAudioModelFiles(
 ): boolean {
   const entry = FLUIDAUDIO_MODELS[model];
   if (!entry) return false;
+  if (entry.nemotron) {
+    const folder = join(getFluidAudioModelsBasePath(env), entry.nemotron);
+    return NEMOTRON_MODEL_FILES.every((file) => fileExists(join(folder, file)));
+  }
   if (!entry.local) return true;
   const folder = join(getFluidAudioModelsBasePath(env), entry.local);
   return LOCAL_MODEL_FILES.every((file) => fileExists(join(folder, file)));
@@ -126,7 +166,9 @@ export class FluidAudioProvider implements STTProvider {
   }
 
   async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
-    const res = await this.request({ ...this.spec(model), file: audio.filePath });
+    const spec = this.spec(model);
+    if (spec.nemotron) spec.language = nemotronLanguagePrompt(audio.language);
+    const res = await this.request({ ...spec, file: audio.filePath });
     if (res.error) throw new Error(res.error);
     return {
       text: (res.text ?? "").trim(),
@@ -158,6 +200,7 @@ export class FluidAudioProvider implements STTProvider {
         `Model files not found for '${model}'. Run: bash bench/scripts/download-fluidaudio-models.sh`
       );
     }
+    if (entry.nemotron) return { model, nemotron: join(base, entry.nemotron) };
     return entry.official
       ? { model, official: entry.official, modelsRoot: base }
       : {

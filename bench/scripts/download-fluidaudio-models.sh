@@ -16,6 +16,10 @@ FLUID_MINI_REPO="FluidVoice-Labs/fluid-speech-mini-coreml"
 FLUID_MINI_REVISION="d81c3160dfe5a5e1f8f7267164a07d30617a3a1a"
 BARK_PRO_REPO="ConwayResearch/Underdog-Bark-3.0-Pro"
 BARK_PRO_REVISION="4b5c51e04aa8d16dda9ecdff71bc29f7360149e4"
+# Same repo, revision and variant as TypeWhisper's NemotronStreaming (ParakeetPlugin.swift).
+NEMOTRON_REPO="FluidInference/Nemotron-3.5-ASR-Streaming-Multilingual-0.6b-CoreML"
+NEMOTRON_REVISION="1a41b75758b0337ff67db7d5408280aaaf23074e"
+NEMOTRON_VARIANT="multilingual/1120ms"
 
 mkdir -p "$STAGING_DIR"
 
@@ -60,6 +64,27 @@ else
   mv "$staging" "$target"
   rm -rf "$download"
   echo "=> Done: Bark 3.0 Pro"
+fi
+
+target="$MODELS_DIR/nemotron-3.5-asr-streaming-1120ms"
+if [ -d "$target" ]; then
+  echo "=> Skipping Nemotron 3.5 ASR Streaming (already exists)"
+else
+  echo "=> Downloading Nemotron 3.5 ASR Streaming, 1120 ms (~630 MB) ..."
+  download="$STAGING_DIR/nemotron.download"   # kept between runs so downloads resume
+  staging="$STAGING_DIR/nemotron-3.5-asr-streaming-1120ms"
+  $HF download "$NEMOTRON_REPO" --revision "$NEMOTRON_REVISION" --local-dir "$download" \
+    --include "$NEMOTRON_VARIANT/*" --include "$NEMOTRON_VARIANT/**" --include "README.md"
+  rm -rf "$staging"
+  mkdir -p "$staging"
+  # The models TypeWhisper loads; FluidAudio's mel front end replaced the preprocessor model.
+  for name in encoder.mlmodelc decoder.mlmodelc joint.mlmodelc decoder_joint.mlmodelc metadata.json tokenizer.json; do
+    cp -R "$download/$NEMOTRON_VARIANT/$name" "$staging/"
+  done
+  cp "$download/README.md" "$staging/"   # carries the OpenMDW-1.1 license header
+  mv "$staging" "$target"
+  rm -rf "$download"
+  echo "=> Done: Nemotron 3.5 ASR Streaming"
 fi
 
 rmdir "$STAGING_DIR" 2>/dev/null || true

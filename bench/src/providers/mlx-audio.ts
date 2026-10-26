@@ -14,12 +14,21 @@ interface MlxModel {
   repo: string;
   /** Pinned Hugging Face revision, so results stay reproducible */
   revision: string;
-  /** Qwen3-ASR takes an explicit language name; Voxtral Realtime always auto-detects */
-  takesLanguage: boolean;
+  /**
+   * How the suite language reaches the model: Qwen3-ASR takes its name, Canary its code. The
+   * others get none (Voxtral Realtime detects it; Granite's `language` means translation).
+   */
+  language?: "name" | "code";
+  /** Extra generate() arguments, such as Granite's punctuation prompt */
+  options?: Record<string, string | number>;
   languages: string[];
 }
 
-// Same repos as TypeWhisper's Qwen3 and Voxtral plugins.
+// Granite Speech's documented instruction for punctuated, truecased transcripts.
+const GRANITE_PUNCTUATION_PROMPT = "transcribe the speech with proper punctuation and capitalization.";
+const GRANITE_LANGUAGES = ["en", "de", "fr", "es", "pt", "auto"];
+
+// Same repos as TypeWhisper's Qwen3, Voxtral, Granite and Canary plugins, then candidates.
 const QWEN3_LANGUAGES: Record<string, string> = {
   en: "English",
   de: "German",
@@ -34,22 +43,77 @@ export const MLX_MODELS: Record<string, MlxModel> = {
   "qwen3-asr-0.6b-8bit": {
     repo: "mlx-community/Qwen3-ASR-0.6B-8bit",
     revision: "89e96d92ba34aca20b3e29fb10cc284097d1219f",
-    takesLanguage: true,
+    language: "name",
     languages: Object.keys(QWEN3_LANGUAGES),
   },
   "qwen3-asr-1.7b-8bit": {
     repo: "mlx-community/Qwen3-ASR-1.7B-8bit",
     revision: "a8379a2e2f9e313c9292cdf1af4055ab56d50d55",
-    takesLanguage: true,
+    language: "name",
     languages: Object.keys(QWEN3_LANGUAGES),
   },
   "voxtral-mini-4b-realtime-4bit": {
     repo: "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
     revision: "fdebf7b2af834a1db4b8a3c99ab7480b333adf9e",
-    takesLanguage: false,
     languages: ["en", "de", "ru", "fr", "es", "it", "pt", "auto"],
   },
+  // TypeWhisper's Granite plugin: no language and its built-in prompt (transcription, not translation).
+  "granite-4.0-1b-speech-8bit": {
+    repo: "mlx-community/granite-4.0-1b-speech-8bit",
+    revision: "5ed3098fb331d0131cb2aeafdbacc19841359736",
+    languages: GRANITE_LANGUAGES,
+  },
+  // Candidates from IBM (Apache 2.0), prompted for punctuation as the model cards recommend.
+  "granite-speech-4.1-2b": {
+    repo: "ibm-granite/granite-speech-4.1-2b",
+    revision: "823ca793aa49925d4eb2e758709b7f2c98513e8e",
+    options: { prompt: GRANITE_PUNCTUATION_PROMPT },
+    languages: GRANITE_LANGUAGES,
+  },
+  "granite-speech-4.1-2b-nar": {
+    repo: "mlx-community/granite-speech-4.1-2b-nar-mlx",
+    revision: "6acb7892068dd30227f20aba6eb7c4b0ae5c7e7c",
+    languages: GRANITE_LANGUAGES,
+  },
+  "granite-speech-5.0-2b": {
+    repo: "ibm-granite/granite-speech-5.0-2b",
+    revision: "c684620bb54fc89d14ba27256b23bbc9e09ba764",
+    options: { prompt: GRANITE_PUNCTUATION_PROMPT },
+    languages: GRANITE_LANGUAGES,
+  },
+  "granite-speech-5.0-470m-turboctc": {
+    repo: "ibm-granite/granite-speech-5.0-470m-turboctc",
+    revision: "1dd23f46f6d4e6eae2531982ba2e33220086dd97",
+    languages: ["en"],
+  },
+  // NVIDIA Canary 1B v2 (CC BY 4.0) in the MLX conversion mlx-audio documents (NVIDIA's own repo
+  // lacks the tokenizer file mlx-audio reads): source = target language, punctuation on.
+  // TypeWhisper's Canary plugin allows 512 tokens per chunk.
+  "canary-1b-v2": {
+    repo: "qfuxa/canary-mlx",
+    revision: "1d2d321f7bfd2026ee2dcb5639f524ab8b5f0c96",
+    language: "code",
+    options: { max_tokens: 512 },
+    languages: ["en", "de", "ru", "fr", "es", "it", "pt"],
+  },
+  // The Greek/English Canary fine-tune TypeWhisper's Canary plugin offers.
+  "sophea-canary": {
+    repo: "KIEFERSA/Sophea-Canary-ASR-mlx",
+    revision: "1d0827f8f869dfad40f6b6980434cf34b1987963",
+    language: "code",
+    options: { max_tokens: 512 },
+    languages: ["en"],
+  },
 };
+
+/** generate() arguments for one clip; the worker adds temperature 0. */
+export function generateOptions(model: string, language: string): Record<string, string | number> {
+  const entry = MLX_MODELS[model];
+  const options: Record<string, string | number> = { ...entry?.options };
+  if (entry?.language === "name") options.language = QWEN3_LANGUAGES[language];
+  if (entry?.language === "code") options.language = language;
+  return options;
+}
 
 interface WorkerResponse {
   id?: number;
@@ -106,7 +170,7 @@ export class MlxAudioProvider implements STTProvider {
       repo: entry.repo,
       revision: entry.revision,
       file: audio.filePath,
-      language: entry.takesLanguage ? QWEN3_LANGUAGES[audio.language] : undefined,
+      options: generateOptions(model, audio.language),
     });
     if (res.error) throw new Error(String(res.error));
 
@@ -137,7 +201,7 @@ export class MlxAudioProvider implements STTProvider {
     return entry;
   }
 
-  private async request(payload: Record<string, string | undefined>): Promise<WorkerResponse> {
+  private async request(payload: Record<string, unknown>): Promise<WorkerResponse> {
     await this.startWorker();
     const stdin = this.worker?.stdin;
     if (!stdin || stdin.destroyed) return { error: "mlx-audio worker is not running" };
