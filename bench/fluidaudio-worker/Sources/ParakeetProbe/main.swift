@@ -368,8 +368,20 @@ func runBoosting() async throws {
     let clips = try loadClips()
     log("boosting: \(capped.count) terms, similarity \(similarity.map { String($0) } ?? "auto"), \(clips.count) clips")
     // Case-insensitive and with the term's own spacing, so "ray cast" is not read as Raycast.
+    // Only at the term's outer edges, so "Rust" does not match "trust".
     func mentions(_ text: String, _ term: String) -> Bool {
-        text.range(of: term, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+        var searchStart = text.startIndex
+        while let found = text.range(of: term, options: [.caseInsensitive, .diacriticInsensitive],
+                                     range: searchStart..<text.endIndex) {
+            let before = found.lowerBound == text.startIndex ? nil : text[text.index(before: found.lowerBound)]
+            let after = found.upperBound == text.endIndex ? nil : text[found.upperBound]
+            if !(before?.isLetter ?? false || before?.isNumber ?? false),
+               !(after?.isLetter ?? false || after?.isNumber ?? false) {
+                return true
+            }
+            searchStart = text.index(after: found.lowerBound)
+        }
+        return false
     }
     let termKeys = capped.map(\.text)
 

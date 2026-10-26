@@ -14,6 +14,6 @@ for t in json.load(open(sys.argv[1]))["tests"]:
   [ -f "$out" ] && continue
   mkdir -p "$(dirname "$out")"
   say -v "$voice" -o "$TMP/clip.aiff" "$text"
-  ffmpeg -loglevel error -y -i "$TMP/clip.aiff" -ar 16000 -ac 1 -c:a pcm_s16le "$out"
+  ffmpeg -nostdin -loglevel error -y -i "$TMP/clip.aiff" -ar 16000 -ac 1 -c:a pcm_s16le "$out"
 done
 echo "Clips in $AUDIO_DIR/samples-vocab-en"
