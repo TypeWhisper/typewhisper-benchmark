@@ -23,6 +23,7 @@ describe("FluidAudioProvider", () => {
       "fluid-speech-mini",
       "bark-3.0-pro",
       "nemotron-3.5-asr-streaming-0.6b",
+      "nemotron-3.5-asr-streaming-0.6b-tail1s",
     ]);
   });
 

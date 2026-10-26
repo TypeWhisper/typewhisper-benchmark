@@ -22,6 +22,8 @@ export interface FluidAudioModel {
   local?: string;
   /** Nemotron streaming folder under the models path (decodes in FluidAudio streams, not TDT) */
   nemotron?: string;
+  /** Trailing silence appended before decoding */
+  tailPadSeconds?: number;
   /** FluidAudio decode contract for local folders */
   version?: "v3" | "ultra";
   /** Leading silence the model card evaluated with */
@@ -53,6 +55,13 @@ export const FLUIDAUDIO_MODELS: Record<string, FluidAudioModel> = {
   // 1120 ms variant of FluidInference's Core ML conversion, prompted with the dictation language.
   "nemotron-3.5-asr-streaming-0.6b": {
     nemotron: "nemotron-3.5-asr-streaming-1120ms",
+    languages: null,
+  },
+  // Probe, not a TypeWhisper setting: the stream drops words at the very end of a clip unless
+  // silence follows them, which the benchmark's tightly cut clips do not have.
+  "nemotron-3.5-asr-streaming-0.6b-tail1s": {
+    nemotron: "nemotron-3.5-asr-streaming-1120ms",
+    tailPadSeconds: 1,
     languages: null,
   },
 };
@@ -200,7 +209,9 @@ export class FluidAudioProvider implements STTProvider {
         `Model files not found for '${model}'. Run: bash bench/scripts/download-fluidaudio-models.sh`
       );
     }
-    if (entry.nemotron) return { model, nemotron: join(base, entry.nemotron) };
+    if (entry.nemotron) {
+      return { model, nemotron: join(base, entry.nemotron), tailPadSeconds: entry.tailPadSeconds };
+    }
     return entry.official
       ? { model, official: entry.official, modelsRoot: base }
       : {
