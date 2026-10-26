@@ -14,5 +14,10 @@ let package = Package(
             name: "FluidAudioWorker",
             dependencies: [.product(name: "FluidAudio", package: "FluidAudio")]
         ),
+        // One-off measurements of decoding ideas, outside the benchmark runner. See bench/probe/README.md.
+        .executableTarget(
+            name: "ParakeetProbe",
+            dependencies: [.product(name: "FluidAudio", package: "FluidAudio")]
+        ),
     ]
 )
