@@ -84,7 +84,8 @@ export const MLX_MODELS: Record<string, MlxModel> = {
   "granite-speech-5.0-470m-turboctc": {
     repo: "ibm-granite/granite-speech-5.0-470m-turboctc",
     revision: "1dd23f46f6d4e6eae2531982ba2e33220086dd97",
-    // English only; it still runs on other explicit languages to document how it behaves there.
+    // The pinned 2026-10-21 release is multilingual (EN, FR, DE, ES, PT, IT, JA); Russian is not
+    // among them and runs only to document how it behaves there.
     languages: ["en", "de", "ru"],
   },
   // NVIDIA Canary 1B v2 (CC BY 4.0) in the MLX conversion mlx-audio documents (NVIDIA's own repo
