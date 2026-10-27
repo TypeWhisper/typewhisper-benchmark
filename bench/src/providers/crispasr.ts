@@ -169,6 +169,12 @@ export class CrispAsrProvider implements STTProvider {
         env: { ...process.env, CRISPASR_API_KEYS: this.apiKey, CRISPASR_CACHE_DIR: join(base, "cache") },
       });
       server.process = child;
+      // A runtime that cannot be executed (missing permission, wrong architecture) emits
+      // "error" instead of exiting; without a listener that would end the whole benchmark.
+      let spawnError: Error | undefined;
+      child.once("error", (error) => {
+        spawnError = error;
+      });
       const capture = (chunk: Buffer) => {
         outputTail = (outputTail + chunk.toString()).slice(-4000);
       };
@@ -178,6 +184,7 @@ export class CrispAsrProvider implements STTProvider {
 
       const deadline = Date.now() + 300_000;
       for (;;) {
+        if (spawnError) throw new Error(`crispasr could not start: ${spawnError.message}`);
         if (child.exitCode != null) throw new Error(`crispasr exited: ${outputTail}`);
         if (Date.now() > deadline) throw new Error(`crispasr did not start: ${outputTail}`);
         if (await fetch(`${baseUrl}/health`).then((r) => r.ok, () => false)) break;
