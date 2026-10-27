@@ -66,15 +66,18 @@ class Loaded:
             check=False,
         )
         pieces = []
-        for idx in range(steps):
-            chunk = pcm[:, idx * FRAME:(idx + 1) * FRAME]
-            tokens = mimi.encode_step(chunk[None, 0:1])
-            tokens = mx.array(tokens).transpose(0, 2, 1)[:, :, : self.other_codebooks]
-            token = gen.step(tokens[0], None)[0].item()
-            if token not in (0, 3):  # padding tokens
-                pieces.append(self.tokenizer.id_to_piece(token).replace("▁", " "))
-        for c in self.model.transformer_cache:  # next clip starts from an empty context
-            c.reset()
+        try:
+            for idx in range(steps):
+                chunk = pcm[:, idx * FRAME:(idx + 1) * FRAME]
+                tokens = mimi.encode_step(chunk[None, 0:1])
+                tokens = mx.array(tokens).transpose(0, 2, 1)[:, :, : self.other_codebooks]
+                token = gen.step(tokens[0], None)[0].item()
+                if token not in (0, 3):  # padding tokens
+                    pieces.append(self.tokenizer.id_to_piece(token).replace("▁", " "))
+        finally:
+            # The next clip starts from an empty context, also after a failed clip.
+            for c in self.model.transformer_cache:
+                c.reset()
         return "".join(pieces).strip()
 
 

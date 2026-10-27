@@ -3,9 +3,16 @@
 # files. Versions, revisions and checksums are the ones TypeWhisper's Cohere Transcribe (Local)
 # plugin pins (CohereGGUFAssets.swift and CohereLocalPlugin.swift in typewhisper-mac).
 # Pass model names to download only some, e.g. `download-crispasr-models.sh q5_0`.
+# The CrispASR 0.8.24 runtime needs Apple silicon and macOS 26 or later.
 set -euo pipefail
 
+# Relative paths resolve from the repository root, as the provider does.
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 MODELS_DIR="${CRISPASR_MODELS_PATH:-models/crispasr}"
+case "$MODELS_DIR" in
+  /*) ;;
+  *) MODELS_DIR="$REPO_ROOT/$MODELS_DIR" ;;
+esac
 CRISPASR_VERSION="0.8.24"
 RUNTIME_SHA256="78397afd5aef2dbd6fa73f8d60800dd4d5725589fb4b04800efd2fb3ff88930c"
 VAD_URL="https://huggingface.co/ggml-org/whisper-vad/resolve/9ffd54a1e1ee413ddf265af9913beaf518d1639b/ggml-silero-v6.2.0.bin"

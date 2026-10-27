@@ -152,7 +152,8 @@ export class CrispAsrProvider implements STTProvider {
 
   private serverFor(model: string): RunningServer {
     const running = this.servers.get(model);
-    if (running && running.process.exitCode == null) return running;
+    // A server killed by a signal keeps exitCode null but sets signalCode.
+    if (running && running.process.exitCode == null && running.process.signalCode == null) return running;
     if (!hasCrispAsrModelFiles(model)) {
       throw new Error(`Model files not found for '${model}'. Run: bash bench/scripts/download-crispasr-models.sh`);
     }
@@ -187,11 +188,15 @@ export class CrispAsrProvider implements STTProvider {
         if (spawnError) throw new Error(`crispasr could not start: ${spawnError.message}`);
         if (child.exitCode != null) throw new Error(`crispasr exited: ${outputTail}`);
         if (Date.now() > deadline) throw new Error(`crispasr did not start: ${outputTail}`);
-        if (await fetch(`${baseUrl}/health`).then((r) => r.ok, () => false)) break;
+        const healthy = await fetch(`${baseUrl}/health`, { signal: AbortSignal.timeout(2_000) }).then(
+          (r) => r.ok,
+          () => false,
+        );
+        if (healthy) break;
         await new Promise((r) => setTimeout(r, 200));
       }
       // The first request compiles Metal kernels; keep it out of the timed runs.
-      await this.post(baseUrl, WARMUP_CLIP, model, "en");
+      await this.post(baseUrl, WARMUP_CLIP, model, "en", AbortSignal.timeout(300_000));
       unref(child);
     })();
     this.servers.set(model, server);
@@ -202,7 +207,13 @@ export class CrispAsrProvider implements STTProvider {
     return server;
   }
 
-  private async post(baseUrl: string, filePath: string, model: string, language: string): Promise<string> {
+  private async post(
+    baseUrl: string,
+    filePath: string,
+    model: string,
+    language: string,
+    signal?: AbortSignal,
+  ): Promise<string> {
     const wav = padWavToOneSecond(await readFile(filePath));
     const form = new FormData();
     form.append("file", new Blob([new Uint8Array(wav)], { type: "audio/wav" }), basename(filePath));
@@ -213,6 +224,7 @@ export class CrispAsrProvider implements STTProvider {
       method: "POST",
       headers: { Authorization: `Bearer ${this.apiKey}` },
       body: form,
+      signal,
     });
     const body = await res.text();
     if (!res.ok) throw new Error(`crispasr HTTP ${res.status}: ${body.slice(0, 300)}`);

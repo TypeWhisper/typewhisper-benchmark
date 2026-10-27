@@ -164,12 +164,13 @@ func removingUnknownTokens(_ text: String) -> String {
 
 @MainActor
 func loadNemotron(_ request: Request, directory: String) async throws -> SharedNemotronMultilingualModels {
-    if let cached = loadedNemotron[request.model] { return cached }
+    // Keyed by directory: the plain and the padded benchmark entries share one model bundle.
+    if let cached = loadedNemotron[directory] { return cached }
     let shared = try await StreamingNemotronMultilingualAsrManager.preloadShared(from: URL(fileURLWithPath: directory))
     // TypeWhisper does not prewarm Nemotron; one silent stream keeps Core ML's first-use
     // compilation out of the first timed clip.
     _ = try await transcribeNemotron(shared, [Float](repeating: 0, count: 2 * sampleRate), language: nil)
-    loadedNemotron[request.model] = shared
+    loadedNemotron[directory] = shared
     return shared
 }
 
