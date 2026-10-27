@@ -2,13 +2,14 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #   "mlx-audio==0.6.1",
+#   "jinja2==3.1.6",  # chat templates of the ibm-granite repos
 # ]
 # ///
 """Persistent mlx-audio worker for the benchmark (Apple Silicon only).
 
-Runs the MLX models that TypeWhisper's Qwen3 and Voxtral plugins use. Reads one JSON request
-per line from stdin and answers with one JSON line on stdout:
-  -> {"id": 1, "repo": "mlx-community/...", "revision": "<sha>", "file": "/abs/path.wav", "language": "Russian"}
+Runs the MLX models that TypeWhisper's Qwen3, Voxtral, Granite and Canary plugins use, and
+candidates. Reads one JSON request per line from stdin and answers with one JSON line on stdout:
+  -> {"id": 1, "repo": "mlx-community/...", "revision": "<sha>", "file": "/abs/path.wav", "options": {"language": "Russian"}}
   <- {"id": 1, "text": "...", "durationMs": 12.3}
 A request with "load" set only downloads and loads the model.
 Models download from Hugging Face on first use and stay loaded for the process lifetime.
@@ -33,9 +34,7 @@ def handle(req):
     model = model_for(req["repo"], req.get("revision"))
     if req.get("load"):
         return {"loaded": True}
-    kwargs = {"temperature": 0.0}
-    if req.get("language"):
-        kwargs["language"] = req["language"]
+    kwargs = {"temperature": 0.0, **(req.get("options") or {})}
     start = time.perf_counter()
     out = model.generate(req["file"], **kwargs)
     return {"text": out.text, "durationMs": (time.perf_counter() - start) * 1000}

@@ -9,6 +9,8 @@ import { AuroraAsrProvider } from "./aurora-asr.js";
 import { MlxAudioProvider } from "./mlx-audio.js";
 import { FluidAudioProvider } from "./fluidaudio.js";
 import { BarkProvider } from "./bark.js";
+import { CrispAsrProvider } from "./crispasr.js";
+import { KyutaiSttProvider } from "./kyutai-stt.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -22,6 +24,8 @@ const ALL_PROVIDERS: STTProvider[] = [
   new FluidAudioProvider(),
   new BarkProvider(),
   new BarkProvider(undefined, "mlx"),
+  new CrispAsrProvider(),
+  new KyutaiSttProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {

@@ -5,8 +5,10 @@ import {
   FLUIDAUDIO_MODELS,
   FluidAudioProvider,
   LOCAL_MODEL_FILES,
+  NEMOTRON_MODEL_FILES,
   getFluidAudioModelsBasePath,
   hasFluidAudioModelFiles,
+  nemotronLanguagePrompt,
 } from "./fluidaudio.js";
 
 describe("FluidAudioProvider", () => {
@@ -20,12 +22,14 @@ describe("FluidAudioProvider", () => {
       "parakeet-ultra",
       "fluid-speech-mini",
       "bark-3.0-pro",
+      "nemotron-3.5-asr-streaming-0.6b",
+      "nemotron-3.5-asr-streaming-0.6b-pad1s",
     ]);
   });
 
-  it("describes every model either as an official repo or a local folder", () => {
+  it("describes every model as an official repo, a local folder or a Nemotron folder", () => {
     for (const entry of Object.values(FLUIDAUDIO_MODELS)) {
-      expect(Boolean(entry.official) !== Boolean(entry.local)).toBe(true);
+      expect([entry.official, entry.local, entry.nemotron].filter(Boolean)).toHaveLength(1);
       if (entry.local) expect(entry.version).toBeDefined();
     }
   });
@@ -60,5 +64,16 @@ describe("FluidAudioProvider", () => {
       )
     ).toBe(false);
     expect(hasFluidAudioModelFiles("unknown", {}, () => true)).toBe(false);
+    const nemotron = "nemotron-3.5-asr-streaming-0.6b";
+    expect(hasFluidAudioModelFiles(nemotron, {}, (path) => path.includes("-1120ms/"))).toBe(true);
+    expect(
+      hasFluidAudioModelFiles(nemotron, {}, (path) => !path.endsWith(NEMOTRON_MODEL_FILES[3]))
+    ).toBe(false);
+  });
+
+  it("prompts Nemotron with the suite's locale and lets it detect the language on auto", () => {
+    expect(nemotronLanguagePrompt("de")).toBe("de-DE");
+    expect(nemotronLanguagePrompt("en")).toBe("en-US");
+    expect(nemotronLanguagePrompt("auto")).toBeUndefined();
   });
 });
