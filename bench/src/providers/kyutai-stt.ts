@@ -18,17 +18,19 @@ interface KyutaiModel {
 }
 
 // Kyutai's streaming STT models (CC BY 4.0), MLX checkpoints. They take no language hint and
-// transcribe English (and French for the 1B model); the benchmark runs them on English suites.
+// transcribe English (and French for the 1B model). Like the other English-only models they still
+// run on the German and Russian suites, so the benchmark documents how they behave there.
+const EXPLICIT_LANGUAGES = ["en", "de", "ru"];
 export const KYUTAI_MODELS: Record<string, KyutaiModel> = {
   "stt-1b-en_fr": {
     repo: "kyutai/stt-1b-en_fr-mlx",
     revision: "2b995724eef1e964b7ccb6a762b35a665c4abe0d",
-    languages: ["en"],
+    languages: EXPLICIT_LANGUAGES,
   },
   "stt-2.6b-en": {
     repo: "kyutai/stt-2.6b-en-mlx",
     revision: "5ccfc8f844ab8abaf591c7954f70c07e72325554",
-    languages: ["en"],
+    languages: EXPLICIT_LANGUAGES,
   },
 };
 

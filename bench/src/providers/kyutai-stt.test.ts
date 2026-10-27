@@ -15,10 +15,10 @@ describe("KyutaiSttProvider", () => {
     }
   });
 
-  it("runs on English suites only", () => {
+  it("runs on explicit languages but not auto-detect", () => {
     const provider = new KyutaiSttProvider();
     expect(provider.supportsLanguage("stt-1b-en_fr", "en")).toBe(true);
-    expect(provider.supportsLanguage("stt-1b-en_fr", "de")).toBe(false);
+    expect(provider.supportsLanguage("stt-1b-en_fr", "de")).toBe(true);
     expect(provider.supportsLanguage("stt-2.6b-en", "auto")).toBe(false);
   });
 });

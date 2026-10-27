@@ -84,7 +84,8 @@ export const MLX_MODELS: Record<string, MlxModel> = {
   "granite-speech-5.0-470m-turboctc": {
     repo: "ibm-granite/granite-speech-5.0-470m-turboctc",
     revision: "1dd23f46f6d4e6eae2531982ba2e33220086dd97",
-    languages: ["en"],
+    // English only; it still runs on other explicit languages to document how it behaves there.
+    languages: ["en", "de", "ru"],
   },
   // NVIDIA Canary 1B v2 (CC BY 4.0) in the MLX conversion mlx-audio documents (NVIDIA's own repo
   // lacks the tokenizer file mlx-audio reads): source = target language, punctuation on.
@@ -96,13 +97,13 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     options: { max_tokens: 512 },
     languages: ["en", "de", "ru", "fr", "es", "it", "pt"],
   },
-  // The Greek/English Canary fine-tune TypeWhisper's Canary plugin offers.
+  // The Greek/English Canary fine-tune TypeWhisper's Canary plugin offers. The suites have no
+  // Greek, so it runs with English as the source language everywhere, like an English-only model.
   "sophea-canary": {
     repo: "KIEFERSA/Sophea-Canary-ASR-mlx",
     revision: "1d0827f8f869dfad40f6b6980434cf34b1987963",
-    language: "code",
-    options: { max_tokens: 512 },
-    languages: ["en"],
+    options: { max_tokens: 512, language: "en" },
+    languages: ["en", "de", "ru"],
   },
 };
 
