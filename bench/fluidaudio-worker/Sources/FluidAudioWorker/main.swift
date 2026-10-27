@@ -13,7 +13,7 @@
 //
 // Nemotron 3.5 ASR Streaming runs like the Parakeet plugin's batch path: a fresh stream per clip,
 // fed in 10 s blocks, prompted with a locale such as "de-DE" (no "language" detects it), no padding
-// unless "tailPadSeconds" asks for trailing silence:
+// unless "leadPadSeconds" / "tailPadSeconds" ask for silence around the clip:
 //   -> {"id": 3, "model": "nemotron-3.5-asr-streaming-0.6b", "nemotron": "/abs/dir", "language": "de-DE", "file": "/abs/clip.wav"}
 import CoreML
 import FluidAudio
@@ -178,7 +178,8 @@ func handleNemotron(_ request: Request, directory: String) async throws -> [Stri
     let shared = try await loadNemotron(request, directory: directory)
     if request.load == true { return ["loaded": true] }
     guard let file = request.file else { throw Failure("request has no 'file'") }
-    var samples = try converter.resampleAudioFile(URL(fileURLWithPath: file))
+    var samples = [Float](repeating: 0, count: Int((request.leadPadSeconds ?? 0) * Double(sampleRate)))
+    samples += try converter.resampleAudioFile(URL(fileURLWithPath: file))
     samples += [Float](repeating: 0, count: Int((request.tailPadSeconds ?? 0) * Double(sampleRate)))
 
     let start = ContinuousClock.now

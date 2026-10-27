@@ -57,10 +57,11 @@ export const FLUIDAUDIO_MODELS: Record<string, FluidAudioModel> = {
     nemotron: "nemotron-3.5-asr-streaming-1120ms",
     languages: null,
   },
-  // Probe, not a TypeWhisper setting: the stream drops words at the very end of a clip unless
-  // silence follows them, which the benchmark's tightly cut clips do not have.
-  "nemotron-3.5-asr-streaming-0.6b-tail1s": {
+  // Probe, not a TypeWhisper setting: the stream drops words at the very start and end of a clip
+  // unless silence surrounds them, which the benchmark's tightly cut clips do not have.
+  "nemotron-3.5-asr-streaming-0.6b-pad1s": {
     nemotron: "nemotron-3.5-asr-streaming-1120ms",
+    leadPadSeconds: 1,
     tailPadSeconds: 1,
     languages: null,
   },
@@ -210,7 +211,12 @@ export class FluidAudioProvider implements STTProvider {
       );
     }
     if (entry.nemotron) {
-      return { model, nemotron: join(base, entry.nemotron), tailPadSeconds: entry.tailPadSeconds };
+      return {
+        model,
+        nemotron: join(base, entry.nemotron),
+        leadPadSeconds: entry.leadPadSeconds,
+        tailPadSeconds: entry.tailPadSeconds,
+      };
     }
     return entry.official
       ? { model, official: entry.official, modelsRoot: base }
