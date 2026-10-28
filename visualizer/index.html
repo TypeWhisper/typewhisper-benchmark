@@ -2,9 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>visualizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Speech-to-text leaderboard · TypeWhisper STT Benchmark</title>
+    <meta
+      name="description"
+      content="Speech-to-text models measured for dictation: word errors, punctuation, numbers and speed in English, German and Russian, with the transcripts behind every score."
+    />
+    <meta property="og:title" content="TypeWhisper STT Benchmark" />
+    <meta
+      property="og:description"
+      content="Compare speech-to-text models for dictation: leaderboards, model-vs-model comparisons and the transcripts behind every score."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      // Pick the theme before the first paint: the visitor's choice, else the system's.
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem("tw-bench-theme");
+        } catch (error) {}
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

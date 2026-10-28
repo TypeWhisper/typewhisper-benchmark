@@ -1,242 +1,148 @@
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Leaderboard } from "./components/Leaderboard";
-import { AccuracyChart } from "./components/AccuracyChart";
-import { SpeedChart } from "./components/SpeedChart";
-import { CostChart } from "./components/CostChart";
-import {
-  getScopeOptions,
-  getViewHeading,
-  getViewRankings,
-  getVisibleTestCount,
-  normalizeSummary,
-  type LanguageFilter,
-  type NormalizedBenchmarkSummary,
-  type OriginFilter,
-  type Scope,
-  type TierFilter,
-} from "./benchmark-data";
+import { AppStateProvider, Link } from "./lib/app-state";
+import { useAppState } from "./lib/app-state-context";
+import { withView } from "./lib/url-state";
+import { formatDate, listJoin } from "./lib/format";
+import { useSummary } from "./data/load";
+import { canonicalize, documentTitle } from "./data/links";
+import type { Summary } from "./data/types";
+import { Header } from "./components/Header";
+import { CompareTray } from "./components/CompareTray";
+import { BarMark, Loading } from "./components/ui";
+import { LeaderboardView } from "./views/LeaderboardView";
+import { CompareView } from "./views/CompareView";
+import { ModelView } from "./views/ModelView";
+import { SuiteView } from "./views/SuiteView";
+import { SuitesView } from "./views/SuitesView";
+import { ModelsView } from "./views/ModelsView";
+import { AboutView } from "./views/AboutView";
 
-const TABS = ["Leaderboard", "Accuracy", "Speed", "Cost"] as const;
-const SCOPES: Array<{ value: Scope; label: string }> = [
-  { value: "global", label: "Global" },
-  { value: "category", label: "Category" },
-  { value: "suite", label: "Suite" },
-  { value: "slice", label: "Slice" },
-];
-
-type Tab = (typeof TABS)[number];
-
-function SelectField(props: {
-  label: string;
-  value: string;
-  options: Array<{ value: string; label: string }>;
-  onChange: (value: string) => void;
-}) {
+function Footer({ summary }: { summary: Summary }) {
   return (
-    <label className="flex min-w-40 flex-col gap-2 text-xs uppercase tracking-[0.2em] text-zinc-500">
-      {props.label}
-      <select
-        value={props.value}
-        onChange={(event) => props.onChange(event.target.value)}
-        className="rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm normal-case tracking-normal text-zinc-100 outline-none transition focus:border-zinc-600"
-      >
-        {props.options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <footer className="mt-16 border-t border-hairline">
+      <div className="wrap flex flex-col gap-3 py-8 pb-28 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <p className="flex items-center gap-2">
+          <BarMark />
+          <span>
+            Built from the runner's result files on {formatDate(summary.generatedAt)} · data {summary.version}
+          </span>
+        </p>
+        <nav aria-label="More" className="flex flex-wrap gap-x-5 gap-y-1">
+          <Link to={(s) => withView(s, "about")} className="hover:text-fg">
+            Method
+          </Link>
+          <a className="hover:text-fg" href="https://github.com/TypeWhisper/typewhisper-benchmark">
+            GitHub
+          </a>
+          <a className="hover:text-fg" href="https://typewhisper.com">
+            typewhisper.com
+          </a>
+        </nav>
+      </div>
+    </footer>
   );
 }
 
-export default function App() {
-  const [data, setData] = useState<NormalizedBenchmarkSummary | null>(null);
-  const [activeTab, setActiveTab] = useState<Tab>("Leaderboard");
-  const [scope, setScope] = useState<Scope>("global");
-  const [scopeValue, setScopeValue] = useState("");
-  const [tier, setTier] = useState<TierFilter>("core");
-  const [language, setLanguage] = useState<LanguageFilter>("all");
-  const [origin, setOrigin] = useState<OriginFilter>("all");
-
-  useEffect(() => {
-    fetch("data/benchmark-results.json")
-      .then((response) => response.json())
-      .then((summary) => setData(normalizeSummary(summary)))
-      .catch(console.error);
-  }, []);
-
-  const scopeOptions = data
-    ? getScopeOptions(data, { tier, language, origin })
-    : { categories: [], suites: [], slices: [] };
-  const currentScopeOptions =
-    scope === "category"
-      ? scopeOptions.categories
-      : scope === "suite"
-        ? scopeOptions.suites
-        : scope === "slice"
-          ? scopeOptions.slices
-          : [];
-
-  useEffect(() => {
-    if (scope === "global") {
-      if (scopeValue !== "") setScopeValue("");
-      return;
-    }
-
-    if (currentScopeOptions.length === 0) {
-      if (scopeValue !== "") setScopeValue("");
-      return;
-    }
-
-    if (!currentScopeOptions.some((option) => option.value === scopeValue)) {
-      setScopeValue(currentScopeOptions[0].value);
-    }
-  }, [scope, scopeValue, currentScopeOptions]);
-
-  if (!data) {
-    return <div className="min-h-screen bg-zinc-950 px-8 py-12 text-white">Loading...</div>;
+function Shell({ summary }: { summary: Summary }) {
+  const { state, navigate } = useAppState();
+  // Links may carry aliases or ids the data does not have: rewrite the URL to canonical ids and
+  // name what was dropped until the visitor dismisses the note.
+  const canonical = canonicalize(summary, state);
+  const [dropped, setDropped] = useState<string[]>([]);
+  const droppedKey = canonical.dropped.join(",");
+  const [seenDropped, setSeenDropped] = useState("");
+  if (droppedKey && droppedKey !== seenDropped) {
+    setSeenDropped(droppedKey);
+    setDropped(canonical.dropped);
   }
+  const needsRewrite = JSON.stringify(canonical.state) !== JSON.stringify(state);
+  useEffect(() => {
+    if (needsRewrite) navigate(canonical.state, { replace: true });
+  }, [needsRewrite, canonical.state, navigate]);
 
-  const rankings = getViewRankings(data, {
-    scope,
-    scopeValue,
-    tier,
-    language,
-    origin,
-  });
-  const heading = getViewHeading(data, {
-    scope,
-    scopeValue,
-    tier,
-    language,
-    origin,
-  });
-  const visibleTestCount = getVisibleTestCount(data, { tier, language, origin });
+  useEffect(() => {
+    document.title = `${documentTitle(summary, state)} · TypeWhisper STT Benchmark`;
+  }, [summary, state]);
+
+  const view = (() => {
+    switch (state.view) {
+      case "compare":
+        return <CompareView summary={summary} />;
+      case "model":
+        return <ModelView summary={summary} />;
+      case "suite":
+        return <SuiteView summary={summary} />;
+      case "suites":
+        return <SuitesView summary={summary} />;
+      case "models":
+        return <ModelsView summary={summary} />;
+      case "about":
+        return <AboutView summary={summary} />;
+      default:
+        return <LeaderboardView summary={summary} />;
+    }
+  })();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <header className="border-b border-zinc-900 bg-[radial-gradient(circle_at_top_left,_rgba(244,63,94,0.2),_transparent_35%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.18),_transparent_30%),#09090b] px-6 py-6">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
-            TypeWhisper STT Benchmark
-          </p>
-          <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h1 className="text-3xl font-semibold tracking-tight">{heading.title}</h1>
-              <p className="mt-2 max-w-3xl text-sm text-zinc-400">
-                {heading.description}
-              </p>
-            </div>
-            <div className="grid gap-2 text-sm text-zinc-300 md:text-right">
-              <span>{data.metadata.totalModels} models tracked</span>
-              <span>{visibleTestCount} benchmark tests in current filter</span>
-              <span>Languages: {language === "all" ? "DE, EN, RU, AUTO" : language.toUpperCase()}</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <section className="border-b border-zinc-900 px-6 py-4">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4">
-          <div className="flex flex-wrap gap-2">
-            {SCOPES.map((item) => (
-              <button
-                key={item.value}
-                onClick={() => setScope(item.value)}
-                className={`rounded-full px-4 py-2 text-sm transition ${
-                  scope === item.value
-                    ? "bg-white text-zinc-950"
-                    : "bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <SelectField
-              label="Tier"
-              value={tier}
-              options={[
-                { value: "core", label: "Core" },
-                { value: "diagnostic", label: "Diagnostic" },
-                { value: "all", label: "All" },
-              ]}
-              onChange={(value) => setTier(value as TierFilter)}
-            />
-            <SelectField
-              label="Language"
-              value={language}
-              options={[
-                { value: "all", label: "All" },
-                { value: "de", label: "DE" },
-                { value: "en", label: "EN" },
-                { value: "ru", label: "RU" },
-                { value: "auto", label: "Auto" },
-              ]}
-              onChange={(value) => setLanguage(value as LanguageFilter)}
-            />
-            <SelectField
-              label="Origin"
-              value={origin}
-              options={[
-                { value: "all", label: "All" },
-                { value: "public", label: "Public" },
-                { value: "synthetic", label: "Synthetic" },
-              ]}
-              onChange={(value) => setOrigin(value as OriginFilter)}
-            />
-            {scope !== "global" && (
-              <SelectField
-                label={scope}
-                value={scopeValue}
-                options={currentScopeOptions}
-                onChange={setScopeValue}
-              />
-            )}
-          </div>
-        </div>
-      </section>
-
-      <nav className="border-b border-zinc-900 px-6 py-3">
-        <div className="mx-auto flex max-w-7xl gap-1">
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
-                activeTab === tab
-                  ? "bg-zinc-100 text-zinc-950"
-                  : "text-zinc-400 hover:bg-zinc-900 hover:text-white"
-              }`}
-            >
-              {tab}
+    <>
+      {dropped.length > 0 && (
+        <div className="border-b border-hairline bg-surface" role="status">
+          <div className="wrap flex items-center gap-3 py-2 text-sm">
+            <span className="text-muted">
+              The link named {dropped.length === 1 ? "a model" : "models"} this benchmark does not have:{" "}
+              <code className="font-mono text-fg">{listJoin(dropped)}</code>. Showing the rest.
+            </span>
+            <button type="button" className="btn btn-ghost btn-icon ml-auto" aria-label="Dismiss" onClick={() => setDropped([])}>
+              <X className="size-4" aria-hidden="true" />
             </button>
-          ))}
+          </div>
         </div>
-      </nav>
-
-      <main className="px-6 py-6">
-        <div className="mx-auto max-w-7xl">
-          {rankings.length === 0 ? (
-            <div className="rounded-3xl border border-zinc-900 bg-zinc-950 px-6 py-10 text-center">
-              <h2 className="text-lg font-semibold">No results for this view</h2>
-              <p className="mt-2 text-sm text-zinc-400">
-                Adjust the filters or run benchmarks for the missing suites first.
-              </p>
-            </div>
-          ) : (
-            <>
-              {activeTab === "Leaderboard" && <Leaderboard rankings={rankings} />}
-              {activeTab === "Accuracy" && <AccuracyChart rankings={rankings} />}
-              {activeTab === "Speed" && <SpeedChart rankings={rankings} />}
-              {activeTab === "Cost" && <CostChart rankings={rankings} />}
-            </>
-          )}
-        </div>
+      )}
+      <main id="content" key={state.view === "model" ? `model:${state.model}` : state.view} className="fade-in">
+        {view}
       </main>
-    </div>
+      <Footer summary={summary} />
+      <CompareTray summary={summary} />
+    </>
+  );
+}
+
+function DataGate() {
+  const [attempt, setAttempt] = useState(0);
+  const summary = useSummary(attempt);
+  if (summary.status === "loading") {
+    return (
+      <div className="wrap py-16">
+        <Loading label="Loading benchmark results…" />
+      </div>
+    );
+  }
+  if (summary.status === "error") {
+    return (
+      <div className="wrap py-16">
+        <p className="text-lg font-semibold">The benchmark data did not load.</p>
+        <p className="mt-2 text-sm text-muted">{summary.error}</p>
+        <button type="button" className="btn mt-4" onClick={() => setAttempt((value) => value + 1)}>
+          Try again
+        </button>
+      </div>
+    );
+  }
+  return <Shell summary={summary.data} />;
+}
+
+export default function App() {
+  return (
+    <AppStateProvider>
+      <a
+        href="#content"
+        className="sr-only z-50 rounded-full bg-primary px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+      >
+        Skip to content
+      </a>
+      <Header />
+      <DataGate />
+    </AppStateProvider>
   );
 }

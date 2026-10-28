@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "data": "node scripts/build-data.mjs",
-    "predev": "node scripts/build-data.mjs && node scripts/merge-results.js",
+    "predev": "node scripts/build-data.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/build-data.mjs && node scripts/merge-results.js",
+    "prebuild": "node scripts/build-data.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest run",
@@ -17,8 +17,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "recharts": "^3.8.0"
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
