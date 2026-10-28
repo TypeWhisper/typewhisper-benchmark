@@ -11,6 +11,7 @@ import { FluidAudioProvider } from "./fluidaudio.js";
 import { BarkProvider } from "./bark.js";
 import { CrispAsrProvider } from "./crispasr.js";
 import { KyutaiSttProvider } from "./kyutai-stt.js";
+import { MlxVlmProvider } from "./mlx-vlm.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -26,6 +27,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new BarkProvider(undefined, "mlx"),
   new CrispAsrProvider(),
   new KyutaiSttProvider(),
+  new MlxVlmProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {
