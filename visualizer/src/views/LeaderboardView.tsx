@@ -90,6 +90,8 @@ export function LeaderboardView({ summary }: { summary: Summary }) {
             emphasis: row.meta.tw.status === "engine",
             color: picked.includes(row.id) ? seriesColor(picked.indexOf(row.id)) : undefined,
             pin: Boolean(row.meta.tw.isDefault),
+            partial: row.values[scatterColumn.id].missing.length > 0,
+            faint: row.values[scatterColumn.id].outside,
             detail: `${row.meta.org} · ${runtimeShort(row.id, row.meta)}`,
           }))
       : [];
@@ -104,7 +106,12 @@ export function LeaderboardView({ summary }: { summary: Summary }) {
       picked: picked.includes(row.id),
       swatch: picked.includes(row.id) ? seriesColor(picked.indexOf(row.id)) : undefined,
       muted: row.values[chartColumn.id].outside,
-      note: row.values[chartColumn.id].outside ? "not trained for this language" : undefined,
+      partial: row.values[chartColumn.id].missing.length > 0,
+      note: row.values[chartColumn.id].outside
+        ? "not trained for this language"
+        : row.values[chartColumn.id].missing.length
+          ? "ran on fewer suites"
+          : undefined,
     }));
 
   // Leaders: the most accurate model per language under the current filters.
@@ -207,6 +214,12 @@ export function LeaderboardView({ summary }: { summary: Summary }) {
                       <span className="swatch" style={{ background: "var(--mark-quiet)" }} aria-hidden="true" />
                       Other model
                     </span>
+                    {scatterPoints.some((point) => point.partial) && (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="swatch border-[1.75px] border-[color:var(--mark-quiet)] bg-transparent" aria-hidden="true" />
+                        Fewer suites
+                      </span>
+                    )}
                     {picked.length > 0 && (
                       <span className="inline-flex items-center gap-1.5">
                         <span className="swatch border-2 border-[color:var(--s1)] bg-transparent" aria-hidden="true" />
@@ -264,6 +277,12 @@ export function LeaderboardView({ summary }: { summary: Summary }) {
                   limit={15}
                   ariaLabel={`Models ranked by ${chartColumn.label}`}
                 />
+                {(barData.some((datum) => datum.partial) || barData.some((datum) => datum.muted)) && (
+                  <p className="note mt-3">
+                    {barData.some((datum) => datum.partial) && "* Ran on fewer of these suites, so not directly comparable. "}
+                    {barData.some((datum) => datum.muted) && "Faded: not trained for this language."}
+                  </p>
+                )}
               </figure>
             </div>
           </Section>

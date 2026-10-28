@@ -17,6 +17,8 @@ export interface BarDatum {
   picked?: boolean;
   /** Muted: e.g. a language the model is not trained for. */
   muted?: boolean;
+  /** Ran on fewer suites than the others: the value gets an asterisk. */
+  partial?: boolean;
   note?: string;
 }
 
@@ -96,6 +98,7 @@ export function RankedBars({ data, format, scale = "linear", max, limit, ariaLab
                 </span>
                 <span className={clsx("text-right tabular-nums", datum.picked ? "font-semibold" : "font-medium", datum.muted && "text-muted")}>
                   {format(datum.v)}
+                  {datum.partial && <sup className="text-muted">*</sup>}
                 </span>
               </Link>
             </li>

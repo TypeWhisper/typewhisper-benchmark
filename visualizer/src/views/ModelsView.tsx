@@ -26,7 +26,7 @@ export function ModelsView({ summary }: { summary: Summary }) {
       <FilterBar summary={summary} controls={["deploy", "tw", "q"]} />
       <div className="wrap pt-8">
         <div className="table-scroll -mx-[var(--gutter)] px-[var(--gutter)]">
-          <table className="data-table min-w-[64rem]">
+          <table className="data-table min-w-[72rem]">
             <caption className="visually-hidden">Benchmarked models</caption>
             <thead>
               <tr>
@@ -58,11 +58,11 @@ export function ModelsView({ summary }: { summary: Summary }) {
                       {[meta.params, meta.quant, meta.size].filter(Boolean).join(" · ") || <span className="text-muted">–</span>}
                     </td>
                     <td>{meta.license ?? <span className="text-muted">–</span>}</td>
-                    <td>
+                    <td className="min-w-[12rem]">
                       {runtimeShort(id, meta)}
                       <span className="meta block">{meta.runtime}</span>
                     </td>
-                    <td className="max-w-[14rem]">{meta.languages ?? <span className="text-muted">–</span>}</td>
+                    <td className="min-w-[11rem] max-w-[16rem]">{meta.languages ?? <span className="text-muted">–</span>}</td>
                     <td>
                       <div className="flex flex-wrap gap-1.5">
                         <TwBadge meta={meta} />

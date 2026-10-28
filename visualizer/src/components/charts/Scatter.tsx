@@ -13,6 +13,10 @@ export interface ScatterPoint {
   color?: string;
   /** Labeled when there is room, e.g. TypeWhisper's default engines. */
   pin?: boolean;
+  /** Ran on fewer suites than the others: hollow, and never on the frontier. */
+  partial?: boolean;
+  /** Not trained for the plotted language: faded, outside the axis range and the frontier. */
+  faint?: boolean;
   detail?: string;
 }
 
@@ -84,8 +88,9 @@ export function Scatter({ points, xLabel, yLabel, formatX, formatY, formatXValue
   const layout = useMemo(() => {
     const usable = points.filter((point) => point.x > 0 && Number.isFinite(point.y));
     if (!usable.length || width === 0) return null;
+    const core = usable.filter((point) => !point.faint).length ? usable.filter((point) => !point.faint) : usable;
     const xs = usable.map((point) => point.x);
-    const ys = usable.map((point) => point.y).sort((a, b) => a - b);
+    const ys = core.map((point) => point.y).sort((a, b) => a - b);
     const xMin = 10 ** Math.floor(Math.log10(Math.min(...xs) / 1.2));
     const xMax = 10 ** Math.ceil(Math.log10(Math.max(...xs) * 1.2));
     // Keep the crowd readable: a few outliers (English-only models on German, say) sit on the
@@ -96,16 +101,20 @@ export function Scatter({ points, xLabel, yLabel, formatX, formatY, formatXValue
     const sy = (value: number) => MARGIN.top + plotH - (Math.min(value, yMax) / yMax) * plotH;
 
     const placed = usable.map((point) => ({ ...point, px: sx(point.x), py: sy(point.y), clipped: point.y > yMax }));
-    const frontier = paretoFrontier(usable);
+    const frontier = paretoFrontier(core.filter((point) => !point.partial));
     const frontierIds = new Set(frontier.map((point) => point.id));
 
     // Labels: picked models first, then the frontier, then the most accurate few.
-    const byAccuracy = [...placed].sort((a, b) => a.y - b.y).slice(0, 3).map((point) => point.id);
+    const byAccuracy = placed
+      .filter((point) => !point.faint && !point.partial)
+      .sort((a, b) => a.y - b.y)
+      .slice(0, 3)
+      .map((point) => point.id);
     const wanted = [
       ...placed.filter((point) => point.color).map((point) => point.id),
       ...frontier.map((point) => point.id),
       ...byAccuracy,
-      ...placed.filter((point) => point.pin).map((point) => point.id),
+      ...placed.filter((point) => point.pin && !point.faint).map((point) => point.id),
     ];
     const boxes: Box[] = placed.map((point) => ({ x: point.px - 6, y: point.py - 6, w: 12, h: 12 }));
     const labels: Array<{ id: string; x: number; y: number; anchor: "start" | "end"; text: string }> = [];
@@ -277,10 +286,11 @@ export function Scatter({ points, xLabel, yLabel, formatX, formatY, formatXValue
               .sort((a, b) => Number(a.emphasis) - Number(b.emphasis) || Number(Boolean(a.color)) - Number(Boolean(b.color)))
               .map((point) => {
                 const isActive = point.id === active;
-                const fill = point.emphasis ? "var(--mark)" : "var(--mark-quiet)";
+                const tone = point.emphasis ? "var(--mark)" : "var(--mark-quiet)";
+                const fill = point.partial ? "var(--background)" : tone;
                 const r = isActive ? 6.5 : point.color ? 5.5 : 4.5;
                 return (
-                  <g key={point.id}>
+                  <g key={point.id} opacity={point.faint && !isActive ? 0.35 : 1}>
                     {point.clipped ? (
                       <path
                         d={`M${point.px},${point.py - 1} l5,8 h-10 z`}
@@ -291,7 +301,17 @@ export function Scatter({ points, xLabel, yLabel, formatX, formatY, formatXValue
                         paintOrder="stroke"
                       />
                     ) : (
-                      <circle cx={point.px} cy={point.py} r={r} fill={fill} stroke="var(--background)" strokeWidth={2} />
+                      <>
+                        {point.partial && <circle cx={point.px} cy={point.py} r={r + 2} fill="var(--background)" />}
+                        <circle
+                          cx={point.px}
+                          cy={point.py}
+                          r={point.partial ? r - 0.75 : r}
+                          fill={fill}
+                          stroke={point.partial ? tone : "var(--background)"}
+                          strokeWidth={point.partial ? 1.75 : 2}
+                        />
+                      </>
                     )}
                     {point.color && (
                       <circle cx={point.px} cy={point.py} r={r + 3.5} fill="none" stroke={point.color} strokeWidth={2} />
@@ -333,6 +353,8 @@ export function Scatter({ points, xLabel, yLabel, formatX, formatY, formatXValue
               <span className="text-right font-medium">{formatXValue(activePoint.x)} ms</span>
             </div>
             {activePoint.detail && <div className="meta mt-1.5">{activePoint.detail}</div>}
+            {activePoint.partial && <div className="mt-1.5 text-xs text-muted">Ran on fewer of these suites; not directly comparable.</div>}
+            {activePoint.faint && <div className="mt-1.5 text-xs text-muted">Not trained for this language.</div>}
             {layout?.frontierIds.has(activePoint.id) && (
               <div className="mt-1.5 text-xs text-accent">On the frontier: nothing is both faster and more accurate.</div>
             )}
