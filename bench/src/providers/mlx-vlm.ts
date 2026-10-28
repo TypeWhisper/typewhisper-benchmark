@@ -59,6 +59,12 @@ export function asrSystemPrompt(language: string): string {
 // The token limit of the model card's ASR example.
 const MAX_TOKENS = 1024;
 
+// generate() cannot be interrupted, so a request that runs past its deadline stops the worker and
+// the next request starts a fresh one. Transcription stays below the runner's default 120 s timeout,
+// so a stuck clip cannot hold up the clips after it. Preparation covers dependency setup, download
+// and loading.
+const DEFAULT_TIMEOUTS = { prepareMs: 30 * 60_000, transcribeMs: 110_000 };
+
 interface WorkerResponse {
   id?: number;
   ready?: boolean;
@@ -82,9 +88,11 @@ export class MlxVlmProvider implements STTProvider {
   private ready?: Promise<void>;
   private pending = new Map<number, (res: WorkerResponse) => void>();
   private nextId = 1;
+  private timeouts: typeof DEFAULT_TIMEOUTS;
 
-  constructor(uvPath?: string) {
+  constructor(uvPath?: string, timeouts: Partial<typeof DEFAULT_TIMEOUTS> = {}) {
     this.uvPath = uvPath || process.env.MLX_VLM_UV_PATH || "uv";
+    this.timeouts = { ...DEFAULT_TIMEOUTS, ...timeouts };
   }
 
   async isAvailable(): Promise<boolean> {
@@ -103,20 +111,26 @@ export class MlxVlmProvider implements STTProvider {
 
   async prepare(model: string): Promise<void> {
     const entry = this.entry(model);
-    const res = await this.request({ load: "1", repo: entry.repo, revision: entry.revision });
+    const res = await this.request(
+      { load: "1", repo: entry.repo, revision: entry.revision },
+      this.timeouts.prepareMs
+    );
     if (res.error) throw new Error(String(res.error));
   }
 
   async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
     const entry = this.entry(model);
 
-    const res = await this.request({
-      repo: entry.repo,
-      revision: entry.revision,
-      file: audio.filePath,
-      system: asrSystemPrompt(audio.language),
-      options: { max_tokens: MAX_TOKENS },
-    });
+    const res = await this.request(
+      {
+        repo: entry.repo,
+        revision: entry.revision,
+        file: audio.filePath,
+        system: asrSystemPrompt(audio.language),
+        options: { max_tokens: MAX_TOKENS },
+      },
+      this.timeouts.transcribeMs
+    );
     if (res.error) throw new Error(String(res.error));
 
     return {
@@ -146,7 +160,23 @@ export class MlxVlmProvider implements STTProvider {
     return entry;
   }
 
-  private async request(payload: Record<string, unknown>): Promise<WorkerResponse> {
+  /** Sends one request; past the deadline it stops the worker and answers with an error. */
+  private async request(payload: Record<string, unknown>, timeoutMs: number): Promise<WorkerResponse> {
+    let timer: NodeJS.Timeout | undefined;
+    const deadline = new Promise<WorkerResponse>((resolveDeadline) => {
+      timer = setTimeout(() => {
+        resolveDeadline({ error: `mlx-vlm worker did not answer within ${timeoutMs / 1000} s` });
+        this.dispose();
+      }, timeoutMs);
+    });
+    try {
+      return await Promise.race([this.send(payload), deadline]);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  private async send(payload: Record<string, unknown>): Promise<WorkerResponse> {
     await this.startWorker();
     const stdin = this.worker?.stdin;
     if (!stdin || stdin.destroyed) return { error: "mlx-vlm worker is not running" };
