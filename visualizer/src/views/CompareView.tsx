@@ -138,16 +138,16 @@ function HeadlineTable({
 }) {
   return (
     <div className="table-scroll -mx-[var(--gutter)] px-[var(--gutter)]">
-      <table className="data-table min-w-[36rem]">
+      <table className="data-table sm:min-w-[36rem]">
         <caption className="visually-hidden">Headline metrics of the compared models</caption>
         <thead>
           <tr>
-            <th scope="col" className="sticky-col min-w-[9rem]">
+            <th scope="col" className="sticky-col min-w-[5.5rem] max-sm:pl-0 sm:min-w-[9rem]">
               Metric
             </th>
             {rows.map((row) => (
-              <th key={row.id} scope="col" className="num min-w-[8.5rem] align-bottom normal-case tracking-normal">
-                <span className="inline-flex items-center gap-1.5 font-sans text-[0.8125rem] font-semibold text-fg">
+              <th key={row.id} scope="col" className="num min-w-[6.5rem] align-bottom normal-case tracking-normal max-sm:px-2 max-sm:whitespace-normal sm:min-w-[8.5rem]">
+                <span className="inline-flex items-baseline gap-1.5 font-sans text-[0.8125rem] leading-snug font-semibold text-fg">
                   <span className="swatch" style={{ background: colors[row.id] }} aria-hidden="true" />
                   {row.meta.short}
                 </span>
@@ -167,7 +167,7 @@ function HeadlineTable({
             const best = complete.length ? (better === "lower" ? Math.min(...complete) : Math.max(...complete)) : null;
             return (
               <tr key={column.id}>
-                <th scope="row" className="sticky-col font-sans text-[0.8125rem] font-medium tracking-normal text-fg normal-case" title={column.help}>
+                <th scope="row" className="sticky-col font-sans text-[0.8125rem] font-medium tracking-normal text-fg normal-case max-sm:pl-0" title={column.help}>
                   <span className="block">{column.label}</span>
                   <Direction better={better} short />
                 </th>
@@ -175,7 +175,7 @@ function HeadlineTable({
                   const value = row.values[column.id];
                   const isBest = value?.v != null && value.v === best && values.length > 1;
                   return (
-                    <td key={row.id} className="num">
+                    <td key={row.id} className="num max-sm:px-2">
                       <ValueText summary={summary} column={column} value={value} best={isBest} />
                       <span className="meta block min-h-4">
                         {value?.v != null && best != null && !isBest && values.length > 1
