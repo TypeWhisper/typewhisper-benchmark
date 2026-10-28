@@ -580,6 +580,8 @@ export function prettifyModel(model: string): string {
       const lower = part.toLowerCase();
       if (UPPER.has(lower)) return lower.toUpperCase();
       if (/^\d+(\.\d+)?[bmk]$/i.test(part)) return part.toUpperCase();
+      // "qwen3" -> "Qwen3", but "v3" and "8bit" stay as written.
+      if (/^[a-z]{2,}\d/i.test(part)) return part[0].toUpperCase() + part.slice(1);
       if (/\d/.test(part)) return part;
       return part[0].toUpperCase() + part.slice(1);
     })
