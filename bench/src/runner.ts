@@ -115,12 +115,13 @@ export async function runBenchmark(
   const cacheDir = join(config.outputDirectory, "cache");
   const results: TestResult[] = [];
 
-  // Build work queue
+  // Build the work queue model by model, so a local model can be loaded before its first clip and
+  // released after its last one instead of every model staying in memory for the whole run.
   const workQueue: WorkItem[] = [];
-  for (const suite of suites) {
-    for (let ti = 0; ti < suite.tests.length; ti++) {
-      for (const provider of providers) {
-        for (const model of provider.models) {
+  for (const provider of providers) {
+    for (const model of provider.models) {
+      for (const suite of suites) {
+        for (let ti = 0; ti < suite.tests.length; ti++) {
           for (let run = 1; run <= config.runsPerModel; run++) {
             workQueue.push({ suite, testIndex: ti, provider, model, run });
           }
@@ -135,25 +136,53 @@ export async function runBenchmark(
     providers: providers.flatMap((p) => p.models.map((m) => `${p.id}/${m}`)),
   });
 
-  // Download and load local models before timing starts, so first-use setup does not
-  // count against the per-request timeout.
-  // A failed preparation is reported and the model's requests then fail individually,
-  // instead of aborting the whole run.
-  for (const provider of providers) {
-    if (!provider.prepare) continue;
-    for (const model of provider.models) {
-      const willRun = workQueue.some(
-        (w) =>
-          w.provider === provider &&
-          w.model === model &&
-          provider.supportsLanguage(model, w.suite.language)
-      );
-      if (!willRun) continue;
+  // Download and load a model right before its first clip that runs, outside the timed request,
+  // so first-use setup does not count against the per-request timeout. A failed preparation is
+  // reported and the model's requests then fail individually, instead of aborting the whole run.
+  const prepared = new Map<string, Promise<void>>();
+  const modelKey = (item: WorkItem) => `${item.provider.id}\u0000${item.model}`;
+  function ensurePrepared(item: WorkItem): Promise<void> {
+    const key = modelKey(item);
+    let ready = prepared.get(key);
+    if (!ready) {
+      ready = (item.provider.prepare?.(item.model) ?? Promise.resolve()).catch((error) => {
+        console.warn(`Could not prepare ${item.provider.id}/${item.model}: ${(error as Error).message}`);
+      });
+      prepared.set(key, ready);
+    }
+    return ready;
+  }
+
+  // Release a model once its last queued item is done.
+  const remaining = new Map<string, number>();
+  for (const item of workQueue) remaining.set(modelKey(item), (remaining.get(modelKey(item)) ?? 0) + 1);
+  async function finishItem(item: WorkItem): Promise<void> {
+    const key = modelKey(item);
+    const left = (remaining.get(key) ?? 1) - 1;
+    remaining.set(key, left);
+    if (left === 0 && prepared.has(key)) {
       try {
-        await provider.prepare(model);
+        await item.provider.release?.(item.model);
       } catch (error) {
-        console.warn(`Could not prepare ${provider.id}/${model}: ${(error as Error).message}`);
+        console.warn(`Could not release ${item.provider.id}/${item.model}: ${(error as Error).message}`);
       }
+    }
+  }
+
+  // Local and system providers take one request at a time, so the timeout starts when the provider
+  // is free rather than while the request waits behind others.
+  const turns = new Map<STTProvider, Promise<void>>();
+  async function withProviderTurn<T>(provider: STTProvider, run: () => Promise<T>): Promise<T> {
+    if (provider.type === "cloud") return run();
+    const previous = turns.get(provider) ?? Promise.resolve();
+    let done!: () => void;
+    const mine = new Promise<void>((resolveTurn) => (done = resolveTurn));
+    turns.set(provider, previous.then(() => mine));
+    await previous;
+    try {
+      return await run();
+    } finally {
+      done();
     }
   }
 
@@ -165,92 +194,104 @@ export async function runBenchmark(
       const idx = queueIndex++;
       const item = workQueue[idx];
       if (!item) break;
-      const test = item.suite.tests[item.testIndex];
-
-      const key = cacheKey(
-        item.suite.id,
-        test.id,
-        item.provider.id,
-        item.model,
-        item.run
-      );
-
-      // Check cache
-      const cached = await readCache(cacheDir, key);
-      if (cached && !cached.error) {
-        results.push(cached);
-        if (cached.status === "skipped") {
-          onEvent?.({
-            type: "skip",
-            providerId: item.provider.id,
-            model: item.model,
-            testId: test.id,
-            reason: cached.skipReason || "Skipped",
-          });
-        } else {
-          onEvent?.({
-            type: "done",
-            providerId: item.provider.id,
-            model: item.model,
-            testId: test.id,
-            durationMs: cached.durationMs,
-            werNormalized: cached.werNormalized,
-          });
-        }
-        continue;
+      try {
+        await processItem(item);
+      } finally {
+        await finishItem(item);
       }
+    }
+  }
 
-      if (!item.provider.supportsLanguage(item.model, item.suite.language)) {
-        const skippedResult: TestResult = {
-          testId: test.id,
-          suiteId: item.suite.id,
-          providerId: item.provider.id,
-          model: item.model,
-          run: item.run,
-          suiteCategory: item.suite.category,
-          suiteLanguage: item.suite.language,
-          testTags: test.tags,
-          testSource: test.source,
-          testMetadata: test.metadata,
-          status: "skipped",
-          transcription: "",
-          werRaw: 0,
-          werNormalized: 0,
-          cer: 0,
-          durationMs: 0,
-          realtimeFactor: 0,
-          audioDurationMs: 0,
-          timestamp: new Date().toISOString(),
-          skipReason: `Model "${item.model}" does not support language "${item.suite.language}"`,
-        };
+  async function processItem(item: WorkItem): Promise<void> {
+    const test = item.suite.tests[item.testIndex];
 
-        results.push(skippedResult);
-        await writeCache(cacheDir, key, skippedResult);
+    const key = cacheKey(
+      item.suite.id,
+      test.id,
+      item.provider.id,
+      item.model,
+      item.run
+    );
 
+    // Check cache
+    const cached = await readCache(cacheDir, key);
+    if (cached && !cached.error) {
+      results.push(cached);
+      if (cached.status === "skipped") {
         onEvent?.({
           type: "skip",
           providerId: item.provider.id,
           model: item.model,
           testId: test.id,
-          reason: skippedResult.skipReason || "Skipped",
+          reason: cached.skipReason || "Skipped",
         });
-        continue;
+      } else {
+        onEvent?.({
+          type: "done",
+          providerId: item.provider.id,
+          model: item.model,
+          testId: test.id,
+          durationMs: cached.durationMs,
+          werNormalized: cached.werNormalized,
+        });
       }
+      return;
+    }
+
+    if (!item.provider.supportsLanguage(item.model, item.suite.language)) {
+      const skippedResult: TestResult = {
+        testId: test.id,
+        suiteId: item.suite.id,
+        providerId: item.provider.id,
+        model: item.model,
+        run: item.run,
+        suiteCategory: item.suite.category,
+        suiteLanguage: item.suite.language,
+        testTags: test.tags,
+        testSource: test.source,
+        testMetadata: test.metadata,
+        status: "skipped",
+        transcription: "",
+        werRaw: 0,
+        werNormalized: 0,
+        cer: 0,
+        durationMs: 0,
+        realtimeFactor: 0,
+        audioDurationMs: 0,
+        timestamp: new Date().toISOString(),
+        skipReason: `Model "${item.model}" does not support language "${item.suite.language}"`,
+      };
+
+      results.push(skippedResult);
+      await writeCache(cacheDir, key, skippedResult);
 
       onEvent?.({
-        type: "start",
+        type: "skip",
         providerId: item.provider.id,
         model: item.model,
         testId: test.id,
+        reason: skippedResult.skipReason || "Skipped",
       });
+      return;
+    }
 
-      try {
-        const audioPath = join(BENCH_ROOT, "audio", test.audioFile);
-        const audioInfo = await getAudioInfo(audioPath, item.suite.language);
+    onEvent?.({
+      type: "start",
+      providerId: item.provider.id,
+      model: item.model,
+      testId: test.id,
+    });
 
-        // Clear the timer afterwards, or it keeps the process alive after the run ends.
-        let timer: NodeJS.Timeout | undefined;
-        const transcription = await Promise.race([
+    try {
+      const audioPath = join(BENCH_ROOT, "audio", test.audioFile);
+      const audioInfo = await getAudioInfo(audioPath, item.suite.language);
+
+      await ensurePrepared(item);
+
+      // Clear the timer afterwards, or it keeps the process alive after the run ends.
+      let timer: NodeJS.Timeout | undefined;
+      const transcription = await withProviderTurn(item.provider, () =>
+        Promise.race([
           item.provider.transcribe(audioInfo, item.model),
           new Promise<never>((_, reject) => {
             timer = setTimeout(
@@ -258,97 +299,97 @@ export async function runBenchmark(
               config.timeoutSeconds * 1000
             );
           }),
-        ]).finally(() => clearTimeout(timer));
+        ]).finally(() => clearTimeout(timer))
+      );
 
-        const metrics = computeMetrics({
-          reference: test.groundTruth,
-          hypothesis: transcription.text,
-          language: item.suite.language,
-          codeReference: test.codeGroundTruth,
-          formattedReference: test.formattedGroundTruth,
-          alternativeReferences: test.alternativeGroundTruths,
-        });
+      const metrics = computeMetrics({
+        reference: test.groundTruth,
+        hypothesis: transcription.text,
+        language: item.suite.language,
+        codeReference: test.codeGroundTruth,
+        formattedReference: test.formattedGroundTruth,
+        alternativeReferences: test.alternativeGroundTruths,
+      });
 
-        const result: TestResult = {
-          testId: test.id,
-          suiteId: item.suite.id,
-          providerId: item.provider.id,
-          model: item.model,
-          run: item.run,
-          suiteCategory: item.suite.category,
-          suiteLanguage: item.suite.language,
-          testTags: test.tags,
-          testSource: test.source,
-          testMetadata: test.metadata,
-          status: "ok",
-          transcription: transcription.text,
-          werRaw: metrics.werRaw,
-          werNormalized: metrics.werNormalized,
-          cer: metrics.cer,
-          codeWerNormalized: metrics.codeWerNormalized,
-          codeCer: metrics.codeCer,
-          punctuationScore: metrics.punctuationScore,
-          formattingScore: metrics.formattingScore,
-          bestAlternativeWer: metrics.bestAlternativeWer,
-          durationMs: transcription.durationMs,
-          realtimeFactor:
-            audioInfo.durationSeconds > 0
-              ? transcription.durationMs / (audioInfo.durationSeconds * 1000)
-              : 0,
-          audioDurationMs: audioInfo.durationSeconds * 1000,
-          costUsd: transcription.cost,
-          timestamp: new Date().toISOString(),
-        };
+      const result: TestResult = {
+        testId: test.id,
+        suiteId: item.suite.id,
+        providerId: item.provider.id,
+        model: item.model,
+        run: item.run,
+        suiteCategory: item.suite.category,
+        suiteLanguage: item.suite.language,
+        testTags: test.tags,
+        testSource: test.source,
+        testMetadata: test.metadata,
+        status: "ok",
+        transcription: transcription.text,
+        werRaw: metrics.werRaw,
+        werNormalized: metrics.werNormalized,
+        cer: metrics.cer,
+        codeWerNormalized: metrics.codeWerNormalized,
+        codeCer: metrics.codeCer,
+        punctuationScore: metrics.punctuationScore,
+        formattingScore: metrics.formattingScore,
+        bestAlternativeWer: metrics.bestAlternativeWer,
+        durationMs: transcription.durationMs,
+        realtimeFactor:
+          audioInfo.durationSeconds > 0
+            ? transcription.durationMs / (audioInfo.durationSeconds * 1000)
+            : 0,
+        audioDurationMs: audioInfo.durationSeconds * 1000,
+        costUsd: transcription.cost,
+        timestamp: new Date().toISOString(),
+      };
 
-        results.push(result);
-        await writeCache(cacheDir, key, result);
+      results.push(result);
+      await writeCache(cacheDir, key, result);
 
-        onEvent?.({
-          type: "done",
-          providerId: item.provider.id,
-          model: item.model,
-          testId: test.id,
-          durationMs: result.durationMs,
-          werNormalized: result.werNormalized,
-        });
-      } catch (error) {
-        const errorMsg =
-          error instanceof Error ? error.message : String(error);
+      onEvent?.({
+        type: "done",
+        providerId: item.provider.id,
+        model: item.model,
+        testId: test.id,
+        durationMs: result.durationMs,
+        werNormalized: result.werNormalized,
+      });
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error ? error.message : String(error);
 
-        const errorResult: TestResult = {
-          testId: test.id,
-          suiteId: item.suite.id,
-          providerId: item.provider.id,
-          model: item.model,
-          run: item.run,
-          suiteCategory: item.suite.category,
-          suiteLanguage: item.suite.language,
-          testTags: test.tags,
-          testSource: test.source,
-          testMetadata: test.metadata,
-          status: "error",
-          transcription: "",
-          werRaw: 1,
-          werNormalized: 1,
-          cer: 1,
-          durationMs: 0,
-          realtimeFactor: 0,
-          audioDurationMs: 0,
-          timestamp: new Date().toISOString(),
-          error: errorMsg,
-        };
+      const errorResult: TestResult = {
+        testId: test.id,
+        suiteId: item.suite.id,
+        providerId: item.provider.id,
+        model: item.model,
+        run: item.run,
+        suiteCategory: item.suite.category,
+        suiteLanguage: item.suite.language,
+        testTags: test.tags,
+        testSource: test.source,
+        testMetadata: test.metadata,
+        status: "error",
+        transcription: "",
+        werRaw: 1,
+        werNormalized: 1,
+        cer: 1,
+        durationMs: 0,
+        realtimeFactor: 0,
+        audioDurationMs: 0,
+        timestamp: new Date().toISOString(),
+        error: errorMsg,
+      };
 
-        results.push(errorResult);
-        // Errors are NOT cached - will be retried on next run
+      results.push(errorResult);
+      // Errors are NOT cached - will be retried on next run
 
-        onEvent?.({
-          type: "error",
-          providerId: item.provider.id,
-          model: item.model,
-          testId: test.id,
-          error: errorMsg,
-        });
-      }
+      onEvent?.({
+        type: "error",
+        providerId: item.provider.id,
+        model: item.model,
+        testId: test.id,
+        error: errorMsg,
+      });
     }
   }
 

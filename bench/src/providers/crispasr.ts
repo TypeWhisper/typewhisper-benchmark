@@ -243,6 +243,12 @@ export class CrispAsrProvider implements STTProvider {
     }
   }
 
+  /** Stops the model's server after its last clip, so the next model has the memory. */
+  release(model: string): void {
+    this.servers.get(model)?.process?.kill();
+    this.servers.delete(model);
+  }
+
   dispose(): void {
     for (const server of this.servers.values()) server.process.kill();
     this.servers.clear();

@@ -252,6 +252,14 @@ export class MlxAudioProvider implements STTProvider {
     };
   }
 
+  /** Drops the model from the worker after its last clip, so the next model has the memory. */
+  async release(model: string): Promise<void> {
+    const entry = MLX_MODELS[model];
+    if (!entry || !this.worker) return;
+    const res = await this.request({ unload: "1", repo: entry.repo, revision: entry.revision });
+    if (res.error) throw new Error(String(res.error));
+  }
+
   /** Stops the worker, so requests that timed out in the runner cannot keep the process alive. */
   dispose(): void {
     const worker = this.worker;
