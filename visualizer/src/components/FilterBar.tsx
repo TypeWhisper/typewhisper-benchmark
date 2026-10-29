@@ -185,7 +185,7 @@ export function FilterBar({ summary, controls, trailing }: { summary: Summary; c
             <button
               type="button"
               className="btn btn-ghost text-muted"
-              onClick={() => set(Object.fromEntries(FILTER_KEYS.map((key) => [key, DEFAULT_STATE[key]])) as Partial<AppState>)}
+              onClick={() => set(Object.fromEntries(active.map((key) => [key, DEFAULT_STATE[key]])) as Partial<AppState>)}
             >
               <X className="size-4" aria-hidden="true" />
               Reset filters

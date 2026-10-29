@@ -62,7 +62,9 @@ describe("resolveModelId", () => {
 
   it("refuses ambiguous or unknown names", () => {
     expect(resolveModelId(summary, "parakeet-tdt-0.6b")).toBeNull();
-    expect(resolveModelId(summary, "nope:nothing")).toBeNull();
+    expect(resolveModelId(summary, "nope:nothing")).toBeNull();    // Names that exist on every object must not resolve to Object.prototype members.
+    expect(resolveModelId(summary, "constructor")).toBeNull();
+    expect(resolveModelId(summary, "toString")).toBeNull();
   });
 });
 
@@ -75,6 +77,13 @@ describe("canonicalize", () => {
     expect(result.state.models).toEqual(["fluidaudio:parakeet-ultra", "acme:parakeet-tdt-0.6b"]);
     expect(result.state.cat).toBeNull();
     expect(result.dropped).toEqual(["x:y"]);
+  });
+
+  it("drops prototype names from model and suite links", () => {
+    const result = canonicalize(summary, state({ view: "compare", models: ["constructor", "parakeet-ultra"], suite: "constructor" }));
+    expect(result.state.models).toEqual(["fluidaudio:parakeet-ultra"]);
+    expect(result.dropped).toEqual(["constructor"]);
+    expect(result.state.suite).toBeNull();
   });
 
   it("keeps an unknown model on its own page so the page can name it", () => {

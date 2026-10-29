@@ -17,7 +17,7 @@ export function WordDiff({ reference, hypothesis }: { reference: string; hypothe
       {ops.map((op, index) => (
         <Fragment key={index}>
           {index > 0 && " "}
-          {op.type === "eq" && op.hyp}
+          {(op.type === "eq" || op.type === "sym") && op.hyp}
           {op.type === "sub" && (
             <span className="w-wrong" title={`Reference: ${op.ref}`}>
               {op.hyp}

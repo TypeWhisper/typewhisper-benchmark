@@ -20,6 +20,7 @@ import {
   type Column,
 } from "../data/metrics";
 import { modelMeta } from "../data/model-meta";
+import { hasKey } from "../data/links";
 import { useClips } from "../data/load";
 import { ClipStatus, type ClipFile, type Summary } from "../data/types";
 import { FilterBar } from "../components/FilterBar";
@@ -215,7 +216,7 @@ function SuiteClips({ summary, file, modelIds }: { summary: Summary; file: ClipF
 export function SuiteView({ summary }: { summary: Summary }) {
   const { state, navigate } = useAppState();
   const suite = state.suite;
-  const info = suite ? summary.suites[suite] : undefined;
+  const info = suite && hasKey(summary.suites, suite) ? summary.suites[suite] : undefined;
   const metricId = useId();
   const { deploy, tw, q, lang } = state;
 

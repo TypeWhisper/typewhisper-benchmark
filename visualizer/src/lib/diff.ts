@@ -8,7 +8,9 @@ export type DiffOp =
   | { type: "eq"; hyp: string; ref: string }
   | { type: "sub"; hyp: string; ref: string }
   | { type: "ins"; hyp: string }
-  | { type: "del"; ref: string };
+  | { type: "del"; ref: string }
+  /** A symbol-only token of the transcript ("€", "-", "=>"): shown, but not aligned or counted. */
+  | { type: "sym"; hyp: string };
 
 interface Token {
   text: string;
@@ -27,14 +29,38 @@ function tokenize(text: string): Token[] {
   return text
     .split(/\s+/)
     .filter(Boolean)
-    .map((word) => ({ text: word, norm: normalizeWord(word) }))
-    .filter((token) => token.norm.length > 0);
+    .map((word) => ({ text: word, norm: normalizeWord(word) }));
 }
 
-/** Levenshtein alignment over words. */
+const isWord = (token: Token) => token.norm.length > 0;
+
+/**
+ * Levenshtein alignment over words. Symbol-only tokens of the transcript stay in place as "sym"
+ * operations, so the displayed transcript keeps everything the model wrote.
+ */
 export function wordDiff(reference: string, hypothesis: string): DiffOp[] {
-  const ref = tokenize(reference);
-  const hyp = tokenize(hypothesis);
+  const allHyp = tokenize(hypothesis);
+  return withSymbols(align(tokenize(reference).filter(isWord), allHyp.filter(isWord)), allHyp);
+}
+
+function withSymbols(ops: DiffOp[], allHyp: Token[]): DiffOp[] {
+  if (allHyp.every(isWord)) return ops;
+  const out: DiffOp[] = [];
+  let next = 0;
+  const flushSymbols = () => {
+    while (next < allHyp.length && !isWord(allHyp[next])) out.push({ type: "sym", hyp: allHyp[next++].text });
+  };
+  flushSymbols();
+  for (const op of ops) {
+    out.push(op);
+    if (op.type === "del") continue;
+    next += 1;
+    flushSymbols();
+  }
+  return out;
+}
+
+function align(ref: Token[], hyp: Token[]): DiffOp[] {
   const rows = ref.length + 1;
   const cols = hyp.length + 1;
   const cost = new Uint32Array(rows * cols);
@@ -78,5 +104,5 @@ export function wordDiff(reference: string, hypothesis: string): DiffOp[] {
 }
 
 export function countErrors(ops: DiffOp[]): number {
-  return ops.filter((op) => op.type !== "eq").length;
+  return ops.filter((op) => op.type !== "eq" && op.type !== "sym").length;
 }

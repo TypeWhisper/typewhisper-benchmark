@@ -5,7 +5,7 @@
  *   tier, accented-speech excluded). Pooled over clips, not averaged over suites.
  * - CV-EN fmt: formatting score on clean-speech-commonvoice-en.
  * - Punct <lang>: punctuation score on punctuation-formatting-<lang>.
- * - Digits <lang>: share of number-formatting-<lang> clips whose numbers all appear verbatim.
+ * - Digits <lang>: share of number-formatting-<lang> clips whose numbers all appear verbatim, as whole numbers.
  * - ms/clip and RTF: mean over all ok clips of the model, every suite.
  */
 import type { AppState, Dir, Lang, Origin, Tier } from "../lib/url-state";
@@ -180,7 +180,7 @@ const PUNCT_HELP = (lang: string) =>
 const FMT_HELP =
   "Formatting score on Common Voice English (real voices): case, punctuation and digits against the formatted references. Higher is better.";
 const DIGITS_HELP = (lang: string) =>
-  `Share of Number Formatting (${languageName(lang)}) clips in which every number of the reference ("2,400", "2:30", "15th") appears exactly as written. Higher is better.`;
+  `Share of Number Formatting (${languageName(lang)}) clips in which every number of the reference ("2,400", "2:30", "15th") appears exactly as written, as a whole number. Higher is better.`;
 const MS_HELP =
   "Mean time per clip over all of the model's clips. Measured inside each runtime (cloud APIs include the network), so compare across runtimes with care. Lower is better.";
 const RTF_HELP = "Real-time factor: processing time divided by audio length, over all clips. Lower is better.";
@@ -473,9 +473,10 @@ export function suiteStanding(summary: Summary, modelId: string, suiteId: string
 }
 
 /** Rank of a value among rows (1 = best), ties share the better rank. */
+/** Rank among the models with a complete value; a model that ran fewer suites gets none. */
 export function rankOf(rows: Row[], column: Column, id: string): { rank: number; of: number } | null {
   const sorted = sortRows(
-    rows.filter((row) => row.values[column.id]?.v != null),
+    rows.filter((row) => row.values[column.id]?.v != null && !row.values[column.id].missing.length),
     column,
     betterFirst(column)
   );

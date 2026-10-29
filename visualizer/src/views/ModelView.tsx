@@ -22,6 +22,8 @@ import {
   type SuiteStanding,
 } from "../data/metrics";
 import { modelMeta } from "../data/model-meta";
+import { hasKey } from "../data/links";
+import { valueTitle } from "../lib/value-title";
 import { RESULTS_BASE } from "../data/load";
 import type { Summary } from "../data/types";
 import { ShareButton } from "../components/Header";
@@ -62,7 +64,7 @@ function FieldStrip({ standing, max }: { standing: SuiteStanding; max: number })
 export function ModelView({ summary }: { summary: Summary }) {
   const { state, navigate } = useAppState();
   const id = state.model;
-  const run = id ? summary.models[id] : undefined;
+  const run = id && hasKey(summary.models, id) ? summary.models[id] : undefined;
   const { tier, cat, origin, acc } = state;
 
   const all = useMemo(() => {
@@ -167,16 +169,27 @@ export function ModelView({ summary }: { summary: Summary }) {
               const value = row?.values[column.id];
               const rank = rankOf(all.rows, column, id);
               return (
-                <li key={column.id} className="border-b border-hairline py-4 pr-4" title={column.help}>
+                <li
+                  key={column.id}
+                  className="border-b border-hairline py-4 pr-4"
+                  title={value ? valueTitle(summary, column, value) : column.help}
+                >
                   <p className="meta uppercase">{column.label}</p>
                   <p className={clsx("mt-1 text-[1.625rem] leading-none font-semibold tracking-[-0.02em]", value?.outside && "text-muted")}>
                     {value?.v != null ? formatMetric(column.metric, value.v) : <span className="text-muted">–</span>}
+                    {value?.v != null && value.missing.length > 0 && (
+                      <sup className="ml-0.5 text-base text-muted" aria-label="ran on fewer suites">
+                        *
+                      </sup>
+                    )}
                   </p>
                   <p className="meta mt-1.5">
                     {value?.v != null && rank ? (
                       <>
                         #{rank.rank} of {rank.of} · {METRICS[column.metric].better === "lower" ? "↓" : "↑"} better
                       </>
+                    ) : value?.v != null && value.missing.length > 0 ? (
+                      `not ranked: ran on fewer suites`
                     ) : value?.skipped ? (
                       "not supported"
                     ) : (
@@ -188,7 +201,7 @@ export function ModelView({ summary }: { summary: Summary }) {
             })}
           </ul>
           <p className="meta mt-3">
-            Ranks count the models with results for that column. WER uses the {tier === "all" ? "core and diagnostic" : tier} suites
+            Ranks count the models with results on every suite of that column; * marks a value from fewer suites. WER uses the {tier === "all" ? "core and diagnostic" : tier} suites
             {acc ? ", accented speech included" : ", accented speech excluded"}.
           </p>
 

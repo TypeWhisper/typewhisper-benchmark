@@ -28,6 +28,14 @@ describe("wordDiff", () => {
     expect(wordDiff("", "")).toEqual([]);
   });
 
+  it("keeps symbol-only tokens of the transcript without counting them", () => {
+    const ops = wordDiff("Der Preis beträgt 4299,50 Euro", "- Der Preis beträgt 4299,50 € .");
+    expect(ops[0]).toEqual({ type: "sym", hyp: "-" });
+    expect(ops.filter((op) => op.type === "sym").map((op) => op.hyp)).toEqual(["-", "€", "."]);
+    expect(ops.map((op) => ("hyp" in op ? op.hyp : "")).join(" ")).toContain("4299,50 €");
+    expect(countErrors(ops)).toBe(1);
+  });
+
   it("folds ё into е like the Russian normalizer", () => {
     expect(wordDiff("ещё", "еще")[0].type).toBe("eq");
   });

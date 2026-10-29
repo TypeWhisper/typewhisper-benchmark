@@ -85,7 +85,7 @@ export function SuitesView({ summary }: { summary: Summary }) {
                             {best ? (
                               <Link to={(s) => withView(s, "model", { model: best.id })} className="hover:text-accent hover:underline">
                                 <span className="font-medium tabular-nums">{formatMetric("wer", best.v)}</span>{" "}
-                                <span className="text-muted">{modelMeta(best.id).short}</span>
+                                <span className="text-muted">{modelMeta(best.id, summary.models[best.id]?.type).short}</span>
                               </Link>
                             ) : (
                               "–"
