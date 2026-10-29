@@ -3,6 +3,7 @@ import { Link } from "../lib/app-state";
 import { DEFAULT_STATE, withView, type AppState } from "../lib/url-state";
 import type { Summary } from "../data/types";
 import { PageHead } from "../components/ui";
+import { hasKey } from "../data/links";
 
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -63,7 +64,7 @@ export function AboutView({ summary }: { summary: Summary }) {
   const examples = EXAMPLES.filter((example) => {
     const target = example.to(DEFAULT_STATE);
     return (
-      [...target.models, ...(target.model ? [target.model] : [])].every((id) => summary.models[id]) &&
+      [...target.models, ...(target.model ? [target.model] : [])].every((id) => hasKey(summary.models, id)) &&
       (!target.suite || summary.suites[target.suite])
     );
   });

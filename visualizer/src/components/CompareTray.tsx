@@ -5,11 +5,12 @@ import { withView } from "../lib/url-state";
 import { modelMeta } from "../data/model-meta";
 import type { Summary } from "../data/types";
 import { seriesColor } from "../lib/series";
+import { hasKey } from "../data/links";
 
 /** The models picked for comparison, kept at the bottom of every view except Compare. */
 export function CompareTray({ summary }: { summary: Summary }) {
   const { state, navigate } = useAppState();
-  const picked = state.models.filter((id) => summary.models[id]);
+  const picked = state.models.filter((id) => hasKey(summary.models, id));
   if (state.view === "compare" || picked.length === 0) return null;
   const ready = picked.length >= 2;
   return (

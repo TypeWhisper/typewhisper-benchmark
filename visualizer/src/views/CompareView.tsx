@@ -4,7 +4,7 @@ import { useId, useMemo } from "react";
 import { Link } from "../lib/app-state";
 import { useAppState } from "../lib/app-state-context";
 import { MAX_COMPARE, withView, type AppState, type Dir, type Lang } from "../lib/url-state";
-import { formatGap, formatMetric, formatUnit } from "../lib/format";
+import { formatGap, formatMetric, formatUnit, listJoin } from "../lib/format";
 import {
   betterFirst,
   buildColumns,
@@ -37,6 +37,7 @@ import { Transcripts } from "../components/Transcripts";
 import { ValueText } from "../components/LeaderboardTable";
 import { Direction, PageHead, Section } from "../components/ui";
 import { SpeedCaveat } from "./LeaderboardView";
+import { hasKey } from "../data/links";
 
 interface Preset {
   label: string;
@@ -83,7 +84,7 @@ const PRESETS: Preset[] = [
 
 function EmptyCompare({ summary, known }: { summary: Summary; known: string[] }) {
   const { navigate } = useAppState();
-  const presets = PRESETS.map((preset) => ({ ...preset, models: preset.models.filter((id) => summary.models[id]) })).filter(
+  const presets = PRESETS.map((preset) => ({ ...preset, models: preset.models.filter((id) => hasKey(summary.models, id)) })).filter(
     (preset) => preset.models.length >= 2
   );
   return (
@@ -281,9 +282,18 @@ function Breakdown({ summary, rows, colors }: { summary: Summary; rows: Row[]; c
           </thead>
           <tbody>
             {groups.map((group) => {
-              const values = rows.map((row) => pool(summary.cells[row.id], group.suites, "wer").v);
-              const present = values.filter((v): v is number => v != null);
-              const best = present.length ? Math.min(...present) : null;
+              // Like the headline columns: a value from fewer of the group's suites is marked and cannot win.
+              const entries = rows.map((row) => {
+                const cells = summary.cells[row.id] ?? {};
+                const { v } = pool(cells, group.suites, "wer");
+                const missing = group.suites.filter((suite) => {
+                  const cell = cells[suite];
+                  return !cell?.ok && !(cell?.skip && cell.skip === cell.n);
+                });
+                return { v, missing: v != null ? missing : [] };
+              });
+              const complete = entries.filter((entry) => entry.v != null && !entry.missing.length).map((entry) => entry.v as number);
+              const best = complete.length ? Math.min(...complete) : null;
               const field = group.suites.length === 1 ? suiteField(summary, group.suites[0])[0] : null;
               return (
                 <tr key={group.key}>
@@ -297,17 +307,30 @@ function Breakdown({ summary, rows, colors }: { summary: Summary; rows: Row[]; c
                     )}
                     <span className="meta block font-normal">{group.sub}</span>
                   </th>
-                  {values.map((v, index) => {
-                    const gap = v != null && best != null ? v - best : 0;
-                    const isBest = v != null && v === best && present.length > 1;
+                  {entries.map(({ v, missing }, index) => {
+                    const partial = missing.length > 0;
+                    const gap = v != null && best != null ? Math.max(0, v - best) : 0;
+                    const isBest = v != null && !partial && v === best && complete.length > 1;
+                    const notRun = partial
+                      ? ` · not run on ${listJoin(missing.map((suite) => summary.suites[suite]?.name ?? suite))}, so not directly comparable`
+                      : "";
                     return (
                       <td
                         key={rows[index].id}
-                        className={clsx("num", isBest && "font-semibold text-accent")}
-                        style={{ background: v != null ? `rgba(var(--heat), ${Math.min(1, gap / 0.1) * 0.42})` : undefined }}
-                        title={v != null ? `${rows[index].meta.name}: ${formatMetric("wer", v)}${gap > 0 ? ` (${formatGap("wer", v, best ?? v)})` : ""}` : "Not run"}
+                        className={clsx("num", isBest && "font-semibold text-accent", partial && "text-muted")}
+                        style={{ background: v != null && !partial ? `rgba(var(--heat), ${Math.min(1, gap / 0.1) * 0.42})` : undefined }}
+                        title={
+                          v != null
+                            ? `${rows[index].meta.name}: ${formatMetric("wer", v)}${gap > 0 && !partial ? ` (${formatGap("wer", v, best ?? v)})` : ""}${notRun}`
+                            : "Not run"
+                        }
                       >
                         {v != null ? formatMetric("wer", v) : <span className="text-muted">–</span>}
+                        {partial && (
+                          <sup className="ml-0.5 text-muted" aria-label="ran on fewer suites">
+                            *
+                          </sup>
+                        )}
                       </td>
                     );
                   })}
@@ -339,7 +362,7 @@ export function CompareView({ summary }: { summary: Summary }) {
   const { state, navigate } = useAppState();
   const sortSelectId = useId();
   const { lang, tier, cat, origin, acc } = state;
-  const known = state.models.filter((id) => summary.models[id]);
+  const known = state.models.filter((id) => hasKey(summary.models, id));
 
   const columns = useMemo(() => {
     const base = buildColumns(summary, { lang, tier, cat, origin, acc });

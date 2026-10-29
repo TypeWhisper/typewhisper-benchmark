@@ -65,7 +65,8 @@ function Shell({ summary }: { summary: Summary }) {
     document.title = `${documentTitle(summary, state)} · TypeWhisper STT Benchmark`;
   }, [summary, state]);
 
-  const view = (() => {
+  // Until the URL holds the canonical state, views would read ids the data may not have.
+  const view = needsRewrite ? null : (() => {
     switch (state.view) {
       case "compare":
         return <CompareView summary={summary} />;
