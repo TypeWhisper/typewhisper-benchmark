@@ -39,6 +39,14 @@ fetch() {
   mv "$target.part" "$target"
 }
 
+known_ids=" $(echo "$CANDIDATES" | cut -d'|' -f1 | tr '\n' ' ') "
+for id in "$@"; do
+  if [[ "$known_ids" != *" $id "* ]]; then
+    echo "unknown candidate '$id'; known:$known_ids" >&2
+    exit 1
+  fi
+done
+
 mkdir -p "$MODELS_DIR/candidates"
 if [ ! -x "$MODELS_DIR/runtime-$CRISPASR_VERSION/crispasr-macos/crispasr" ]; then
   fetch "https://github.com/CrispStrobe/CrispASR/releases/download/v$CRISPASR_VERSION/crispasr-macos.tar.gz" \
