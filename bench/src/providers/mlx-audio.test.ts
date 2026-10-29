@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { MLX_MODELS, MlxAudioProvider, generateOptions } from "./mlx-audio.js";
+import {
+  MLX_MODELS,
+  MlxAudioProvider,
+  generateOptions,
+  nemotronTranscribePrompt,
+  stripSpeakerLabels,
+} from "./mlx-audio.js";
 
 describe("MlxAudioProvider", () => {
   it("has correct provider metadata", () => {
@@ -17,6 +23,9 @@ describe("MlxAudioProvider", () => {
       "granite-speech-5.0-470m-turboctc",
       "canary-1b-v2",
       "sophea-canary",
+      "phonon-2.5",
+      "nemotron-3.5-transcribe-4bit",
+      "vibevoice-asr-streaming-1.5b",
     ]);
   });
 
@@ -43,5 +52,22 @@ describe("MlxAudioProvider", () => {
     expect(generateOptions("granite-4.0-1b-speech-8bit", "de")).toEqual({});
     expect(generateOptions("granite-speech-5.0-2b", "de").language).toBeUndefined();
     expect(generateOptions("voxtral-mini-4b-realtime-4bit", "de")).toEqual({});
+    expect(generateOptions("phonon-2.5", "de")).toEqual({});
+  });
+
+  it("names the suite language in Nemotron 3.5 Transcribe's prompt", () => {
+    const options = generateOptions("nemotron-3.5-transcribe-4bit", "de");
+    expect(options.max_tokens).toBe(1024);
+    expect(options.prompt).toBe(nemotronTranscribePrompt("de"));
+    expect(nemotronTranscribePrompt("de")).toContain("Language: German.");
+    expect(nemotronTranscribePrompt("auto")).toContain("Language: as spoken.");
+    // The card's optional number clause made the 4-bit model return empty transcripts.
+    expect(nemotronTranscribePrompt("en")).not.toContain("numbers");
+  });
+
+  it("drops speaker labels from speaker-attributed transcripts", () => {
+    expect(stripSpeakerLabels("Speaker 0:The quick brown fox.")).toBe("The quick brown fox.");
+    expect(stripSpeakerLabels("Speaker 0: Hello. Speaker 1:Hi there.")).toBe("Hello. Hi there.");
+    expect(stripSpeakerLabels("No labels here.")).toBe("No labels here.");
   });
 });

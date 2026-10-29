@@ -15,18 +15,28 @@ interface MlxModel {
   /** Pinned Hugging Face revision, so results stay reproducible */
   revision: string;
   /**
-   * How the suite language reaches the model: Qwen3-ASR takes its name, Canary its code. The
-   * others get none (Voxtral Realtime detects it; Granite's `language` means translation).
+   * How the suite language reaches the model: Qwen3-ASR takes its name, Canary its code. The others get none (Voxtral Realtime detects it; Granite's `language` means translation).
    */
   language?: "name" | "code";
+  /** A prompt built from the suite language, for models that take the language in their prompt */
+  prompt?: (language: string) => string;
   /** Extra generate() arguments, such as Granite's punctuation prompt */
   options?: Record<string, string | number>;
+  /** Removes speaker labels ("Speaker 0:") that speaker-attributing models put before each turn */
+  stripSpeakerLabels?: boolean;
   languages: string[];
+}
+
+/** The transcript without "Speaker <n>:" labels. */
+export function stripSpeakerLabels(text: string): string {
+  return text.replace(/(^|\s)Speaker \d+:\s*/g, "$1").replace(/\s+/g, " ").trim();
 }
 
 // Granite Speech's documented instruction for punctuated, truecased transcripts.
 const GRANITE_PUNCTUATION_PROMPT = "transcribe the speech with proper punctuation and capitalization.";
 const GRANITE_LANGUAGES = ["en", "de", "fr", "es", "pt", "auto"];
+// Models that cover all suite languages and detect the language themselves.
+const MULTILINGUAL_AUTO = ["en", "de", "ru", "fr", "es", "it", "pt", "auto"];
 
 // Same repos as TypeWhisper's Qwen3, Voxtral, Granite and Canary plugins, then candidates.
 const QWEN3_LANGUAGES: Record<string, string> = {
@@ -106,7 +116,47 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     options: { max_tokens: 512, language: "en" },
     languages: ["en", "de", "ru"],
   },
+  // Candidates added with mlx-audio 0.6.3.
+  // Fermion Research's low-bit Parakeet TDT 0.6B v3 (156 MB, CC BY 4.0); detects the language.
+  "phonon-2.5": {
+    repo: "FermionResearch/Phonon-2.5",
+    revision: "2af4bb8ccceb66a8ce06c4081bb968f1802c1e58",
+    languages: MULTILINGUAL_AUTO,
+  },
+  // NVIDIA Nemotron 3.5 Transcribe 30B-A4B (OpenMDW-1.1), released 2026-10-28, in the community's
+  // 4-bit MLX export (language model 4-bit, audio encoders unquantized). Prompted with the model
+  // card's "readable text" instruction, which suits dictation, and the suite language.
+  "nemotron-3.5-transcribe-4bit": {
+    repo: "nativ-community/Nemotron-3.5-Transcribe-30B-A4B-EA-4bit",
+    revision: "c47153ca2ce4024d43e216b81e6db4f67b886545",
+    prompt: nemotronTranscribePrompt,
+    options: { max_tokens: 1024 },
+    languages: MULTILINGUAL_AUTO,
+  },
+  // Microsoft VibeVoice-ASR Streaming 1.5B (MIT): 10 languages incl. EN, DE, RU; detects the language.
+  // It labels each speaker turn, which a dictation app would drop.
+  "vibevoice-asr-streaming-1.5b": {
+    repo: "microsoft/VibeVoice-ASR-Streaming-1.5B",
+    revision: "4262d23d8a539a6530cf64fbd0b1751ef9a30853",
+    options: { max_tokens: 1024 },
+    stripSpeakerLabels: true,
+    languages: MULTILINGUAL_AUTO,
+  },
 };
+
+/**
+ * Nemotron 3.5 Transcribe's "readable text" prompt from the model card, with the suite language
+ * named. Adding the card's optional "numbers in their standard written form" made the 4-bit model
+ * return empty transcripts for many clips over ~10 s, so it is left out.
+ */
+export function nemotronTranscribePrompt(language: string): string {
+  const name = language === "auto" ? "as spoken" : QWEN3_LANGUAGES[language] ?? "as spoken";
+  return (
+    `Audio transcription. Language: ${name}. ` +
+    "Wording: omit fillers and accidental repetitions; keep the remaining spoken wording unchanged. " +
+    "Formatting: punctuation and capitalization. Output: transcript only."
+  );
+}
 
 /** generate() arguments for one clip; the worker adds temperature 0. */
 export function generateOptions(model: string, language: string): Record<string, string | number> {
@@ -114,6 +164,7 @@ export function generateOptions(model: string, language: string): Record<string,
   const options: Record<string, string | number> = { ...entry?.options };
   if (entry?.language === "name") options.language = QWEN3_LANGUAGES[language];
   if (entry?.language === "code") options.language = language;
+  if (entry?.prompt) options.prompt = entry.prompt(language);
   return options;
 }
 
@@ -176,8 +227,9 @@ export class MlxAudioProvider implements STTProvider {
     });
     if (res.error) throw new Error(String(res.error));
 
+    const text = (res.text ?? "").trim();
     return {
-      text: (res.text ?? "").trim(),
+      text: entry.stripSpeakerLabels ? stripSpeakerLabels(text) : text,
       durationMs: Math.round(res.durationMs ?? 0),
       cost: 0,
       model,

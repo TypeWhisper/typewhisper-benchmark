@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#   "mlx-audio==0.6.1",
+#   "mlx-audio[stt]==0.6.3",  # 0.6.3: Phonon-2.5, Nemotron 3.5 Transcribe; [stt] unpacks Phonon archives
 #   "jinja2==3.1.6",  # chat templates of the ibm-granite repos
 # ]
 # ///
