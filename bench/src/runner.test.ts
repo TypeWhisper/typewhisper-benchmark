@@ -1,6 +1,7 @@
-import { mkdtemp, rm } from "fs/promises";
+import { copyFile, mkdtemp, rm } from "fs/promises";
 import { tmpdir } from "os";
-import { join } from "path";
+import { join, relative } from "path";
+import { fileURLToPath } from "url";
 import { afterEach, describe, expect, it } from "vitest";
 import { runBenchmark, type RunnerEvent } from "./runner.js";
 import type { BenchmarkConfig, STTProvider, TestSuite } from "./types.js";
@@ -247,5 +248,40 @@ describe("runBenchmark", () => {
       version: "t",
     });
     expect(summary.rankings[0].errorCount).toBe(0);
+  });
+
+  it("does not reuse a cached transcript after the clip's audio changed", async () => {
+    const audioDir = join(fileURLToPath(new URL("..", import.meta.url)), "audio");
+    const dir = await createTempDir();
+    const clip = join(dir, "clip.wav");
+    await copyFile(join(audioDir, "samples-en/clean-01.wav"), clip);
+    let calls = 0;
+    const provider: STTProvider = {
+      id: "mock-cache",
+      name: "Mock Cache",
+      type: "local",
+      models: ["only"],
+      async transcribe(_audio, model) {
+        calls += 1;
+        return { text: "The quick brown fox jumps over the lazy dog", durationMs: 1, model };
+      },
+      async isAvailable() {
+        return true;
+      },
+      supportsLanguage() {
+        return true;
+      },
+    };
+    const suite = suiteWith(1);
+    suite.tests[0].audioFile = relative(audioDir, clip);
+    const config = await configWith(1);
+
+    await runBenchmark({ suites: [suite], providers: [provider], config, version: "t" });
+    await runBenchmark({ suites: [suite], providers: [provider], config, version: "t" });
+    expect(calls).toBe(1);
+
+    await copyFile(join(audioDir, "samples-en/clean-02.wav"), clip);
+    await runBenchmark({ suites: [suite], providers: [provider], config, version: "t" });
+    expect(calls).toBe(2);
   });
 });

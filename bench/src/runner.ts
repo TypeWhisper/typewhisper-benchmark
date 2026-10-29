@@ -9,6 +9,7 @@ const __dirname = dirname(__filename);
 const BENCH_ROOT = resolve(__dirname, "..");
 import { getAudioInfo } from "./audio.js";
 import { computeMetrics } from "./metrics/index.js";
+import { scoreTranscript } from "./rescore.js";
 import {
   buildBenchmarkSummary,
   mergeBenchmarkSummaries,
@@ -57,12 +58,24 @@ function cacheKey(
   testId: string,
   providerId: string,
   model: string,
-  run: number
+  run: number,
+  audioHash: string
 ): string {
   return createHash("sha1")
-    .update(`${suiteId}:${testId}:${providerId}:${model}:${run}`)
+    .update(`${suiteId}:${testId}:${providerId}:${model}:${run}:${audioHash}`)
     .digest("hex")
     .slice(0, 16);
+}
+
+/**
+ * A fingerprint of a clip's audio, part of the cache key: a regenerated clip with the same id must
+ * not reuse the transcript of the old audio.
+ */
+function hashAudio(path: string): Promise<string> {
+  return readFile(path).then(
+    (bytes) => createHash("sha1").update(bytes).digest("hex").slice(0, 16),
+    () => "missing"
+  );
 }
 
 async function readCache(
@@ -114,6 +127,14 @@ export async function runBenchmark(
 
   const cacheDir = join(config.outputDirectory, "cache");
   const results: TestResult[] = [];
+
+  // Every model reads the same clips, so hash each file once per run.
+  const audioHashes = new Map<string, Promise<string>>();
+  const audioHash = (path: string): Promise<string> => {
+    let hash = audioHashes.get(path);
+    if (!hash) audioHashes.set(path, (hash = hashAudio(path)));
+    return hash;
+  };
 
   // Build the work queue model by model, so a local model can be loaded before its first clip and
   // released after its last one instead of every model staying in memory for the whole run.
@@ -235,17 +256,22 @@ export async function runBenchmark(
   async function processItem(item: WorkItem): Promise<void> {
     const test = item.suite.tests[item.testIndex];
 
+    const audioPath = join(BENCH_ROOT, "audio", test.audioFile);
     const key = cacheKey(
       item.suite.id,
       test.id,
       item.provider.id,
       item.model,
-      item.run
+      item.run,
+      await audioHash(audioPath)
     );
 
     // Check cache
     const cached = await readCache(cacheDir, key);
     if (cached && !cached.error) {
+      // The cache keeps the transcript; score it against the current references, so a corrected
+      // reference does not bring back old numbers.
+      if (cached.status === "ok") Object.assign(cached, scoreTranscript(test, item.suite, cached.transcription));
       results.push(cached);
       if (cached.status === "skipped") {
         onEvent?.({
@@ -313,7 +339,6 @@ export async function runBenchmark(
     });
 
     try {
-      const audioPath = join(BENCH_ROOT, "audio", test.audioFile);
       const audioInfo = await getAudioInfo(audioPath, item.suite.language);
 
       await ensurePrepared(item);

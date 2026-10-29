@@ -4,6 +4,7 @@ import chalk from "chalk";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { runBenchmark, mergeResultFiles } from "./runner.js";
+import { rescoreResultFiles } from "./rescore.js";
 import { loadAllSuites, loadSuite } from "./suite-loader.js";
 import {
   getAvailableProviders,
@@ -28,7 +29,7 @@ program
 program
   .command("run", { isDefault: true })
   .description("Run the benchmark")
-  .option("-s, --suite <path>", "Run a specific test suite")
+  .option("-s, --suite <paths...>", "Run only these test suite files")
   .option("-p, --provider <id>", "Run only a specific provider")
   .option("-m, --model <name>", "Run only a specific model (requires --provider)")
   .option("-l, --language <lang>", "Filter suites by language")
@@ -52,7 +53,7 @@ program
     // Load suites
     let suites;
     if (opts.suite) {
-      suites = [await loadSuite(opts.suite)];
+      suites = await Promise.all((opts.suite as string[]).map((path) => loadSuite(path)));
     } else {
       suites = await loadAllSuites(join(BENCH_ROOT, "tests"));
     }
@@ -248,6 +249,27 @@ program
       console.log(`    Models: ${p.models.join(", ")}`);
     }
     console.log();
+  });
+
+program
+  .command("rescore")
+  .description("Recompute the metrics of stored results against the current suite references")
+  .option("-s, --suite <ids...>", "Only these suite ids (default: all)")
+  .option("--drop-suite <ids...>", "Remove these suites from the result files of --drop-provider")
+  .option("--drop-provider <ids...>", "Providers whose --drop-suite results are removed, e.g. cloud APIs that cannot be rerun")
+  .action(async (opts) => {
+    const suites = await loadAllSuites(join(BENCH_ROOT, "tests"));
+    const reports = await rescoreResultFiles(join(PROJECT_ROOT, "visualizer", "public", "data", "results"), suites, {
+      suiteIds: opts.suite,
+      dropSuites: opts.dropSuite,
+      dropProviders: opts.dropProvider,
+    });
+    for (const report of reports) {
+      const dropped = report.dropped.length ? `, dropped ${report.dropped.join(", ")}` : "";
+      const refreshed = report.refreshed.length ? `, metadata of ${report.refreshed.join(", ")}` : "";
+      console.log(`${report.file}: ${report.changed} result(s) rescored${refreshed}${dropped}`);
+    }
+    console.log(chalk.green(`${reports.length} result file(s) updated`));
   });
 
 program
