@@ -391,7 +391,10 @@ interface ManifestCodeSwitchingEntry {
 
 interface ManifestPunctuationEntry {
   id: string;
+  /** What the voice reads */
   text: string;
+  /** The reference when it is spelled differently from `text` (e.g. umlauts the TTS input writes as ae/oe/ue) */
+  groundTruth?: string;
   formattedGroundTruth: string;
   tags: string[];
   voice: string;
@@ -474,7 +477,7 @@ export async function generatePunctuationFormattingSuite(
     tests: entries.map((entry) => ({
       id: entry.id,
       audioFile: `${dirName}/${entry.id}.wav`,
-      groundTruth: entry.text,
+      groundTruth: entry.groundTruth ?? entry.text,
       formattedGroundTruth: entry.formattedGroundTruth,
       tags: entry.tags,
       source: "custom",
