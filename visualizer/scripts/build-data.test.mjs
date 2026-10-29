@@ -18,6 +18,17 @@ describe("Digits metric", () => {
     expect(digitsHit("the company has 2,400 employees", "The company has 2400 employees.")).toBe(false);
     expect(digitsHit("at 2:30 PM", "At 2.30 p.m.")).toBe(false);
     expect(digitsHit("no numbers", "anything")).toBeNull();
+    // A number must match whole: a wrong, longer number does not count.
+    expect(digitsHit("4322 Besucher und 999 Euro", "43220 Besucher und 9990 Euro")).toBe(false);
+    expect(digitsHit("15 guests", "115 guests")).toBe(false);
+    expect(digitsHit("15 guests", "15,000 guests")).toBe(false);
+    expect(digitsHit("revenue reached $578,000", "Revenue reached $578,000.")).toBe(true);
+    expect(digitsHit("am 15. Maerz", "Am 15. März")).toBe(true);
+    // Phone numbers may be written without the reference's grouping, but not with other digits.
+    expect(digitsHit("0171 345 6789", "01713456789")).toBe(true);
+    expect(digitsHit("meine Nummer ist +49 171 234 56", "Meine Nummer ist +49 17123456")).toBe(true);
+    expect(digitsHit("0171 345 6789", "01713456780")).toBe(false);
+    expect(digitsHit("on March 15 at 2:30, 300 guests", "On March 15 at 2:30, 300 guests.")).toBe(true);
   });
 });
 

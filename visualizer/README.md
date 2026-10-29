@@ -46,7 +46,9 @@ As in the PR tables (#10, #11):
 - **CV-EN fmt**: formatting score on `clean-speech-commonvoice-en`.
 - **Punct <lang>**: punctuation score on `punctuation-formatting-<lang>`.
 - **Digits <lang>**: share of `number-formatting-<lang>` clips in which every number token of the reference
-  appears verbatim in the transcript (PR #11's definition).
+  appears verbatim, as a whole number, in the transcript ("4322" does not count inside "43220"). Adjacent numbers
+  such as a phone number's groups may be written without their spaces. PR #11 matched substrings, so a few
+  values here are lower than in its table.
 - **ms/clip, RTF**: mean over all ok clips of the model. Each runtime measures speed its own way.
 
 ## Model facts

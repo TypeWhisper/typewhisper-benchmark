@@ -100,8 +100,10 @@ export function AboutView({ summary }: { summary: Summary }) {
           </p>
           <p>
             <strong>Digits</strong>: the share of Number Formatting clips in which every number of the reference (“2,400”,
-            “2:30”, “15th”) appears exactly as written there. The normalized WER forgives spelled-out numbers; this shows
-            what a dictation user would see. This is the definition from PR #11; PR #10 used a different one.
+            “2:30”, “15th”) appears exactly as written there, as a whole number: “4322” does not count inside “43220”.
+            The groups of a phone number may be written without their spaces. The normalized WER forgives spelled-out
+            numbers; this shows what a dictation user would see. PR #11 matched substrings, so a few values here are
+            lower than in its table; PR #10 used a different definition.
           </p>
         </Block>
         <Block title="Speed">

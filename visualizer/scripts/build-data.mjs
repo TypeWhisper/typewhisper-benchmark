@@ -43,11 +43,49 @@ export function numberTokens(reference) {
     .filter(Boolean);
 }
 
-/** Digits: every number token of the reference appears verbatim in the transcript. */
+/**
+ * Runs of adjacent number tokens in a reference ("0171 345 6789", "+49 171 234 56"). A transcript
+ * may write a run without its spaces; trailing punctuation ends a run.
+ */
+export function numberRuns(reference) {
+  const runs = [];
+  let run = [];
+  for (const raw of reference.split(/\s+/)) {
+    const token = /\d/.test(raw) ? raw.replace(/[.,;:!?]+$/, "") : "";
+    if (token) run.push(token);
+    if (!token || token !== raw) {
+      if (run.length) runs.push(run);
+      run = [];
+    }
+  }
+  if (run.length) runs.push(run);
+  return runs;
+}
+
+const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/** A pattern that matches only as a whole number: "4322" not inside "43220", "15" not inside "115" or "15,000". */
+function wholeNumber(pattern) {
+  return new RegExp(`(?<!\\d)(?<!\\d[.,:])${pattern}(?!\\d)(?![.,:]\\d)`);
+}
+
+export function containsNumber(transcript, token) {
+  return wholeNumber(escapeRegExp(token)).test(transcript);
+}
+
+/**
+ * Digits: every number of the reference appears verbatim, as a whole number, in the transcript.
+ * A run of adjacent numbers also counts when written without the spaces between them.
+ */
 export function digitsHit(reference, transcript) {
-  const tokens = numberTokens(reference);
-  if (tokens.length === 0) return null;
-  return tokens.every((token) => (transcript ?? "").includes(token));
+  const runs = numberRuns(reference);
+  if (runs.length === 0) return null;
+  const text = transcript ?? "";
+  return runs.every(
+    (run) =>
+      run.every((token) => containsNumber(text, token)) ||
+      wholeNumber(run.map(escapeRegExp).join("\\s*")).test(text)
+  );
 }
 
 const CATEGORY_PREFIXES = [
@@ -268,7 +306,8 @@ export function buildData({ resultsDir, testsDir }) {
   }
 
   /* Suite metadata: runner metadata first, then the suite definition, then inference. */
-  const suiteIds = new Set([...Object.keys(suiteMetadata), ...Object.keys(clipRows)]);
+  // Suite definitions count too, so a new suite appears before any model has run it.
+  const suiteIds = new Set([...Object.keys(suiteMetadata), ...Object.keys(clipRows), ...suiteDefinitions.keys()]);
   const suites = {};
   for (const suiteId of [...suiteIds].sort()) {
     const fromResults = suiteMetadata[suiteId] ?? {};
@@ -329,7 +368,8 @@ export function buildData({ resultsDir, testsDir }) {
   }
 
   const body = { schema: SCHEMA_VERSION, suites, models, cells: accumulators };
-  const version = createHash("sha1").update(JSON.stringify(body)).digest("hex").slice(0, 10);
+  // The clip files are fetched with this version as their cache key, so their content counts too.
+  const version = createHash("sha1").update(JSON.stringify(body)).update(JSON.stringify(clipFiles)).digest("hex").slice(0, 10);
   const summary = { ...body, version, generatedAt: new Date().toISOString() };
   return { summary, clipFiles, fileCount: files.length };
 }
