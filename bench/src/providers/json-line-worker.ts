@@ -110,7 +110,11 @@ export class JsonLineWorker {
           this.worker = worker;
           const killOnExit = () => worker.kill();
           process.once("exit", killOnExit);
+          let failed = false;
           const fail = (error: string) => {
+            // An error and the exit after it, or an error from kill() itself, report the same failure.
+            if (failed) return;
+            failed = true;
             // Settle this start even if the worker was already replaced, so no request waits on it.
             rejectReady(new Error(error));
             process.removeListener("exit", killOnExit);

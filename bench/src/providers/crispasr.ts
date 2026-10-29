@@ -243,10 +243,25 @@ export class CrispAsrProvider implements STTProvider {
     }
   }
 
-  /** Stops the model's server after its last clip, so the next model has the memory. */
-  release(model: string): void {
-    this.servers.get(model)?.process?.kill();
+  /**
+   * Stops the model's server after its last clip and waits until it has exited, so the next model
+   * does not start next to it. A server that ignores SIGTERM for 10 s is killed.
+   */
+  async release(model: string): Promise<void> {
+    const child = this.servers.get(model)?.process;
     this.servers.delete(model);
+    if (!child || child.exitCode != null || child.signalCode != null) return;
+    await new Promise<void>((resolveExit) => {
+      const timer = setTimeout(() => {
+        child.kill("SIGKILL");
+        resolveExit();
+      }, 10_000);
+      child.once("exit", () => {
+        clearTimeout(timer);
+        resolveExit();
+      });
+      child.kill();
+    });
   }
 
   dispose(): void {
