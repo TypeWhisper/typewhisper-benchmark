@@ -5,14 +5,8 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-# The benchmark reads .env, so read the same setting here unless it is exported.
-env_setting() { [ -f "$REPO_ROOT/.env" ] && sed -n "s/^$1=//p" "$REPO_ROOT/.env" | tail -n 1 | tr -d "\"'" || true; }
-MODELS_DIR="${AUDIOCPP_MODELS_PATH:-$(env_setting AUDIOCPP_MODELS_PATH)}"
-MODELS_DIR="${MODELS_DIR:-models/audiocpp}"
-case "$MODELS_DIR" in
-  /*) ;;
-  *) MODELS_DIR="$REPO_ROOT/$MODELS_DIR" ;;
-esac
+. "$(dirname "$0")/lib/env-setting.sh"
+MODELS_DIR="$(model_path AUDIOCPP_MODELS_PATH models/audiocpp)"
 RUNTIME_ARCHIVE="audio-v0.9.0-bin-macos-arm64-metal.tar.gz"
 RUNTIME_SHA256="7cea9219d5f06475011c5d225d71d988cecef633ff7d098ee8a4c7b08583b1b4"
 GGUF_URL="https://huggingface.co/davidxifeng/Confucius4-R2T2-gguf/resolve/a8e6b385d7df7eae9519363e07034a209004797a/r2t2-q8_0.gguf"

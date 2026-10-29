@@ -6,14 +6,8 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-# The benchmark reads .env, so read the same setting here unless it is exported.
-env_setting() { [ -f "$REPO_ROOT/.env" ] && sed -n "s/^$1=//p" "$REPO_ROOT/.env" | tail -n 1 | tr -d "\"'" || true; }
-MODELS_DIR="${CRISPASR_MODELS_PATH:-$(env_setting CRISPASR_MODELS_PATH)}"
-MODELS_DIR="${MODELS_DIR:-models/crispasr}"
-case "$MODELS_DIR" in
-  /*) ;;
-  *) MODELS_DIR="$REPO_ROOT/$MODELS_DIR" ;;
-esac
+. "$(dirname "$0")/lib/env-setting.sh"
+MODELS_DIR="$(model_path CRISPASR_MODELS_PATH models/crispasr)"
 CRISPASR_VERSION="0.8.47"
 RUNTIME_SHA256="ee6e30a0cc8ece90b457bca35afba469b388736e85e20d7fd86daf82c7dffbc7"
 
