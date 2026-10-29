@@ -49,7 +49,10 @@ export function getAudioCppModelsBasePath(env: NodeJS.ProcessEnv = process.env):
   return resolve(REPO_ROOT, env.AUDIOCPP_MODELS_PATH);
 }
 
-/** The plugin's server.json (R2T2ManagedServer), on a port of our own. */
+/**
+ * The plugin's server.json (R2T2ManagedServer), on a port of our own. Its idle unload after 30
+ * minutes stays: a run warms the model up right before its timed clips, which follow each other.
+ */
 export function serverConfig(model: string, port: number, base: string): Record<string, unknown> {
   return {
     host: "127.0.0.1",
@@ -117,6 +120,8 @@ interface RunningServer {
   process?: ChildProcess;
   port: number;
   ready: Promise<void>;
+  /** The server's last output, for errors */
+  output: string;
 }
 
 /**
@@ -153,7 +158,7 @@ export class AudioCppProvider implements STTProvider {
     server.process?.ref();
     try {
       const start = performance.now();
-      const text = await this.stream(server.port, pcm, audio.language, 110_000);
+      const text = await this.stream(server, pcm, audio.language, 110_000);
       return { text: text.trim(), durationMs: Math.round(performance.now() - start), cost: 0, model };
     } finally {
       unref(server.process);
@@ -173,8 +178,7 @@ export class AudioCppProvider implements STTProvider {
     if (!entry || ![SERVER_RELATIVE_PATH, entry.file].every((file) => existsSync(join(base, file)))) {
       throw new Error(`Model files not found for '${model}'. Run: bash bench/scripts/download-audiocpp-models.sh`);
     }
-    let outputTail = "";
-    const server = { port: 0 } as RunningServer;
+    const server = { port: 0, output: "" } as RunningServer;
     server.ready = (async () => {
       server.port = await freePort();
       const configPath = join(base, "config", `${model}-${process.pid}.json`);
@@ -190,7 +194,7 @@ export class AudioCppProvider implements STTProvider {
         spawnError = error;
       });
       const capture = (chunk: Buffer) => {
-        outputTail = (outputTail + chunk.toString()).slice(-4000);
+        server.output = (server.output + chunk.toString()).slice(-4000);
       };
       child.stdout?.on("data", capture);
       child.stderr?.on("data", capture);
@@ -199,8 +203,8 @@ export class AudioCppProvider implements STTProvider {
       const deadline = Date.now() + 300_000;
       for (;;) {
         if (spawnError) throw new Error(`audiocpp_server could not start: ${spawnError.message}`);
-        if (child.exitCode != null) throw new Error(`audiocpp_server exited: ${outputTail}`);
-        if (Date.now() > deadline) throw new Error(`audiocpp_server did not start: ${outputTail}`);
+        if (child.exitCode != null) throw new Error(`audiocpp_server exited: ${server.output}`);
+        if (Date.now() > deadline) throw new Error(`audiocpp_server did not start: ${server.output}`);
         const healthy = await fetch(`http://127.0.0.1:${server.port}/health`, { signal: AbortSignal.timeout(2_000) }).then(
           (r) => r.ok,
           () => false
@@ -209,7 +213,7 @@ export class AudioCppProvider implements STTProvider {
         await new Promise((r) => setTimeout(r, 200));
       }
       // The server loads the model lazily and compiles Metal kernels on the first request.
-      await this.stream(server.port, await pcm16(WARMUP_CLIP), "en", 300_000);
+      await this.stream(server, await pcm16(WARMUP_CLIP), "en", 300_000);
       unref(child);
     })();
     this.servers.set(model, server);
@@ -221,12 +225,12 @@ export class AudioCppProvider implements STTProvider {
   }
 
   /** Streams PCM16 to the live route like R2T2LiveConnection and returns the final transcript. */
-  private stream(port: number, pcm: Buffer, language: string, timeoutMs: number): Promise<string> {
+  private stream(server: RunningServer, pcm: Buffer, language: string, timeoutMs: number): Promise<string> {
     return new Promise((resolveText, reject) => {
       const req = httpRequest(
         {
           host: "127.0.0.1",
-          port,
+          port: server.port,
           method: "POST",
           path: livePath(language),
           headers: {
@@ -241,6 +245,10 @@ export class AudioCppProvider implements STTProvider {
           let body = "";
           res.setEncoding("utf8");
           res.on("data", (chunk) => (body += chunk));
+          // A server that dies mid-response emits no "end"; fail now instead of at the runner's timeout.
+          res.on("close", () => {
+            if (!res.complete) reject(new Error(`audio.cpp closed the response early: ${server.output.slice(-500)}`));
+          });
           res.on("end", () => {
             if (res.statusCode !== 200) return reject(new Error(`audio.cpp HTTP ${res.statusCode}: ${body.slice(0, 300)}`));
             try {
