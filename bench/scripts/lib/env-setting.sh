@@ -14,7 +14,8 @@ env_setting() {
   case "$value" in
     \"*) value=${value#\"}; value=${value%%\"*} ;;
     \'*) value=${value#\'}; value=${value%%\'*} ;;
-    *) value=$(printf '%s' "$value" | sed -E 's/[[:space:]]+#.*$//; s/[[:space:]]+$//') ;;
+    # Unquoted, a "#" starts a comment wherever it stands, as in node.
+    *) value=$(printf '%s' "$value" | sed -E 's/#.*$//; s/[[:space:]]+$//') ;;
   esac
   printf '%s' "$value"
 }
