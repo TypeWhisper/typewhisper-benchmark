@@ -8,7 +8,10 @@ set -euo pipefail
 
 # Relative paths resolve from the repository root, as the provider does.
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-MODELS_DIR="${CRISPASR_MODELS_PATH:-models/crispasr}"
+# The benchmark reads .env, so read the same setting here unless it is exported.
+env_setting() { [ -f "$REPO_ROOT/.env" ] && sed -n "s/^$1=//p" "$REPO_ROOT/.env" | tail -n 1 | tr -d "\"'" || true; }
+MODELS_DIR="${CRISPASR_MODELS_PATH:-$(env_setting CRISPASR_MODELS_PATH)}"
+MODELS_DIR="${MODELS_DIR:-models/crispasr}"
 case "$MODELS_DIR" in
   /*) ;;
   *) MODELS_DIR="$REPO_ROOT/$MODELS_DIR" ;;

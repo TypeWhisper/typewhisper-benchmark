@@ -5,7 +5,10 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-MODELS_DIR="${AUDIOCPP_MODELS_PATH:-models/audiocpp}"
+# The benchmark reads .env, so read the same setting here unless it is exported.
+env_setting() { [ -f "$REPO_ROOT/.env" ] && sed -n "s/^$1=//p" "$REPO_ROOT/.env" | tail -n 1 | tr -d "\"'" || true; }
+MODELS_DIR="${AUDIOCPP_MODELS_PATH:-$(env_setting AUDIOCPP_MODELS_PATH)}"
+MODELS_DIR="${MODELS_DIR:-models/audiocpp}"
 case "$MODELS_DIR" in
   /*) ;;
   *) MODELS_DIR="$REPO_ROOT/$MODELS_DIR" ;;
@@ -28,13 +31,15 @@ fetch() {
 }
 
 mkdir -p "$MODELS_DIR"
-if [ ! -x "$MODELS_DIR/runtime/audiocpp_server" ]; then
-  fetch "https://github.com/0xShug0/audio.cpp/releases/download/v0.9.0/$RUNTIME_ARCHIVE" "$MODELS_DIR/$RUNTIME_ARCHIVE" "$RUNTIME_SHA256"
-  rm -rf "$MODELS_DIR/runtime"
-  mkdir -p "$MODELS_DIR/runtime"
-  tar -xzf "$MODELS_DIR/$RUNTIME_ARCHIVE" -C "$MODELS_DIR/runtime"
-  # The release archive ships the server without the executable bit.
-  chmod +x "$MODELS_DIR/runtime/audiocpp_server"
-fi
+# Install the runtime from the verified archive every time, through a staging folder, so a
+# modified or half-extracted runtime is never kept.
+fetch "https://github.com/0xShug0/audio.cpp/releases/download/v0.9.0/$RUNTIME_ARCHIVE" "$MODELS_DIR/$RUNTIME_ARCHIVE" "$RUNTIME_SHA256"
+rm -rf "$MODELS_DIR/runtime.staging"
+mkdir -p "$MODELS_DIR/runtime.staging"
+tar -xzf "$MODELS_DIR/$RUNTIME_ARCHIVE" -C "$MODELS_DIR/runtime.staging"
+# The release archive ships the server without the executable bit.
+chmod +x "$MODELS_DIR/runtime.staging/audiocpp_server"
+rm -rf "$MODELS_DIR/runtime"
+mv "$MODELS_DIR/runtime.staging" "$MODELS_DIR/runtime"
 fetch "$GGUF_URL" "$MODELS_DIR/r2t2-q8_0.gguf" "$GGUF_SHA256"
 echo "=> Done: $MODELS_DIR"

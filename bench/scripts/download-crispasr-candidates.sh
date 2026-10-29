@@ -6,7 +6,10 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-MODELS_DIR="${CRISPASR_MODELS_PATH:-models/crispasr}"
+# The benchmark reads .env, so read the same setting here unless it is exported.
+env_setting() { [ -f "$REPO_ROOT/.env" ] && sed -n "s/^$1=//p" "$REPO_ROOT/.env" | tail -n 1 | tr -d "\"'" || true; }
+MODELS_DIR="${CRISPASR_MODELS_PATH:-$(env_setting CRISPASR_MODELS_PATH)}"
+MODELS_DIR="${MODELS_DIR:-models/crispasr}"
 case "$MODELS_DIR" in
   /*) ;;
   *) MODELS_DIR="$REPO_ROOT/$MODELS_DIR" ;;
@@ -48,13 +51,15 @@ for id in "$@"; do
 done
 
 mkdir -p "$MODELS_DIR/candidates"
-if [ ! -x "$MODELS_DIR/runtime-$CRISPASR_VERSION/crispasr-macos/crispasr" ]; then
-  fetch "https://github.com/CrispStrobe/CrispASR/releases/download/v$CRISPASR_VERSION/crispasr-macos.tar.gz" \
-    "$MODELS_DIR/crispasr-macos-$CRISPASR_VERSION.tar.gz" "$RUNTIME_SHA256"
-  rm -rf "$MODELS_DIR/runtime-$CRISPASR_VERSION"
-  mkdir -p "$MODELS_DIR/runtime-$CRISPASR_VERSION"
-  tar -xzf "$MODELS_DIR/crispasr-macos-$CRISPASR_VERSION.tar.gz" -C "$MODELS_DIR/runtime-$CRISPASR_VERSION"
-fi
+# Install the runtime (the binary and its sidecar library) from the verified archive every time,
+# through a staging folder, so a modified or half-extracted runtime is never kept.
+fetch "https://github.com/CrispStrobe/CrispASR/releases/download/v$CRISPASR_VERSION/crispasr-macos.tar.gz" \
+  "$MODELS_DIR/crispasr-macos-$CRISPASR_VERSION.tar.gz" "$RUNTIME_SHA256"
+rm -rf "$MODELS_DIR/runtime-$CRISPASR_VERSION.staging"
+mkdir -p "$MODELS_DIR/runtime-$CRISPASR_VERSION.staging"
+tar -xzf "$MODELS_DIR/crispasr-macos-$CRISPASR_VERSION.tar.gz" -C "$MODELS_DIR/runtime-$CRISPASR_VERSION.staging"
+rm -rf "$MODELS_DIR/runtime-$CRISPASR_VERSION"
+mv "$MODELS_DIR/runtime-$CRISPASR_VERSION.staging" "$MODELS_DIR/runtime-$CRISPASR_VERSION"
 
 echo "$CANDIDATES" | while IFS='|' read -r id repo revision file sha; do
   [ -n "$id" ] || continue
