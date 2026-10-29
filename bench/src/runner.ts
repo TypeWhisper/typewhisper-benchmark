@@ -9,6 +9,7 @@ const __dirname = dirname(__filename);
 const BENCH_ROOT = resolve(__dirname, "..");
 import { getAudioInfo } from "./audio.js";
 import { computeMetrics } from "./metrics/index.js";
+import { scoreTranscript } from "./rescore.js";
 import {
   buildBenchmarkSummary,
   mergeBenchmarkSummaries,
@@ -246,6 +247,9 @@ export async function runBenchmark(
     // Check cache
     const cached = await readCache(cacheDir, key);
     if (cached && !cached.error) {
+      // The cache keeps the transcript; score it against the current references, so a corrected
+      // reference does not bring back old numbers.
+      if (cached.status === "ok") Object.assign(cached, scoreTranscript(test, item.suite, cached.transcription));
       results.push(cached);
       if (cached.status === "skipped") {
         onEvent?.({
