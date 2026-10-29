@@ -24,12 +24,13 @@ describe("FluidAudioProvider", () => {
       "bark-3.0-pro",
       "nemotron-3.5-asr-streaming-0.6b",
       "nemotron-3.5-asr-streaming-0.6b-pad1s",
+      "nemotron-unified-asr-0.6b",
     ]);
   });
 
-  it("describes every model as an official repo, a local folder or a Nemotron folder", () => {
+  it("describes every model as an official repo, a local folder, a Nemotron folder or a unified model", () => {
     for (const entry of Object.values(FLUIDAUDIO_MODELS)) {
-      expect([entry.official, entry.local, entry.nemotron].filter(Boolean)).toHaveLength(1);
+      expect([entry.official, entry.local, entry.nemotron, entry.unified].filter(Boolean)).toHaveLength(1);
       if (entry.local) expect(entry.version).toBeDefined();
     }
   });
@@ -42,6 +43,7 @@ describe("FluidAudioProvider", () => {
     expect(provider.supportsLanguage("bark-3.0-pro", "auto")).toBe(false);
     expect(provider.supportsLanguage("parakeet-tdt-0.6b-v2", "auto")).toBe(false);
     expect(provider.supportsLanguage("unknown", "en")).toBe(false);
+    expect(provider.supportsLanguage("nemotron-unified-asr-0.6b", "auto")).toBe(true);
   });
 
   it("resolves the models path from the repo root", () => {

@@ -5,6 +5,7 @@ import { join, resolve } from "path";
 import { createInterface } from "readline";
 import { fileURLToPath } from "url";
 import { promisify } from "util";
+import { JsonLineWorker } from "./json-line-worker.js";
 import type { STTProvider, AudioInput, TranscriptionResult } from "../types.js";
 
 const execFileAsync = promisify(execFile);
@@ -14,6 +15,10 @@ const DEFAULT_MODELS_BASE_PATH = fileURLToPath(
 );
 const WORKER_PACKAGE = fileURLToPath(new URL("../../fluidaudio-worker", import.meta.url));
 const WORKER_BINARY = join(WORKER_PACKAGE, ".build", "release", "FluidAudioWorker");
+// Models that need a newer FluidAudio than TypeWhisper ships run in a second worker package.
+const NEXT_WORKER_PACKAGE = fileURLToPath(new URL("../../fluidaudio-next-worker", import.meta.url));
+const NEXT_WORKER_BINARY = join(NEXT_WORKER_PACKAGE, ".build", "release", "FluidAudioNextWorker");
+const NEXT_TIMEOUTS = { prepareMs: 30 * 60_000, transcribeMs: 110_000 };
 
 export interface FluidAudioModel {
   /** Official FluidInference Core ML repo that FluidAudio downloads itself */
@@ -30,6 +35,8 @@ export interface FluidAudioModel {
   leadPadSeconds?: number;
   /** Encoder function for clips up to 8 s (multifunction encoders) */
   shortFunction?: string;
+  /** Unified model in the FluidAudio 0.18 worker; FluidAudio downloads it on first use */
+  unified?: "nemotron-unified";
   /** null = multilingual (runs every suite); otherwise trained languages */
   languages: string[] | null;
 }
@@ -65,6 +72,10 @@ export const FLUIDAUDIO_MODELS: Record<string, FluidAudioModel> = {
     tailPadSeconds: 1,
     languages: null,
   },
+  // Candidate, not in TypeWhisper yet: NVIDIA's Nemotron Unified ASR 0.6B (25 European languages,
+  // punctuated, offline and streaming) in FluidAudio 0.18.0's offline UnifiedAsrManager with the
+  // fp16 encoder, prompted with the suite language ("auto" on the auto-detect suite).
+  "nemotron-unified-asr-0.6b": { unified: "nemotron-unified", languages: null },
 };
 
 /**
@@ -117,6 +128,7 @@ export function hasFluidAudioModelFiles(
 ): boolean {
   const entry = FLUIDAUDIO_MODELS[model];
   if (!entry) return false;
+  if (entry.unified) return true;
   if (entry.nemotron) {
     const folder = join(getFluidAudioModelsBasePath(env), entry.nemotron);
     return NEMOTRON_MODEL_FILES.every((file) => fileExists(join(folder, file)));
@@ -150,6 +162,12 @@ export class FluidAudioProvider implements STTProvider {
   private built?: Promise<void>;
   private pending = new Map<number, (res: WorkerResponse) => void>();
   private nextId = 1;
+  private nextWorker = new JsonLineWorker("FluidAudio 0.18", async () => {
+    await execFileAsync("swift", ["build", "-c", "release", "--package-path", NEXT_WORKER_PACKAGE], {
+      maxBuffer: 64 * 1024 * 1024,
+    });
+    return { file: NEXT_WORKER_BINARY, args: [] };
+  });
 
   async isAvailable(): Promise<boolean> {
     if (platform() !== "darwin" || arch() !== "arm64") return false;
@@ -171,11 +189,29 @@ export class FluidAudioProvider implements STTProvider {
   }
 
   async prepare(model: string): Promise<void> {
+    const unified = FLUIDAUDIO_MODELS[model]?.unified;
+    if (unified) {
+      // One language-prompted manager per suite language; load and prewarm them before timing.
+      for (const language of ["en", "de", "ru", "auto"]) {
+        const res = await this.nextWorker.request({ model: unified, language, load: true }, NEXT_TIMEOUTS.prepareMs);
+        if (res.error) throw new Error(res.error);
+      }
+      return;
+    }
     const res = await this.request({ ...this.spec(model), load: true });
     if (res.error) throw new Error(res.error);
   }
 
   async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
+    const unified = FLUIDAUDIO_MODELS[model]?.unified;
+    if (unified) {
+      const res = await this.nextWorker.request(
+        { model: unified, language: audio.language, file: audio.filePath },
+        NEXT_TIMEOUTS.transcribeMs
+      );
+      if (res.error) throw new Error(res.error);
+      return { text: (res.text ?? "").trim(), durationMs: Math.round(res.durationMs ?? 0), cost: 0, model };
+    }
     const spec = this.spec(model);
     if (spec.nemotron) spec.language = nemotronLanguagePrompt(audio.language);
     const res = await this.request({ ...spec, file: audio.filePath });
@@ -190,6 +226,7 @@ export class FluidAudioProvider implements STTProvider {
 
   /** Stops the worker after a run, including one stuck on a request that timed out. */
   dispose(): void {
+    this.nextWorker.dispose();
     const worker = this.worker;
     if (!worker) return;
     for (const resolvePending of this.pending.values()) resolvePending({ error: "FluidAudio worker stopped" });
