@@ -180,11 +180,20 @@ export async function runBenchmark(
     const left = (remaining.get(itemKey) ?? 1) - 1;
     remaining.set(itemKey, left);
     if (left > 0) return;
-    if (prepared.has(itemKey)) {
+    if (prepared.has(itemKey) && item.provider.release) {
+      // A release must not hold up the run, e.g. behind a request that timed out in the provider.
+      let timer: NodeJS.Timeout | undefined;
       try {
-        await item.provider.release?.(item.model);
+        await Promise.race([
+          Promise.resolve(item.provider.release(item.model)),
+          new Promise<never>((_, reject) => {
+            timer = setTimeout(() => reject(new Error("Timeout")), config.timeoutSeconds * 1000);
+          }),
+        ]);
       } catch (error) {
         console.warn(`Could not release ${item.provider.id}/${item.model}: ${(error as Error).message}`);
+      } finally {
+        clearTimeout(timer);
       }
     }
     finished.get(itemKey)?.settle();

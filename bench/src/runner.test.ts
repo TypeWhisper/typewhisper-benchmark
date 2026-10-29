@@ -218,4 +218,34 @@ describe("runBenchmark", () => {
     expect(calls.indexOf("prepare b")).toBeGreaterThan(calls.indexOf("release a"));
     expect(calls.filter((call) => call === "transcribe b")).toHaveLength(3);
   });
+
+  it("does not wait forever on a release that never answers", async () => {
+    const provider: STTProvider = {
+      id: "mock-stuck-release",
+      name: "Mock Stuck Release",
+      type: "local",
+      models: ["a"],
+      async prepare() {},
+      release() {
+        return new Promise<void>(() => {});
+      },
+      async transcribe(_audio, model) {
+        return { text: "The quick brown fox jumps over the lazy dog", durationMs: 1, model };
+      },
+      async isAvailable() {
+        return true;
+      },
+      supportsLanguage() {
+        return true;
+      },
+    };
+
+    const summary = await runBenchmark({
+      suites: [suiteWith(1)],
+      providers: [provider],
+      config: await configWith(1),
+      version: "t",
+    });
+    expect(summary.rankings[0].errorCount).toBe(0);
+  });
 });

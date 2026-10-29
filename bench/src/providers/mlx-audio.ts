@@ -174,6 +174,9 @@ export function nemotronTranscribePrompt(language: string): string {
   );
 }
 
+// How long releasing a model may take before the worker is stopped instead.
+const RELEASE_TIMEOUT_MS = 30_000;
+
 /** generate() arguments for one clip; the worker adds temperature 0. */
 export function generateOptions(model: string, language: string): Record<string, string | number> {
   const entry = MLX_MODELS[model];
@@ -252,12 +255,22 @@ export class MlxAudioProvider implements STTProvider {
     };
   }
 
-  /** Drops the model from the worker after its last clip, so the next model has the memory. */
+  /**
+   * Drops the model from the worker after its last clip, so the next model has the memory. A worker
+   * still stuck in a timed-out generate() cannot answer, so after a short wait it is stopped, which
+   * frees the memory as well.
+   */
   async release(model: string): Promise<void> {
     const entry = MLX_MODELS[model];
     if (!entry || !this.worker) return;
-    const res = await this.request({ unload: "1", repo: entry.repo, revision: entry.revision });
-    if (res.error) throw new Error(String(res.error));
+    let timer: NodeJS.Timeout | undefined;
+    const answered = await Promise.race([
+      this.request({ unload: "1", repo: entry.repo, revision: entry.revision }).then(() => true),
+      new Promise<boolean>((resolveLate) => {
+        timer = setTimeout(() => resolveLate(false), RELEASE_TIMEOUT_MS);
+      }),
+    ]).finally(() => clearTimeout(timer));
+    if (!answered) this.dispose();
   }
 
   /** Stops the worker, so requests that timed out in the runner cannot keep the process alive. */
