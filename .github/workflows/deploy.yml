@@ -3,7 +3,8 @@ name: Deploy Visualizer to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["visualizer/**"]
+    # The data build also reads the suite references in bench/tests.
+    paths: ["visualizer/**", "bench/tests/**"]
   workflow_dispatch:
 
 permissions:
