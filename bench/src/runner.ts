@@ -140,15 +140,34 @@ export async function runBenchmark(
   // so first-use setup does not count against the per-request timeout. A failed preparation is
   // reported and the model's requests then fail individually, instead of aborting the whole run.
   const prepared = new Map<string, Promise<void>>();
-  const modelKey = (item: WorkItem) => `${item.provider.id}\u0000${item.model}`;
-  function ensurePrepared(item: WorkItem): Promise<void> {
-    const key = modelKey(item);
-    let ready = prepared.get(key);
+  const key = (provider: STTProvider, model: string) => `${provider.id}\u0000${model}`;
+  const modelKey = (item: WorkItem) => key(item.provider, item.model);
+
+  // Settles once a model's last item is done and the model is released.
+  const finished = new Map<string, { done: Promise<void>; settle: () => void }>();
+  for (const provider of providers) {
+    for (const model of provider.models) {
+      let settle!: () => void;
+      const done = new Promise<void>((resolveDone) => (settle = resolveDone));
+      finished.set(key(provider, model), { done, settle });
+    }
+  }
+
+  async function ensurePrepared(item: WorkItem): Promise<void> {
+    let ready = prepared.get(modelKey(item));
     if (!ready) {
-      ready = (item.provider.prepare?.(item.model) ?? Promise.resolve()).catch((error) => {
+      ready = (async () => {
+        // A local model loads only after the provider's earlier models are done and released, even
+        // when several runner workers reach the model boundary at once.
+        if (item.provider.type !== "cloud") {
+          const earlier = item.provider.models.slice(0, item.provider.models.indexOf(item.model));
+          await Promise.all(earlier.map((model) => finished.get(key(item.provider, model))?.done));
+        }
+        await item.provider.prepare?.(item.model);
+      })().catch((error) => {
         console.warn(`Could not prepare ${item.provider.id}/${item.model}: ${(error as Error).message}`);
       });
-      prepared.set(key, ready);
+      prepared.set(modelKey(item), ready);
     }
     return ready;
   }
@@ -157,16 +176,18 @@ export async function runBenchmark(
   const remaining = new Map<string, number>();
   for (const item of workQueue) remaining.set(modelKey(item), (remaining.get(modelKey(item)) ?? 0) + 1);
   async function finishItem(item: WorkItem): Promise<void> {
-    const key = modelKey(item);
-    const left = (remaining.get(key) ?? 1) - 1;
-    remaining.set(key, left);
-    if (left === 0 && prepared.has(key)) {
+    const itemKey = modelKey(item);
+    const left = (remaining.get(itemKey) ?? 1) - 1;
+    remaining.set(itemKey, left);
+    if (left > 0) return;
+    if (prepared.has(itemKey)) {
       try {
         await item.provider.release?.(item.model);
       } catch (error) {
         console.warn(`Could not release ${item.provider.id}/${item.model}: ${(error as Error).message}`);
       }
     }
+    finished.get(itemKey)?.settle();
   }
 
   // Local and system providers take one request at a time, so the timeout starts when the provider

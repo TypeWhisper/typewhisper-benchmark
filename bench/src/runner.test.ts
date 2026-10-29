@@ -184,4 +184,38 @@ describe("runBenchmark", () => {
     expect(maxInFlight).toBe(1);
     expect(summary.rankings[0].errorCount).toBe(0);
   });
+
+  it("releases a local model before preparing the next, also with several runner workers", async () => {
+    const calls: string[] = [];
+    const provider: STTProvider = {
+      id: "mock-boundary",
+      name: "Mock Boundary",
+      type: "local",
+      models: ["a", "b"],
+      async prepare(model) {
+        calls.push(`prepare ${model}`);
+      },
+      async release(model) {
+        await new Promise((r) => setTimeout(r, 50));
+        calls.push(`release ${model}`);
+      },
+      async transcribe(_audio, model) {
+        await new Promise((r) => setTimeout(r, 100));
+        calls.push(`transcribe ${model}`);
+        return { text: "The quick brown fox jumps over the lazy dog", durationMs: 100, model };
+      },
+      async isAvailable() {
+        return true;
+      },
+      supportsLanguage() {
+        return true;
+      },
+    };
+
+    await runBenchmark({ suites: [suiteWith(3)], providers: [provider], config: await configWith(3), version: "t" });
+
+    expect(calls.indexOf("release a")).toBeGreaterThan(calls.lastIndexOf("transcribe a"));
+    expect(calls.indexOf("prepare b")).toBeGreaterThan(calls.indexOf("release a"));
+    expect(calls.filter((call) => call === "transcribe b")).toHaveLength(3);
+  });
 });
