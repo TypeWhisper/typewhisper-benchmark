@@ -70,5 +70,6 @@ describe("MlxAudioProvider", () => {
     expect(stripSpeakerLabels("Speaker 0:The quick brown fox.")).toBe("The quick brown fox.");
     expect(stripSpeakerLabels("Speaker 0: Hello. Speaker 1:Hi there.")).toBe("Hello. Hi there.");
     expect(stripSpeakerLabels("No labels here.")).toBe("No labels here.");
+    expect(stripSpeakerLabels("Speaker 0:The quick brown fox.Speaker 1:Hi there.")).toBe("The quick brown fox. Hi there.");
   });
 });

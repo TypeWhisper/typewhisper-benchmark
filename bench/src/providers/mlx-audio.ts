@@ -27,9 +27,12 @@ interface MlxModel {
   languages: string[];
 }
 
-/** The transcript without "Speaker <n>:" labels. */
+/**
+ * The transcript without "Speaker <n>:" labels. mlx-audio joins VibeVoice's streaming chunks without
+ * a separator, so a label can follow text directly ("fox.Speaker 1:Hi").
+ */
 export function stripSpeakerLabels(text: string): string {
-  return text.replace(/(^|\s)Speaker \d+:\s*/g, "$1").replace(/\s+/g, " ").trim();
+  return text.replace(/Speaker \d+:\s*/g, " ").replace(/\s+/g, " ").trim();
 }
 
 // Granite Speech's documented instruction for punctuated, truecased transcripts.
