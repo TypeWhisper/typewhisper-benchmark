@@ -325,7 +325,7 @@ const ENTRIES: Record<string, Entry> = {
     params: "0.8B",
     size: "1.98 GB",
     quant: "F16",
-    license: "Apache 2.0",
+    license: "Apache 2.0 per FunAudioLLM's model card; the GGUF lists the FunASR Model License v1.1",
     runtime: CRISPASR_CANDIDATE_RUNTIME,
     languages: "31 languages",
     trainedFor: EN_DE_RU,
