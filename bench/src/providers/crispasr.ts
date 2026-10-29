@@ -12,13 +12,26 @@ const DEFAULT_MODELS_BASE_PATH = fileURLToPath(new URL("../../../models/crispasr
 const WARMUP_CLIP = fileURLToPath(new URL("../../audio/samples-en/clean-01.wav", import.meta.url));
 
 export const RUNTIME_RELATIVE_PATH = "runtime/crispasr-macos/crispasr";
+/** The newer CrispASR release that runs the candidates (download-crispasr-candidates.sh). */
+export const CANDIDATE_RUNTIME_RELATIVE_PATH = "runtime-0.8.47/crispasr-macos/crispasr";
 export const VAD_FILE = "ggml-silero-v6.2.0.bin";
 
 interface CrispAsrModel {
   backend: string;
   file: string;
   languages: string[];
+  /**
+   * A candidate no TypeWhisper plugin runs: CrispASR 0.8.47 with its defaults, no VAD pipeline and
+   * no padding, and the suite language ("auto" on the auto-detect suite) with every request.
+   */
+  candidate?: boolean;
 }
+
+// Languages for multilingual candidates: all suite languages plus auto-detect.
+const ALL_SUITE_LANGUAGES = ["en", "de", "ru", "fr", "es", "it", "pt", "auto"];
+// English-only candidates also run on the German and Russian suites, like the AuroraASR results,
+// to show how they behave there; they skip auto-detect.
+const ENGLISH_PLUS_DOCUMENTED = ["en", "de", "ru"];
 
 // Cohere Transcribe takes no auto-detect; TypeWhisper's plugin lists these 14 languages.
 const COHERE_LANGUAGES = ["en", "fr", "de", "es", "it", "pt", "nl", "pl", "el", "ar", "ja", "zh", "vi", "ko"];
@@ -27,6 +40,52 @@ const COHERE_LANGUAGES = ["en", "fr", "de", "es", "it", "pt", "nl", "pl", "el", 
 export const CRISPASR_MODELS: Record<string, CrispAsrModel> = {
   "cohere-transcribe-q5_0": { backend: "cohere", file: "cohere-transcribe-q5_0.gguf", languages: COHERE_LANGUAGES },
   "cohere-transcribe-q8_0": { backend: "cohere", file: "cohere-transcribe-q8_0.gguf", languages: COHERE_LANGUAGES },
+  // Candidates, as GGUF conversions by CrispASR's author (cstr/*-GGUF), at pinned revisions.
+  // Hojo-ASR-Multi-V1 (Apache 2.0): Qwen3-Omni audio tower + Qwen3-4B; de, fr, it, pt, es, ru and more.
+  "hojo-asr-multi-v1-f16": {
+    backend: "hojo-asr",
+    file: "candidates/hojo-asr-multi-v1-f16.gguf",
+    languages: ALL_SUITE_LANGUAGES,
+    candidate: true,
+  },
+  // Fun-ASR-MLT-Nano-2512 (FunASR Model License v1.1): 31 languages incl. de and ru.
+  "fun-asr-mlt-nano-f16": {
+    backend: "fun-asr-mlt-nano",
+    file: "candidates/funasr-mlt-nano-2512-f16.gguf",
+    languages: ALL_SUITE_LANGUAGES,
+    candidate: true,
+  },
+  // NVIDIA Canary-Qwen 2.5B (CC BY 4.0): English only.
+  "canary-qwen-2.5b-q8_0": {
+    backend: "canary-qwen",
+    file: "candidates/canary-qwen-2.5b-q8_0.gguf",
+    languages: ENGLISH_PLUS_DOCUMENTED,
+    candidate: true,
+  },
+  // Google Gemma 4 E4B (Apache 2.0), a general model with audio input; CrispASR runs E4B on its
+  // gemma4-e2b backend.
+  "gemma4-e4b-it-q8_0": {
+    backend: "gemma4-e2b",
+    file: "candidates/gemma4-e4b-it-q8_0.gguf",
+    languages: ALL_SUITE_LANGUAGES,
+    candidate: true,
+  },
+  // Mistral's offline Voxtral Mini 3B (Apache 2.0): en, es, fr, pt, hi, de, nl, it. mlx-audio's
+  // port needs PyTorch for its processor, so it runs here.
+  "voxtral-mini-3b-2507-q8_0": {
+    backend: "voxtral",
+    file: "candidates/voxtral-mini-3b-2507-q8_0.gguf",
+    languages: ["en", "de", "fr", "es", "it", "pt", "auto"],
+    candidate: true,
+  },
+  // moondream Parakeet Redux (CC BY 4.0): Parakeet TDT 0.6B v3 with a ternary encoder, which the
+  // converter dequantizes exactly. Accuracy is the model's; speed is not its packed CPU runtime's.
+  "parakeet-redux-f16": {
+    backend: "parakeet",
+    file: "candidates/parakeet-redux-f16.gguf",
+    languages: ALL_SUITE_LANGUAGES,
+    candidate: true,
+  },
 };
 
 export function getCrispAsrModelsBasePath(env: NodeJS.ProcessEnv = process.env): string {
@@ -42,12 +101,29 @@ export function hasCrispAsrModelFiles(
   const entry = CRISPASR_MODELS[model];
   if (!entry) return false;
   const base = getCrispAsrModelsBasePath(env);
-  return [RUNTIME_RELATIVE_PATH, VAD_FILE, entry.file].every((file) => fileExists(join(base, file)));
+  const files = entry.candidate
+    ? [CANDIDATE_RUNTIME_RELATIVE_PATH, entry.file]
+    : [RUNTIME_RELATIVE_PATH, VAD_FILE, entry.file];
+  return files.every((file) => fileExists(join(base, file)));
 }
 
-/** The plugin's server arguments (CrispAsrServer.swift), on a port of our own. */
+/**
+ * The plugin's server arguments (CrispAsrServer.swift), on a port of our own. Candidates get
+ * CrispASR's defaults with Metal and the same thread count.
+ */
 export function serverArguments(model: string, port: number, base: string): string[] {
   const entry = CRISPASR_MODELS[model];
+  if (entry.candidate) {
+    return [
+      "--server",
+      "--backend", entry.backend,
+      "--model", join(base, entry.file),
+      "--host", "127.0.0.1",
+      "--port", String(port),
+      "--threads", "8",
+      "--gpu-backend", "metal",
+    ];
+  }
   return [
     "--server",
     "--backend", entry.backend,
@@ -154,8 +230,10 @@ export class CrispAsrProvider implements STTProvider {
     const running = this.servers.get(model);
     // A server killed by a signal keeps exitCode null but sets signalCode.
     if (running && running.process.exitCode == null && running.process.signalCode == null) return running;
+    const entry = CRISPASR_MODELS[model];
     if (!hasCrispAsrModelFiles(model)) {
-      throw new Error(`Model files not found for '${model}'. Run: bash bench/scripts/download-crispasr-models.sh`);
+      const script = entry?.candidate ? "download-crispasr-candidates.sh" : "download-crispasr-models.sh";
+      throw new Error(`Model files not found for '${model}'. Run: bash bench/scripts/${script}`);
     }
     const base = getCrispAsrModelsBasePath();
     let outputTail = "";
@@ -165,7 +243,8 @@ export class CrispAsrProvider implements STTProvider {
       const port = await freePort();
       const baseUrl = `http://127.0.0.1:${port}`;
       server.baseUrl = baseUrl;
-      child = spawn(join(base, RUNTIME_RELATIVE_PATH), serverArguments(model, port, base), {
+      const runtime = entry.candidate ? CANDIDATE_RUNTIME_RELATIVE_PATH : RUNTIME_RELATIVE_PATH;
+      child = spawn(join(base, runtime), serverArguments(model, port, base), {
         stdio: ["ignore", "pipe", "pipe"],
         env: { ...process.env, CRISPASR_API_KEYS: this.apiKey, CRISPASR_CACHE_DIR: join(base, "cache") },
       });
@@ -214,7 +293,8 @@ export class CrispAsrProvider implements STTProvider {
     language: string,
     signal?: AbortSignal,
   ): Promise<string> {
-    const wav = padWavToOneSecond(await readFile(filePath));
+    const raw = await readFile(filePath);
+    const wav = CRISPASR_MODELS[model]?.candidate ? raw : padWavToOneSecond(raw);
     const form = new FormData();
     form.append("file", new Blob([new Uint8Array(wav)], { type: "audio/wav" }), basename(filePath));
     form.append("model", model);
