@@ -36,6 +36,9 @@ describe("CrispAsrProvider", () => {
       "fun-asr-mlt-nano-f16",
       "canary-qwen-2.5b-q8_0",
       "gemma4-e4b-it-q8_0",
+      "mega-asr-1.7b-f16",
+      "granite-speech-4.1-2b-plus-f16",
+      "parakeet-tdt_ctc-1.1b",
       "voxtral-mini-3b-2507-q8_0",
       "parakeet-redux-f16",
     ]);

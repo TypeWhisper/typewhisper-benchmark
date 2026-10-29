@@ -70,6 +70,28 @@ export const CRISPASR_MODELS: Record<string, CrispAsrModel> = {
     languages: ALL_SUITE_LANGUAGES,
     candidate: true,
   },
+  // Mega-ASR (Apache 2.0): Qwen3-ASR 1.7B with a merged robustness LoRA for noisy and degraded speech;
+  // CrispASR runs its robust path always.
+  "mega-asr-1.7b-f16": {
+    backend: "mega-asr",
+    file: "candidates/mega-asr-1.7b-f16.gguf",
+    languages: ALL_SUITE_LANGUAGES,
+    candidate: true,
+  },
+  // IBM Granite Speech 4.1 2B Plus (Apache 2.0): 4.1 with punctuated output; en, fr, de, es, pt.
+  "granite-speech-4.1-2b-plus-f16": {
+    backend: "granite-4.1-plus",
+    file: "candidates/granite-speech-4.1-2b-plus-f16.gguf",
+    languages: ["en", "de", "fr", "es", "pt", "auto"],
+    candidate: true,
+  },
+  // NVIDIA Parakeet TDT-CTC 1.1B (CC BY 4.0): the largest English Parakeet, cased and punctuated.
+  "parakeet-tdt_ctc-1.1b": {
+    backend: "parakeet",
+    file: "candidates/parakeet-tdt_ctc-1.1b.gguf",
+    languages: ENGLISH_PLUS_DOCUMENTED,
+    candidate: true,
+  },
   // Mistral's offline Voxtral Mini 3B (Apache 2.0): en, es, fr, pt, hi, de, nl, it. mlx-audio's
   // port needs PyTorch for its processor, so it runs here.
   "voxtral-mini-3b-2507-q8_0": {
