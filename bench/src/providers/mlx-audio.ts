@@ -133,6 +133,19 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     options: { max_tokens: 1024 },
     languages: MULTILINGUAL_AUTO,
   },
+  // Probe, not a dictation setting of record: the model card's speaker-attribution instruction
+  // without speaker tags, whose "standard written form" asks for numbers as digits. It names no
+  // language. In a 66-clip check it wrote 48% of the number clips as digits (the readable-text
+  // prompt: 0%) without the empty transcripts the same clause caused inside that prompt.
+  "nemotron-3.5-transcribe-4bit-written": {
+    repo: "nativ-community/Nemotron-3.5-Transcribe-30B-A4B-EA-4bit",
+    revision: "c47153ca2ce4024d43e216b81e6db4f67b886545",
+    options: {
+      max_tokens: 1024,
+      prompt: "Transcribe this audio with punctuation and capitalization. Write numbers in their standard written form.",
+    },
+    languages: MULTILINGUAL_AUTO,
+  },
   // Microsoft VibeVoice-ASR Streaming 1.5B (MIT): 10 languages incl. EN, DE, RU; detects the language.
   // It labels each speaker turn, which a dictation app would drop.
   "vibevoice-asr-streaming-1.5b": {

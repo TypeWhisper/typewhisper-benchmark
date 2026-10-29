@@ -25,6 +25,7 @@ describe("MlxAudioProvider", () => {
       "sophea-canary",
       "phonon-2.5",
       "nemotron-3.5-transcribe-4bit",
+      "nemotron-3.5-transcribe-4bit-written",
       "vibevoice-asr-streaming-1.5b",
     ]);
   });
