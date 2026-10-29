@@ -3,6 +3,8 @@
 # dependencies = [
 #   "cactus-needle==3.2.8",
 #   "huggingface_hub",
+#   "numpy",
+#   "soxr",  # Needle's WAV reader resamples 8 and 48 kHz clips with it
 # ]
 # ///
 """Persistent worker for Cactus Compute's Whistle speech model on the Needle CPU engine.

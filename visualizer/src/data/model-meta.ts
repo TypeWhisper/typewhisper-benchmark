@@ -325,7 +325,7 @@ const ENTRIES: Record<string, Entry> = {
     params: "0.8B",
     size: "1.98 GB",
     quant: "F16",
-    license: "FunASR Model License v1.1",
+    license: "Apache 2.0",
     runtime: CRISPASR_CANDIDATE_RUNTIME,
     languages: "31 languages",
     trainedFor: EN_DE_RU,
