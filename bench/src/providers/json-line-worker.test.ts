@@ -1,18 +1,24 @@
 import { describe, expect, it } from "vitest";
 import { JsonLineWorker } from "./json-line-worker.js";
 
-// A worker that answers after `delayMs` with the pid it runs in.
+// A worker that answers after `delayMs` with its pid and how many requests it has received.
 const ECHO_WORKER = `
 const rl = require("readline").createInterface({ input: process.stdin });
+let received = 0;
 console.log(JSON.stringify({ ready: true }));
 rl.on("line", (line) => {
   const req = JSON.parse(line);
-  setTimeout(() => console.log(JSON.stringify({ id: req.id, text: String(process.pid) })), req.delayMs ?? 0);
+  received += 1;
+  const text = process.pid + ":" + received;
+  setTimeout(() => console.log(JSON.stringify({ id: req.id, text })), req.delayMs ?? 0);
 });
 `;
 
-function echoWorker(): JsonLineWorker {
-  return new JsonLineWorker("echo", async () => ({ file: process.execPath, args: ["-e", ECHO_WORKER] }));
+function echoWorker(buildMs = 0): JsonLineWorker {
+  return new JsonLineWorker("echo", async () => {
+    await new Promise((r) => setTimeout(r, buildMs));
+    return { file: process.execPath, args: ["-e", ECHO_WORKER] };
+  });
 }
 
 describe("JsonLineWorker", () => {
@@ -24,7 +30,7 @@ describe("JsonLineWorker", () => {
       const [a, b] = await Promise.all([first, second]);
       expect(a.error).toBeUndefined();
       expect(b.error).toBeUndefined();
-      expect(a.text).toBe(b.text);
+      expect(a.text?.split(":")[0]).toBe(b.text?.split(":")[0]);
     } finally {
       worker.dispose();
     }
@@ -39,10 +45,24 @@ describe("JsonLineWorker", () => {
       expect(late.error).toMatch(/did not answer/);
       const next = await worker.request({ delayMs: 0 }, 2_000);
       expect(next.error).toBeUndefined();
-      expect(next.text).not.toBe(first.text);
+      expect(next.text?.split(":")[0]).not.toBe(first.text?.split(":")[0]);
       await new Promise((r) => setTimeout(r, 100));
       // The stopped worker's exit listener is gone; only the running one's remains.
       expect(process.listenerCount("exit")).toBeLessThanOrEqual(before + 1);
+    } finally {
+      worker.dispose();
+    }
+  });
+
+  it("does not run a request that expired while the worker was still building", async () => {
+    const worker = echoWorker(300);
+    try {
+      const expired = await worker.request({ delayMs: 0 }, 100);
+      expect(expired.error).toMatch(/did not answer/);
+      const next = await worker.request({ delayMs: 0 }, 5_000);
+      expect(next.error).toBeUndefined();
+      // The fresh worker received only this request, not the expired one.
+      expect(next.text?.split(":")[1]).toBe("1");
     } finally {
       worker.dispose();
     }

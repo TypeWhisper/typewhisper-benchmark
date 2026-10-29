@@ -22,6 +22,8 @@ export class JsonLineWorker {
   private pending = new Map<number, (res: WorkerResponse) => void>();
   private nextId = 1;
   private queue: Promise<unknown> = Promise.resolve();
+  /** Bumped by dispose(), so a start still building or spawning cannot revive a stopped worker. */
+  private generation = 0;
 
   constructor(
     private label: string,
@@ -37,36 +39,41 @@ export class JsonLineWorker {
 
   private async requestNow(payload: Record<string, unknown>, timeoutMs: number): Promise<WorkerResponse> {
     let timer: NodeJS.Timeout | undefined;
+    let expired = false;
     const deadline = new Promise<WorkerResponse>((resolveDeadline) => {
       timer = setTimeout(() => {
+        expired = true;
         resolveDeadline({ error: `${this.label} worker did not answer within ${timeoutMs / 1000} s` });
         this.dispose();
       }, timeoutMs);
     });
     try {
-      return await Promise.race([this.send(payload), deadline]);
+      return await Promise.race([this.send(payload, () => expired), deadline]);
     } finally {
       clearTimeout(timer);
     }
   }
 
-  /** Stops the worker and fails its open requests. */
+  /** Stops the worker, cancels a start in progress and fails its open requests. */
   dispose(): void {
+    this.generation += 1;
+    this.ready = undefined;
     const worker = this.worker;
     if (!worker) return;
     for (const resolvePending of this.pending.values()) resolvePending({ error: `${this.label} worker stopped` });
     this.pending.clear();
     this.worker = undefined;
-    this.ready = undefined;
     worker.kill();
   }
 
-  private async send(payload: Record<string, unknown>): Promise<WorkerResponse> {
+  private async send(payload: Record<string, unknown>, expired: () => boolean): Promise<WorkerResponse> {
     try {
       await this.start();
     } catch (error) {
       return { error: (error as Error).message };
     }
+    // A request whose deadline passed while the worker was starting is not sent at all.
+    if (expired()) return { error: `${this.label} request expired before the worker was ready` };
     const stdin = this.worker?.stdin;
     if (!stdin || stdin.destroyed) return { error: `${this.label} worker is not running` };
     const id = this.nextId++;
@@ -95,9 +102,10 @@ export class JsonLineWorker {
   private start(): Promise<void> {
     if (this.ready) return this.ready;
 
-    const ready = this.command().then(
-      ({ file, args }) =>
-        new Promise<void>((resolveReady, rejectReady) => {
+    const generation = this.generation;
+    const ready = this.command().then(({ file, args }) => {
+      if (generation !== this.generation) throw new Error(`${this.label} worker start was cancelled`);
+      return new Promise<void>((resolveReady, rejectReady) => {
           const worker = spawn(file, args, { stdio: ["pipe", "pipe", "inherit"] });
           this.worker = worker;
           const killOnExit = () => worker.kill();
@@ -133,8 +141,8 @@ export class JsonLineWorker {
           });
 
           worker.on("exit", (code) => fail(`${this.label} worker exited with code ${code}`));
-        })
-    );
+      });
+    });
     // A failed start (e.g. a build error) must not stick: the next request tries again.
     ready.catch(() => {
       if (this.ready === ready) this.ready = undefined;
