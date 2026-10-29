@@ -13,23 +13,34 @@ interface NeedleModel {
   repo: string;
   /** Pinned Hugging Face revision, so results stay reproducible */
   revision: string;
+  /** Languages the model accepts as a hint */
+  hints: string[];
+  /** Suite languages it runs on */
   languages: string[];
 }
 
 // Cactus Compute's Whistle (Apache 2.0, released 2026-09-30): a 16.9 MB model for English, German,
-// French, Spanish, Italian, Dutch and Polish on Needle's CPU engine. It gets the suite language,
-// or none on the auto-detect suite. Russian is not among its languages and runs for the record.
+// French, Spanish, Italian, Dutch and Polish on Needle's CPU engine. It gets the suite language when
+// it knows it and detects the language otherwise: on the auto-detect suite, and on the Russian
+// suites, which run for the record (Whistle rejects "ru" as a language hint).
 export const NEEDLE_MODELS: Record<string, NeedleModel> = {
   whistle: {
     repo: "Cactus-Compute/whistle",
     revision: "741118687e1f008f06d1351a402a731274789790",
+    hints: ["en", "de", "fr", "es", "it", "nl", "pl"],
     languages: ["en", "de", "ru", "fr", "es", "it", "auto"],
   },
 };
 
+/** The language hint Needle gets for a suite language, or null to let the model detect it. */
+export function needleLanguage(model: string, language: string): string | null {
+  return NEEDLE_MODELS[model]?.hints.includes(language) ? language : null;
+}
+
 /**
  * Whistle in a long-lived Python worker (started via uv) on Needle's CPU engine. Timing is measured
- * inside the worker around the transcribe call and excludes Python startup, download and loading.
+ * inside the worker around the transcribe call and excludes Python startup, download, loading and
+ * decoding the WAV file.
  */
 export class NeedleProvider implements STTProvider {
   id = "needle";
@@ -70,7 +81,7 @@ export class NeedleProvider implements STTProvider {
         repo: entry.repo,
         revision: entry.revision,
         file: audio.filePath,
-        language: audio.language === "auto" ? null : audio.language,
+        language: needleLanguage(model, audio.language),
       },
       TIMEOUTS.transcribeMs
     );

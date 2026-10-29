@@ -11,7 +11,7 @@ Reads one JSON request per line from stdin and answers with one JSON line on std
   -> {"id": 1, "load": "1", "repo": "Cactus-Compute/whistle", "revision": "<sha>"}
   -> {"id": 2, "repo": "...", "revision": "<sha>", "file": "/abs/clip.wav", "language": "de"}
   <- {"id": 2, "text": "...", "durationMs": 12.3}
-The weights download at the pinned revision on first use. Needle's anonymous usage counts are
+The weights download at the pinned revision on first use. Timing excludes decoding the WAV file. Needle's anonymous usage counts are
 switched off, so nothing leaves the machine after the download.
 """
 import json
@@ -23,6 +23,7 @@ os.environ["NEEDLE_TELEMETRY"] = "0"
 
 import needle  # noqa: E402
 from huggingface_hub import hf_hub_download  # noqa: E402
+from needle.agent.whistle import _read_wav  # noqa: E402  (the engine's own WAV reader)
 
 models = {}
 
@@ -39,8 +40,10 @@ def handle(req):
     model = model_for(req["repo"], req["revision"])
     if req.get("load"):
         return {"loaded": True}
+    # Decode the WAV first, so the timing covers transcription only, like the other workers.
+    samples = _read_wav(req["file"])
     start = time.perf_counter()
-    out = model.transcribe(req["file"], language=req.get("language") or None)
+    out = model.transcribe(samples, language=req.get("language") or None)
     return {"text": out.get("text", ""), "durationMs": (time.perf_counter() - start) * 1000}
 
 

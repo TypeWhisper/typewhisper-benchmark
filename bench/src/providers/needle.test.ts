@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { NEEDLE_MODELS, NeedleProvider } from "./needle.js";
+import { NEEDLE_MODELS, NeedleProvider, needleLanguage } from "./needle.js";
 
 describe("NeedleProvider", () => {
   it("has correct provider metadata", () => {
@@ -18,5 +18,11 @@ describe("NeedleProvider", () => {
     expect(provider.supportsLanguage("whistle", "de")).toBe(true);
     expect(provider.supportsLanguage("whistle", "auto")).toBe(true);
     expect(provider.supportsLanguage("unknown", "de")).toBe(false);
+  });
+
+  it("hints only languages Whistle knows and lets it detect the rest", () => {
+    expect(needleLanguage("whistle", "de")).toBe("de");
+    expect(needleLanguage("whistle", "ru")).toBeNull();
+    expect(needleLanguage("whistle", "auto")).toBeNull();
   });
 });
