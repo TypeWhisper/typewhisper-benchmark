@@ -49,6 +49,8 @@ export interface STTProvider {
   supportsLanguage(model: string, language: string): boolean;
   /** Optional one-time setup (download, load) that runs before timed requests */
   prepare?(model: string): Promise<void>;
+  /** Optional release of one model after its last clip, so the next model does not share memory with it */
+  release?(model: string): void | Promise<void>;
   /** Optional cleanup after the run, e.g. stopping a worker with requests that timed out */
   dispose?(): void;
 }

@@ -12,6 +12,9 @@ import { BarkProvider } from "./bark.js";
 import { CrispAsrProvider } from "./crispasr.js";
 import { KyutaiSttProvider } from "./kyutai-stt.js";
 import { MlxVlmProvider } from "./mlx-vlm.js";
+import { SpeechAnalyzerProvider } from "./speech-analyzer.js";
+import { AudioCppProvider } from "./audiocpp.js";
+import { NeedleProvider } from "./needle.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -28,6 +31,9 @@ const ALL_PROVIDERS: STTProvider[] = [
   new CrispAsrProvider(),
   new KyutaiSttProvider(),
   new MlxVlmProvider(),
+  new SpeechAnalyzerProvider(),
+  new AudioCppProvider(),
+  new NeedleProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {

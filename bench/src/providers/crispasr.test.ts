@@ -4,6 +4,7 @@ import {
   hasCrispAsrModelFiles,
   padWavToOneSecond,
   serverArguments,
+  VAD_FILE,
 } from "./crispasr.js";
 
 function wav(samples: number, sampleRate = 16_000): Buffer {
@@ -28,7 +29,36 @@ describe("CrispAsrProvider", () => {
     const provider = new CrispAsrProvider();
     expect(provider.id).toBe("crispasr");
     expect(provider.type).toBe("local");
-    expect(provider.models).toEqual(["cohere-transcribe-q5_0", "cohere-transcribe-q8_0"]);
+    expect(provider.models).toEqual([
+      "cohere-transcribe-q5_0",
+      "cohere-transcribe-q8_0",
+      "hojo-asr-multi-v1-f16",
+      "fun-asr-mlt-nano-f16",
+      "canary-qwen-2.5b-q8_0",
+      "gemma4-e4b-it-q8_0",
+      "mega-asr-1.7b-f16",
+      "granite-speech-4.1-2b-plus-f16",
+      "parakeet-tdt_ctc-1.1b",
+      "voxtral-mini-3b-2507-q8_0",
+      "parakeet-redux-f16",
+    ]);
+  });
+
+  it("starts candidates on the newer runtime without the plugin's VAD pipeline", () => {
+    const args = serverArguments("hojo-asr-multi-v1-f16", 4321, "/m");
+    expect(args).not.toContain("--require-vad");
+    expect(args).not.toContain("--vad");
+    expect(args).toContain("/m/candidates/hojo-asr-multi-v1-f16.gguf");
+    expect(args.slice(args.indexOf("--backend"), args.indexOf("--backend") + 2)).toEqual(["--backend", "hojo-asr"]);
+    expect(hasCrispAsrModelFiles("parakeet-redux-f16", {}, (p) => !p.endsWith(VAD_FILE))).toBe(true);
+    expect(hasCrispAsrModelFiles("parakeet-redux-f16", {}, (p) => !p.includes("runtime-0.8.47"))).toBe(false);
+  });
+
+  it("runs English-only candidates on English and, for the record, German and Russian", () => {
+    const provider = new CrispAsrProvider();
+    expect(provider.supportsLanguage("canary-qwen-2.5b-q8_0", "de")).toBe(true);
+    expect(provider.supportsLanguage("canary-qwen-2.5b-q8_0", "auto")).toBe(false);
+    expect(provider.supportsLanguage("parakeet-redux-f16", "auto")).toBe(true);
   });
 
   it("runs Cohere only on explicitly selected languages it supports", () => {

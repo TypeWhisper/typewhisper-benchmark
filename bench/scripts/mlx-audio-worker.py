@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#   "mlx-audio==0.6.1",
+#   "mlx-audio[stt]==0.6.3",  # 0.6.3: Phonon-2.5, Nemotron 3.5 Transcribe; [stt] unpacks Phonon archives
 #   "jinja2==3.1.6",  # chat templates of the ibm-granite repos
 # ]
 # ///
@@ -11,9 +11,10 @@ Runs the MLX models that TypeWhisper's Qwen3, Voxtral, Granite and Canary plugin
 candidates. Reads one JSON request per line from stdin and answers with one JSON line on stdout:
   -> {"id": 1, "repo": "mlx-community/...", "revision": "<sha>", "file": "/abs/path.wav", "options": {"language": "Russian"}}
   <- {"id": 1, "text": "...", "durationMs": 12.3}
-A request with "load" set only downloads and loads the model.
+A request with "load" set only downloads and loads the model; one with "unload" drops it again.
 Models download from Hugging Face on first use and stay loaded for the process lifetime.
 """
+import gc
 import json
 import sys
 import time
@@ -30,7 +31,21 @@ def model_for(repo, revision):
     return cache[key]
 
 
+def unload(repo, revision):
+    cache.pop((repo, revision), None)
+    gc.collect()
+    try:
+        import mlx.core as mx
+
+        mx.clear_cache()
+    except Exception:  # older MLX: the memory is reused by the next model anyway
+        pass
+
+
 def handle(req):
+    if req.get("unload"):
+        unload(req["repo"], req.get("revision"))
+        return {"unloaded": True}
     model = model_for(req["repo"], req.get("revision"))
     if req.get("load"):
         return {"loaded": True}
