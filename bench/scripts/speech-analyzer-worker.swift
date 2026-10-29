@@ -1,9 +1,10 @@
 // Persistent worker for Apple's SpeechAnalyzer with SpeechTranscriber (macOS 26 or later).
-// It transcribes a recording the way TypeWhisper's Apple Speech plugin does in
-// `SpeechAnalyzerPlugin.transcribe(audio:language:translate:prompt:)`: a fresh
-// `SpeechTranscriber(locale:preset: .transcription)` and `SpeechAnalyzer` per recording, an empty
-// analysis context, the 16 kHz mono samples converted to the analyzer's best format and fed as one
-// buffer, and the final results joined.
+// It transcribes a recording the way TypeWhisper's Apple Speech plugin does after a dictation with
+// live preview off, in `SpeechAnalyzerPlugin.transcribe(audio:language:translate:prompt:onProgress:)`
+// (the plugin supports streaming, so the app calls this variant): a fresh `SpeechTranscriber` with
+// volatile results and a fresh `SpeechAnalyzer` per recording, an empty analysis context, the
+// 16 kHz mono samples converted to the analyzer's best format and fed as one buffer, and the final
+// results joined. Like the plugin, it keeps one locale reserved at a time.
 //
 // Protocol: one JSON request per line on stdin, one JSON line per answer on stdout.
 //   -> {"id": 1, "load": "1", "locale": "de-DE"}             installs and reserves the locale's model
@@ -31,18 +32,24 @@ func supportedLocale(_ identifier: String) async throws -> Locale {
     return locale
 }
 
-nonisolated(unsafe) var reservedLocales = Set<String>()
+nonisolated(unsafe) var reservedLocale: Locale?
 
-/** Downloads the locale's assets if needed and reserves them, like the plugin's model load. */
+/**
+ * Downloads the locale's assets if needed and reserves them, like the plugin's model load. The
+ * previous locale is released first: macOS allows only a few reserved locales.
+ */
 func prepare(_ locale: Locale) async throws {
     let transcriber = SpeechTranscriber(locale: locale, preset: .transcription)
     if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
         try await request.downloadAndInstall()
     }
-    if !reservedLocales.contains(locale.identifier) {
-        _ = try await AssetInventory.reserve(locale: locale)
-        reservedLocales.insert(locale.identifier)
+    guard reservedLocale?.identifier != locale.identifier else { return }
+    if let previous = reservedLocale {
+        await AssetInventory.release(reservedLocale: previous)
+        reservedLocale = nil
     }
+    _ = try await AssetInventory.reserve(locale: locale)
+    reservedLocale = locale
 }
 
 /** Reads an audio file as 16 kHz mono Float32 samples, the format TypeWhisper hands its plugins. */
@@ -116,7 +123,12 @@ func prepareBuffer(_ samples: [Float], for modules: [SpeechTranscriber]) async -
 }
 
 func transcribe(_ samples: [Float], locale: Locale) async throws -> String {
-    let transcriber = SpeechTranscriber(locale: locale, preset: .transcription)
+    let transcriber = SpeechTranscriber(
+        locale: locale,
+        transcriptionOptions: [],
+        reportingOptions: [.volatileResults],
+        attributeOptions: []
+    )
     let analyzer = SpeechAnalyzer(modules: [transcriber])
     try await analyzer.setContext(AnalysisContext())
 
