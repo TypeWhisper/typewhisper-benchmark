@@ -114,6 +114,8 @@ export class JsonLineWorker {
             // Settle this start even if the worker was already replaced, so no request waits on it.
             rejectReady(new Error(error));
             process.removeListener("exit", killOnExit);
+            // A stdin error does not mean the process ended; never leave it running unwatched.
+            worker.kill();
             // Several events can report the same dead worker; only the current one resets state.
             if (this.worker !== worker) return;
             for (const resolvePending of this.pending.values()) resolvePending({ error });

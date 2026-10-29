@@ -151,6 +151,9 @@ func transcribe(_ samples: [Float], locale: Locale) async throws -> String {
 }
 
 func handle(_ request: [String: Any]) async throws -> [String: Any] {
+    guard SpeechTranscriber.isAvailable else {
+        throw WorkerError(description: "SpeechTranscriber is not available on this Mac")
+    }
     guard let localeId = request["locale"] as? String else { throw WorkerError(description: "Missing locale") }
     let locale = try await supportedLocale(localeId)
     try await prepare(locale)

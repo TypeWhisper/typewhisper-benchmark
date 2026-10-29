@@ -203,7 +203,9 @@ export class AudioCppProvider implements STTProvider {
       const deadline = Date.now() + 300_000;
       for (;;) {
         if (spawnError) throw new Error(`audiocpp_server could not start: ${spawnError.message}`);
-        if (child.exitCode != null) throw new Error(`audiocpp_server exited: ${server.output}`);
+        if (child.exitCode != null || child.signalCode != null) {
+          throw new Error(`audiocpp_server exited (${child.exitCode ?? child.signalCode}): ${server.output}`);
+        }
         if (Date.now() > deadline) throw new Error(`audiocpp_server did not start: ${server.output}`);
         const healthy = await fetch(`http://127.0.0.1:${server.port}/health`, { signal: AbortSignal.timeout(2_000) }).then(
           (r) => r.ok,
