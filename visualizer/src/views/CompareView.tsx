@@ -482,6 +482,13 @@ export function CompareView({ summary }: { summary: Summary }) {
                 v: row.values[column.id].v as number,
                 color: colors[row.id],
                 muted: row.values[column.id].outside,
+                // Same coverage note as the leaderboard chart.
+                partial: row.values[column.id].missing.length > 0,
+                note: row.values[column.id].outside
+                  ? "not trained for this language"
+                  : row.values[column.id].missing.length
+                    ? `not run on ${listJoin(row.values[column.id].missing.map((suite) => summary.suites[suite]?.name ?? suite))}`
+                    : undefined,
               }));
             return (
               <figure key={column.id} className="min-w-0">
