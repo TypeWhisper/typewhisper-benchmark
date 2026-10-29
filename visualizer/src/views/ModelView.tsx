@@ -172,7 +172,7 @@ export function ModelView({ summary }: { summary: Summary }) {
                 <li
                   key={column.id}
                   className="border-b border-hairline py-4 pr-4"
-                  title={value ? valueTitle(summary, column, value) : column.help}
+                  title={value ? `${column.help}\n${valueTitle(summary, column, value)}` : column.help}
                 >
                   <p className="meta uppercase">{column.label}</p>
                   <p className={clsx("mt-1 text-[1.625rem] leading-none font-semibold tracking-[-0.02em]", value?.outside && "text-muted")}>
@@ -201,7 +201,8 @@ export function ModelView({ summary }: { summary: Summary }) {
             })}
           </ul>
           <p className="meta mt-3">
-            Ranks count the models with results on every suite of that column; * marks a value from fewer suites. WER uses the {tier === "all" ? "core and diagnostic" : tier} suites
+            Accuracy ranks count only the models with results on every suite of that column; * marks a value from
+            fewer suites. Speed ranks (ms/clip, RTF) use the suites each model ran. WER uses the {tier === "all" ? "core and diagnostic" : tier} suites
             {acc ? ", accented speech included" : ", accented speech excluded"}.
           </p>
 

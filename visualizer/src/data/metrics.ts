@@ -314,12 +314,12 @@ export function columnValue(summary: Summary, modelId: string, column: Column, m
   const cells = summary.cells[modelId] ?? {};
   const suites = column.kind === "all" ? Object.keys(cells) : column.suites;
   const missing: string[] = [];
-  let skippedSuites = 0;
+  const skipped: string[] = [];
   if (column.kind !== "all") {
     for (const suite of suites) {
       const cell = cells[suite];
       if (cell?.ok) continue;
-      if (cell && cell.skip && cell.skip === cell.n) skippedSuites += 1;
+      if (cell && cell.skip && cell.skip === cell.n) skipped.push(suite);
       else missing.push(suite);
     }
   }
@@ -328,8 +328,9 @@ export function columnValue(summary: Summary, modelId: string, column: Column, m
   return {
     v,
     n,
-    missing: column.kind === "scoped" && v != null ? missing : [],
-    skipped: v == null && skippedSuites > 0,
+    // A value that leaves out some of the column's suites, run or skipped, is incomplete.
+    missing: column.kind === "scoped" && v != null ? [...missing, ...skipped] : [],
+    skipped: v == null && skipped.length > 0,
     outside,
   };
 }

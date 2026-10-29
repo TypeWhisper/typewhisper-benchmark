@@ -286,10 +286,7 @@ function Breakdown({ summary, rows, colors }: { summary: Summary; rows: Row[]; c
               const entries = rows.map((row) => {
                 const cells = summary.cells[row.id] ?? {};
                 const { v } = pool(cells, group.suites, "wer");
-                const missing = group.suites.filter((suite) => {
-                  const cell = cells[suite];
-                  return !cell?.ok && !(cell?.skip && cell.skip === cell.n);
-                });
+                const missing = group.suites.filter((suite) => !cells[suite]?.ok);
                 return { v, missing: v != null ? missing : [] };
               });
               const complete = entries.filter((entry) => entry.v != null && !entry.missing.length).map((entry) => entry.v as number);
