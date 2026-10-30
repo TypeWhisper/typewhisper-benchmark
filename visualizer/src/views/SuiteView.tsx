@@ -11,6 +11,8 @@ import {
   betterFirst,
   buildRows,
   categoryName,
+  chartMax,
+  chartScale,
   languageName,
   matchesModelFilters,
   median,
@@ -328,8 +330,8 @@ export function SuiteView({ summary }: { summary: Summary }) {
                 muted: row.values[chartColumn.id].outside,
               }))}
             format={(value) => formatUnit(chartUnit, value)}
-            scale={chartUnit === "ms" || chartUnit === "rtf" ? "log" : "linear"}
-            max={chartColumn.metric === "wer" || chartColumn.metric === "cer" ? undefined : 1}
+            scale={chartScale(chartUnit)}
+            max={chartMax(chartColumn.metric)}
             limit={20}
             ariaLabel={`Models ranked by ${chartColumn.label} on ${info.name}`}
           />

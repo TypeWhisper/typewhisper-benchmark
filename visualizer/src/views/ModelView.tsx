@@ -192,6 +192,8 @@ export function ModelView({ summary }: { summary: Summary }) {
                       `not ranked: ran on fewer suites`
                     ) : value?.skipped ? (
                       "not supported"
+                    ) : column.kind === "speed" ? (
+                      meta.deployment === "local" ? "not measured" : "local models only"
                     ) : (
                       "not run"
                     )}

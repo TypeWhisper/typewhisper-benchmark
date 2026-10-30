@@ -51,6 +51,24 @@ export interface Cell {
   dn?: number;
 }
 
+/** A local model's speed run on the reference Mac mini (bench/speed/speed-set.json). */
+export interface SpeedInfo {
+  /** Speed factor: audio seconds transcribed per second of processing. */
+  x: number;
+  /** Median time per clip in ms for short (3-6.5 s), medium (8-12 s) and long (12.5-20 s) clips. */
+  short?: number;
+  medium?: number;
+  long?: number;
+  clips?: number;
+  passes?: number;
+  /** Relative spread between the timed passes. */
+  spread?: number;
+  /** Date measured. */
+  at?: string;
+  /** Language hint other than English, for models without English. */
+  lang?: string;
+}
+
 export interface Summary {
   schema: number;
   version: string;
@@ -58,6 +76,8 @@ export interface Summary {
   suites: Record<string, SuiteInfo>;
   models: Record<string, ModelRun>;
   cells: Record<string, Record<string, Cell>>;
+  /** Speed runs by model id; only local models that were measured. */
+  speed?: Record<string, SpeedInfo>;
 }
 
 export const ClipStatus = { Ok: 0, Error: 1, Skipped: 2 } as const;

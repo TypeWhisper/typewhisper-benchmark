@@ -10,6 +10,8 @@ import {
   buildColumns,
   buildRows,
   categoryName,
+  chartMax,
+  chartScale,
   defaultTranscriptSuite,
   langLabel,
   languageName,
@@ -504,8 +506,8 @@ export function CompareView({ summary }: { summary: Summary }) {
                     data={data}
                     ranked={false}
                     format={(value) => formatUnit(unit, value)}
-                    scale={unit === "ms" ? "log" : "linear"}
-                    max={column.metric === "wer" ? undefined : 1}
+                    scale={chartScale(unit)}
+                    max={chartMax(column.metric)}
                     ariaLabel={column.label}
                   />
                 ) : (

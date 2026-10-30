@@ -10,6 +10,8 @@ export function formatUnit(unit: Unit, value: number | null | undefined): string
       return value < 10 ? value.toFixed(1) : Math.round(value).toLocaleString("en-US");
     case "rtf":
       return value < 0.01 ? value.toFixed(4) : value < 1 ? value.toFixed(3) : value.toFixed(2);
+    case "x":
+      return `${value.toFixed(value < 10 ? 1 : 0)}×`;
     case "usd":
       return `$${value < 1 ? value.toFixed(3) : value.toFixed(2)}`;
   }
