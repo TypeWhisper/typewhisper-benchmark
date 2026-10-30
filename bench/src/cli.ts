@@ -17,6 +17,8 @@ import {
   speedLanguage,
   speedLockHolder,
   speedResultsDir,
+  PUBLISHED_PASSES,
+  SPEED_OTHER_RESULTS_DIR,
   writeSpeedReport,
   REFERENCE_MACHINE,
 } from "./speed.js";
@@ -278,9 +280,13 @@ program
         console.log(chalk.red(`This is ${machineLabel}; published speeds come from ${reference}. Pass --allow-other-machine to measure anyway.`));
         process.exit(1);
       }
-      console.log(chalk.yellow(`Not the reference machine (${reference}); results go to ${speedResultsDir(machine)}, not the visualizer.`));
+      console.log(chalk.yellow(`Not the reference machine (${reference}); results go to ${SPEED_OTHER_RESULTS_DIR}, not the visualizer.`));
     }
-    const resultsDir = speedResultsDir(machine);
+    const passes = Math.max(1, parseInt(opts.passes) || PUBLISHED_PASSES);
+    if (passes !== PUBLISHED_PASSES) {
+      console.log(chalk.yellow(`Published speeds use ${PUBLISHED_PASSES} passes; results go to ${SPEED_OTHER_RESULTS_DIR}, not the visualizer.`));
+    }
+    const resultsDir = speedResultsDir(machine, passes);
     if (machine.lowPowerMode) console.log(chalk.yellow("Low Power Mode is on; speeds will be lower."));
 
     let providers = (await getAvailableProviders()).filter((provider) => provider.type !== "cloud");
@@ -305,7 +311,6 @@ program
     }
 
     const set = await loadSpeedSet();
-    const passes = Math.max(1, parseInt(opts.passes) || 3);
     const plan: Array<{ provider: (typeof providers)[number]; model: string }> = [];
     for (const provider of providers) {
       if (provider.speedUnsupported) {

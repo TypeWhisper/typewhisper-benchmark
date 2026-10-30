@@ -216,6 +216,8 @@ describe("isReferenceMachine", () => {
     const laptop = { model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 24 };
     expect(speedResultsDir({ model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48 })).toBe(SPEED_RESULTS_DIR);
     expect(speedResultsDir(laptop)).toBe(SPEED_OTHER_RESULTS_DIR);
+    // A quick one-pass check on the reference machine does not replace a published result.
+    expect(speedResultsDir({ model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48 }, 1)).toBe(SPEED_OTHER_RESULTS_DIR);
     expect(sameMachine(laptop, { ...laptop })).toBe(true);
     expect(sameMachine(laptop, { ...laptop, chip: "Apple M5 Max" })).toBe(false);
   });

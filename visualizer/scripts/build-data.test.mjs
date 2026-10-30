@@ -121,9 +121,9 @@ describe("buildData", () => {
     const dirs = fixture();
     const speedDir = join(dirs.resultsDir, "..", "speed");
     mkdirSync(speedDir);
-    const report = (providerId, model, machine) => ({
+    const report = (providerId, model, machine, passes = 3) => ({
       providerId, model, language: "en", measuredAt: "2026-10-29T21:00:00.000Z",
-      speedSet: { id: "speed-en-v1", clips: 30 }, settings: { passes: 3 }, machine,
+      speedSet: { id: "speed-en-v1", clips: 30 }, settings: { passes }, machine,
       summary: {
         speedFactor: 173.6, passSpread: 0.02,
         buckets: { short: { medianMs: 38.8 }, medium: { medianMs: 55 }, long: { medianMs: 79.7 } },
@@ -135,10 +135,11 @@ describe("buildData", () => {
       join(speedDir, "acme_laptop.json"),
       JSON.stringify(report("acme", "fast", { ...SPEED_REFERENCE, model: "Mac16,1" }))
     );
+    writeFileSync(join(speedDir, "acme_quick.json"), JSON.stringify(report("acme", "fast", SPEED_REFERENCE, 1)));
     writeFileSync(join(speedDir, "null.json"), "null");
     writeFileSync(join(speedDir, "broken.json"), "{");
     const { summary } = buildData({ ...dirs, speedDir });
-    // No accuracy results for acme:other, the laptop run does not count, and malformed files are skipped.
+    // No accuracy results for acme:other, the laptop and one-pass runs do not count, and malformed files are skipped.
     expect(summary.speed).toEqual({
       "acme:fast": { x: 173.6, short: 38.8, medium: 55, long: 79.7, clips: 30, passes: 3, spread: 0.02, at: "2026-10-29" },
     });

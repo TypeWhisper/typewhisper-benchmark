@@ -201,8 +201,10 @@ export function finalizeCell(acc) {
 
 /** Speeds are published only from this machine, so they stay comparable (bench/src/speed.ts). */
 export const SPEED_REFERENCE = { model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48 };
+/** ...and only from the published clip set and number of passes. */
+export const SPEED_METHOD = { set: "speed-en-v1", passes: 3 };
 
-/** The compact speed entry of summary.json, or null for a run from another machine. */
+/** The compact speed entry of summary.json, or null for a run that is not a published measurement. */
 export function speedEntry(report) {
   const machine = report?.machine;
   const summary = report?.summary;
@@ -210,6 +212,7 @@ export function speedEntry(report) {
   if (machine.model !== SPEED_REFERENCE.model || machine.chip !== SPEED_REFERENCE.chip || machine.memoryGb !== SPEED_REFERENCE.memoryGb) {
     return null;
   }
+  if (report.speedSet?.id !== SPEED_METHOD.set || report.settings?.passes !== SPEED_METHOD.passes) return null;
   const entry = {
     x: summary.speedFactor,
     short: summary.buckets?.short?.medianMs,
@@ -241,7 +244,7 @@ function loadSpeed(speedDir, models) {
     const modelId = `${report.providerId}:${report.model}`;
     const entry = speedEntry(report);
     if (!entry) {
-      console.warn(`build-data: skipped speed file ${file}, not measured on the reference machine`);
+      console.warn(`build-data: skipped speed file ${file}, not measured on the reference machine with set ${SPEED_METHOD.set} and ${SPEED_METHOD.passes} passes`);
     } else if (!models[modelId]) {
       console.warn(`build-data: skipped speed file ${file}, ${modelId} has no accuracy results`);
     } else {

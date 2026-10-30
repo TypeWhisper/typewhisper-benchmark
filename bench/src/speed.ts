@@ -207,9 +207,15 @@ export function isReferenceMachine(machine: MachineIdentity): boolean {
   return sameMachine(machine, REFERENCE_MACHINE);
 }
 
-/** Where a run on this machine reads and writes its results. */
-export function speedResultsDir(machine: MachineIdentity): string {
-  return isReferenceMachine(machine) ? SPEED_RESULTS_DIR : SPEED_OTHER_RESULTS_DIR;
+/** Published speeds always come from this many timed passes. */
+export const PUBLISHED_PASSES = 3;
+
+/**
+ * Where a run reads and writes its results. Only runs on the reference machine with the published
+ * number of passes go to the visualizer, so a quick one-pass check never replaces a published result.
+ */
+export function speedResultsDir(machine: MachineIdentity, passes = PUBLISHED_PASSES): string {
+  return isReferenceMachine(machine) && passes === PUBLISHED_PASSES ? SPEED_RESULTS_DIR : SPEED_OTHER_RESULTS_DIR;
 }
 
 /** Commands of other benchmark runs or model workers that would compete for the machine. */
