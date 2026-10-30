@@ -15,6 +15,7 @@ import { MlxVlmProvider } from "./mlx-vlm.js";
 import { SpeechAnalyzerProvider } from "./speech-analyzer.js";
 import { AudioCppProvider } from "./audiocpp.js";
 import { NeedleProvider } from "./needle.js";
+import { ArcProvider } from "./arc.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -34,6 +35,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new SpeechAnalyzerProvider(),
   new AudioCppProvider(),
   new NeedleProvider(),
+  new ArcProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {
