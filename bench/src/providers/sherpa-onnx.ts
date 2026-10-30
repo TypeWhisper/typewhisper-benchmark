@@ -199,6 +199,13 @@ export class SherpaOnnxProvider implements STTProvider {
     };
   }
 
+  /** Drops the model's recognizers, so the next model does not share memory with them. */
+  release(model: string): void {
+    for (const key of [...this.recognizerCache.keys()]) {
+      if (key === model || key.startsWith(`${model}:`)) this.recognizerCache.delete(key);
+    }
+  }
+
   private getOrCreateRecognizer(
     entry: ModelEntry,
     model: string,
