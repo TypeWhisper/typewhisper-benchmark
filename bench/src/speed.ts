@@ -372,6 +372,8 @@ export async function speedLockHolder(path = SPEED_LOCK_PATH): Promise<number | 
   return pid && alive(pid) ? pid : null;
 }
 
+const REAP_GRACE_MS = 10_000;
+
 /** Creates the lock with this process's pid already in it, so no run ever sees an empty lock. */
 async function createLock(path: string): Promise<boolean> {
   const temp = `${path}.${process.pid}.${Math.random().toString(36).slice(2)}`;
@@ -400,7 +402,7 @@ async function removeStaleLock(path: string): Promise<void> {
     if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
     // Another run is removing it. A reap lock this old belongs to a run that died meanwhile.
     const since = await stat(reap).then((info) => Date.now() - info.mtimeMs, () => 0);
-    if (since > 10_000) await unlink(reap).catch(() => undefined);
+    if (since > REAP_GRACE_MS) await unlink(reap).catch(() => undefined);
     else await new Promise((resolveWait) => setTimeout(resolveWait, 100));
     return;
   }
@@ -415,7 +417,9 @@ async function removeStaleLock(path: string): Promise<void> {
 
 /** Takes the speed lock, so a second speed run cannot measure at the same time. */
 export async function acquireSpeedLock(path = SPEED_LOCK_PATH): Promise<() => Promise<void>> {
-  for (let attempt = 0; attempt < 50; attempt++) {
+  // Long enough to outlast the grace period of a reap lock left by a run that died.
+  const deadline = Date.now() + 2 * REAP_GRACE_MS;
+  while (Date.now() < deadline) {
     if (await createLock(path)) {
       return async () => {
         if ((await lockPid(path)) === process.pid) await unlink(path).catch(() => undefined);

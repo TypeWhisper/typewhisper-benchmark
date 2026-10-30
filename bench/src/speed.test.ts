@@ -1,5 +1,5 @@
 import { existsSync } from "fs";
-import { mkdtemp, rm, writeFile } from "fs/promises";
+import { mkdtemp, rm, utimes, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -131,6 +131,20 @@ describe("speed lock", () => {
     expect(await speedLockHolder(path)).toBe(process.pid);
     await (taken[0] as PromiseFulfilledResult<() => Promise<void>>).value();
     expect(existsSync(path)).toBe(false);
+  });
+
+  it("clears a reap lock left by a run that died", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "speed-lock-"));
+    tempDirs.push(dir);
+    const path = join(dir, "speed.lock");
+    await writeFile(path, "999999999");
+    await writeFile(`${path}.reap`, "");
+    const old = new Date(Date.now() - 60_000);
+    await utimes(`${path}.reap`, old, old);
+    const release = await acquireSpeedLock(path);
+    expect(await speedLockHolder(path)).toBe(process.pid);
+    expect(existsSync(`${path}.reap`)).toBe(false);
+    await release();
   });
 
   it("treats an empty lock file as stale", async () => {
