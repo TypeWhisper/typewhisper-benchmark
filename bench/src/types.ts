@@ -53,6 +53,11 @@ export interface STTProvider {
   release?(model: string): void | Promise<void>;
   /** Optional cleanup after the run, e.g. stopping a worker with requests that timed out */
   dispose?(): void;
+  /**
+   * Set when this harness cannot measure the model's speed fairly, e.g. because it starts a new
+   * process and reloads the model for every clip. The speed command skips such providers.
+   */
+  speedUnsupported?: string;
 }
 
 // === Test Suite Types ===

@@ -6,6 +6,8 @@ import { formatCount, formatDate, formatMetric, formatUnit, listJoin, plural } f
 import {
   allModelIds,
   betterFirst,
+  chartMax,
+  chartScale,
   latestRun,
   buildColumns,
   buildRows,
@@ -28,9 +30,10 @@ import { Direction, PageHead, Section } from "../components/ui";
 export function SpeedCaveat() {
   return (
     <p className="note max-w-3xl">
-      Speed is measured inside each runtime: the FluidAudio and MLX workers time the model call, whisper.cpp starts
-      whisper-cli for every clip, and CrispASR and the cloud APIs include an HTTP round trip (cloud: over the internet).
-      Read speed gaps between runtimes as rough orders of magnitude.
+      Time per clip comes from the accuracy runs and is measured inside each runtime: the FluidAudio and MLX workers
+      time the model call, whisper.cpp starts whisper-cli for every clip, and CrispASR and the cloud APIs include an
+      HTTP round trip (cloud: over the internet). Read those gaps as rough orders of magnitude. The Speed column is
+      the controlled comparison: local models only, timed one at a time on the same Mac mini.
     </p>
   );
 }
@@ -272,8 +275,8 @@ export function LeaderboardView({ summary }: { summary: Summary }) {
                 <RankedBars
                   data={barData}
                   format={(value) => formatUnit(chartUnit, value)}
-                  scale={chartUnit === "ms" || chartUnit === "rtf" ? "log" : "linear"}
-                  max={chartColumn.metric === "wer" || chartColumn.metric === "cer" ? undefined : 1}
+                  scale={chartScale(chartUnit)}
+                  max={chartMax(chartColumn.metric)}
                   limit={15}
                   ariaLabel={`Models ranked by ${chartColumn.label}`}
                 />

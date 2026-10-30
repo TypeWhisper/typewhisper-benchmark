@@ -104,6 +104,27 @@ export class AuroraAsrProvider implements STTProvider {
     };
   }
 
+  /**
+   * Stops the worker, which holds every model it loaded and may still be working on a request
+   * that timed out. The next request starts a new worker.
+   */
+  async release(_model?: string): Promise<void> {
+    const worker = this.worker;
+    if (!worker || worker.exitCode !== null || worker.signalCode !== null) return;
+    await new Promise<void>((resolveExit) => {
+      const force = setTimeout(() => worker.kill("SIGKILL"), 5_000);
+      worker.once("exit", () => {
+        clearTimeout(force);
+        resolveExit();
+      });
+      worker.kill();
+    });
+  }
+
+  dispose(): void {
+    this.worker?.kill();
+  }
+
   private async request(payload: { model: string; file: string }): Promise<WorkerResponse> {
     await this.startWorker();
     const id = this.nextId++;

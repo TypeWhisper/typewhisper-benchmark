@@ -7,13 +7,15 @@
  * - Punct <lang>: punctuation score on punctuation-formatting-<lang>.
  * - Digits <lang>: share of number-formatting-<lang> clips whose numbers all appear verbatim, as whole numbers.
  * - ms/clip and RTF: mean over all ok clips of the model, every suite.
+ * - Speed: speed factor from the separate speed run of local models on the reference Mac mini
+ *   (audio seconds per second of processing, one model and one clip at a time).
  */
 import type { AppState, Dir, Lang, Origin, Tier } from "../lib/url-state";
 import { modelMeta, type ModelMeta } from "./model-meta";
 import type { Cell, ModelRun, SuiteInfo, Summary } from "./types";
 
-export type MetricKey = "wer" | "cer" | "punct" | "fmt" | "digits" | "ms" | "rtf" | "price";
-export type Unit = "pct" | "ms" | "rtf" | "usd";
+export type MetricKey = "wer" | "cer" | "punct" | "fmt" | "digits" | "ms" | "rtf" | "speed" | "price";
+export type Unit = "pct" | "ms" | "rtf" | "x" | "usd";
 
 export interface MetricDef {
   key: MetricKey;
@@ -31,6 +33,7 @@ export const METRICS: Record<MetricKey, MetricDef> = {
   digits: { key: "digits", label: "Digits", name: "Numbers written as digits", better: "higher", unit: "pct" },
   ms: { key: "ms", label: "ms/clip", name: "Time per clip", better: "lower", unit: "ms" },
   rtf: { key: "rtf", label: "RTF", name: "Real-time factor", better: "lower", unit: "rtf" },
+  speed: { key: "speed", label: "Speed", name: "Speed factor", better: "higher", unit: "x" },
   price: { key: "price", label: "$/h", name: "Price per audio hour", better: "lower", unit: "usd" },
 };
 
@@ -143,8 +146,8 @@ export interface Column {
   label: string;
   /** Suites pooled. Empty for kind "all" (every suite of the model). */
   suites: string[];
-  /** scoped: follows tier/category/audio filters; fixed: one suite; all: every clip of the model. */
-  kind: "scoped" | "fixed" | "all";
+  /** scoped: follows tier/category/audio filters; fixed: one suite; all: every clip of the model; speed: the speed run. */
+  kind: "scoped" | "fixed" | "all" | "speed";
   help: string;
 }
 
@@ -184,6 +187,8 @@ const DIGITS_HELP = (lang: string) =>
 const MS_HELP =
   "Mean time per clip over all of the model's clips. Measured inside each runtime (cloud APIs include the network), so compare across runtimes with care. Lower is better.";
 const RTF_HELP = "Real-time factor: processing time divided by audio length, over all clips. Lower is better.";
+const SPEED_HELP =
+  "Speed factor: seconds of audio transcribed per second, on a fixed set of 30 English clips (3-20 s), measured on a Mac mini (M5 Pro, 48 GB) one model and one clip at a time. Local models only. Higher is better.";
 const PRICE_HELP = "API cost per hour of audio, from the costs the runner recorded. Local models cost nothing to run.";
 
 export function msColumn(): Column {
@@ -192,6 +197,20 @@ export function msColumn(): Column {
 
 export function rtfColumn(): Column {
   return { id: "rtf", metric: "rtf", lang: null, label: "RTF", suites: [], kind: "all", help: RTF_HELP };
+}
+
+export function speedColumn(): Column {
+  return { id: "speed", metric: "speed", lang: null, label: "Speed", suites: [], kind: "speed", help: SPEED_HELP };
+}
+
+/** Chart axis for a unit: times and speed factors span orders of magnitude. */
+export function chartScale(unit: Unit): "log" | "linear" {
+  return unit === "ms" || unit === "rtf" || unit === "x" ? "log" : "linear";
+}
+
+/** Fixed upper bound of a linear chart: 100% for scores, none for error rates. */
+export function chartMax(metric: MetricKey): number | undefined {
+  return METRICS[metric].unit === "pct" && metric !== "wer" && metric !== "cer" ? 1 : undefined;
 }
 
 export function priceColumn(): Column {
@@ -219,7 +238,7 @@ export function buildColumns(summary: Summary, state: Pick<AppState, "lang" | "t
         columns.push(fixedColumn(`digits-${lang}`, "digits", lang, `Digits ${langLabel(lang)}`, numberSuite(lang), DIGITS_HELP(lang)));
       }
     }
-    columns.push(msColumn());
+    columns.push(msColumn(), speedColumn());
     return columns;
   }
 
@@ -229,7 +248,7 @@ export function buildColumns(summary: Summary, state: Pick<AppState, "lang" | "t
   if (has(punctSuite(lang))) columns.push(fixedColumn("punct", "punct", lang, "Punct", punctSuite(lang), PUNCT_HELP(lang)));
   if (lang === "en" && has(CV_EN)) columns.push(fixedColumn("fmt", "fmt", "en", "CV fmt", CV_EN, FMT_HELP));
   if (has(numberSuite(lang))) columns.push(fixedColumn("digits", "digits", lang, "Digits", numberSuite(lang), DIGITS_HELP(lang)));
-  columns.push(msColumn(), rtfColumn());
+  columns.push(msColumn(), rtfColumn(), speedColumn());
   return columns;
 }
 
@@ -270,9 +289,11 @@ export interface Value {
   skipped: boolean;
   /** The model is not trained for the column's language. */
   outside: boolean;
+  /** Extra hover text, e.g. the clip-length times behind a speed factor. */
+  detail?: string;
 }
 
-const VALUE_KEYS: Record<Exclude<MetricKey, "price">, [keyof Cell, keyof Cell]> = {
+const VALUE_KEYS: Record<Exclude<MetricKey, "price" | "speed">, [keyof Cell, keyof Cell]> = {
   wer: ["wer", "ok"],
   cer: ["cer", "ok"],
   ms: ["ms", "ok"],
@@ -284,7 +305,7 @@ const VALUE_KEYS: Record<Exclude<MetricKey, "price">, [keyof Cell, keyof Cell]> 
 
 /** Pools a metric over suites, weighting each suite mean by its own count. */
 export function pool(cells: Record<string, Cell> | undefined, suites: string[], metric: MetricKey): { v: number | null; n: number } {
-  if (!cells) return { v: null, n: 0 };
+  if (!cells || metric === "speed") return { v: null, n: 0 };
   if (metric === "price") {
     let usd = 0;
     let seconds = 0;
@@ -310,7 +331,23 @@ export function pool(cells: Record<string, Cell> | undefined, suites: string[], 
   return { v: n > 0 ? sum / n : null, n };
 }
 
+function speedValue(summary: Summary, modelId: string): Value {
+  const speed = summary.speed?.[modelId];
+  const value: Value = { v: speed?.x ?? null, n: speed?.clips ?? 0, missing: [], skipped: false, outside: false };
+  if (speed) {
+    const times = (["short", "medium", "long"] as const)
+      .filter((bucket) => speed[bucket] != null)
+      .map((bucket) => `${bucket} ${Math.round(speed[bucket] as number)} ms`);
+    const parts = [`median per clip: ${times.join(", ")}`];
+    if (speed.lang) parts.push(`English clips with a ${languageName(speed.lang)} language hint`);
+    if (speed.at) parts.push(`measured ${speed.at}`);
+    value.detail = parts.join(" · ");
+  }
+  return value;
+}
+
 export function columnValue(summary: Summary, modelId: string, column: Column, meta = modelMeta(modelId)): Value {
+  if (column.kind === "speed") return speedValue(summary, modelId);
   const cells = summary.cells[modelId] ?? {};
   const suites = column.kind === "all" ? Object.keys(cells) : column.suites;
   const missing: string[] = [];

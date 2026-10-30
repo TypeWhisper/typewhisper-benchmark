@@ -5,10 +5,12 @@ import type { Summary } from "../data/types";
 /** Hover text of a table value: the number, its clip count and why it may not compare. */
 export function valueTitle(summary: Summary, column: Column, value: Value): string {
   if (value.v == null) {
+    if (column.kind === "speed") return "No speed run: only local models are measured, on the reference Mac mini";
     return value.skipped ? "Skipped: the model does not support this language" : "Not run on these clips";
   }
   const parts = [`${formatMetric(column.metric, value.v)}`];
   if (value.n) parts.push(`${formatCount(value.n)} clips`);
+  if (value.detail) parts.push(value.detail);
   if (value.missing.length) {
     const names = value.missing.map((suite) => summary.suites[suite]?.name ?? suite);
     parts.push(`not run on ${listJoin(names)}, so not directly comparable`);

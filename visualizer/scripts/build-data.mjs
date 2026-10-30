@@ -6,6 +6,8 @@
  *   public/data/results/<providerId>_<model>.json   one file per model, written by bench/src/runner.ts
  *   ../bench/tests/<suiteId>.json                    references (groundTruth) for transcripts and Digits
  *
+ *   public/data/speed/<providerId>_<model>.json     speed runs of local models, written by `npm run bench -- speed`
+ *
  * Output (gitignored, regenerated on every build and dev start):
  *   public/data/generated/summary.json               per model x suite aggregates, loaded on first paint
  *   public/data/generated/clips/<suiteId>.json       per-clip transcripts, loaded only by transcript views
@@ -197,6 +199,61 @@ export function finalizeCell(acc) {
   return cell;
 }
 
+/** Speeds are published only from this machine, so they stay comparable (bench/src/speed.ts). */
+export const SPEED_REFERENCE = { model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48 };
+/** ...and only from the published clip set and number of passes. */
+export const SPEED_METHOD = { set: "speed-en-v1", passes: 3 };
+
+/** The compact speed entry of summary.json, or null for a run that is not a published measurement. */
+export function speedEntry(report) {
+  const machine = report?.machine;
+  const summary = report?.summary;
+  if (!summary?.speedFactor || !machine) return null;
+  if (machine.model !== SPEED_REFERENCE.model || machine.chip !== SPEED_REFERENCE.chip || machine.memoryGb !== SPEED_REFERENCE.memoryGb) {
+    return null;
+  }
+  if (report.speedSet?.id !== SPEED_METHOD.set || report.settings?.passes !== SPEED_METHOD.passes) return null;
+  const entry = {
+    x: summary.speedFactor,
+    short: summary.buckets?.short?.medianMs,
+    medium: summary.buckets?.medium?.medianMs,
+    long: summary.buckets?.long?.medianMs,
+    clips: report.speedSet?.clips,
+    passes: report.settings?.passes,
+    spread: summary.passSpread,
+    at: report.measuredAt?.slice(0, 10),
+  };
+  if (report.language && report.language !== "en") entry.lang = report.language;
+  return entry;
+}
+
+function loadSpeed(speedDir, models) {
+  const speed = {};
+  if (!speedDir || !existsSync(speedDir)) return speed;
+  for (const file of readdirSync(speedDir).filter((name) => name.endsWith(".json")).sort()) {
+    let report;
+    try {
+      report = readJson(join(speedDir, file));
+    } catch {
+      report = null;
+    }
+    if (typeof report?.providerId !== "string" || typeof report?.model !== "string") {
+      console.warn(`build-data: skipped malformed speed file ${file}`);
+      continue;
+    }
+    const modelId = `${report.providerId}:${report.model}`;
+    const entry = speedEntry(report);
+    if (!entry) {
+      console.warn(`build-data: skipped speed file ${file}, not measured on the reference machine with set ${SPEED_METHOD.set} and ${SPEED_METHOD.passes} passes`);
+    } else if (!models[modelId]) {
+      console.warn(`build-data: skipped speed file ${file}, ${modelId} has no accuracy results`);
+    } else {
+      speed[modelId] = entry;
+    }
+  }
+  return speed;
+}
+
 /* ------------------------------------------------------------------------------------------ */
 /* Build                                                                                       */
 /* ------------------------------------------------------------------------------------------ */
@@ -223,7 +280,7 @@ function loadReferences(testsDir) {
 
 const STATUS_CODE = { ok: 0, err: 1, skip: 2 };
 
-export function buildData({ resultsDir, testsDir }) {
+export function buildData({ resultsDir, testsDir, speedDir }) {
   const suiteDefinitions = loadReferences(testsDir);
   const referenceById = new Map();
   for (const suite of suiteDefinitions.values()) {
@@ -367,15 +424,16 @@ export function buildData({ resultsDir, testsDir }) {
     clipFiles[suiteId] = { suite: suiteId, clips, results };
   }
 
-  const body = { schema: SCHEMA_VERSION, suites, models, cells: accumulators };
+  const speed = loadSpeed(speedDir, models);
+  const body = { schema: SCHEMA_VERSION, suites, models, cells: accumulators, speed };
   // The clip files are fetched with this version as their cache key, so their content counts too.
   const version = createHash("sha1").update(JSON.stringify(body)).update(JSON.stringify(clipFiles)).digest("hex").slice(0, 10);
   const summary = { ...body, version, generatedAt: new Date().toISOString() };
   return { summary, clipFiles, fileCount: files.length };
 }
 
-export function writeData({ resultsDir, testsDir, outDir }) {
-  const { summary, clipFiles, fileCount } = buildData({ resultsDir, testsDir });
+export function writeData({ resultsDir, testsDir, speedDir, outDir }) {
+  const { summary, clipFiles, fileCount } = buildData({ resultsDir, testsDir, speedDir });
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(join(outDir, "clips"), { recursive: true });
   writeFileSync(join(outDir, "summary.json"), JSON.stringify(summary));
@@ -392,12 +450,13 @@ if (isMain) {
   const { summary, fileCount, clipFileCount } = writeData({
     resultsDir: join(root, "public", "data", "results"),
     testsDir: join(root, "..", "bench", "tests"),
+    speedDir: join(root, "public", "data", "speed"),
     outDir: join(root, "public", "data", "generated"),
   });
   const size = Buffer.byteLength(JSON.stringify(summary));
   console.log(
     `build-data: ${fileCount} result files -> ${Object.keys(summary.models).length} models, ` +
-      `${Object.keys(summary.suites).length} suites; summary.json ${(size / 1024).toFixed(0)} KB, ` +
+      `${Object.keys(summary.suites).length} suites, ${Object.keys(summary.speed).length} speeds; summary.json ${(size / 1024).toFixed(0)} KB, ` +
       `${clipFileCount} clip files (version ${summary.version})`
   );
 }

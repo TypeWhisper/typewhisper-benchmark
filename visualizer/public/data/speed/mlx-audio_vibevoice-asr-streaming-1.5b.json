@@ -1,0 +1,594 @@
+{
+  "schema": 1,
+  "providerId": "mlx-audio",
+  "model": "vibevoice-asr-streaming-1.5b",
+  "providerType": "local",
+  "speedSet": {
+    "id": "speed-en-v1",
+    "clips": 30,
+    "audioSeconds": 305.11
+  },
+  "language": "en",
+  "machine": {
+    "model": "Mac17,16",
+    "chip": "Apple M5 Pro",
+    "memoryGb": 48,
+    "cores": 18,
+    "os": "macOS 27.0.1",
+    "lowPowerMode": false
+  },
+  "measuredAt": "2026-10-30T00:11:06.128Z",
+  "settings": {
+    "passes": 3,
+    "warmupClips": 3,
+    "timeoutSeconds": 120
+  },
+  "prepareMs": 1352,
+  "summary": {
+    "speedFactor": 6.48,
+    "engineSpeedFactor": 6.48,
+    "buckets": {
+      "short": {
+        "clips": 10,
+        "audioSeconds": 48.74,
+        "medianMs": 751,
+        "speedFactor": 6.18
+      },
+      "medium": {
+        "clips": 10,
+        "audioSeconds": 102.89,
+        "medianMs": 1514.1,
+        "speedFactor": 6.73
+      },
+      "long": {
+        "clips": 10,
+        "audioSeconds": 153.47,
+        "medianMs": 2238.6,
+        "speedFactor": 6.42
+      }
+    },
+    "passSpread": 0.0096,
+    "wer": 0.1307
+  },
+  "conditions": {
+    "loadBefore": [
+      2.44,
+      2.32,
+      2.11
+    ],
+    "loadAfter": [
+      2.55,
+      2.41,
+      2.17
+    ],
+    "busyProcesses": [
+      {
+        "pid": 442,
+        "cpu": 25.7,
+        "command": "WindowServer"
+      },
+      {
+        "pid": 40761,
+        "cpu": 18.9,
+        "command": "Google Chrome Helper (Aperitif Renderer)"
+      },
+      {
+        "pid": 38612,
+        "cpu": 16.2,
+        "command": "Google Chrome Helper (Aperitif)"
+      }
+    ]
+  },
+  "clips": [
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_10166454",
+      "bucket": "short",
+      "audioSeconds": 5.184,
+      "wallMs": [
+        781.3,
+        790.4,
+        794.3
+      ],
+      "engineMs": [
+        781,
+        790,
+        794
+      ],
+      "wer": 0.3077
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-1089-134686-0000",
+      "bucket": "medium",
+      "audioSeconds": 10.435,
+      "wallMs": [
+        1569.5,
+        1576.7,
+        1591.1
+      ],
+      "engineMs": [
+        1569,
+        1576,
+        1591
+      ],
+      "wer": 0.0714
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-7127-75946-0000",
+      "bucket": "long",
+      "audioSeconds": 19.475,
+      "wallMs": [
+        3783,
+        3802.3,
+        3809.7
+      ],
+      "engineMs": [
+        3783,
+        3802,
+        3809
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_17263741",
+      "bucket": "short",
+      "audioSeconds": 5.976,
+      "wallMs": [
+        1063.6,
+        1057.9,
+        1059.1
+      ],
+      "engineMs": [
+        1063,
+        1058,
+        1059
+      ],
+      "wer": 0.75
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-1188-133604-0001",
+      "bucket": "medium",
+      "audioSeconds": 9.04,
+      "wallMs": [
+        1364.4,
+        1375.3,
+        1391
+      ],
+      "engineMs": [
+        1364,
+        1375,
+        1391
+      ],
+      "wer": 0.1111
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-8224-274381-0000",
+      "bucket": "long",
+      "audioSeconds": 17.74,
+      "wallMs": [
+        2367.2,
+        2359.6,
+        2362.8
+      ],
+      "engineMs": [
+        2367,
+        2359,
+        2363
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_18188256",
+      "bucket": "short",
+      "audioSeconds": 3.744,
+      "wallMs": [
+        709.5,
+        674,
+        672.2
+      ],
+      "engineMs": [
+        709,
+        674,
+        672
+      ],
+      "wer": 0.125
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-1284-1180-0000",
+      "bucket": "medium",
+      "audioSeconds": 8.12,
+      "wallMs": [
+        1227.2,
+        1283.4,
+        1246.8
+      ],
+      "engineMs": [
+        1227,
+        1283,
+        1247
+      ],
+      "wer": 0.0417
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-1221-135766-0001",
+      "bucket": "long",
+      "audioSeconds": 16.715,
+      "wallMs": [
+        2739.6,
+        2746.3,
+        2817.4
+      ],
+      "engineMs": [
+        2739,
+        2746,
+        2817
+      ],
+      "wer": 0.0833
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_18373122",
+      "bucket": "short",
+      "audioSeconds": 5.544,
+      "wallMs": [
+        711.5,
+        718.7,
+        711.5
+      ],
+      "engineMs": [
+        711,
+        718,
+        711
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-1580-141083-0001",
+      "bucket": "medium",
+      "audioSeconds": 10.255,
+      "wallMs": [
+        1573.6,
+        1578.9,
+        1613.1
+      ],
+      "engineMs": [
+        1573,
+        1579,
+        1613
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-5639-40744-0000",
+      "bucket": "long",
+      "audioSeconds": 15.77,
+      "wallMs": [
+        2695.5,
+        2736.2,
+        2708.2
+      ],
+      "engineMs": [
+        2695,
+        2736,
+        2708
+      ],
+      "wer": 0.0204
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_20141506",
+      "bucket": "short",
+      "audioSeconds": 5.976,
+      "wallMs": [
+        1019.9,
+        1024.8,
+        1071.9
+      ],
+      "engineMs": [
+        1020,
+        1025,
+        1072
+      ],
+      "wer": 0.0769
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-1995-1826-0001",
+      "bucket": "medium",
+      "audioSeconds": 10.17,
+      "wallMs": [
+        1500,
+        1507.1,
+        1515.2
+      ],
+      "engineMs": [
+        1500,
+        1507,
+        1515
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-2094-142345-0002",
+      "bucket": "long",
+      "audioSeconds": 15.52,
+      "wallMs": [
+        2474.2,
+        2484.4,
+        2531.1
+      ],
+      "engineMs": [
+        2474,
+        2484,
+        2531
+      ],
+      "wer": 0.0952
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_25314993",
+      "bucket": "short",
+      "audioSeconds": 5.76,
+      "wallMs": [
+        798.7,
+        803.9,
+        789.9
+      ],
+      "engineMs": [
+        798,
+        804,
+        790
+      ],
+      "wer": 0.0833
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-3570-5694-0000",
+      "bucket": "medium",
+      "audioSeconds": 12.085,
+      "wallMs": [
+        1955.8,
+        1949,
+        1928.5
+      ],
+      "engineMs": [
+        1956,
+        1949,
+        1928
+      ],
+      "wer": 0.027
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-2300-131720-0001",
+      "bucket": "long",
+      "audioSeconds": 14.63,
+      "wallMs": [
+        1902.7,
+        1896.7,
+        1948.6
+      ],
+      "engineMs": [
+        1903,
+        1896,
+        1948
+      ],
+      "wer": 0.0303
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_31893855",
+      "bucket": "short",
+      "audioSeconds": 3.348,
+      "wallMs": [
+        642.9,
+        622.9,
+        631.3
+      ],
+      "engineMs": [
+        643,
+        623,
+        631
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-3729-6852-0000",
+      "bucket": "medium",
+      "audioSeconds": 11.17,
+      "wallMs": [
+        1604.1,
+        1611.5,
+        1632.3
+      ],
+      "engineMs": [
+        1604,
+        1611,
+        1632
+      ],
+      "wer": 0.0313
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-6930-75918-0001",
+      "bucket": "long",
+      "audioSeconds": 14.225,
+      "wallMs": [
+        1990.6,
+        1982.4,
+        2008.2
+      ],
+      "engineMs": [
+        1990,
+        1982,
+        2008
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_37007562",
+      "bucket": "short",
+      "audioSeconds": 5.508,
+      "wallMs": [
+        853.8,
+        812.2,
+        823
+      ],
+      "engineMs": [
+        854,
+        812,
+        823
+      ],
+      "wer": 0.6667
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-4507-16021-0001",
+      "bucket": "medium",
+      "audioSeconds": 11.32,
+      "wallMs": [
+        1454.5,
+        1490.9,
+        1472.8
+      ],
+      "engineMs": [
+        1454,
+        1491,
+        1473
+      ],
+      "wer": 0.3
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-1320-122612-0000",
+      "bucket": "long",
+      "audioSeconds": 13.48,
+      "wallMs": [
+        1961.3,
+        1967.8,
+        1985.4
+      ],
+      "engineMs": [
+        1961,
+        1968,
+        1985
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_456493",
+      "bucket": "short",
+      "audioSeconds": 3.768,
+      "wallMs": [
+        676.4,
+        678.4,
+        691.5
+      ],
+      "engineMs": [
+        676,
+        678,
+        691
+      ],
+      "wer": 1
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-7021-79730-0001",
+      "bucket": "medium",
+      "audioSeconds": 11.49,
+      "wallMs": [
+        1449.4,
+        1451.6,
+        1480
+      ],
+      "engineMs": [
+        1449,
+        1451,
+        1480
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-237-126133-0000",
+      "bucket": "long",
+      "audioSeconds": 13.29,
+      "wallMs": [
+        2114.4,
+        2090.6,
+        2115
+      ],
+      "engineMs": [
+        2114,
+        2090,
+        2115
+      ],
+      "wer": 0.0256
+    },
+    {
+      "suite": "clean-speech-commonvoice-en",
+      "testId": "cv-en-common_voice_en_561706",
+      "bucket": "short",
+      "audioSeconds": 3.936,
+      "wallMs": [
+        722.9,
+        697.8,
+        689.2
+      ],
+      "engineMs": [
+        723,
+        698,
+        689
+      ],
+      "wer": 0
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-8230-279154-0000",
+      "bucket": "medium",
+      "audioSeconds": 8.805,
+      "wallMs": [
+        1476.6,
+        1521.1,
+        1547.6
+      ],
+      "engineMs": [
+        1476,
+        1521,
+        1547
+      ],
+      "wer": 0.0417
+    },
+    {
+      "suite": "clean-speech-librispeech-en",
+      "testId": "librispeech-908-157963-0000",
+      "bucket": "long",
+      "audioSeconds": 12.62,
+      "wallMs": [
+        1825.7,
+        1823,
+        1822.2
+      ],
+      "engineMs": [
+        1825,
+        1823,
+        1822
+      ],
+      "wer": 0.0333
+    }
+  ]
+}

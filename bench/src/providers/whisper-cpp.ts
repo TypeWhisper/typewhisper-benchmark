@@ -39,6 +39,7 @@ export class WhisperCppProvider implements STTProvider {
   id = "whisper-cpp";
   name = "whisper.cpp";
   type = "local" as const;
+  speedUnsupported = "whisper-cli starts and reloads the model for every clip";
   models = [
     "tiny", "base", "small", "medium",
     "large-v3", "large-v3-turbo",

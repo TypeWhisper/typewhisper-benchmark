@@ -14,6 +14,7 @@ export class AppleSpeechProvider implements STTProvider {
   id = "apple-speech";
   name = "Apple Speech";
   type = "system" as const;
+  speedUnsupported = "the swift script is compiled and started for every clip";
   models = ["default"];
 
   async isAvailable(): Promise<boolean> {

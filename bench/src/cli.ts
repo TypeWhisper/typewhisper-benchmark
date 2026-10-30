@@ -5,6 +5,23 @@ import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { runBenchmark, mergeResultFiles } from "./runner.js";
 import { rescoreResultFiles } from "./rescore.js";
+import {
+  acquireSpeedLock,
+  describeHolder,
+  isReferenceMachine,
+  loadSpeedSet,
+  machineInfo,
+  measureModel,
+  readSpeedReport,
+  sameMachine,
+  speedLanguage,
+  speedLockHolder,
+  speedResultsDir,
+  PUBLISHED_PASSES,
+  SPEED_OTHER_RESULTS_DIR,
+  writeSpeedReport,
+  REFERENCE_MACHINE,
+} from "./speed.js";
 import { loadAllSuites, loadSuite } from "./suite-loader.js";
 import {
   getAvailableProviders,
@@ -45,6 +62,13 @@ program
   )
   .action(async (opts) => {
     console.log(chalk.bold("\nTypeWhisper STT Benchmark\n"));
+
+    // A run next to a speed measurement would distort its times.
+    const speedRun = await speedLockHolder();
+    if (speedRun) {
+      console.log(chalk.red(`A speed run (${describeHolder(speedRun)}) is measuring; start this run after it finishes.`));
+      process.exit(1);
+    }
 
     // Default version to today's date
     const version =
@@ -230,6 +254,169 @@ program
         `\nResults saved to ${config.outputDirectory}/${version}/`
       )
     );
+  });
+
+program
+  .command("speed")
+  .description("Measure the speed of local models, one model and one clip at a time, on the reference machine")
+  .option("-p, --provider <id>", "Only this provider (default: every available local provider)")
+  .option("-m, --model <names...>", "Only these models (requires --provider)")
+  .option("--passes <number>", "Timed passes over the clip set", "3")
+  .option("--warmup <number>", "Untimed warm-up clips before the passes", "3")
+  .option("--timeout <seconds>", "Timeout per clip", "120")
+  .option("--max-load <number>", "Highest 1-minute load average to start a model at", "4")
+  .option("--max-wait <minutes>", "How long to wait for an idle machine before a model", "15")
+  .option("--settle <seconds>", "Pause before each model once the machine is idle", "5")
+  .option("--rerun", "Measure models that already have a speed result for this set and machine")
+  .option("--force", "Measure even when the machine does not become idle")
+  .option("--allow-other-machine", "Measure on a machine other than the reference Mac mini")
+  .action(async (opts) => {
+    console.log(chalk.bold("\nTypeWhisper STT speed benchmark\n"));
+    const machine = await machineInfo();
+    const machineLabel = `${machine.model} · ${machine.chip} · ${machine.memoryGb} GB · ${machine.os}`;
+    if (!isReferenceMachine(machine)) {
+      const reference = `${REFERENCE_MACHINE.model} · ${REFERENCE_MACHINE.chip} · ${REFERENCE_MACHINE.memoryGb} GB`;
+      if (!opts.allowOtherMachine) {
+        console.log(chalk.red(`This is ${machineLabel}; published speeds come from ${reference}. Pass --allow-other-machine to measure anyway.`));
+        process.exit(1);
+      }
+      console.log(chalk.yellow(`Not the reference machine (${reference}); results go to ${SPEED_OTHER_RESULTS_DIR}, not the visualizer.`));
+    }
+    const passes = Math.max(1, parseInt(opts.passes) || PUBLISHED_PASSES);
+    if (passes !== PUBLISHED_PASSES) {
+      console.log(chalk.yellow(`Published speeds use ${PUBLISHED_PASSES} passes; results go to ${SPEED_OTHER_RESULTS_DIR}, not the visualizer.`));
+    }
+    const resultsDir = speedResultsDir(machine, passes);
+    if (machine.lowPowerMode) console.log(chalk.yellow("Low Power Mode is on; speeds will be lower."));
+
+    let providers = (await getAvailableProviders()).filter((provider) => provider.type !== "cloud");
+    if (opts.provider) {
+      const provider = getProviderById(opts.provider);
+      if (!provider || provider.type === "cloud") {
+        console.log(chalk.red(`"${opts.provider}" is not a local provider.`));
+        process.exit(1);
+      }
+      providers = [provider];
+    }
+    if (opts.model) {
+      if (!opts.provider) {
+        console.log(chalk.red("--model requires --provider"));
+        process.exit(1);
+      }
+      const unknown = (opts.model as string[]).filter((model) => !providers[0].models.includes(model));
+      if (unknown.length) {
+        console.log(chalk.red(`Unknown model(s) of ${opts.provider}: ${unknown.join(", ")}`));
+        process.exit(1);
+      }
+    }
+
+    const set = await loadSpeedSet();
+    const plan: Array<{ provider: (typeof providers)[number]; model: string }> = [];
+    for (const provider of providers) {
+      if (provider.speedUnsupported) {
+        console.log(chalk.dim(`Skipping ${provider.id}: ${provider.speedUnsupported}`));
+        continue;
+      }
+      for (const model of opts.model ?? provider.models) {
+        if (!speedLanguage(provider, model, set.language)) {
+          console.log(chalk.dim(`Skipping ${provider.id}/${model}: no supported language`));
+          continue;
+        }
+        const existing = await readSpeedReport(resultsDir, provider.id, model);
+        if (!opts.rerun && existing?.speedSet.id === set.id && sameMachine(existing.machine, machine)) {
+          console.log(chalk.dim(`Skipping ${provider.id}/${model}: measured ${existing.measuredAt.slice(0, 10)} (--rerun to measure again)`));
+          continue;
+        }
+        plan.push({ provider, model });
+      }
+    }
+    if (plan.length === 0) {
+      console.log(chalk.yellow("Nothing to measure."));
+      return;
+    }
+
+    let release: () => Promise<void>;
+    try {
+      release = await acquireSpeedLock();
+    } catch (error) {
+      console.log(chalk.red((error as Error).message));
+      process.exit(1);
+    }
+    const stop = () => {
+      void release().finally(() => process.exit(130));
+    };
+    process.once("SIGINT", stop);
+    process.once("SIGTERM", stop);
+
+    console.log(
+      chalk.dim(
+        `${machineLabel}\nSet ${set.id}: ${set.clips.length} clips, ${set.audioSeconds.toFixed(0)} s of audio; ` +
+          `${passes} timed pass(es); ${plan.length} model(s), measured one at a time\n`
+      )
+    );
+
+    const log = (message: string) => console.log(chalk.dim(`  ${message}`));
+    const failed: string[] = [];
+    try {
+      for (const [index, { provider, model }] of plan.entries()) {
+        const label = `${provider.id}/${model}`;
+        console.log(chalk.bold(`[${index + 1}/${plan.length}] ${label}`));
+        const started = Date.now();
+        let lastPrint = 0;
+        try {
+          const report = await measureModel(provider, model, set, {
+            passes,
+            warmupClips: Math.max(0, parseInt(opts.warmup) || 0),
+            timeoutSeconds: Math.max(1, parseInt(opts.timeout) || 120),
+            machine,
+            settleMs: Math.max(0, Number(opts.settle) || 0) * 1000,
+            idle: {
+              maxLoad: Number(opts.maxLoad) || 4,
+              maxWaitMs: Math.max(0, Number(opts.maxWait) || 0) * 60_000,
+              force: Boolean(opts.force),
+              log,
+            },
+            log,
+            onClip: (done, total) => {
+              if (Date.now() - lastPrint > 15_000 || done === total) {
+                lastPrint = Date.now();
+                log(`${done}/${total} clips`);
+              }
+            },
+          });
+          await writeSpeedReport(resultsDir, report);
+          const { summary } = report;
+          const wer = summary.wer != null ? `, WER ${(summary.wer * 100).toFixed(1)}%` : "";
+          const spread = summary.passSpread > 0.1 ? chalk.yellow(` (passes differ by ${(summary.passSpread * 100).toFixed(0)}%)`) : "";
+          console.log(
+            chalk.green(
+              `  ${summary.speedFactor.toFixed(1)}x real time; short clips ${Math.round(summary.buckets.short.medianMs)} ms, ` +
+                `long ${Math.round(summary.buckets.long.medianMs)} ms${wer}`
+            ) + spread + chalk.dim(` [${Math.round((Date.now() - started) / 1000)} s]`)
+          );
+        } catch (error) {
+          failed.push(`${label}: ${(error as Error).message}`);
+          console.log(chalk.red(`  failed: ${(error as Error).message}`));
+        } finally {
+          try {
+            await provider.release?.(model);
+          } catch {
+            // The next model's idle check still waits for a lingering worker.
+          }
+          // Stop the provider's workers, so the next model starts on a quiet machine.
+          provider.dispose?.();
+        }
+      }
+    } finally {
+      await release();
+    }
+
+    if (failed.length) {
+      console.log(chalk.red(`\n${failed.length} model(s) failed:`));
+      for (const line of failed) console.log(chalk.red(`  ${line}`));
+    }
+    console.log(chalk.dim(`\nSpeed results in ${resultsDir}`));
+    process.exit(failed.length ? 1 : 0);
   });
 
 program

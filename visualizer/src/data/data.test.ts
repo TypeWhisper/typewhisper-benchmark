@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_STATE, type AppState } from "../lib/url-state";
 import { canonicalize, resolveModelId } from "./links";
-import { buildColumns, columnValue, pool, resolveColumn, scopedSuites, type Scope } from "./metrics";
+import { betterFirst, buildColumns, columnValue, pool, resolveColumn, scopedSuites, type Scope } from "./metrics";
 import { modelMeta, prettifyModel } from "./model-meta";
 import type { Summary, SuiteInfo } from "./types";
 
@@ -102,8 +102,8 @@ describe("scope and columns", () => {
   });
 
   it("builds the PR columns for all languages and detail columns for one", () => {
-    expect(buildColumns(summary, state({})).map((column) => column.id)).toEqual(["wer-en", "wer-de", "punct-en", "digits-de", "ms"]);
-    expect(buildColumns(summary, state({ lang: "en" })).map((column) => column.id)).toEqual(["wer", "cer", "punct", "ms", "rtf"]);
+    expect(buildColumns(summary, state({})).map((column) => column.id)).toEqual(["wer-en", "wer-de", "punct-en", "digits-de", "ms", "speed"]);
+    expect(buildColumns(summary, state({ lang: "en" })).map((column) => column.id)).toEqual(["wer", "cer", "punct", "ms", "rtf", "speed"]);
   });
 
   it("resolves sort ids across the two forms", () => {
@@ -135,6 +135,25 @@ describe("pooling", () => {
     const partial = columnValue(summary, "acme:parakeet-tdt-0.6b", werEn);
     expect(partial.v).toBeCloseTo(0.2);
     expect(partial.missing).toEqual(["punctuation-formatting-en"]);
+  });
+});
+
+describe("speed", () => {
+  const withSpeed: Summary = {
+    ...summary,
+    speed: { "fluidaudio:parakeet-ultra": { x: 173.6, short: 38.8, medium: 55, long: 79.7, clips: 30, at: "2026-10-29" } },
+  };
+  const speed = () => buildColumns(withSpeed, state({})).find((column) => column.id === "speed")!;
+
+  it("reads the speed run, not the accuracy cells", () => {
+    const value = columnValue(withSpeed, "fluidaudio:parakeet-ultra", speed());
+    expect(value).toMatchObject({ v: 173.6, n: 30, missing: [], outside: false });
+    expect(value.detail).toBe("median per clip: short 39 ms, medium 55 ms, long 80 ms · measured 2026-10-29");
+    expect(columnValue(withSpeed, "acme:parakeet-tdt-0.6b", speed()).v).toBeNull();
+  });
+
+  it("ranks higher speed first", () => {
+    expect(betterFirst(speed())).toBe("desc");
   });
 });
 

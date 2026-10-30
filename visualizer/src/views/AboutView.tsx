@@ -30,7 +30,7 @@ const PARAMS: Array<[string, string, string]> = [
   ["deploy", "all · local · cloud", "all"],
   ["tw", "all · engine · candidate (TypeWhisper status)", "all"],
   ["q", "Model search text", "–"],
-  ["sort", "Column: wer, cer, punct, fmt, digits, ms, rtf, price; with lang=all also wer-en, punct-de, …", "WER"],
+  ["sort", "Column: wer, cer, punct, fmt, digits, ms, rtf, speed, price; with lang=all also wer-en, punct-de, …", "WER"],
   ["dir", "asc · desc, only when not best-first", "best first"],
   ["metric", "Metric of the ranked chart (same ids as sort)", "the sort column"],
   ["group", "suite · category (compare breakdown)", "suite"],
@@ -115,8 +115,19 @@ export function AboutView({ summary }: { summary: Summary }) {
             CrispASR is timed over a local HTTP round trip, and the cloud APIs include the network.
           </p>
           <p>
-            Compare speeds within a runtime with confidence, and across runtimes as rough orders of magnitude. Local models
+            Compare these within a runtime with confidence, and across runtimes as rough orders of magnitude. Local models
             ran on Apple silicon (an M5 Pro in the recent runs).
+          </p>
+          <p>
+            <strong>Speed</strong> is a separate, controlled measurement of local models, like the speed factor of
+            Artificial Analysis: seconds of audio transcribed per second (higher is better). Every model transcribes the
+            same 30 English clips, ten each of 3–6.5 s, 8–12 s and 12.5–20 s, on one reference machine, a Mac mini with
+            an M5 Pro and 48 GB. Models run one at a time and one clip at a time, never next to another benchmark, and
+            only once the machine is idle. After loading the model and three untimed warm-up clips, three timed passes
+            run over the set; each clip counts with its median time. Times are wall-clock from handing the audio file to
+            the runtime until the text comes back, the same for every runtime. Hover a value for the median time of a
+            short, medium and long clip, which is what a dictation waits for. Cloud APIs are not measured, and neither
+            are whisper.cpp and Apple Speech, which this harness starts anew for every clip.
           </p>
         </Block>
         <Block title="Runs and transcripts">

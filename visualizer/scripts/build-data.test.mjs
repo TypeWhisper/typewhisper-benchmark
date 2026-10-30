@@ -2,7 +2,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildData, digitsHit, finalizeCell, numberTokens, rowStatus } from "./build-data.mjs";
+import { SPEED_REFERENCE, buildData, digitsHit, finalizeCell, numberTokens, rowStatus } from "./build-data.mjs";
 
 describe("Digits metric", () => {
   it("takes whitespace tokens with a digit, without trailing punctuation", () => {
@@ -115,5 +115,33 @@ describe("buildData", () => {
     expect(clips.clips[0]).toMatchObject({ ref: "352 participants registered", tags: ["cardinal"] });
     // n2 keeps the ok first run, not the failed second one.
     expect(clips.results["acme:fast"][1]).toEqual(["at two thirty", 0.5, 0, 30, 0]);
+  });
+
+  it("takes speed runs from the reference machine for models with results", () => {
+    const dirs = fixture();
+    const speedDir = join(dirs.resultsDir, "..", "speed");
+    mkdirSync(speedDir);
+    const report = (providerId, model, machine, passes = 3) => ({
+      providerId, model, language: "en", measuredAt: "2026-10-29T21:00:00.000Z",
+      speedSet: { id: "speed-en-v1", clips: 30 }, settings: { passes }, machine,
+      summary: {
+        speedFactor: 173.6, passSpread: 0.02,
+        buckets: { short: { medianMs: 38.8 }, medium: { medianMs: 55 }, long: { medianMs: 79.7 } },
+      },
+    });
+    writeFileSync(join(speedDir, "acme_fast.json"), JSON.stringify(report("acme", "fast", SPEED_REFERENCE)));
+    writeFileSync(join(speedDir, "acme_other.json"), JSON.stringify(report("acme", "other", SPEED_REFERENCE)));
+    writeFileSync(
+      join(speedDir, "acme_laptop.json"),
+      JSON.stringify(report("acme", "fast", { ...SPEED_REFERENCE, model: "Mac16,1" }))
+    );
+    writeFileSync(join(speedDir, "acme_quick.json"), JSON.stringify(report("acme", "fast", SPEED_REFERENCE, 1)));
+    writeFileSync(join(speedDir, "null.json"), "null");
+    writeFileSync(join(speedDir, "broken.json"), "{");
+    const { summary } = buildData({ ...dirs, speedDir });
+    // No accuracy results for acme:other, the laptop and one-pass runs do not count, and malformed files are skipped.
+    expect(summary.speed).toEqual({
+      "acme:fast": { x: 173.6, short: 38.8, medium: 55, long: 79.7, clips: 30, passes: 3, spread: 0.02, at: "2026-10-29" },
+    });
   });
 });
