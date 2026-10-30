@@ -135,8 +135,10 @@ describe("buildData", () => {
       join(speedDir, "acme_laptop.json"),
       JSON.stringify(report("acme", "fast", { ...SPEED_REFERENCE, model: "Mac16,1" }))
     );
+    writeFileSync(join(speedDir, "null.json"), "null");
+    writeFileSync(join(speedDir, "broken.json"), "{");
     const { summary } = buildData({ ...dirs, speedDir });
-    // No accuracy results for acme:other, and the laptop run does not count.
+    // No accuracy results for acme:other, the laptop run does not count, and malformed files are skipped.
     expect(summary.speed).toEqual({
       "acme:fast": { x: 173.6, short: 38.8, medium: 55, long: 79.7, clips: 30, passes: 3, spread: 0.02, at: "2026-10-29" },
     });

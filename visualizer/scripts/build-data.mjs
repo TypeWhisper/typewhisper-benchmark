@@ -232,6 +232,9 @@ function loadSpeed(speedDir, models) {
     try {
       report = readJson(join(speedDir, file));
     } catch {
+      report = null;
+    }
+    if (typeof report?.providerId !== "string" || typeof report?.model !== "string") {
       console.warn(`build-data: skipped malformed speed file ${file}`);
       continue;
     }
