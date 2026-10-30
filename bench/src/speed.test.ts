@@ -1,8 +1,8 @@
+import { spawn } from "child_process";
 import { existsSync } from "fs";
-import { mkdtemp, rm, utimes, writeFile } from "fs/promises";
-import { tmpdir } from "os";
+import { createServer, type AddressInfo } from "net";
 import { join } from "path";
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   acquireSpeedLock,
   foreignProcesses,
@@ -20,11 +20,6 @@ import {
   type SpeedClipResult,
 } from "./speed.js";
 import type { STTProvider } from "./types.js";
-
-const tempDirs: string[] = [];
-afterEach(async () => {
-  for (const dir of tempDirs.splice(0)) await rm(dir, { recursive: true, force: true });
-});
 
 function clip(bucket: SpeedClipResult["bucket"], audioSeconds: number, wallMs: number[], engineMs = wallMs, wer: number | null = 0.1): SpeedClipResult {
   return { suite: "s", testId: `${bucket}-${audioSeconds}`, bucket, audioSeconds, wallMs, engineMs, wer };
@@ -99,62 +94,57 @@ describe("processes", () => {
 });
 
 describe("speed lock", () => {
-  it("lets one run hold the lock and clears a stale one", async () => {
-    const dir = await mkdtemp(join(tmpdir(), "speed-lock-"));
-    tempDirs.push(dir);
-    const path = join(dir, "speed.lock");
+  // A free port for each test, so the tests never touch a real speed run's lock.
+  async function freePort(): Promise<number> {
+    const server = createServer();
+    await new Promise<void>((resolveListen) => server.listen(0, "127.0.0.1", () => resolveListen()));
+    const { port } = server.address() as AddressInfo;
+    await new Promise<void>((resolveClose) => server.close(() => resolveClose()));
+    return port;
+  }
 
-    const release = await acquireSpeedLock(path);
-    expect(await speedLockHolder(path)).toBe(process.pid);
-    await expect(acquireSpeedLock(path)).rejects.toThrow(/Another speed run/);
+  it("lets one run hold the lock and frees it on release", async () => {
+    const port = await freePort();
+    expect(await speedLockHolder(port)).toBeNull();
+    const release = await acquireSpeedLock(port);
+    expect(await speedLockHolder(port)).toBe(process.pid);
+    await expect(acquireSpeedLock(port)).rejects.toThrow(/Another speed run/);
     await release();
-    expect(existsSync(path)).toBe(false);
-
-    await writeFile(path, "999999999");
-    expect(await speedLockHolder(path)).toBeNull();
-    const again = await acquireSpeedLock(path);
-    await again();
+    expect(await speedLockHolder(port)).toBeNull();
+    await (await acquireSpeedLock(port))();
   });
 
-  it("gives a stale lock to exactly one of several runs that find it at once", async () => {
-    const dir = await mkdtemp(join(tmpdir(), "speed-lock-"));
-    tempDirs.push(dir);
-    const path = join(dir, "speed.lock");
-    await writeFile(path, "999999999");
-
-    const attempts = await Promise.allSettled(Array.from({ length: 8 }, () => acquireSpeedLock(path)));
+  it("gives the lock to exactly one of several runs that start at once", async () => {
+    const port = await freePort();
+    const attempts = await Promise.allSettled(Array.from({ length: 8 }, () => acquireSpeedLock(port)));
     const taken = attempts.filter((attempt) => attempt.status === "fulfilled");
     expect(taken).toHaveLength(1);
-    for (const attempt of attempts) {
-      if (attempt.status === "rejected") expect(String(attempt.reason)).toMatch(/Another speed run/);
-    }
-    expect(await speedLockHolder(path)).toBe(process.pid);
     await (taken[0] as PromiseFulfilledResult<() => Promise<void>>).value();
-    expect(existsSync(path)).toBe(false);
   });
 
-  it("clears a reap lock left by a run that died", async () => {
-    const dir = await mkdtemp(join(tmpdir(), "speed-lock-"));
-    tempDirs.push(dir);
-    const path = join(dir, "speed.lock");
-    await writeFile(path, "999999999");
-    await writeFile(`${path}.reap`, "");
-    const old = new Date(Date.now() - 60_000);
-    await utimes(`${path}.reap`, old, old);
-    const release = await acquireSpeedLock(path);
-    expect(await speedLockHolder(path)).toBe(process.pid);
-    expect(existsSync(`${path}.reap`)).toBe(false);
-    await release();
+  it("is free again as soon as the holding process is killed", async () => {
+    const port = await freePort();
+    const holder = spawn(
+      process.execPath,
+      ["-e", `require("net").createServer((s) => s.end("typewhisper-speed " + process.pid)).listen(${port}, "127.0.0.1", () => console.log("ready"))`],
+      { stdio: ["ignore", "pipe", "ignore"] }
+    );
+    await new Promise((resolveReady) => holder.stdout!.once("data", resolveReady));
+    expect(await speedLockHolder(port)).toBe(holder.pid);
+    await expect(acquireSpeedLock(port)).rejects.toThrow(new RegExp(`pid ${holder.pid}`));
+    const exited = new Promise((resolveExit) => holder.once("exit", resolveExit));
+    holder.kill("SIGKILL");
+    await exited;
+    await (await acquireSpeedLock(port))();
   });
 
-  it("treats an empty lock file as stale", async () => {
-    const dir = await mkdtemp(join(tmpdir(), "speed-lock-"));
-    tempDirs.push(dir);
-    const path = join(dir, "speed.lock");
-    await writeFile(path, "");
-    const release = await acquireSpeedLock(path);
-    expect(await speedLockHolder(path)).toBe(process.pid);
-    await release();
+  it("does not take another program on the port for a speed run", async () => {
+    const port = await freePort();
+    const other = createServer((socket) => socket.end("HTTP/1.1 400 Bad Request\r\n\r\n"));
+    await new Promise<void>((resolveListen) => other.listen(port, "127.0.0.1", () => resolveListen()));
+    expect(await speedLockHolder(port)).toBeNull();
+    await expect(acquireSpeedLock(port)).rejects.toThrow(/in use by another program/);
+    await new Promise<void>((resolveClose) => other.close(() => resolveClose()));
   });
 });
 

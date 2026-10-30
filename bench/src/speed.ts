@@ -10,13 +10,14 @@
  * measured the same way: from handing over the audio file to getting the text back. The time the
  * runtime reports itself is kept as engineMs.
  *
- * Measurements disturb each other, so a lock file keeps a second speed run out, the run refuses to
+ * Measurements disturb each other, so a lock keeps a second speed run out, the run refuses to
  * start next to another benchmark process, and it waits for the machine to be idle before every model.
  */
 import { execFile } from "child_process";
 import { existsSync } from "fs";
-import { link, mkdir, open, readFile, stat, unlink, writeFile } from "fs/promises";
-import { loadavg, tmpdir } from "os";
+import { mkdir, readFile, writeFile } from "fs/promises";
+import { createConnection, createServer } from "net";
+import { loadavg } from "os";
 import { basename, dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { promisify } from "util";
@@ -32,7 +33,11 @@ export const SPEED_SET_PATH = join(BENCH_ROOT, "speed", "speed-set.json");
 export const SPEED_RESULTS_DIR = join(BENCH_ROOT, "..", "visualizer", "public", "data", "speed");
 /** Runs on other machines go here, so they never replace a published result. */
 export const SPEED_OTHER_RESULTS_DIR = join(BENCH_ROOT, "results", "speed");
-export const SPEED_LOCK_PATH = join(tmpdir(), "typewhisper-bench-speed.lock");
+/**
+ * The speed lock is a listening socket on this local port: only one process can listen on it, and
+ * the system frees it when that process ends, even when it crashes, so no lock is ever left behind.
+ */
+export const SPEED_LOCK_PORT = 47_913;
 
 /** The machine all published speeds come from: the Mac mini (M5 Pro, 48 GB). */
 export const REFERENCE_MACHINE = { model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48 } as const;
@@ -347,89 +352,48 @@ export async function waitForIdle(options: IdleOptions): Promise<void> {
 /* Lock                                                                                        */
 /* ------------------------------------------------------------------------------------------ */
 
-function alive(pid: number): boolean {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch (error) {
-    return (error as NodeJS.ErrnoException).code === "EPERM";
-  }
-}
-
-/** The pid written in the lock, or null when there is no lock file. */
-async function lockPid(path: string): Promise<number | null> {
-  try {
-    return Number((await readFile(path, "utf-8")).trim()) || 0;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
-    throw error;
-  }
-}
-
-/** The pid holding the speed lock, or null when no live process holds it. */
-export async function speedLockHolder(path = SPEED_LOCK_PATH): Promise<number | null> {
-  const pid = await lockPid(path);
-  return pid && alive(pid) ? pid : null;
-}
-
-const REAP_GRACE_MS = 10_000;
-
-/** Creates the lock with this process's pid already in it, so no run ever sees an empty lock. */
-async function createLock(path: string): Promise<boolean> {
-  const temp = `${path}.${process.pid}.${Math.random().toString(36).slice(2)}`;
-  await writeFile(temp, String(process.pid));
-  try {
-    await link(temp, path);
-    return true;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "EEXIST") return false;
-    throw error;
-  } finally {
-    await unlink(temp).catch(() => undefined);
-  }
-}
+const LOCK_HOST = "127.0.0.1";
 
 /**
- * Removes the lock of a run that died. Runs take turns through a second lock, and only a run
- * holding it may delete the speed lock, so no run deletes a lock that another run just took.
+ * The pid of the speed run holding the lock, or null when no run holds it. A holder answers a
+ * connection with "typewhisper-speed <pid>"; another program on the port answers with something
+ * else and counts as no holder.
  */
-async function removeStaleLock(path: string): Promise<void> {
-  const reap = `${path}.reap`;
-  let handle;
-  try {
-    handle = await open(reap, "wx");
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-    // Another run is removing it. A reap lock this old belongs to a run that died meanwhile.
-    const since = await stat(reap).then((info) => Date.now() - info.mtimeMs, () => 0);
-    if (since > REAP_GRACE_MS) await unlink(reap).catch(() => undefined);
-    else await new Promise((resolveWait) => setTimeout(resolveWait, 100));
-    return;
-  }
-  try {
-    const pid = await lockPid(path);
-    if (pid !== null && !(pid && alive(pid))) await unlink(path).catch(() => undefined);
-  } finally {
-    await handle.close();
-    await unlink(reap).catch(() => undefined);
-  }
+export function speedLockHolder(port = SPEED_LOCK_PORT): Promise<number | null> {
+  return new Promise((resolveHolder) => {
+    let answer = "";
+    const socket = createConnection({ host: LOCK_HOST, port });
+    const done = (pid: number | null) => {
+      socket.destroy();
+      resolveHolder(pid);
+    };
+    socket.setTimeout(2_000, () => done(null));
+    socket.on("data", (chunk) => (answer += chunk));
+    socket.on("end", () => {
+      const match = /^typewhisper-speed (\d+)$/.exec(answer.trim());
+      done(match ? Number(match[1]) : null);
+    });
+    socket.on("error", () => done(null));
+  });
 }
 
 /** Takes the speed lock, so a second speed run cannot measure at the same time. */
-export async function acquireSpeedLock(path = SPEED_LOCK_PATH): Promise<() => Promise<void>> {
-  // Long enough to outlast the grace period of a reap lock left by a run that died.
-  const deadline = Date.now() + 2 * REAP_GRACE_MS;
-  while (Date.now() < deadline) {
-    if (await createLock(path)) {
-      return async () => {
-        if ((await lockPid(path)) === process.pid) await unlink(path).catch(() => undefined);
-      };
-    }
-    const holder = await speedLockHolder(path);
-    if (holder) throw new Error(`Another speed run (pid ${holder}) holds ${path}`);
-    await removeStaleLock(path);
-  }
-  throw new Error(`Could not take ${path}`);
+export function acquireSpeedLock(port = SPEED_LOCK_PORT): Promise<() => Promise<void>> {
+  return new Promise((resolveLock, rejectLock) => {
+    const server = createServer((socket) => socket.end(`typewhisper-speed ${process.pid}\n`));
+    server.once("error", async (error: NodeJS.ErrnoException) => {
+      if (error.code !== "EADDRINUSE") return rejectLock(error);
+      const holder = await speedLockHolder(port);
+      rejectLock(
+        new Error(holder ? `Another speed run (pid ${holder}) holds the speed lock` : `Port ${port} for the speed lock is in use by another program`)
+      );
+    });
+    server.listen({ host: LOCK_HOST, port, exclusive: true }, () => {
+      // The lock must not keep the process alive on its own.
+      server.unref();
+      resolveLock(() => new Promise((resolveRelease) => server.close(() => resolveRelease())));
+    });
+  });
 }
 
 /* ------------------------------------------------------------------------------------------ */
