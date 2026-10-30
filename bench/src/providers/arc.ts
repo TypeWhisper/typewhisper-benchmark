@@ -1,5 +1,7 @@
 import { execFile } from "child_process";
-import { arch, platform } from "os";
+import { existsSync } from "fs";
+import { arch, homedir, platform } from "os";
+import { join } from "path";
 import { fileURLToPath } from "url";
 import { promisify } from "util";
 import { JsonLineWorker } from "./json-line-worker.js";
@@ -26,6 +28,13 @@ export const ARC_MODELS: Record<string, ArcModel> = {
   transcriber: { backbone: "full" },
 };
 
+/** True when a Hugging Face token is set or cached, which the gated Arc weights need. */
+export function hasHuggingFaceToken(env: NodeJS.ProcessEnv = process.env, home = homedir()): boolean {
+  if (env.HF_TOKEN || env.HUGGING_FACE_HUB_TOKEN) return true;
+  const hfHome = env.HF_HOME || join(home, ".cache", "huggingface");
+  return existsSync(env.HF_TOKEN_PATH || join(hfHome, "token"));
+}
+
 /**
  * Arc in a long-lived Python worker (started via uv) on arc_audio 1.2.0. The weights are gated: the worker
  * needs a Hugging Face token (HF_TOKEN or a cached login) whose account accepted the licence. Timing is
@@ -47,6 +56,8 @@ export class ArcProvider implements STTProvider {
 
   async isAvailable(): Promise<boolean> {
     if (platform() !== "darwin" || arch() !== "arm64") return false;
+    // Without a token the gated download fails, so a default run should leave Arc out.
+    if (!hasHuggingFaceToken()) return false;
     try {
       await execFileAsync(this.uvPath, ["--version"]);
       return true;

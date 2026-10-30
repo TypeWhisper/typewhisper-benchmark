@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ARC_MODELS, ARC_REVISION, ArcProvider } from "./arc.js";
+import { ARC_MODELS, ARC_REVISION, ArcProvider, hasHuggingFaceToken } from "./arc.js";
 
 describe("ArcProvider", () => {
   it("has correct provider metadata", () => {
@@ -21,5 +21,10 @@ describe("ArcProvider", () => {
     expect(provider.supportsLanguage("transcriber", "de")).toBe(false);
     expect(provider.supportsLanguage("mini", "auto")).toBe(false);
     expect(provider.supportsLanguage("unknown", "en")).toBe(false);
+  });
+
+  it("needs a Hugging Face token for the gated weights", () => {
+    expect(hasHuggingFaceToken({ HF_TOKEN: "hf_x" }, "/nonexistent")).toBe(true);
+    expect(hasHuggingFaceToken({}, "/nonexistent")).toBe(false);
   });
 });
