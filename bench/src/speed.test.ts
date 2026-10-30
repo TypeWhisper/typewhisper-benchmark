@@ -9,6 +9,10 @@ import {
   isBenchProcess,
   isReferenceMachine,
   loadSpeedSet,
+  sameMachine,
+  SPEED_OTHER_RESULTS_DIR,
+  SPEED_RESULTS_DIR,
+  speedResultsDir,
   parseProcessTable,
   speedLanguage,
   speedLockHolder,
@@ -111,6 +115,33 @@ describe("speed lock", () => {
     const again = await acquireSpeedLock(path);
     await again();
   });
+
+  it("gives a stale lock to exactly one of several runs that find it at once", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "speed-lock-"));
+    tempDirs.push(dir);
+    const path = join(dir, "speed.lock");
+    await writeFile(path, "999999999");
+
+    const attempts = await Promise.allSettled(Array.from({ length: 8 }, () => acquireSpeedLock(path)));
+    const taken = attempts.filter((attempt) => attempt.status === "fulfilled");
+    expect(taken).toHaveLength(1);
+    for (const attempt of attempts) {
+      if (attempt.status === "rejected") expect(String(attempt.reason)).toMatch(/Another speed run/);
+    }
+    expect(await speedLockHolder(path)).toBe(process.pid);
+    await (taken[0] as PromiseFulfilledResult<() => Promise<void>>).value();
+    expect(existsSync(path)).toBe(false);
+  });
+
+  it("treats an empty lock file as stale", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "speed-lock-"));
+    tempDirs.push(dir);
+    const path = join(dir, "speed.lock");
+    await writeFile(path, "");
+    const release = await acquireSpeedLock(path);
+    expect(await speedLockHolder(path)).toBe(process.pid);
+    await release();
+  });
 });
 
 describe("speed set", () => {
@@ -129,5 +160,13 @@ describe("isReferenceMachine", () => {
   it("accepts only the Mac mini M5 Pro with 48 GB", () => {
     expect(isReferenceMachine({ model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48 })).toBe(true);
     expect(isReferenceMachine({ model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 64 })).toBe(false);
+  });
+
+  it("keeps results from other machines out of the published folder", () => {
+    const laptop = { model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 24 };
+    expect(speedResultsDir({ model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48 })).toBe(SPEED_RESULTS_DIR);
+    expect(speedResultsDir(laptop)).toBe(SPEED_OTHER_RESULTS_DIR);
+    expect(sameMachine(laptop, { ...laptop })).toBe(true);
+    expect(sameMachine(laptop, { ...laptop, chip: "Apple M5 Max" })).toBe(false);
   });
 });

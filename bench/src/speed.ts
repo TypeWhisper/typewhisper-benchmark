@@ -15,7 +15,7 @@
  */
 import { execFile } from "child_process";
 import { existsSync } from "fs";
-import { mkdir, readFile, unlink, writeFile, open } from "fs/promises";
+import { link, mkdir, open, readFile, stat, unlink, writeFile } from "fs/promises";
 import { loadavg, tmpdir } from "os";
 import { basename, dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
@@ -30,6 +30,8 @@ const BENCH_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 export const SPEED_SCHEMA = 1;
 export const SPEED_SET_PATH = join(BENCH_ROOT, "speed", "speed-set.json");
 export const SPEED_RESULTS_DIR = join(BENCH_ROOT, "..", "visualizer", "public", "data", "speed");
+/** Runs on other machines go here, so they never replace a published result. */
+export const SPEED_OTHER_RESULTS_DIR = join(BENCH_ROOT, "results", "speed");
 export const SPEED_LOCK_PATH = join(tmpdir(), "typewhisper-bench-speed.lock");
 
 /** The machine all published speeds come from: the Mac mini (M5 Pro, 48 GB). */
@@ -190,12 +192,19 @@ export function speedFileName(providerId: string, model: string): string {
   return `${providerId}_${model}.json`;
 }
 
-export function isReferenceMachine(machine: Pick<MachineInfo, "model" | "chip" | "memoryGb">): boolean {
-  return (
-    machine.model === REFERENCE_MACHINE.model &&
-    machine.chip === REFERENCE_MACHINE.chip &&
-    machine.memoryGb === REFERENCE_MACHINE.memoryGb
-  );
+type MachineIdentity = Pick<MachineInfo, "model" | "chip" | "memoryGb">;
+
+export function sameMachine(a: MachineIdentity, b: MachineIdentity): boolean {
+  return a.model === b.model && a.chip === b.chip && a.memoryGb === b.memoryGb;
+}
+
+export function isReferenceMachine(machine: MachineIdentity): boolean {
+  return sameMachine(machine, REFERENCE_MACHINE);
+}
+
+/** Where a run on this machine reads and writes its results. */
+export function speedResultsDir(machine: MachineIdentity): string {
+  return isReferenceMachine(machine) ? SPEED_RESULTS_DIR : SPEED_OTHER_RESULTS_DIR;
 }
 
 /** Commands of other benchmark runs or model workers that would compete for the machine. */
@@ -347,30 +356,74 @@ function alive(pid: number): boolean {
   }
 }
 
+/** The pid written in the lock, or null when there is no lock file. */
+async function lockPid(path: string): Promise<number | null> {
+  try {
+    return Number((await readFile(path, "utf-8")).trim()) || 0;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 /** The pid holding the speed lock, or null when no live process holds it. */
 export async function speedLockHolder(path = SPEED_LOCK_PATH): Promise<number | null> {
-  if (!existsSync(path)) return null;
-  const pid = Number((await readFile(path, "utf-8").catch(() => "")).trim());
-  return pid > 0 && alive(pid) ? pid : null;
+  const pid = await lockPid(path);
+  return pid && alive(pid) ? pid : null;
+}
+
+/** Creates the lock with this process's pid already in it, so no run ever sees an empty lock. */
+async function createLock(path: string): Promise<boolean> {
+  const temp = `${path}.${process.pid}.${Math.random().toString(36).slice(2)}`;
+  await writeFile(temp, String(process.pid));
+  try {
+    await link(temp, path);
+    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "EEXIST") return false;
+    throw error;
+  } finally {
+    await unlink(temp).catch(() => undefined);
+  }
+}
+
+/**
+ * Removes the lock of a run that died. Runs take turns through a second lock, and only a run
+ * holding it may delete the speed lock, so no run deletes a lock that another run just took.
+ */
+async function removeStaleLock(path: string): Promise<void> {
+  const reap = `${path}.reap`;
+  let handle;
+  try {
+    handle = await open(reap, "wx");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+    // Another run is removing it. A reap lock this old belongs to a run that died meanwhile.
+    const since = await stat(reap).then((info) => Date.now() - info.mtimeMs, () => 0);
+    if (since > 10_000) await unlink(reap).catch(() => undefined);
+    else await new Promise((resolveWait) => setTimeout(resolveWait, 100));
+    return;
+  }
+  try {
+    const pid = await lockPid(path);
+    if (pid !== null && !(pid && alive(pid))) await unlink(path).catch(() => undefined);
+  } finally {
+    await handle.close();
+    await unlink(reap).catch(() => undefined);
+  }
 }
 
 /** Takes the speed lock, so a second speed run cannot measure at the same time. */
 export async function acquireSpeedLock(path = SPEED_LOCK_PATH): Promise<() => Promise<void>> {
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const handle = await open(path, "wx");
-      await handle.writeFile(String(process.pid));
-      await handle.close();
+  for (let attempt = 0; attempt < 50; attempt++) {
+    if (await createLock(path)) {
       return async () => {
-        await unlink(path).catch(() => undefined);
+        if ((await lockPid(path)) === process.pid) await unlink(path).catch(() => undefined);
       };
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-      const holder = await speedLockHolder(path);
-      if (holder) throw new Error(`Another speed run (pid ${holder}) holds ${path}`);
-      // A stale lock from a run that died.
-      await unlink(path).catch(() => undefined);
     }
+    const holder = await speedLockHolder(path);
+    if (holder) throw new Error(`Another speed run (pid ${holder}) holds ${path}`);
+    await removeStaleLock(path);
   }
   throw new Error(`Could not take ${path}`);
 }

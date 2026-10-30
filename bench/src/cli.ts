@@ -6,15 +6,16 @@ import { fileURLToPath } from "url";
 import { runBenchmark, mergeResultFiles } from "./runner.js";
 import { rescoreResultFiles } from "./rescore.js";
 import {
-  SPEED_RESULTS_DIR,
   acquireSpeedLock,
   isReferenceMachine,
   loadSpeedSet,
   machineInfo,
   measureModel,
   readSpeedReport,
+  sameMachine,
   speedLanguage,
   speedLockHolder,
+  speedResultsDir,
   writeSpeedReport,
   REFERENCE_MACHINE,
 } from "./speed.js";
@@ -276,8 +277,9 @@ program
         console.log(chalk.red(`This is ${machineLabel}; published speeds come from ${reference}. Pass --allow-other-machine to measure anyway.`));
         process.exit(1);
       }
-      console.log(chalk.yellow(`Not the reference machine (${reference}); the visualizer ignores these results.`));
+      console.log(chalk.yellow(`Not the reference machine (${reference}); results go to ${speedResultsDir(machine)}, not the visualizer.`));
     }
+    const resultsDir = speedResultsDir(machine);
     if (machine.lowPowerMode) console.log(chalk.yellow("Low Power Mode is on; speeds will be lower."));
 
     let providers = (await getAvailableProviders()).filter((provider) => provider.type !== "cloud");
@@ -314,8 +316,8 @@ program
           console.log(chalk.dim(`Skipping ${provider.id}/${model}: no supported language`));
           continue;
         }
-        const existing = await readSpeedReport(SPEED_RESULTS_DIR, provider.id, model);
-        if (!opts.rerun && existing?.speedSet.id === set.id && existing.machine.model === machine.model) {
+        const existing = await readSpeedReport(resultsDir, provider.id, model);
+        if (!opts.rerun && existing?.speedSet.id === set.id && sameMachine(existing.machine, machine)) {
           console.log(chalk.dim(`Skipping ${provider.id}/${model}: measured ${existing.measuredAt.slice(0, 10)} (--rerun to measure again)`));
           continue;
         }
@@ -376,7 +378,7 @@ program
               }
             },
           });
-          await writeSpeedReport(SPEED_RESULTS_DIR, report);
+          await writeSpeedReport(resultsDir, report);
           const { summary } = report;
           const wer = summary.wer != null ? `, WER ${(summary.wer * 100).toFixed(1)}%` : "";
           const spread = summary.passSpread > 0.1 ? chalk.yellow(` (passes differ by ${(summary.passSpread * 100).toFixed(0)}%)`) : "";
@@ -407,7 +409,7 @@ program
       console.log(chalk.red(`\n${failed.length} model(s) failed:`));
       for (const line of failed) console.log(chalk.red(`  ${line}`));
     }
-    console.log(chalk.dim(`\nSpeed results in ${SPEED_RESULTS_DIR}`));
+    console.log(chalk.dim(`\nSpeed results in ${resultsDir}`));
     process.exit(failed.length ? 1 : 0);
   });
 
