@@ -354,24 +354,36 @@ export async function waitForIdle(options: IdleOptions): Promise<void> {
 
 const LOCK_HOST = "127.0.0.1";
 
+/** A speed run holding the lock; pid is null while the run is too busy to answer. */
+export interface SpeedLockHolder {
+  pid: number | null;
+}
+
+export function describeHolder(holder: SpeedLockHolder): string {
+  return holder.pid ? `pid ${holder.pid}` : "busy, pid unknown";
+}
+
 /**
- * The pid of the speed run holding the lock, or null when no run holds it. A holder answers a
- * connection with "typewhisper-speed <pid>"; another program on the port answers with something
- * else and counts as no holder.
+ * The speed run holding the lock, or null when no run holds it. A holder answers a connection
+ * with "typewhisper-speed <pid>". A run can be too busy to answer, for example during a
+ * synchronous decode, so an accepted connection without an answer also counts as a holder.
+ * Another program that answers with something else does not.
  */
-export function speedLockHolder(port = SPEED_LOCK_PORT): Promise<number | null> {
+export function speedLockHolder(port = SPEED_LOCK_PORT, timeoutMs = 2_000): Promise<SpeedLockHolder | null> {
   return new Promise((resolveHolder) => {
     let answer = "";
+    let connected = false;
     const socket = createConnection({ host: LOCK_HOST, port });
-    const done = (pid: number | null) => {
+    const done = (holder: SpeedLockHolder | null) => {
       socket.destroy();
-      resolveHolder(pid);
+      resolveHolder(holder);
     };
-    socket.setTimeout(2_000, () => done(null));
+    socket.on("connect", () => (connected = true));
+    socket.setTimeout(timeoutMs, () => done(connected ? { pid: null } : null));
     socket.on("data", (chunk) => (answer += chunk));
     socket.on("end", () => {
       const match = /^typewhisper-speed (\d+)$/.exec(answer.trim());
-      done(match ? Number(match[1]) : null);
+      done(match ? { pid: Number(match[1]) } : null);
     });
     socket.on("error", () => done(null));
   });
@@ -385,7 +397,11 @@ export function acquireSpeedLock(port = SPEED_LOCK_PORT): Promise<() => Promise<
       if (error.code !== "EADDRINUSE") return rejectLock(error);
       const holder = await speedLockHolder(port);
       rejectLock(
-        new Error(holder ? `Another speed run (pid ${holder}) holds the speed lock` : `Port ${port} for the speed lock is in use by another program`)
+        new Error(
+          holder
+            ? `Another speed run (${describeHolder(holder)}) holds the speed lock`
+            : `Port ${port} for the speed lock is in use by another program`
+        )
       );
     });
     server.listen({ host: LOCK_HOST, port, exclusive: true }, () => {

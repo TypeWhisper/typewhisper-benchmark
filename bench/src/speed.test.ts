@@ -107,7 +107,7 @@ describe("speed lock", () => {
     const port = await freePort();
     expect(await speedLockHolder(port)).toBeNull();
     const release = await acquireSpeedLock(port);
-    expect(await speedLockHolder(port)).toBe(process.pid);
+    expect(await speedLockHolder(port)).toEqual({ pid: process.pid });
     await expect(acquireSpeedLock(port)).rejects.toThrow(/Another speed run/);
     await release();
     expect(await speedLockHolder(port)).toBeNull();
@@ -130,12 +130,33 @@ describe("speed lock", () => {
       { stdio: ["ignore", "pipe", "ignore"] }
     );
     await new Promise((resolveReady) => holder.stdout!.once("data", resolveReady));
-    expect(await speedLockHolder(port)).toBe(holder.pid);
+    expect(await speedLockHolder(port)).toEqual({ pid: holder.pid });
     await expect(acquireSpeedLock(port)).rejects.toThrow(new RegExp(`pid ${holder.pid}`));
     const exited = new Promise((resolveExit) => holder.once("exit", resolveExit));
     holder.kill("SIGKILL");
     await exited;
     await (await acquireSpeedLock(port))();
+  });
+
+  it("counts a holder that is too busy to answer", async () => {
+    const port = await freePort();
+    // Listens, then blocks its event loop like a synchronous decode.
+    const holder = spawn(
+      process.execPath,
+      [
+        "-e",
+        `require("net").createServer((s) => s.end("typewhisper-speed " + process.pid)).listen(${port}, "127.0.0.1", () => {
+          process.stdout.write("ready\\n", () => { const end = Date.now() + 5000; while (Date.now() < end); });
+        })`,
+      ],
+      { stdio: ["ignore", "pipe", "ignore"] }
+    );
+    await new Promise((resolveReady) => holder.stdout!.once("data", resolveReady));
+    try {
+      expect(await speedLockHolder(port, 500)).toEqual({ pid: null });
+    } finally {
+      holder.kill("SIGKILL");
+    }
   });
 
   it("does not take another program on the port for a speed run", async () => {

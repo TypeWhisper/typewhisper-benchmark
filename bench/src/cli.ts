@@ -7,6 +7,7 @@ import { runBenchmark, mergeResultFiles } from "./runner.js";
 import { rescoreResultFiles } from "./rescore.js";
 import {
   acquireSpeedLock,
+  describeHolder,
   isReferenceMachine,
   loadSpeedSet,
   machineInfo,
@@ -63,7 +64,7 @@ program
     // A run next to a speed measurement would distort its times.
     const speedRun = await speedLockHolder();
     if (speedRun) {
-      console.log(chalk.red(`A speed run (pid ${speedRun}) is measuring; start this run after it finishes.`));
+      console.log(chalk.red(`A speed run (${describeHolder(speedRun)}) is measuring; start this run after it finishes.`));
       process.exit(1);
     }
 
