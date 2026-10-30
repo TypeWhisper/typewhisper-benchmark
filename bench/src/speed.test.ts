@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
 import { existsSync } from "fs";
-import { createServer, type AddressInfo } from "net";
+import { createConnection, createServer, type AddressInfo } from "net";
 import { join } from "path";
 import { describe, expect, it } from "vitest";
 import {
@@ -157,6 +157,31 @@ describe("speed lock", () => {
     } finally {
       holder.kill("SIGKILL");
     }
+  });
+
+  it("survives probes that hang up before a busy run answers", async () => {
+    const port = await freePort();
+    const release = await acquireSpeedLock(port);
+    await Promise.all(
+      Array.from(
+        { length: 20 },
+        () =>
+          new Promise<void>((resolveProbe) => {
+            const probe = createConnection({ host: "127.0.0.1", port });
+            probe.on("connect", () => {
+              probe.resetAndDestroy();
+              resolveProbe();
+            });
+            probe.on("error", () => resolveProbe());
+          })
+      )
+    );
+    // Busy like a synchronous decode, so the answers go out after the probes reset.
+    const end = Date.now() + 300;
+    while (Date.now() < end);
+    await new Promise((resolveWait) => setTimeout(resolveWait, 300));
+    expect(await speedLockHolder(port)).toEqual({ pid: process.pid });
+    await release();
   });
 
   it("does not take another program on the port for a speed run", async () => {

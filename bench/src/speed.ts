@@ -392,7 +392,11 @@ export function speedLockHolder(port = SPEED_LOCK_PORT, timeoutMs = 2_000): Prom
 /** Takes the speed lock, so a second speed run cannot measure at the same time. */
 export function acquireSpeedLock(port = SPEED_LOCK_PORT): Promise<() => Promise<void>> {
   return new Promise((resolveLock, rejectLock) => {
-    const server = createServer((socket) => socket.end(`typewhisper-speed ${process.pid}\n`));
+    const server = createServer((socket) => {
+      // A probe that gave up on a busy run has closed its end; the late answer must not crash the run.
+      socket.on("error", () => undefined);
+      socket.end(`typewhisper-speed ${process.pid}\n`);
+    });
     server.once("error", async (error: NodeJS.ErrnoException) => {
       if (error.code !== "EADDRINUSE") return rejectLock(error);
       const holder = await speedLockHolder(port);
