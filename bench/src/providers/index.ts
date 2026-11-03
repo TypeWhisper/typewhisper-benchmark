@@ -17,12 +17,14 @@ import { AudioCppProvider } from "./audiocpp.js";
 import { NeedleProvider } from "./needle.js";
 import { ArcProvider } from "./arc.js";
 import { SonioxProvider } from "./soniox.js";
+import { Reson8Provider } from "./reson8.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
   new DeepgramProvider(),
   new GroqProvider(),
   new SonioxProvider(),
+  new Reson8Provider(),
   new WhisperCppProvider(),
   new AppleSpeechProvider(),
   new SherpaOnnxProvider(),
