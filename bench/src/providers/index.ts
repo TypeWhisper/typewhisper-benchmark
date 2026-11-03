@@ -16,11 +16,13 @@ import { SpeechAnalyzerProvider } from "./speech-analyzer.js";
 import { AudioCppProvider } from "./audiocpp.js";
 import { NeedleProvider } from "./needle.js";
 import { ArcProvider } from "./arc.js";
+import { SonioxProvider } from "./soniox.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
   new DeepgramProvider(),
   new GroqProvider(),
+  new SonioxProvider(),
   new WhisperCppProvider(),
   new AppleSpeechProvider(),
   new SherpaOnnxProvider(),
