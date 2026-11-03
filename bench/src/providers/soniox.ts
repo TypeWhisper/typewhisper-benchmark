@@ -100,6 +100,16 @@ export class MinuteRateLimiter {
       await sleep(60_000 - (now - this.times[0]) + 25);
     }
   }
+
+  /** Waits until at least `free` requests are left in the last minute. */
+  async reserve(free: number): Promise<void> {
+    for (;;) {
+      const now = Date.now();
+      this.times = this.times.filter((t) => now - t < 60_000);
+      if (this.times.length <= this.perMinute - free) return;
+      await sleep(60_000 - (now - this.times[0]) + 25);
+    }
+  }
 }
 
 /** Below Soniox's 100 requests per minute (per group: real-time, files, async), leaving room for other use of the key. */
@@ -140,6 +150,15 @@ export class SonioxProvider implements STTProvider {
 
   async isAvailable(): Promise<boolean> {
     return !!process.env.SONIOX_API_KEY;
+  }
+
+  dispose(): void {
+    if (this.asyncClips > 0) {
+      console.log(
+        `Soniox async: ${this.pacedPolls.clips} of ${this.asyncClips} clips waited for a request slot while polling ` +
+          `(${Math.round(this.pacedPolls.ms)} ms in total)`
+      );
+    }
   }
 
   supportsLanguage(model: string, _language: string): boolean {
@@ -232,6 +251,8 @@ export class SonioxProvider implements STTProvider {
   }
 
   private realtimeConnections = new MinuteRateLimiter(REQUESTS_PER_MINUTE);
+  private asyncClips = 0;
+  private pacedPolls = { clips: 0, ms: 0 };
   private fileRequests = new MinuteRateLimiter(REQUESTS_PER_MINUTE);
   private transcriptionRequests = new MinuteRateLimiter(REQUESTS_PER_MINUTE);
 
@@ -261,8 +282,14 @@ export class SonioxProvider implements STTProvider {
     audio: AudioInput,
     model: string
   ): Promise<Omit<TranscriptionResult, "model">> {
+    // Start a clip only when the minute's budget covers all its requests (2 file requests, create, a few
+    // polls, transcript, delete), so its polls do not wait for a slot. Soniox gives no completion time, and a
+    // poll that waits would count pacing as processing time. Waits that still happen are in the metadata.
+    await this.fileRequests.reserve(4);
+    await this.transcriptionRequests.reserve(12);
     const start = performance.now();
     const waited = { ms: 0 };
+    const pollWaited = { ms: 0 };
     const form = new FormData();
     form.append("file", new Blob([await readFile(audio.filePath)]), basename(audio.filePath));
 
@@ -283,7 +310,7 @@ export class SonioxProvider implements STTProvider {
       ).id as string;
 
       for (let polls = 0; ; polls++) {
-        const status = await this.request(`/v1/transcriptions/${transcriptionId}`, {}, waited);
+        const status = await this.request(`/v1/transcriptions/${transcriptionId}`, {}, pollWaited);
         if (status.status === "completed") break;
         if (status.status === "error") throw new Error(`Soniox transcription error: ${status.error_message ?? ""}`);
         if (polls > 110) throw new Error("Soniox async timeout");
@@ -293,8 +320,18 @@ export class SonioxProvider implements STTProvider {
       const transcript = await this.request(`/v1/transcriptions/${transcriptionId}/transcript`, {}, waited);
       const tokens: Array<{ text?: string }> = transcript.tokens ?? [];
       const text = tokens.length > 0 ? tokens.map((t) => t.text ?? "").join("") : (transcript.text ?? "");
-      // Time spent waiting for a request slot is pacing, not Soniox's processing time.
-      return { text: text.trim(), durationMs: Math.round(performance.now() - start - waited.ms) };
+      // Pacing before the job exists and after it completed is not Soniox's time; waits while polling stay in,
+      // because Soniox keeps processing the job meanwhile.
+      this.asyncClips += 1;
+      if (pollWaited.ms > 0) {
+        this.pacedPolls.clips += 1;
+        this.pacedPolls.ms += pollWaited.ms;
+      }
+      return {
+        text: text.trim(),
+        durationMs: Math.round(performance.now() - start - waited.ms),
+        metadata: { pollPacingMs: Math.round(pollWaited.ms) },
+      };
     } finally {
       // Leftover files and transcriptions count against the project quota (TypeWhisper #1063).
       if (transcriptionId) await this.request(`/v1/transcriptions/${transcriptionId}`, { method: "DELETE" }).catch(() => {});
