@@ -64,7 +64,9 @@ export const PROVIDERS: Record<string, ProviderInfo> = {
   "mlx-vlm": { name: "MLX-VLM", runtime: "mlx-vlm (MLX, Python)", deployment: "local" },
   needle: { name: "Cactus Needle", runtime: "Needle 3.2.8 (CPU)", deployment: "local" },
   openai: { name: "OpenAI", runtime: "OpenAI API", deployment: "cloud" },
+  reson8: { name: "Reson8", runtime: "Reson8 API", deployment: "cloud" },
   "sherpa-onnx": { name: "sherpa-onnx", runtime: "sherpa-onnx (ONNX, CPU)", deployment: "local" },
+  soniox: { name: "Soniox", runtime: "Soniox API (US region)", deployment: "cloud" },
   "whissle-arc": { name: "Whissle Arc", runtime: "arc_audio 1.2.0 (PyTorch, CPU)", deployment: "local" },
   "whisper-cpp": { name: "whisper.cpp", runtime: "whisper.cpp (whisper-cli)", deployment: "local" },
 };
@@ -150,6 +152,31 @@ const lfm3 = (quant: string, note?: string): Entry => ({
 
 const EN_DE_RU = ["en", "de", "ru"];
 const CRISPASR_CANDIDATE_RUNTIME = "CrispASR 0.8.47 (GGUF, Metal)";
+
+/** Reson8's speech-to-text models, as TypeWhisper engines (Reson8 plugin). */
+const reson8 = (m: Pick<Entry, "name" | "short" | "family" | "languages" | "trainedFor" | "tw">): Entry => ({
+  org: "Reson8",
+  license: "Proprietary API",
+  runtime: "Reson8 API",
+  deployment: "cloud",
+  links: [{ label: "Models", href: "https://docs.reson8.dev/speech-to-text/models/" }],
+  pr: 17,
+  ...m,
+});
+
+/** Soniox's one model for all 60+ languages, as a TypeWhisper engine. */
+const soniox = (m: Pick<Entry, "name" | "short" | "tw">): Entry => ({
+  org: "Soniox",
+  family: "Soniox STT",
+  license: "Proprietary API",
+  runtime: "Soniox API (US region)",
+  deployment: "cloud",
+  languages: "60+ languages in one model",
+  trainedFor: EN_DE_RU,
+  links: [{ label: "Models", href: "https://docs.soniox.com/stt/models" }],
+  pr: 17,
+  ...m,
+});
 
 const ENTRIES: Record<string, Entry> = {
   "apple-speech:default": {
@@ -791,6 +818,42 @@ const ENTRIES: Record<string, Entry> = {
     languages: "About 100 languages",
     tw: { status: "engine", plugin: "OpenAI" },
   },
+  "reson8:resonant-1": reson8({
+    name: "Resonant-1 (prerecorded)",
+    short: "Resonant-1",
+    family: "Resonant",
+    languages: "10 languages, no Russian",
+    trainedFor: EN_DE,
+    tw: {
+      status: "engine",
+      plugin: "Reson8",
+      note: "Reson8's default model on the prerecorded endpoint, the plugin's default for recordings, files and dictations without a live session.",
+    },
+  }),
+  "reson8:resonant-1-realtime": reson8({
+    name: "Resonant-1 (realtime)",
+    short: "Resonant-1 RT",
+    family: "Resonant",
+    languages: "10 languages, no Russian",
+    trainedFor: EN_DE,
+    tw: {
+      status: "engine",
+      plugin: "Reson8",
+      note: "The plugin's live dictation path: one realtime connection, flushed at the end. Clips are streamed faster than real time.",
+    },
+  }),
+  "reson8:rumble-2-flash": reson8({
+    name: "Rumble-2-Flash",
+    short: "Rumble-2-Flash",
+    family: "Rumble",
+    languages: "40+ languages",
+    trainedFor: EN_DE_RU,
+    tw: {
+      status: "engine",
+      plugin: "Reson8",
+      note: "Prerecorded only, plain transcripts without word timings; selectable in the plugin since 1.1.0.",
+    },
+  }),
   "sherpa-onnx:canary-180m-flash": {
     name: "Canary 180M Flash (int8)",
     short: "Canary 180M Flash",
@@ -821,6 +884,42 @@ const ENTRIES: Record<string, Entry> = {
     languages: "25 European languages",
     tw: { status: "reference", note: "TypeWhisper runs Parakeet through FluidAudio; this is the int8 ONNX build on the CPU." },
     pr: undefined,
+  }),
+  "soniox:stt-rt-v6": soniox({
+    name: "Soniox STT v6 (real-time)",
+    short: "Soniox rt-v6",
+    tw: {
+      status: "engine",
+      plugin: "Soniox",
+      note: "Dictation model of the Soniox plugin once its model list includes v6 (Automatic picks the newest). Clips are streamed faster than real time over the plugin's WebSocket setup.",
+    },
+  }),
+  "soniox:stt-rt-v5": soniox({
+    name: "Soniox STT v5 (real-time)",
+    short: "Soniox rt-v5",
+    tw: {
+      status: "engine",
+      plugin: "Soniox",
+      note: "The Soniox plugin's dictation fallback. Soniox retires v5 on 2026-12-15 and then routes it to v6.",
+    },
+  }),
+  "soniox:stt-async-v6": soniox({
+    name: "Soniox STT v6 (async)",
+    short: "Soniox async-v6",
+    tw: {
+      status: "engine",
+      plugin: "Soniox",
+      note: "File transcription model of the Soniox plugin once its model list includes v6.",
+    },
+  }),
+  "soniox:stt-async-v5": soniox({
+    name: "Soniox STT v5 (async)",
+    short: "Soniox async-v5",
+    tw: {
+      status: "engine",
+      plugin: "Soniox",
+      note: "The Soniox plugin's file transcription fallback. Soniox retires v5 on 2026-12-15 and then routes it to v6.",
+    },
   }),
   "whissle-arc:mini": {
     name: "Arc Mini 1.1.1",
