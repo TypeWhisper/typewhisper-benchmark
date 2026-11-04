@@ -60,6 +60,11 @@ program
     "-c, --concurrency <number>",
     "Max concurrent tasks (default: 10 cloud, 1 local)",
   )
+  .option(
+    "--timeout <seconds>",
+    "Timeout per clip, including a provider's own pacing",
+    String(DEFAULT_CONFIG.timeoutSeconds)
+  )
   .action(async (opts) => {
     console.log(chalk.bold("\nTypeWhisper STT Benchmark\n"));
 
@@ -197,6 +202,7 @@ program
         parseInt(opts.runs) || DEFAULT_CONFIG.runsPerModel,
       maxConcurrency:
         parseInt(opts.concurrency) || defaultConcurrency,
+      timeoutSeconds: Math.max(1, parseInt(opts.timeout) || DEFAULT_CONFIG.timeoutSeconds),
     };
 
     console.log(

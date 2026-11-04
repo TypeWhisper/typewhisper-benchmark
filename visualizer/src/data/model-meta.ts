@@ -51,6 +51,7 @@ interface ProviderInfo {
 export const PROVIDERS: Record<string, ProviderInfo> = {
   "apple-speech": { name: "Apple Speech", runtime: "SFSpeechRecognizer (macOS)", deployment: "local" },
   "apple-speechanalyzer": { name: "Apple SpeechAnalyzer", runtime: "SpeechAnalyzer (macOS 26+)", deployment: "local" },
+  assemblyai: { name: "AssemblyAI", runtime: "AssemblyAI API", deployment: "cloud" },
   audiocpp: { name: "audio.cpp", runtime: "audio.cpp v0.9.0 (GGUF, Metal)", deployment: "local" },
   "aurora-asr": { name: "AuroraASR", runtime: "PyTorch (uv worker)", deployment: "local" },
   bark: { name: "Underdog Bark", runtime: "Core ML (model repo runner)", deployment: "local" },
@@ -153,6 +154,17 @@ const lfm3 = (quant: string, note?: string): Entry => ({
 const EN_DE_RU = ["en", "de", "ru"];
 const CRISPASR_CANDIDATE_RUNTIME = "CrispASR 0.8.47 (GGUF, Metal)";
 
+/** AssemblyAI Universal-3.5 Pro on its async, Sync and realtime APIs, as TypeWhisper engines (AssemblyAI plugin). */
+const assemblyai = (m: Pick<Entry, "name" | "short" | "languages" | "trainedFor" | "tw" | "links">): Entry => ({
+  org: "AssemblyAI",
+  family: "Universal",
+  license: "Proprietary API",
+  runtime: "AssemblyAI API",
+  deployment: "cloud",
+  pr: 18,
+  ...m,
+});
+
 /** Reson8's speech-to-text models, as TypeWhisper engines (Reson8 plugin). */
 const reson8 = (m: Pick<Entry, "name" | "short" | "family" | "languages" | "trainedFor" | "tw">): Entry => ({
   org: "Reson8",
@@ -202,6 +214,42 @@ const ENTRIES: Record<string, Entry> = {
     tw: { status: "engine", plugin: "Apple Speech", note: "Transcribed like the plugin handles a recording with live preview off." },
     pr: 13,
   },
+  "assemblyai:universal-3-5-pro": assemblyai({
+    name: "Universal-3.5 Pro (async)",
+    short: "AssemblyAI U3.5 async",
+    languages: "18 languages, no Russian (the async API runs Russian on Universal-2)",
+    trainedFor: EN_DE,
+    tw: {
+      status: "engine",
+      plugin: "AssemblyAI",
+      note: "The plugin's path for dictations and recordings up to 1.1.4. From 1.2.0 the Async mode ($0.21/h), and in the other modes the fallback for speaker labels, recordings over 20 minutes and failed Sync requests. Upload, create, then one poll per second.",
+    },
+    links: [{ label: "Models", href: "https://www.assemblyai.com/docs/getting-started/models" }],
+  }),
+  "assemblyai:universal-3-5-pro-sync": assemblyai({
+    name: "Universal-3.5 Pro (Sync API)",
+    short: "AssemblyAI U3.5 sync",
+    languages: "32 languages on the Sync API",
+    trainedFor: EN_DE_RU,
+    tw: {
+      status: "engine",
+      plugin: "AssemblyAI",
+      note: "From plugin 1.2.0 the Sync mode ($0.30/h) for dictations and recordings, and in the default Live mode for recordings and files (no speaker labels, up to 20 minutes): one request that returns the transcript. Live dictations stream to the realtime API instead (Universal-3.5 Pro (realtime)).",
+    },
+    links: [{ label: "Sync API", href: "https://www.assemblyai.com/docs/api-reference/sync-api/transcribe" }],
+  }),
+  "assemblyai:universal-3-5-pro-realtime": assemblyai({
+    name: "Universal-3.5 Pro (realtime)",
+    short: "AssemblyAI U3.5 RT",
+    languages: "18 languages, no Russian",
+    trainedFor: EN_DE,
+    tw: {
+      status: "engine",
+      plugin: "AssemblyAI",
+      note: "The plugin's default Live mode from 1.2.0: streams the dictation while it is recorded and takes the final text from the same session. Clips stream at recording pace; the latency is the wait after the audio ends. $0.45 per hour of session time.",
+    },
+    links: [{ label: "Streaming API", href: "https://www.assemblyai.com/docs/streaming/message-sequence" }],
+  }),
   "audiocpp:confucius4-r2t2-q8_0": {
     name: "Confucius4-R2T2 (Q8_0)",
     short: "Confucius4-R2T2 Q8_0",
