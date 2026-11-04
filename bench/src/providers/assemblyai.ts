@@ -11,8 +11,9 @@ const ASYNC_API = "https://api.assemblyai.com/v2";
 const SYNC_URL = "https://sync.assemblyai.com/v1/transcribe";
 const SPEECH_MODEL = "universal-3-5-pro";
 
-/** Universal-3.5 Pro on the async API, from assemblyai.com/pricing (November 2026). The page lists no Sync rate. */
+/** Universal-3.5 Pro list prices from assemblyai.com/pricing (November 2026). */
 const ASYNC_COST_PER_HOUR = 0.21;
+const SYNC_COST_PER_HOUR = 0.3;
 
 /** The plugin sleeps one second before every poll. */
 const POLL_INTERVAL_MS = 1_000;
@@ -159,8 +160,8 @@ export class AssemblyAIProvider implements STTProvider {
           entry.api === "sync"
             ? await this.transcribeSync(upload, audio.language)
             : await this.transcribeAsync(upload, audio.language);
-        const cost = entry.api === "async" ? (audio.durationSeconds / 3600) * ASYNC_COST_PER_HOUR : undefined;
-        return { ...result, model, ...(cost !== undefined && { cost }) };
+        const cost = (audio.durationSeconds / 3600) * (entry.api === "sync" ? SYNC_COST_PER_HOUR : ASYNC_COST_PER_HOUR);
+        return { ...result, model, cost };
       } catch (error) {
         const retryable = error instanceof RetryableError || (error instanceof TypeError && /fetch failed/i.test(error.message));
         if (!retryable || attempt >= RETRIES) throw error;

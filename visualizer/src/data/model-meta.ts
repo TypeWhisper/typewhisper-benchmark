@@ -222,7 +222,7 @@ const ENTRIES: Record<string, Entry> = {
     tw: {
       status: "engine",
       plugin: "AssemblyAI",
-      note: "The plugin's path for dictations and recordings up to 1.1.4; from 1.1.5 the fallback for speaker labels, recordings over 20 minutes and failed Sync requests. Upload, create, then one poll per second.",
+      note: "The plugin's path for dictations and recordings up to 1.1.4. From 1.2.0 the Async mode ($0.21/h), and in the other modes the fallback for speaker labels, recordings over 20 minutes and failed Sync requests. Upload, create, then one poll per second.",
     },
     links: [{ label: "Models", href: "https://www.assemblyai.com/docs/getting-started/models" }],
   }),
@@ -234,7 +234,7 @@ const ENTRIES: Record<string, Entry> = {
     tw: {
       status: "engine",
       plugin: "AssemblyAI",
-      note: "The plugin's first choice for dictations and recordings from 1.1.5 (no speaker labels, up to 20 minutes): one request that returns the transcript. AssemblyAI's pricing page lists no Sync rate, so no price is shown.",
+      note: "From plugin 1.2.0 the Sync mode ($0.30/h) for dictations and recordings, and in the default Live mode for recordings and files (no speaker labels, up to 20 minutes): one request that returns the transcript. Live dictations stream to the realtime API instead, which this benchmark does not measure.",
     },
     links: [{ label: "Sync API", href: "https://www.assemblyai.com/docs/api-reference/sync-api/transcribe" }],
   }),
