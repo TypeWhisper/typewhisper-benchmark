@@ -311,6 +311,8 @@ export class AssemblyAIProvider implements STTProvider {
   private asyncModelsUsed = new Map<string, number>();
   private retries = 0;
   private sessionStarts = new SessionStartPacer(SESSION_START_INTERVAL_MS);
+  /** Clips whose first session start was booked in `beforeTranscribe`, outside the runner's timeout. */
+  private bookedStarts = new WeakSet<AudioInput>();
   private realtime = {
     sessions: 0,
     /** When and why sessions were refused or failed to start. */
@@ -358,6 +360,16 @@ export class AssemblyAIProvider implements STTProvider {
     }
   }
 
+  /**
+   * Books a realtime clip's session start before the runner times the clip, so the pace (one start every 13 s)
+   * does not count against the per-clip timeout at any concurrency.
+   */
+  async beforeTranscribe(audio: AudioInput, model: string): Promise<void> {
+    if (ASSEMBLYAI_MODELS[model]?.api !== "realtime") return;
+    await this.sessionStarts.take();
+    this.bookedStarts.add(audio);
+  }
+
   async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
     const entry = ASSEMBLYAI_MODELS[model];
     if (!entry) throw new Error(`Unknown AssemblyAI model '${model}'`);
@@ -390,8 +402,13 @@ export class AssemblyAIProvider implements STTProvider {
   private async transcribeRealtime(audio: AudioInput): Promise<Omit<TranscriptionResult, "model">> {
     const pcm = await decodePcm16(audio.filePath);
     for (let attempt = 1; ; attempt++) {
-      // Waiting for a start happens before the session opens, so it is in neither the latency nor the cost.
-      await this.sessionStarts.take();
+      // Waiting for a start happens before the session opens, so it is in neither the latency nor the cost. The
+      // first start is usually booked in `beforeTranscribe`; a retry after a refusal waits here.
+      if (attempt === 1 && this.bookedStarts.delete(audio)) {
+        // Booked outside the timeout.
+      } else {
+        await this.sessionStarts.take();
+      }
       try {
         return await this.streamOnce(pcm, audio);
       } catch (error) {
@@ -622,10 +639,17 @@ export class AssemblyAIProvider implements STTProvider {
         if (polls >= 110) throw new Error("AssemblyAI async timeout");
       }
     } finally {
-      // Outside the timed part: the plugin keeps its transcripts, the benchmark does not need them.
-      await fetch(`${ASYNC_API}/transcript/${id}`, { method: "DELETE", headers: { Authorization: this.apiKey() } }).catch(
-        () => {}
-      );
+      // Outside the timed part: the plugin keeps its transcripts, the benchmark does not need them. A failed
+      // deletion is reported but does not replace the transcription's own error.
+      try {
+        const res = await fetch(`${ASYNC_API}/transcript/${id}`, {
+          method: "DELETE",
+          headers: { Authorization: this.apiKey() },
+        });
+        if (!res.ok) console.warn(`AssemblyAI: could not delete transcript ${id}: HTTP ${res.status}`);
+      } catch (error) {
+        console.warn(`AssemblyAI: could not delete transcript ${id}: ${(error as Error).message}`);
+      }
     }
   }
 }

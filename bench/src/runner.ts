@@ -342,6 +342,8 @@ export async function runBenchmark(
       const audioInfo = await getAudioInfo(audioPath, item.suite.language);
 
       await ensurePrepared(item);
+      // A provider's own queue, such as a session-start pace, does not count against the timeout.
+      await item.provider.beforeTranscribe?.(audioInfo, item.model);
 
       // Clear the timer afterwards, or it keeps the process alive after the run ends.
       let timer: NodeJS.Timeout | undefined;

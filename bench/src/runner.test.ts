@@ -186,6 +186,41 @@ describe("runBenchmark", () => {
     expect(summary.rankings[0].errorCount).toBe(0);
   });
 
+  it("waits for a provider's beforeTranscribe outside the per-clip timeout", async () => {
+    const order: string[] = [];
+    const provider: STTProvider = {
+      id: "mock-paced",
+      name: "Mock Paced",
+      type: "cloud",
+      models: ["only"],
+      async beforeTranscribe(_audio, model) {
+        order.push(`wait ${model}`);
+        // Longer than the 1 s timeout: a paced start slot must not make the clip time out.
+        await new Promise((r) => setTimeout(r, 1_200));
+      },
+      async transcribe(_audio, model) {
+        order.push(`transcribe ${model}`);
+        return { text: "The quick brown fox jumps over the lazy dog", durationMs: 10, model };
+      },
+      async isAvailable() {
+        return true;
+      },
+      supportsLanguage() {
+        return true;
+      },
+    };
+
+    const summary = await runBenchmark({
+      suites: [suiteWith(1)],
+      providers: [provider],
+      config: await configWith(1),
+      version: "t",
+    });
+
+    expect(order).toEqual(["wait only", "transcribe only"]);
+    expect(summary.rankings[0].errorCount).toBe(0);
+  });
+
   it("releases a local model before preparing the next, also with several runner workers", async () => {
     const calls: string[] = [];
     const provider: STTProvider = {
