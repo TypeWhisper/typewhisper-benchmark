@@ -18,6 +18,7 @@ import { NeedleProvider } from "./needle.js";
 import { ArcProvider } from "./arc.js";
 import { SonioxProvider } from "./soniox.js";
 import { Reson8Provider } from "./reson8.js";
+import { AssemblyAIProvider } from "./assemblyai.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -25,6 +26,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new GroqProvider(),
   new SonioxProvider(),
   new Reson8Provider(),
+  new AssemblyAIProvider(),
   new WhisperCppProvider(),
   new AppleSpeechProvider(),
   new SherpaOnnxProvider(),
