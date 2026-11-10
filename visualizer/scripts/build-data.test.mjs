@@ -2,7 +2,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { SPEED_REFERENCE, buildData, digitsHit, finalizeCell, numberTokens, rowStatus } from "./build-data.mjs";
+import { SPEED_REFERENCE, buildData, buildDiarization, digitsHit, finalizeCell, numberTokens, rowStatus } from "./build-data.mjs";
 
 describe("Digits metric", () => {
   it("takes whitespace tokens with a digit, without trailing punctuation", () => {
@@ -143,5 +143,39 @@ describe("buildData", () => {
     expect(summary.speed).toEqual({
       "acme:fast": { x: 173.6, short: 38.8, medium: 55, long: 79.7, clips: 30, passes: 3, spread: 0.02, at: "2026-10-29" },
     });
+  });
+});
+
+describe("diarization reports", () => {
+  it("keeps the scored summary and per-file scores of every platform and skips broken files", () => {
+    const dir = mkdtempSync(join(tmpdir(), "diarization-"));
+    mkdirSync(join(dir, "macos"));
+    mkdirSync(join(dir, "windows"));
+    mkdirSync(join(dir, "notes"));
+    const report = {
+      schema: 1,
+      setId: "diarization-v1",
+      platform: "macos",
+      engineId: "nemotron3-fast32",
+      engineName: "Nemotron 3 Diarization (fast32)",
+      runtime: "FluidAudio 0.18.0",
+      model: "m",
+      shipped: false,
+      settings: { preset: "fast32" },
+      machine: { model: "Mac17,16", chip: "Apple M5 Pro", memoryGb: 48, os: "macOS 27.0.1" },
+      measuredAt: "2026-11-10T00:00:00.000Z",
+      prepareMs: 100,
+      summary: { synthetic: { files: 1 } },
+      items: [{ id: "synthetic/de-2sp", group: "synthetic", language: "de", audioSeconds: 10, processingMs: 20, speakers: { reference: 2, found: 2 }, scores: {}, peakMemoryMb: null }],
+    };
+    writeFileSync(join(dir, "macos", "nemotron3-fast32.json"), JSON.stringify(report));
+    writeFileSync(join(dir, "windows", "broken.json"), "{");
+    writeFileSync(join(dir, "windows", "old.json"), JSON.stringify({ ...report, schema: 9 }));
+    writeFileSync(join(dir, "notes", "x.json"), JSON.stringify(report));
+
+    const { reports } = buildDiarization(dir);
+    expect(reports.map((r) => r.id)).toEqual(["macos:nemotron3-fast32"]);
+    expect(reports[0].items[0]).not.toHaveProperty("peakMemoryMb");
+    expect(buildDiarization(join(dir, "missing")).reports).toEqual([]);
   });
 });

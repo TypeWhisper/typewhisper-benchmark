@@ -11,6 +11,7 @@ const NAV: Array<{ view: View; label: string; also?: View[] }> = [
   { view: "compare", label: "Compare" },
   { view: "models", label: "Models", also: ["model"] },
   { view: "suites", label: "Suites", also: ["suite"] },
+  { view: "diarization", label: "Diarization" },
   { view: "about", label: "Method" },
 ];
 

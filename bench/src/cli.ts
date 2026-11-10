@@ -23,6 +23,9 @@ import {
   REFERENCE_MACHINE,
 } from "./speed.js";
 import { loadAllSuites, loadSuite } from "./suite-loader.js";
+import { writeDiarizationSet } from "./diarization/build-set.js";
+import { MAC_DIARIZATION_ENGINES, runMacDiarization } from "./diarization/run.js";
+import { scoreAll } from "./diarization/score.js";
 import {
   getAvailableProviders,
   getProviderById,
@@ -472,5 +475,67 @@ program
     await mergeResultFiles(PROJECT_ROOT);
     console.log(chalk.green("Merged results into visualizer/public/data/benchmark-results.json"));
   });
+
+program
+  .command("diarization-set")
+  .description("Rebuild bench/diarization/diarization-set.json from the downloaded audio and the references")
+  .option("--allow-missing", "Leave out files that are not downloaded yet (for an early partial run)")
+  .action(async (opts) => {
+    const set = await writeDiarizationSet({ allowMissingAudio: opts.allowMissing });
+    const hours = set.items.reduce((sum, item) => sum + item.seconds, 0) / 3600;
+    console.log(chalk.green(`${set.id}: ${set.items.length} files, ${hours.toFixed(1)} h`));
+  });
+
+program
+  .command("diarization")
+  .description("Run the macOS diarization engines over the diarization set and score them")
+  .option("-e, --engine <ids...>", `Only these engines (${MAC_DIARIZATION_ENGINES.map((e) => e.engineId).join(", ")})`)
+  .option("-i, --item <prefixes...>", "Only set items whose id starts with one of these, e.g. ami/ES2004a synthetic/de")
+  .option("--skip-checksums", "Do not verify the audio against the set's checksums first")
+  .option("--resume", "Keep files an earlier run of an engine finished on this machine and run only the rest")
+  .action(async (opts) => {
+    console.log(chalk.bold("\nTypeWhisper diarization benchmark (macOS)\n"));
+    const partial = Boolean(opts.item?.length);
+    const outDir = partial ? join(BENCH_ROOT, "results", "diarization", "macos") : undefined;
+    if (partial) console.log(chalk.yellow(`Partial run; hypotheses go to ${outDir}, not to bench/diarization.`));
+    const files = await runMacDiarization({
+      engines: opts.engine,
+      items: opts.item,
+      outDir,
+      skipChecksums: opts.skipChecksums,
+      resume: opts.resume,
+    });
+    if (partial) return;
+    const reports = await scoreAll({ files });
+    for (const report of reports) printDiarizationSummary(report);
+  });
+
+program
+  .command("diarization-score")
+  .description("Score the hypothesis files of all platforms (bench/diarization/hypotheses) into the visualizer's reports")
+  .argument("[files...]", "Only these hypothesis files")
+  .action(async (files: string[]) => {
+    const reports = await scoreAll({ files: files.length ? files.map((f) => resolve(f)) : undefined });
+    for (const report of reports) printDiarizationSummary(report);
+    console.log(chalk.green(`${reports.length} report(s) written to visualizer/public/data/diarization`));
+  });
+
+function printDiarizationSummary(report: Awaited<ReturnType<typeof scoreAll>>[number]): void {
+  const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
+  console.log(chalk.bold(`${report.platform}/${report.engineId}`));
+  for (const [group, s] of Object.entries(report.summary)) {
+    if (!s.files) continue;
+    const refs = Object.entries(s.scores)
+      .map(([ref, sc]) => {
+        const c = sc!.collar0;
+        return `${ref}: DER ${pct(c.der)} (0.25: ${pct(sc!.collar25.der)}) miss ${pct(c.missed / c.total)} FA ${pct(c.falseAlarm / c.total)} conf ${pct(c.confusion / c.total)}`;
+      })
+      .join(" · ");
+    console.log(
+      `  ${group.padEnd(12)} ${refs} | speakers right ${pct(s.speakerCountAccuracy)} | ${s.speedFactor}x` +
+        (s.failed ? chalk.red(` | ${s.failed} failed`) : "")
+    );
+  }
+}
 
 program.parse();
