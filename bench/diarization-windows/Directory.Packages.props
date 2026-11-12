@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The versions the TypeWhisper Windows app pins, so the CPU numbers describe what it would ship. -->
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime" Version="1.31.1" />
+    <PackageVersion Include="org.k2fsa.sherpa.onnx" Version="2.0.1" />
+    <!-- The newest DirectML build of ONNX Runtime, and per-process GPU memory counters for the runner. -->
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" />
+    <PackageVersion Include="System.Diagnostics.PerformanceCounter" Version="10.0.0" />
+  </ItemGroup>
+</Project>
