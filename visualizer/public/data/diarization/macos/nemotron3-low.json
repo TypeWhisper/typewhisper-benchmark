@@ -1,0 +1,2280 @@
+{
+  "schema": 1,
+  "setId": "diarization-v1",
+  "platform": "macos",
+  "engineId": "nemotron3-low",
+  "engineName": "Nemotron 3 Diarization (low)",
+  "runtime": "FluidAudio 0.18.0",
+  "model": "FluidInference/nemotron-3-diarization-coreml low (NVIDIA GA weights 2026-09-23)",
+  "shipped": false,
+  "settings": {
+    "preset": "low",
+    "computeUnits": "all",
+    "threshold": 0.5,
+    "minTurnSeconds": 0.2,
+    "note": "1.04 s latency, live"
+  },
+  "machine": {
+    "model": "Mac17,16",
+    "chip": "Apple M5 Pro",
+    "memoryGb": 48,
+    "os": "macOS 27.2"
+  },
+  "measuredAt": "2026-11-10T22:09:14.718Z",
+  "prepareMs": 1126.9,
+  "scoring": {
+    "overlap": "included",
+    "collars": [
+      0,
+      0.25
+    ],
+    "references": [
+      "only-words",
+      "forced-alignment",
+      "exact"
+    ]
+  },
+  "summary": {
+    "ami-array": {
+      "files": 16,
+      "failed": 0,
+      "audioSeconds": 32624.3,
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 30713.924,
+            "missed": 8039.884,
+            "falseAlarm": 416.479,
+            "confusion": 536.846,
+            "der": 0.29281
+          },
+          "collar25": {
+            "total": 23629.124,
+            "missed": 5790.694,
+            "falseAlarm": 178.248,
+            "confusion": 310.89,
+            "der": 0.26577
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 23930.536,
+            "missed": 1741.17,
+            "falseAlarm": 901.153,
+            "confusion": 549.383,
+            "der": 0.13337
+          },
+          "collar25": {
+            "total": 13629.802,
+            "missed": 372.329,
+            "falseAlarm": 240.151,
+            "confusion": 233.157,
+            "der": 0.06204
+          }
+        }
+      },
+      "speakerCountAccuracy": 0.875,
+      "speedFactor": 75.4
+    },
+    "ami-headset": {
+      "files": 16,
+      "failed": 0,
+      "audioSeconds": 32623.9,
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 30713.924,
+            "missed": 7576.004,
+            "falseAlarm": 345.261,
+            "confusion": 225.532,
+            "der": 0.26525
+          },
+          "collar25": {
+            "total": 23629.124,
+            "missed": 5539.634,
+            "falseAlarm": 110.17,
+            "confusion": 95.58,
+            "der": 0.24315
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 23930.536,
+            "missed": 1274.524,
+            "falseAlarm": 827.169,
+            "confusion": 232.798,
+            "der": 0.09755
+          },
+          "collar25": {
+            "total": 13629.802,
+            "missed": 250.456,
+            "falseAlarm": 173.281,
+            "confusion": 75.626,
+            "der": 0.03664
+          }
+        }
+      },
+      "speakerCountAccuracy": 0.8125,
+      "speedFactor": 75.5
+    },
+    "synthetic": {
+      "files": 22,
+      "failed": 0,
+      "audioSeconds": 3851.9,
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 3660.73,
+            "missed": 183,
+            "falseAlarm": 5.92,
+            "confusion": 52.895,
+            "der": 0.06606
+          },
+          "collar25": {
+            "total": 3459.23,
+            "missed": 106.873,
+            "falseAlarm": 0,
+            "confusion": 50.508,
+            "der": 0.0455
+          }
+        }
+      },
+      "speakerCountAccuracy": 0.7273,
+      "speedFactor": 75.6
+    }
+  },
+  "items": [
+    {
+      "id": "ami/EN2002a/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2142.709,
+      "processingMs": 28834.8,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2530.26,
+            "missed": 763.47,
+            "falseAlarm": 24.39,
+            "confusion": 34,
+            "der": 0.32481
+          },
+          "collar25": {
+            "total": 1732.83,
+            "missed": 487.87,
+            "falseAlarm": 6.82,
+            "confusion": 17.13,
+            "der": 0.29537
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1907.902,
+            "missed": 204.984,
+            "falseAlarm": 88.262,
+            "confusion": 38.539,
+            "der": 0.1739
+          },
+          "collar25": {
+            "total": 876.613,
+            "missed": 37.27,
+            "falseAlarm": 17.231,
+            "confusion": 13.819,
+            "der": 0.07794
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/EN2002b/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 1786.848,
+      "processingMs": 23847.8,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1943.44,
+            "missed": 585.89,
+            "falseAlarm": 32.32,
+            "confusion": 22.68,
+            "der": 0.32977
+          },
+          "collar25": {
+            "total": 1420.77,
+            "missed": 412.84,
+            "falseAlarm": 14.7,
+            "confusion": 8.31,
+            "der": 0.30677
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1434.72,
+            "missed": 131.079,
+            "falseAlarm": 86.229,
+            "confusion": 25.953,
+            "der": 0.16955
+          },
+          "collar25": {
+            "total": 693.031,
+            "missed": 25.832,
+            "falseAlarm": 31.163,
+            "confusion": 6.533,
+            "der": 0.09167
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/EN2002c/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2972.256,
+      "processingMs": 39981.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 3343.64,
+            "missed": 1033.19,
+            "falseAlarm": 48.84,
+            "confusion": 44.24,
+            "der": 0.33684
+          },
+          "collar25": {
+            "total": 2624.86,
+            "missed": 783.12,
+            "falseAlarm": 35.86,
+            "confusion": 28.64,
+            "der": 0.32292
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 2450.921,
+            "missed": 195.753,
+            "falseAlarm": 104.122,
+            "confusion": 45.447,
+            "der": 0.14089
+          },
+          "collar25": {
+            "total": 1273.972,
+            "missed": 41.035,
+            "falseAlarm": 39.312,
+            "confusion": 18.194,
+            "der": 0.07735
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/EN2002d/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2209.899,
+      "processingMs": 29437.4,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2675.89,
+            "missed": 887.59,
+            "falseAlarm": 32.19,
+            "confusion": 36.62,
+            "der": 0.35741
+          },
+          "collar25": {
+            "total": 1899.33,
+            "missed": 612.25,
+            "falseAlarm": 13.94,
+            "confusion": 17.57,
+            "der": 0.33894
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1955.014,
+            "missed": 218.442,
+            "falseAlarm": 83.918,
+            "confusion": 46.622,
+            "der": 0.17851
+          },
+          "collar25": {
+            "total": 926.774,
+            "missed": 47.404,
+            "falseAlarm": 19.197,
+            "confusion": 14.461,
+            "der": 0.08747
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004a/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 1049.355,
+      "processingMs": 14067.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 923.43,
+            "missed": 305.89,
+            "falseAlarm": 20.86,
+            "confusion": 78.58,
+            "der": 0.43894
+          },
+          "collar25": {
+            "total": 663.72,
+            "missed": 202.11,
+            "falseAlarm": 14.27,
+            "confusion": 49.79,
+            "der": 0.40103
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 708.493,
+            "missed": 104.464,
+            "falseAlarm": 34.371,
+            "confusion": 78.336,
+            "der": 0.30653
+          },
+          "collar25": {
+            "total": 379.106,
+            "missed": 30.213,
+            "falseAlarm": 16.01,
+            "confusion": 38.518,
+            "der": 0.22353
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004b/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2345.493,
+      "processingMs": 31312.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 5
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2233.05,
+            "missed": 551.68,
+            "falseAlarm": 27.42,
+            "confusion": 141,
+            "der": 0.32247
+          },
+          "collar25": {
+            "total": 1776.44,
+            "missed": 392.51,
+            "falseAlarm": 18.78,
+            "confusion": 119.9,
+            "der": 0.29902
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1804.103,
+            "missed": 150.865,
+            "falseAlarm": 55.552,
+            "confusion": 139.934,
+            "der": 0.19198
+          },
+          "collar25": {
+            "total": 1134.091,
+            "missed": 46.242,
+            "falseAlarm": 18.932,
+            "confusion": 93.812,
+            "der": 0.14019
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004c/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2334.368,
+      "processingMs": 30612.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2244.47,
+            "missed": 455.19,
+            "falseAlarm": 24.288,
+            "confusion": 18.26,
+            "der": 0.22176
+          },
+          "collar25": {
+            "total": 1771.76,
+            "missed": 326.11,
+            "falseAlarm": 9.208,
+            "confusion": 9.16,
+            "der": 0.19443
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1831.088,
+            "missed": 73.257,
+            "falseAlarm": 55.737,
+            "confusion": 16.559,
+            "der": 0.07949
+          },
+          "collar25": {
+            "total": 1148.541,
+            "missed": 10.953,
+            "falseAlarm": 10.182,
+            "confusion": 5.571,
+            "der": 0.02325
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004d/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2222.291,
+      "processingMs": 29483.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2006.77,
+            "missed": 429.15,
+            "falseAlarm": 30.951,
+            "confusion": 25.76,
+            "der": 0.24211
+          },
+          "collar25": {
+            "total": 1451.36,
+            "missed": 276.35,
+            "falseAlarm": 8.32,
+            "confusion": 12.81,
+            "der": 0.20497
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1628.091,
+            "missed": 83.799,
+            "falseAlarm": 64.279,
+            "confusion": 25.526,
+            "der": 0.10663
+          },
+          "collar25": {
+            "total": 935.911,
+            "missed": 14.782,
+            "falseAlarm": 12.039,
+            "confusion": 9.608,
+            "der": 0.03892
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009a/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 838.997,
+      "processingMs": 11163.7,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 695.9,
+            "missed": 121.83,
+            "falseAlarm": 24.63,
+            "confusion": 12.68,
+            "der": 0.22868
+          },
+          "collar25": {
+            "total": 513.61,
+            "missed": 82.27,
+            "falseAlarm": 11.1,
+            "confusion": 6.52,
+            "der": 0.19449
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 612.897,
+            "missed": 42.878,
+            "falseAlarm": 28.681,
+            "confusion": 12.355,
+            "der": 0.13691
+          },
+          "collar25": {
+            "total": 370.54,
+            "missed": 12.45,
+            "falseAlarm": 11.902,
+            "confusion": 4.257,
+            "der": 0.07721
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009b/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2052.437,
+      "processingMs": 27164.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1982.97,
+            "missed": 260.77,
+            "falseAlarm": 35.49,
+            "confusion": 29.99,
+            "der": 0.16453
+          },
+          "collar25": {
+            "total": 1584.66,
+            "missed": 185.5,
+            "falseAlarm": 7.37,
+            "confusion": 6.07,
+            "der": 0.12554
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1770.931,
+            "missed": 67.985,
+            "falseAlarm": 54.744,
+            "confusion": 27.046,
+            "der": 0.08457
+          },
+          "collar25": {
+            "total": 1181.094,
+            "missed": 15.363,
+            "falseAlarm": 9.109,
+            "confusion": 5.247,
+            "der": 0.02516
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009c/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 1820.843,
+      "processingMs": 24153.1,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1584.45,
+            "missed": 211.19,
+            "falseAlarm": 31.66,
+            "confusion": 14.8,
+            "der": 0.16261
+          },
+          "collar25": {
+            "total": 1354.26,
+            "missed": 167.56,
+            "falseAlarm": 10.61,
+            "confusion": 4.37,
+            "der": 0.13479
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1400.898,
+            "missed": 45.715,
+            "falseAlarm": 49.737,
+            "confusion": 16.009,
+            "der": 0.07956
+          },
+          "collar25": {
+            "total": 993.32,
+            "missed": 15.489,
+            "falseAlarm": 13.686,
+            "confusion": 3.519,
+            "der": 0.03291
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009d/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 1944.661,
+      "processingMs": 25516.3,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1738.6,
+            "missed": 313.4,
+            "falseAlarm": 33.54,
+            "confusion": 33.36,
+            "der": 0.21874
+          },
+          "collar25": {
+            "total": 1306.2,
+            "missed": 211.72,
+            "falseAlarm": 7.01,
+            "confusion": 11.5,
+            "der": 0.17626
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1509.893,
+            "missed": 106.297,
+            "falseAlarm": 55.144,
+            "confusion": 32.904,
+            "der": 0.12871
+          },
+          "collar25": {
+            "total": 920.506,
+            "missed": 26.782,
+            "falseAlarm": 14.653,
+            "confusion": 9.643,
+            "der": 0.05549
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003a/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 1505.643,
+      "processingMs": 19723.8,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1025.964,
+            "missed": 376.984,
+            "falseAlarm": 6.43,
+            "confusion": 10.626,
+            "der": 0.38407
+          },
+          "collar25": {
+            "total": 854.394,
+            "missed": 299.214,
+            "falseAlarm": 2.15,
+            "confusion": 5.32,
+            "der": 0.35895
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 704.447,
+            "missed": 69.263,
+            "falseAlarm": 20.226,
+            "confusion": 11.125,
+            "der": 0.14283
+          },
+          "collar25": {
+            "total": 404.334,
+            "missed": 13.593,
+            "falseAlarm": 3.303,
+            "confusion": 3.196,
+            "der": 0.04969
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003b/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2210.304,
+      "processingMs": 29074,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1820.5,
+            "missed": 476.6,
+            "falseAlarm": 14.47,
+            "confusion": 6.53,
+            "der": 0.27333
+          },
+          "collar25": {
+            "total": 1531.5,
+            "missed": 387.3,
+            "falseAlarm": 8.45,
+            "confusion": 2.93,
+            "der": 0.26032
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1376.236,
+            "missed": 57.892,
+            "falseAlarm": 40.026,
+            "confusion": 6.691,
+            "der": 0.07601
+          },
+          "collar25": {
+            "total": 842.03,
+            "missed": 9.33,
+            "falseAlarm": 8.785,
+            "confusion": 1.95,
+            "der": 0.02383
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003c/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2570,
+      "processingMs": 33808.2,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1894.25,
+            "missed": 586.03,
+            "falseAlarm": 13.34,
+            "confusion": 8.53,
+            "der": 0.32092
+          },
+          "collar25": {
+            "total": 1621.13,
+            "missed": 482.54,
+            "falseAlarm": 7.31,
+            "confusion": 4.09,
+            "der": 0.30469
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1349.562,
+            "missed": 67.891,
+            "falseAlarm": 39.889,
+            "confusion": 8.179,
+            "der": 0.08592
+          },
+          "collar25": {
+            "total": 803.917,
+            "missed": 10.91,
+            "falseAlarm": 10.4,
+            "confusion": 1.609,
+            "der": 0.02851
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003d/array",
+      "group": "ami-array",
+      "language": "en",
+      "audioSeconds": 2618.2,
+      "processingMs": 34636.7,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2070.34,
+            "missed": 681.03,
+            "falseAlarm": 15.66,
+            "confusion": 19.19,
+            "der": 0.34578
+          },
+          "collar25": {
+            "total": 1522.3,
+            "missed": 481.43,
+            "falseAlarm": 2.35,
+            "confusion": 6.78,
+            "der": 0.32225
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1485.34,
+            "missed": 120.606,
+            "falseAlarm": 40.236,
+            "confusion": 18.158,
+            "der": 0.12051
+          },
+          "collar25": {
+            "total": 746.022,
+            "missed": 14.681,
+            "falseAlarm": 4.247,
+            "confusion": 3.22,
+            "der": 0.02969
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/EN2002a/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2142.709,
+      "processingMs": 28147.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2530.26,
+            "missed": 735.46,
+            "falseAlarm": 26.6,
+            "confusion": 28.21,
+            "der": 0.31233
+          },
+          "collar25": {
+            "total": 1732.83,
+            "missed": 477.4,
+            "falseAlarm": 9.89,
+            "confusion": 13.03,
+            "der": 0.28873
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1907.902,
+            "missed": 175.592,
+            "falseAlarm": 89.09,
+            "confusion": 34.186,
+            "der": 0.15665
+          },
+          "collar25": {
+            "total": 876.613,
+            "missed": 31.683,
+            "falseAlarm": 20.147,
+            "confusion": 11.964,
+            "der": 0.07277
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/EN2002b/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 1786.848,
+      "processingMs": 23530.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1943.44,
+            "missed": 563.85,
+            "falseAlarm": 20.51,
+            "confusion": 16.91,
+            "der": 0.30938
+          },
+          "collar25": {
+            "total": 1420.77,
+            "missed": 401.56,
+            "falseAlarm": 6.28,
+            "confusion": 6.95,
+            "der": 0.29195
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1434.72,
+            "missed": 107.688,
+            "falseAlarm": 73.068,
+            "confusion": 18.433,
+            "der": 0.13883
+          },
+          "collar25": {
+            "total": 693.031,
+            "missed": 20.683,
+            "falseAlarm": 22.329,
+            "confusion": 4.265,
+            "der": 0.06822
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/EN2002c/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2972.256,
+      "processingMs": 39426.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 3343.64,
+            "missed": 964.9,
+            "falseAlarm": 21.89,
+            "confusion": 10.94,
+            "der": 0.2984
+          },
+          "collar25": {
+            "total": 2624.86,
+            "missed": 743.1,
+            "falseAlarm": 7.91,
+            "confusion": 5.58,
+            "der": 0.28824
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 2450.921,
+            "missed": 133.948,
+            "falseAlarm": 83.657,
+            "confusion": 10.462,
+            "der": 0.09305
+          },
+          "collar25": {
+            "total": 1273.972,
+            "missed": 28.674,
+            "falseAlarm": 12.867,
+            "confusion": 1.775,
+            "der": 0.034
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/EN2002d/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2209.899,
+      "processingMs": 29227.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2675.89,
+            "missed": 851.29,
+            "falseAlarm": 29.37,
+            "confusion": 25.95,
+            "der": 0.33881
+          },
+          "collar25": {
+            "total": 1899.33,
+            "missed": 596.46,
+            "falseAlarm": 10.12,
+            "confusion": 11.66,
+            "der": 0.3255
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1955.014,
+            "missed": 182.953,
+            "falseAlarm": 81.909,
+            "confusion": 37.336,
+            "der": 0.15458
+          },
+          "collar25": {
+            "total": 926.774,
+            "missed": 42.023,
+            "falseAlarm": 17.594,
+            "confusion": 11.927,
+            "der": 0.0772
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004a/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 1049.355,
+      "processingMs": 13850.2,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 5
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 923.43,
+            "missed": 242.41,
+            "falseAlarm": 7.89,
+            "confusion": 5,
+            "der": 0.27647
+          },
+          "collar25": {
+            "total": 663.72,
+            "missed": 164.75,
+            "falseAlarm": 2.28,
+            "confusion": 1.57,
+            "der": 0.25402
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 708.493,
+            "missed": 43.638,
+            "falseAlarm": 24.055,
+            "confusion": 3.121,
+            "der": 0.09995
+          },
+          "collar25": {
+            "total": 379.106,
+            "missed": 9.823,
+            "falseAlarm": 4.39,
+            "confusion": 0.73,
+            "der": 0.03942
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004b/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2345.493,
+      "processingMs": 30891.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 5
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2233.05,
+            "missed": 452,
+            "falseAlarm": 19.14,
+            "confusion": 5.59,
+            "der": 0.21349
+          },
+          "collar25": {
+            "total": 1776.44,
+            "missed": 328.78,
+            "falseAlarm": 7.61,
+            "confusion": 2.03,
+            "der": 0.1905
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1804.103,
+            "missed": 56.232,
+            "falseAlarm": 52.319,
+            "confusion": 4.593,
+            "der": 0.06271
+          },
+          "collar25": {
+            "total": 1134.091,
+            "missed": 6.111,
+            "falseAlarm": 8.122,
+            "confusion": 0.995,
+            "der": 0.01343
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004c/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2334.368,
+      "processingMs": 30902.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2244.47,
+            "missed": 436.26,
+            "falseAlarm": 19.58,
+            "confusion": 8.33,
+            "der": 0.20681
+          },
+          "collar25": {
+            "total": 1771.76,
+            "missed": 317.73,
+            "falseAlarm": 6.12,
+            "confusion": 1.43,
+            "der": 0.18359
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1831.088,
+            "missed": 52.895,
+            "falseAlarm": 49.597,
+            "confusion": 5.575,
+            "der": 0.05902
+          },
+          "collar25": {
+            "total": 1148.541,
+            "missed": 5.89,
+            "falseAlarm": 7.405,
+            "confusion": 0.658,
+            "der": 0.01215
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/ES2004d/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2222.291,
+      "processingMs": 29468.4,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2006.77,
+            "missed": 412.38,
+            "falseAlarm": 33.681,
+            "confusion": 11.83,
+            "der": 0.22817
+          },
+          "collar25": {
+            "total": 1451.36,
+            "missed": 272.51,
+            "falseAlarm": 7.94,
+            "confusion": 2.67,
+            "der": 0.19507
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1628.091,
+            "missed": 62.346,
+            "falseAlarm": 62.326,
+            "confusion": 8.735,
+            "der": 0.08194
+          },
+          "collar25": {
+            "total": 935.911,
+            "missed": 10.903,
+            "falseAlarm": 11.569,
+            "confusion": 1.928,
+            "der": 0.02607
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009a/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 838.833,
+      "processingMs": 11052.4,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 695.9,
+            "missed": 123.83,
+            "falseAlarm": 23.06,
+            "confusion": 47.82,
+            "der": 0.2798
+          },
+          "collar25": {
+            "total": 513.61,
+            "missed": 84.27,
+            "falseAlarm": 9.36,
+            "confusion": 34.79,
+            "der": 0.25003
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 612.897,
+            "missed": 43.256,
+            "falseAlarm": 25.489,
+            "confusion": 50.302,
+            "der": 0.19424
+          },
+          "collar25": {
+            "total": 370.54,
+            "missed": 13.091,
+            "falseAlarm": 8.414,
+            "confusion": 29.247,
+            "der": 0.13697
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009b/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2052.333,
+      "processingMs": 27511.3,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1982.97,
+            "missed": 255.14,
+            "falseAlarm": 30.73,
+            "confusion": 16.7,
+            "der": 0.15258
+          },
+          "collar25": {
+            "total": 1584.66,
+            "missed": 180.82,
+            "falseAlarm": 4.58,
+            "confusion": 3.85,
+            "der": 0.11943
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1770.931,
+            "missed": 61.093,
+            "falseAlarm": 48.722,
+            "confusion": 13.581,
+            "der": 0.06968
+          },
+          "collar25": {
+            "total": 1181.094,
+            "missed": 12.88,
+            "falseAlarm": 6.364,
+            "confusion": 2.258,
+            "der": 0.01821
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009c/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 1820.833,
+      "processingMs": 24099,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1584.45,
+            "missed": 211.72,
+            "falseAlarm": 31,
+            "confusion": 12.44,
+            "der": 0.16104
+          },
+          "collar25": {
+            "total": 1354.26,
+            "missed": 170.24,
+            "falseAlarm": 9.92,
+            "confusion": 4.97,
+            "der": 0.1367
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1400.898,
+            "missed": 45.067,
+            "falseAlarm": 47.899,
+            "confusion": 13.301,
+            "der": 0.07586
+          },
+          "collar25": {
+            "total": 993.32,
+            "missed": 16.801,
+            "falseAlarm": 12.619,
+            "confusion": 4.907,
+            "der": 0.03456
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/IS1009d/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 1944.5,
+      "processingMs": 25905.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1738.6,
+            "missed": 307.23,
+            "falseAlarm": 30.52,
+            "confusion": 18.16,
+            "der": 0.20471
+          },
+          "collar25": {
+            "total": 1306.2,
+            "missed": 211.42,
+            "falseAlarm": 5.91,
+            "confusion": 2.97,
+            "der": 0.16866
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1509.893,
+            "missed": 99.109,
+            "falseAlarm": 51.106,
+            "confusion": 18.736,
+            "der": 0.1119
+          },
+          "collar25": {
+            "total": 920.506,
+            "missed": 27.122,
+            "falseAlarm": 13.464,
+            "confusion": 3.964,
+            "der": 0.0484
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003a/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 1505.643,
+      "processingMs": 19799.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1025.964,
+            "missed": 354.514,
+            "falseAlarm": 5.35,
+            "confusion": 2.992,
+            "der": 0.35367
+          },
+          "collar25": {
+            "total": 854.394,
+            "missed": 283.734,
+            "falseAlarm": 1.76,
+            "confusion": 0.78,
+            "der": 0.33506
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 704.447,
+            "missed": 45.304,
+            "falseAlarm": 17.657,
+            "confusion": 1.939,
+            "der": 0.09213
+          },
+          "collar25": {
+            "total": 404.334,
+            "missed": 7.926,
+            "falseAlarm": 2.365,
+            "confusion": 0.038,
+            "der": 0.02555
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003b/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2210.304,
+      "processingMs": 29106.6,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1820.5,
+            "missed": 460.98,
+            "falseAlarm": 17.05,
+            "confusion": 3.34,
+            "der": 0.26442
+          },
+          "collar25": {
+            "total": 1531.5,
+            "missed": 376.67,
+            "falseAlarm": 11.39,
+            "confusion": 0.82,
+            "der": 0.25392
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1376.236,
+            "missed": 38.807,
+            "falseAlarm": 39.141,
+            "confusion": 3.197,
+            "der": 0.05896
+          },
+          "collar25": {
+            "total": 842.03,
+            "missed": 3.84,
+            "falseAlarm": 10.566,
+            "confusion": 0.344,
+            "der": 0.01752
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003c/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2570,
+      "processingMs": 34142.1,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 1894.25,
+            "missed": 561.09,
+            "falseAlarm": 13.01,
+            "confusion": 1.81,
+            "der": 0.30403
+          },
+          "collar25": {
+            "total": 1621.13,
+            "missed": 468.58,
+            "falseAlarm": 6.67,
+            "confusion": 0.27,
+            "der": 0.29333
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1349.562,
+            "missed": 42.794,
+            "falseAlarm": 39.402,
+            "confusion": 1.205,
+            "der": 0.0618
+          },
+          "collar25": {
+            "total": 803.917,
+            "missed": 6.044,
+            "falseAlarm": 10.052,
+            "confusion": 0.066,
+            "der": 0.0201
+          }
+        }
+      }
+    },
+    {
+      "id": "ami/TS3003d/headset",
+      "group": "ami-headset",
+      "language": "en",
+      "audioSeconds": 2618.2,
+      "processingMs": 34821.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "only-words": {
+          "collar0": {
+            "total": 2070.34,
+            "missed": 642.95,
+            "falseAlarm": 15.88,
+            "confusion": 9.51,
+            "der": 0.32282
+          },
+          "collar25": {
+            "total": 1522.3,
+            "missed": 461.61,
+            "falseAlarm": 2.43,
+            "confusion": 2.21,
+            "der": 0.30628
+          }
+        },
+        "forced-alignment": {
+          "collar0": {
+            "total": 1485.34,
+            "missed": 83.802,
+            "falseAlarm": 41.732,
+            "confusion": 8.096,
+            "der": 0.08997
+          },
+          "collar25": {
+            "total": 746.022,
+            "missed": 6.962,
+            "falseAlarm": 5.014,
+            "confusion": 0.56,
+            "der": 0.0168
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/de-2sp-45s",
+      "group": "synthetic",
+      "language": "de",
+      "audioSeconds": 58.19,
+      "processingMs": 752.3,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 2,
+        "found": 2
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 55.239,
+            "missed": 0.916,
+            "falseAlarm": 0.127,
+            "confusion": 0,
+            "der": 0.01888
+          },
+          "collar25": {
+            "total": 52.239,
+            "missed": 0,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/de-3sp-240s",
+      "group": "synthetic",
+      "language": "de",
+      "audioSeconds": 252.27,
+      "processingMs": 3277,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 240.609,
+            "missed": 4.762,
+            "falseAlarm": 0.713,
+            "confusion": 0,
+            "der": 0.02275
+          },
+          "collar25": {
+            "total": 226.109,
+            "missed": 0.529,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.00234
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/de-3sp-60s",
+      "group": "synthetic",
+      "language": "de",
+      "audioSeconds": 83.373,
+      "processingMs": 1094.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 4
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 79.575,
+            "missed": 2.572,
+            "falseAlarm": 0.147,
+            "confusion": 9.373,
+            "der": 0.15196
+          },
+          "collar25": {
+            "total": 75.575,
+            "missed": 1.726,
+            "falseAlarm": 0,
+            "confusion": 8.879,
+            "der": 0.14032
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/de-4sp-300s",
+      "group": "synthetic",
+      "language": "de",
+      "audioSeconds": 307.947,
+      "processingMs": 4123.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 289.845,
+            "missed": 12.63,
+            "falseAlarm": 0.395,
+            "confusion": 0,
+            "der": 0.04494
+          },
+          "collar25": {
+            "total": 272.345,
+            "missed": 4.775,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.01753
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/de-6sp-480s",
+      "group": "synthetic",
+      "language": "de",
+      "audioSeconds": 481.336,
+      "processingMs": 6369.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 6,
+        "found": 6
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 454.558,
+            "missed": 25.542,
+            "falseAlarm": 0.764,
+            "confusion": 1.31,
+            "der": 0.06075
+          },
+          "collar25": {
+            "total": 427.558,
+            "missed": 14.796,
+            "falseAlarm": 0,
+            "confusion": 1.136,
+            "der": 0.03726
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/de-en-4sp-240s",
+      "group": "synthetic",
+      "language": "de-en",
+      "audioSeconds": 257.651,
+      "processingMs": 3346.5,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 5
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 246.429,
+            "missed": 20.847,
+            "falseAlarm": 0.208,
+            "confusion": 2.88,
+            "der": 0.09713
+          },
+          "collar25": {
+            "total": 233.429,
+            "missed": 14.425,
+            "falseAlarm": 0,
+            "confusion": 2.88,
+            "der": 0.07413
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/en-2sp-45s",
+      "group": "synthetic",
+      "language": "en",
+      "audioSeconds": 63.486,
+      "processingMs": 831.8,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 2,
+        "found": 4
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 60.54,
+            "missed": 1.334,
+            "falseAlarm": 0.074,
+            "confusion": 13.774,
+            "der": 0.25078
+          },
+          "collar25": {
+            "total": 57.54,
+            "missed": 0.26,
+            "falseAlarm": 0,
+            "confusion": 13.065,
+            "der": 0.23158
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/en-3sp-240s",
+      "group": "synthetic",
+      "language": "en",
+      "audioSeconds": 69.927,
+      "processingMs": 915.4,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 66.316,
+            "missed": 2.559,
+            "falseAlarm": 0.043,
+            "confusion": 2.4,
+            "der": 0.07543
+          },
+          "collar25": {
+            "total": 62.816,
+            "missed": 0.978,
+            "falseAlarm": 0,
+            "confusion": 2.4,
+            "der": 0.05378
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/en-3sp-60s",
+      "group": "synthetic",
+      "language": "en",
+      "audioSeconds": 86.76,
+      "processingMs": 1142.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 82.336,
+            "missed": 4.155,
+            "falseAlarm": 0.319,
+            "confusion": 0,
+            "der": 0.05434
+          },
+          "collar25": {
+            "total": 77.336,
+            "missed": 2.364,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.03057
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/en-4sp-300s",
+      "group": "synthetic",
+      "language": "en",
+      "audioSeconds": 307.726,
+      "processingMs": 4088.2,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 290.793,
+            "missed": 10.894,
+            "falseAlarm": 1.141,
+            "confusion": 0,
+            "der": 0.04139
+          },
+          "collar25": {
+            "total": 272.793,
+            "missed": 2.999,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.01099
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/es-2sp-45s",
+      "group": "synthetic",
+      "language": "es",
+      "audioSeconds": 52.242,
+      "processingMs": 676.7,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 2,
+        "found": 2
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 49.178,
+            "missed": 0.921,
+            "falseAlarm": 0.113,
+            "confusion": 1.95,
+            "der": 0.06068
+          },
+          "collar25": {
+            "total": 46.178,
+            "missed": 0.009,
+            "falseAlarm": 0,
+            "confusion": 1.95,
+            "der": 0.04242
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/es-3sp-240s",
+      "group": "synthetic",
+      "language": "es",
+      "audioSeconds": 74.089,
+      "processingMs": 991.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 70.656,
+            "missed": 1.861,
+            "falseAlarm": 0.145,
+            "confusion": 0,
+            "der": 0.02839
+          },
+          "collar25": {
+            "total": 67.156,
+            "missed": 0.745,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.01109
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/es-3sp-60s",
+      "group": "synthetic",
+      "language": "es",
+      "audioSeconds": 63.758,
+      "processingMs": 845.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 60.18,
+            "missed": 1.237,
+            "falseAlarm": 0.027,
+            "confusion": 0,
+            "der": 0.021
+          },
+          "collar25": {
+            "total": 57.18,
+            "missed": 0.178,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.00311
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/es-4sp-300s",
+      "group": "synthetic",
+      "language": "es",
+      "audioSeconds": 304.773,
+      "processingMs": 4055.7,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 5
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 291.271,
+            "missed": 18.803,
+            "falseAlarm": 0.532,
+            "confusion": 1.26,
+            "der": 0.07071
+          },
+          "collar25": {
+            "total": 276.271,
+            "missed": 13.6,
+            "falseAlarm": 0,
+            "confusion": 1.26,
+            "der": 0.05379
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/fr-2sp-45s",
+      "group": "synthetic",
+      "language": "fr",
+      "audioSeconds": 54.786,
+      "processingMs": 735.4,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 2,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 50.678,
+            "missed": 2.431,
+            "falseAlarm": 0.003,
+            "confusion": 5.12,
+            "der": 0.14906
+          },
+          "collar25": {
+            "total": 47.178,
+            "missed": 0.536,
+            "falseAlarm": 0,
+            "confusion": 4.888,
+            "der": 0.11497
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/fr-3sp-240s",
+      "group": "synthetic",
+      "language": "fr",
+      "audioSeconds": 250.027,
+      "processingMs": 3270.1,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 236.688,
+            "missed": 10.58,
+            "falseAlarm": 0.282,
+            "confusion": 0,
+            "der": 0.04589
+          },
+          "collar25": {
+            "total": 223.188,
+            "missed": 5.787,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.02593
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/fr-3sp-60s",
+      "group": "synthetic",
+      "language": "fr",
+      "audioSeconds": 83.563,
+      "processingMs": 1103.3,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 78.977,
+            "missed": 5.297,
+            "falseAlarm": 0.1,
+            "confusion": 0,
+            "der": 0.06834
+          },
+          "collar25": {
+            "total": 74.477,
+            "missed": 3.74,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.05022
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/fr-4sp-300s",
+      "group": "synthetic",
+      "language": "fr",
+      "audioSeconds": 303.189,
+      "processingMs": 4069.8,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 6
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 289.883,
+            "missed": 23.424,
+            "falseAlarm": 0.131,
+            "confusion": 2.58,
+            "der": 0.09016
+          },
+          "collar25": {
+            "total": 274.383,
+            "missed": 16.263,
+            "falseAlarm": 0,
+            "confusion": 2.58,
+            "der": 0.06867
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/it-2sp-45s",
+      "group": "synthetic",
+      "language": "it",
+      "audioSeconds": 76.906,
+      "processingMs": 1037.1,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 2,
+        "found": 2
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 73.678,
+            "missed": 3.314,
+            "falseAlarm": 0.046,
+            "confusion": 0,
+            "der": 0.0456
+          },
+          "collar25": {
+            "total": 70.178,
+            "missed": 1.857,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.02646
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/it-3sp-240s",
+      "group": "synthetic",
+      "language": "it",
+      "audioSeconds": 245.67,
+      "processingMs": 3247.8,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 237.193,
+            "missed": 13.407,
+            "falseAlarm": 0.354,
+            "confusion": 0,
+            "der": 0.05802
+          },
+          "collar25": {
+            "total": 227.693,
+            "missed": 11.444,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.05026
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/it-3sp-60s",
+      "group": "synthetic",
+      "language": "it",
+      "audioSeconds": 70.125,
+      "processingMs": 959.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 3,
+        "found": 3
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 66.198,
+            "missed": 2.355,
+            "falseAlarm": 0.027,
+            "confusion": 0,
+            "der": 0.03598
+          },
+          "collar25": {
+            "total": 62.198,
+            "missed": 1.15,
+            "falseAlarm": 0,
+            "confusion": 0,
+            "der": 0.01849
+          }
+        }
+      }
+    },
+    {
+      "id": "synthetic/it-4sp-300s",
+      "group": "synthetic",
+      "language": "it",
+      "audioSeconds": 304.128,
+      "processingMs": 4012.9,
+      "peakMemoryMb": null,
+      "speakers": {
+        "reference": 4,
+        "found": 4
+      },
+      "scores": {
+        "exact": {
+          "collar0": {
+            "total": 289.91,
+            "missed": 13.159,
+            "falseAlarm": 0.229,
+            "confusion": 12.248,
+            "der": 0.08843
+          },
+          "collar25": {
+            "total": 275.41,
+            "missed": 8.712,
+            "falseAlarm": 0,
+            "confusion": 11.47,
+            "der": 0.07328
+          }
+        }
+      }
+    }
+  ]
+}

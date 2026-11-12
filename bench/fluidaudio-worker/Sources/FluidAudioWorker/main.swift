@@ -15,6 +15,8 @@
 // fed in 10 s blocks, prompted with a locale such as "de-DE" (no "language" detects it), no padding
 // unless "leadPadSeconds" / "tailPadSeconds" ask for silence around the clip:
 //   -> {"id": 3, "model": "nemotron-3.5-asr-streaming-0.6b", "nemotron": "/abs/dir", "language": "de-DE", "file": "/abs/clip.wav"}
+//
+// Diarization.swift adds TypeWhisper's speaker detection ("model": "offline-diarizer").
 import CoreML
 import FluidAudio
 import Foundation
@@ -36,6 +38,12 @@ struct Request: Decodable {
     let language: String?
     /// Trailing silence appended before decoding (Nemotron probe; TypeWhisper appends none)
     let tailPadSeconds: Double?
+    /// Audio file to diarize (selects the diarization path, see Diarization.swift)
+    let diarize: String?
+    /// Offline diarizer clustering threshold
+    let threshold: Double?
+    /// Keep the segments without speaker evidence that TypeWhisper drops
+    let keepUnbacked: Bool?
 }
 
 struct Failure: Error, CustomStringConvertible {
@@ -192,6 +200,7 @@ func handleNemotron(_ request: Request, directory: String) async throws -> [Stri
 
 @MainActor
 func handle(_ request: Request) async throws -> [String: Any] {
+    if request.model == "offline-diarizer" { return try await handleOfflineDiarizer(request) }
     if let directory = request.nemotron { return try await handleNemotron(request, directory: directory) }
     let model = try await load(request)
     if request.load == true { return ["loaded": true] }

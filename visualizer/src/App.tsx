@@ -17,6 +17,7 @@ import { SuiteView } from "./views/SuiteView";
 import { SuitesView } from "./views/SuitesView";
 import { ModelsView } from "./views/ModelsView";
 import { AboutView } from "./views/AboutView";
+import { DiarizationView } from "./views/DiarizationView";
 
 function Footer({ summary }: { summary: Summary }) {
   return (
@@ -78,6 +79,8 @@ function Shell({ summary }: { summary: Summary }) {
         return <SuitesView summary={summary} />;
       case "models":
         return <ModelsView summary={summary} />;
+      case "diarization":
+        return <DiarizationView />;
       case "about":
         return <AboutView summary={summary} />;
       default:

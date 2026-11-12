@@ -32,6 +32,13 @@ describe("parseState", () => {
     expect(parsed.dir).toBeNull();
   });
 
+  it("reads and writes the diarization view's selection", () => {
+    const parsed = parseState("?view=diarization&dset=synthetic&dref=forced-alignment&os=ios");
+    expect(parsed).toMatchObject({ view: "diarization", dset: "synthetic", dref: "forced-alignment", os: "ios" });
+    expect(serializeState(parsed)).toBe("view=diarization&dset=synthetic&dref=forced-alignment&os=ios");
+    expect(parseState("?view=diarization&dset=nope&os=linux")).toMatchObject({ dset: "ami-array", os: "all" });
+  });
+
   it("decodes percent-encoded ids", () => {
     expect(parseState("?models=fluidaudio%3Aparakeet-ultra%2Cgroq%3Awhisper-large-v3").models).toEqual([
       "fluidaudio:parakeet-ultra",

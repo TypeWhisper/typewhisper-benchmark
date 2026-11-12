@@ -22,13 +22,16 @@
  *   sort    table column, e.g. wer, punct, ms, wer-de
  *   dir     asc | desc (only written when it differs from the column's "better first" order)
  *   group   suite | category   (breakdown in the compare view)              (default suite)
+ *   dset    ami-array | ami-headset | synthetic   (view=diarization)       (default ami-array)
+ *   dref    only-words | forced-alignment   (AMI reference, view=diarization) (default only-words)
+ *   os      all | macos | windows | ios   (view=diarization)                (default all)
  *
  * Model ids are `<providerId>:<model>`, the same pair the runner writes into each result file
  * name (`<providerId>_<model>.json`). Unknown values fall back to defaults; unknown model ids
  * are dropped by the views once the data is loaded.
  */
 
-export const VIEWS = ["leaderboard", "compare", "model", "suite", "models", "suites", "about"] as const;
+export const VIEWS = ["leaderboard", "compare", "model", "suite", "models", "suites", "diarization", "about"] as const;
 export const LANGS = ["all", "en", "de", "ru", "auto"] as const;
 export const TIERS = ["core", "diagnostic", "all"] as const;
 export const ORIGINS = ["all", "public", "synthetic"] as const;
@@ -36,6 +39,9 @@ export const DEPLOYS = ["all", "local", "cloud"] as const;
 export const TW_FILTERS = ["all", "engine", "candidate"] as const;
 export const GROUPS = ["suite", "category"] as const;
 export const DIRS = ["asc", "desc"] as const;
+export const DIARIZATION_SETS = ["ami-array", "ami-headset", "synthetic"] as const;
+export const DIARIZATION_REFS = ["only-words", "forced-alignment"] as const;
+export const PLATFORMS = ["all", "macos", "windows", "ios"] as const;
 
 export const MAX_COMPARE = 6;
 
@@ -47,6 +53,9 @@ export type Deploy = (typeof DEPLOYS)[number];
 export type TwFilter = (typeof TW_FILTERS)[number];
 export type Group = (typeof GROUPS)[number];
 export type Dir = (typeof DIRS)[number];
+export type DiarizationSetKey = (typeof DIARIZATION_SETS)[number];
+export type DiarizationRef = (typeof DIARIZATION_REFS)[number];
+export type Platform = (typeof PLATFORMS)[number];
 
 export interface AppState {
   view: View;
@@ -66,6 +75,9 @@ export interface AppState {
   sort: string | null;
   dir: Dir | null;
   group: Group;
+  dset: DiarizationSetKey;
+  dref: DiarizationRef;
+  os: Platform;
 }
 
 export const DEFAULT_STATE: Readonly<AppState> = Object.freeze({
@@ -86,6 +98,9 @@ export const DEFAULT_STATE: Readonly<AppState> = Object.freeze({
   sort: null,
   dir: null,
   group: "suite",
+  dset: "ami-array",
+  dref: "only-words",
+  os: "all",
 }) as AppState;
 
 /** Order in which keys are written, so equal states always give the same URL. */
@@ -106,6 +121,9 @@ const KEY_ORDER: Array<keyof AppState> = [
   "sort",
   "dir",
   "group",
+  "dset",
+  "dref",
+  "os",
   "clip",
 ];
 
@@ -170,6 +188,9 @@ export function parseState(search: string): AppState {
     sort: id(params.get("sort")),
     dir: params.has("dir") ? pick(params.get("dir"), DIRS, "asc") : null,
     group: pick(params.get("group"), GROUPS, DEFAULT_STATE.group),
+    dset: pick(params.get("dset"), DIARIZATION_SETS, DEFAULT_STATE.dset),
+    dref: pick(params.get("dref"), DIARIZATION_REFS, DEFAULT_STATE.dref),
+    os: pick(params.get("os"), PLATFORMS, DEFAULT_STATE.os),
   };
 }
 

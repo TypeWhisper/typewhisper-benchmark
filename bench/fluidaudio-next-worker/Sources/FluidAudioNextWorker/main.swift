@@ -10,6 +10,7 @@
 //   -> {"id": 2, "model": "nemotron-unified", "language": "de", "file": "/abs/clip.wav"}
 //   <- {"id": 2, "text": "...", "durationMs": 12.3}
 // Timing covers transcription only; it excludes loading and reading the audio file.
+// Diarization.swift adds Nemotron 3 Diarization ("model": "nemotron3-diarization").
 import FluidAudio
 import Foundation
 
@@ -19,6 +20,12 @@ struct Request: Decodable {
     let language: String?
     let file: String?
     let load: Bool?
+    /// Audio file to diarize (selects the diarization path, see Diarization.swift)
+    let diarize: String?
+    /// Nemotron 3 Diarization preset, for example "fast32" or "offline"
+    let preset: String?
+    /// Core ML compute units: "all", "ane", "gpu" or "cpu"
+    let computeUnits: String?
 }
 
 struct Failure: Error, CustomStringConvertible {
@@ -49,6 +56,7 @@ func manager(for request: Request) async throws -> UnifiedAsrManager {
 }
 
 func handle(_ request: Request) async throws -> [String: Any] {
+    if request.model == "nemotron3-diarization" { return try await handleNemotron3Diarization(request) }
     let manager = try await manager(for: request)
     if request.load == true { return ["loaded": true] }
     guard let file = request.file else { throw Failure("request has no 'file'") }

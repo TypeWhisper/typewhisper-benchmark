@@ -7,10 +7,12 @@
  *   ../bench/tests/<suiteId>.json                    references (groundTruth) for transcripts and Digits
  *
  *   public/data/speed/<providerId>_<model>.json     speed runs of local models, written by `npm run bench -- speed`
+ *   public/data/diarization/<platform>/<engine>.json diarization reports, written by `npm run bench -- diarization-score`
  *
  * Output (gitignored, regenerated on every build and dev start):
  *   public/data/generated/summary.json               per model x suite aggregates, loaded on first paint
  *   public/data/generated/clips/<suiteId>.json       per-clip transcripts, loaded only by transcript views
+ *   public/data/generated/diarization.json           diarization reports without settings noise, loaded by its view
  *
  * The aggregates keep means together with their counts, so the browser can pool any set of suites
  * the same way the PR tables do (mean over clips, not mean of suite means).
@@ -432,31 +434,87 @@ export function buildData({ resultsDir, testsDir, speedDir }) {
   return { summary, clipFiles, fileCount: files.length };
 }
 
-export function writeData({ resultsDir, testsDir, speedDir, outDir }) {
+/**
+ * The diarization reports of all platforms in one file. Each report keeps its per-group summary and
+ * per-file scores; nothing is recomputed here (bench/src/diarization/score.ts did the scoring).
+ */
+export function buildDiarization(diarizationDir) {
+  const reports = [];
+  if (diarizationDir && existsSync(diarizationDir)) {
+    for (const platform of readdirSync(diarizationDir).sort()) {
+      const dir = join(diarizationDir, platform);
+      if (!existsSync(dir) || !platform.match(/^(macos|windows|ios)$/)) continue;
+      for (const file of readdirSync(dir).filter((name) => name.endsWith(".json")).sort()) {
+        let report;
+        try {
+          report = readJson(join(dir, file));
+        } catch {
+          console.warn(`build-data: skipped malformed diarization report ${platform}/${file}`);
+          continue;
+        }
+        if (report.schema !== 1 || !report.summary || !Array.isArray(report.items)) {
+          console.warn(`build-data: skipped diarization report ${platform}/${file} with an unknown schema`);
+          continue;
+        }
+        reports.push({
+          id: `${report.platform}:${report.engineId}`,
+          platform: report.platform,
+          engineId: report.engineId,
+          engineName: report.engineName,
+          runtime: report.runtime,
+          model: report.model,
+          shipped: Boolean(report.shipped),
+          settings: report.settings ?? {},
+          machine: report.machine,
+          measuredAt: report.measuredAt,
+          prepareMs: report.prepareMs,
+          setId: report.setId,
+          summary: report.summary,
+          items: report.items.map((item) => ({
+            id: item.id,
+            group: item.group,
+            language: item.language,
+            audioSeconds: item.audioSeconds,
+            processingMs: item.processingMs,
+            speakers: item.speakers,
+            scores: item.scores,
+            ...(item.error ? { error: item.error } : {}),
+          })),
+        });
+      }
+    }
+  }
+  return { schema: 1, reports };
+}
+
+export function writeData({ resultsDir, testsDir, speedDir, diarizationDir, outDir }) {
   const { summary, clipFiles, fileCount } = buildData({ resultsDir, testsDir, speedDir });
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(join(outDir, "clips"), { recursive: true });
   writeFileSync(join(outDir, "summary.json"), JSON.stringify(summary));
+  const diarization = buildDiarization(diarizationDir);
+  writeFileSync(join(outDir, "diarization.json"), JSON.stringify({ ...diarization, version: summary.version }));
   for (const [suiteId, file] of Object.entries(clipFiles)) {
     writeFileSync(join(outDir, "clips", `${suiteId}.json`), JSON.stringify(file));
   }
-  return { summary, fileCount, clipFileCount: Object.keys(clipFiles).length };
+  return { summary, fileCount, clipFileCount: Object.keys(clipFiles).length, diarizationReports: diarization.reports.length };
 }
 
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isMain) {
   const here = dirname(fileURLToPath(import.meta.url));
   const root = join(here, "..");
-  const { summary, fileCount, clipFileCount } = writeData({
+  const { summary, fileCount, clipFileCount, diarizationReports } = writeData({
     resultsDir: join(root, "public", "data", "results"),
     testsDir: join(root, "..", "bench", "tests"),
     speedDir: join(root, "public", "data", "speed"),
+    diarizationDir: join(root, "public", "data", "diarization"),
     outDir: join(root, "public", "data", "generated"),
   });
   const size = Buffer.byteLength(JSON.stringify(summary));
   console.log(
     `build-data: ${fileCount} result files -> ${Object.keys(summary.models).length} models, ` +
       `${Object.keys(summary.suites).length} suites, ${Object.keys(summary.speed).length} speeds; summary.json ${(size / 1024).toFixed(0)} KB, ` +
-      `${clipFileCount} clip files (version ${summary.version})`
+      `${clipFileCount} clip files, ${diarizationReports} diarization reports (version ${summary.version})`
   );
 }

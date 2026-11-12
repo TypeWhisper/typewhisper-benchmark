@@ -56,6 +56,8 @@ export function documentTitle(summary: Summary, state: AppState): string {
       return "Models";
     case "suites":
       return "Suites";
+    case "diarization":
+      return "Speaker diarization";
     case "about":
       return "Method";
     default:
