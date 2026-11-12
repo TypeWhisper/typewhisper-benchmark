@@ -61,7 +61,8 @@ npm run bench -- diarization-score                   # rescore every platform's 
 
 Each platform writes one file per engine configuration to `hypotheses/<platform>/<engineId>.json`; the
 scorer writes the reports to `visualizer/public/data/diarization/<platform>/<engineId>.json`. Only the
-hypothesis files are produced on Windows and iOS; scoring always happens here.
+hypothesis files are produced on Windows and iOS; scoring always happens here. The Windows runner is in
+`../diarization-windows`.
 
 ```jsonc
 {
