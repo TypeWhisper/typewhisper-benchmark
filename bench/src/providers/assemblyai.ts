@@ -231,7 +231,7 @@ const TERMINATION_GRACE_MS = 5_000;
 class SessionLimitError extends Error {}
 class SessionNotStartedError extends Error {}
 
-async function decodePcm16(filePath: string): Promise<Buffer> {
+export async function decodePcm16(filePath: string): Promise<Buffer> {
   const { stdout } = await execFileAsync(
     "ffmpeg",
     ["-v", "error", "-i", filePath, "-ac", "1", "-ar", String(SAMPLE_RATE), "-f", "s16le", "-"],
@@ -245,7 +245,7 @@ async function decodePcm16(filePath: string): Promise<Buffer> {
  * second, then AAC at 48 kbit/s, 16 kHz mono, in an M4A container. macOS uses afconvert, Apple's AAC encoder like
  * the plugin's AVAudioFile; elsewhere ffmpeg's AAC encoder stands in.
  */
-async function encodeUpload(filePath: string): Promise<Buffer> {
+export async function encodeUpload(filePath: string): Promise<Buffer> {
   const dir = await mkdtemp(join(tmpdir(), "assemblyai-"));
   try {
     const wav = join(dir, "padded.wav");
