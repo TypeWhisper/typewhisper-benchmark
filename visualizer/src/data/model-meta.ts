@@ -497,7 +497,7 @@ const ENTRIES: Record<string, Entry> = {
       note: "Parakeet TDT v3 with only the decoder and joint trained on German doctor's letters; the encoder is unchanged.",
     },
     links: [hf("johannhartmann/parakeet_de_med"), hf("cstr/parakeet_de_med-GGUF")],
-    pr: undefined,
+    pr: 22,
   }),
   "crispasr:parakeet-tdt-0.6b-v3-q8_0": parakeet({
     name: "Parakeet TDT 0.6B v3 (Q8_0, CrispASR)",
@@ -511,7 +511,7 @@ const ENTRIES: Record<string, Entry> = {
       note: "The unchanged base model in the same runtime and quantization as Parakeet DE Med, so the two differ only by the fine-tune.",
     },
     links: [hf("nvidia/parakeet-tdt-0.6b-v3"), hf("cstr/parakeet-tdt-0.6b-v3-GGUF")],
-    pr: undefined,
+    pr: 22,
   }),
   "crispasr:parakeet-tdt_ctc-1.1b": parakeet({
     name: "Parakeet TDT-CTC 1.1B",
@@ -631,7 +631,7 @@ const ENTRIES: Record<string, Entry> = {
       note: "A general German fine-tune of Parakeet TDT v3. Core ML export by ValentinWeyer, checked against NeMo. Loads in the Parakeet plugin's runtime.",
     },
     links: [hf("primeline/parakeet-primeline"), hf("ValentinWeyer/parakeet-primeline-de-coreml")],
-    pr: undefined,
+    pr: 22,
   }),
   "fluidaudio:parakeet-medical-de": parakeet({
     name: "Parakeet Medical DE (Mediform)",
@@ -648,7 +648,7 @@ const ENTRIES: Record<string, Entry> = {
       note: "Parakeet TDT v3 fine-tuned on 117 h of German medical speech, including MultiMed's training split. Core ML export by hohmannc1. Loads in the Parakeet plugin's runtime, but returns no text for 26 of 203 MultiMed clips; mlx-audio and NeMo do the same with Mediform's weights.",
     },
     links: [hf("Mediform/parakeet-medical-de"), hf("hohmannc1/parakeet-medical-de-coreml")],
-    pr: undefined,
+    pr: 22,
   }),
   "groq:whisper-large-v3": {
     name: "Whisper large-v3 (Groq)",
@@ -822,7 +822,7 @@ const ENTRIES: Record<string, Entry> = {
       note: "Mediform's own MLX safetensors, run to check the Core ML export. Like the Core ML export and a NeMo rebuild of the same weights, it returns no text for many MultiMed clips and a few dictation clips.",
     },
     links: [hf("Mediform/parakeet-medical-de")],
-    pr: undefined,
+    pr: 22,
   }),
   "mlx-audio:qwen3-asr-0.6b-8bit": {
     name: "Qwen3-ASR 0.6B (8-bit)",
@@ -1011,7 +1011,7 @@ const ENTRIES: Record<string, Entry> = {
     quant: "int8",
     languages: "25 European languages",
     tw: { status: "reference", note: "TypeWhisper runs Parakeet through FluidAudio; this is the int8 ONNX build on the CPU." },
-    pr: undefined,
+    pr: 22,
   }),
   "soniox:stt-rt-v6": soniox({
     name: "Soniox STT v6 (real-time)",
