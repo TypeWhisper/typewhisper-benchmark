@@ -39,8 +39,12 @@ describe("parseState", () => {
     ]);
   });
 
+  it("accepts the French, Spanish, Italian and Portuguese suites' languages", () => {
+    for (const lang of ["fr", "es", "it", "pt"]) expect(parseState(`?lang=${lang}`).lang).toBe(lang);
+  });
+
   it("falls back to defaults for unknown values", () => {
-    const parsed = parseState("?view=nope&lang=fr&tier=gold&origin=x&deploy=moon&tw=maybe&group=x&dir=up");
+    const parsed = parseState("?view=nope&lang=xx&tier=gold&origin=x&deploy=moon&tw=maybe&group=x&dir=up");
     expect(parsed.view).toBe("leaderboard");
     expect(parsed.lang).toBe("all");
     expect(parsed.tier).toBe("core");

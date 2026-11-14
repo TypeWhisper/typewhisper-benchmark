@@ -114,10 +114,24 @@ const DE_FILLERS = new Set([
 // Hesitations only; "ну" and "вот" are real words and stay.
 const RU_FILLERS = new Set(["э", "ээ", "эээ", "эм", "мм", "ммм", "хм"]);
 
+// Hesitations only, as for Russian: discourse words such as "bah", "pues", "allora" or "então"
+// are real words and stay.
+const FR_FILLERS = new Set(["euh", "euhm", "heu", "hum", "hm", "hmm", "mm", "mmm"]);
+const ES_FILLERS = new Set(["eh", "ehm", "em", "mm", "mmm", "hm", "hmm"]);
+const IT_FILLERS = new Set(["eh", "ehm", "ehmm", "uhm", "mm", "mmm", "hm", "hmm"]);
+const PT_FILLERS = new Set(["hã", "ãh", "ahn", "hum", "eh", "mm", "mmm", "hm", "hmm"]);
+
+const FILLERS: Record<string, Set<string>> = {
+  de: DE_FILLERS,
+  ru: RU_FILLERS,
+  fr: FR_FILLERS,
+  es: ES_FILLERS,
+  it: IT_FILLERS,
+  pt: PT_FILLERS,
+};
+
 function fillersFor(lang: string): Set<string> {
-  if (lang === "de") return DE_FILLERS;
-  if (lang === "ru") return RU_FILLERS;
-  return EN_FILLERS;
+  return FILLERS[lang] ?? EN_FILLERS;
 }
 
 // --- Number to words (English) ---
@@ -318,8 +332,9 @@ export function normalizeCodeText(text: string): string {
 export function normalizeText(text: string, lang: string = "en"): string {
   if (text === "") return "";
 
-  // 1. Lowercase
-  let result = text.toLowerCase();
+  // 1. Lowercase. Composed accents first: a decomposed "é" would otherwise lose its accent
+  // with the punctuation in step 3.
+  let result = text.normalize("NFC").toLowerCase();
 
   // Russian writing omits the diaeresis on "ё" most of the time, so models and references
   // disagree on it without any recognition error.

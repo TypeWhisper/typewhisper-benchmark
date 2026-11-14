@@ -47,6 +47,21 @@ const MODEL_REGISTRY: Record<string, ModelEntry> = {
     },
     languages: null, // multilingual transducer, auto-detects language
   },
+  // FluidVoice's fine-tune of Parakeet TDT 0.6B v3 in its own int8 ONNX export (external weight
+  // files next to each graph, NeMo vocab.txt as the token list).
+  "fluid-speech-pro": {
+    type: "transducer",
+    dirName: "fluid-speech-pro-onnx-int8",
+    files: {
+      encoder: "encoder-model.int8.onnx",
+      decoder: "decoder.int8.onnx",
+      joiner: "joiner.int8.onnx",
+      tokens: "vocab.txt",
+    },
+    featureDim: 128,
+    modelType: "nemo_transducer",
+    languages: null,
+  },
   "canary-180m-flash": {
     type: "canary",
     dirName: "sherpa-onnx-nemo-canary-180m-flash-en-es-de-fr-int8",

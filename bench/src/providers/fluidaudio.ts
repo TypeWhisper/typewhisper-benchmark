@@ -49,6 +49,9 @@ export const FLUIDAUDIO_MODELS: Record<string, FluidAudioModel> = {
   // FluidVoice-Labs fine-tune of Parakeet Ultra. Its joint has no top-K outputs, which is fine
   // because no language hint is passed.
   "fluid-speech-mini": { local: "fluid-speech-mini", version: "ultra", languages: ["en"] },
+  // Multilingual FluidVoice-Labs fine-tune of Parakeet v3 and Ultra (25 European languages), same
+  // Core ML contract as Fluid Speech Mini; it detects the language itself.
+  "fluid-speech-pro": { local: "fluid-speech-pro", version: "ultra", languages: null },
   // ConwayResearch fine-tune of Parakeet v3; its runner loads it as `.ultra`, adds 0.25 s of
   // leading silence and uses the `short8` encoder function for clips up to 8 s.
   "bark-3.0-pro": {
@@ -192,7 +195,7 @@ export class FluidAudioProvider implements STTProvider {
     const unified = FLUIDAUDIO_MODELS[model]?.unified;
     if (unified) {
       // One language-prompted manager per suite language; load and prewarm them before timing.
-      for (const language of ["en", "de", "ru", "auto"]) {
+      for (const language of ["en", "de", "ru", "fr", "es", "it", "pt", "auto"]) {
         const res = await this.nextWorker.request({ model: unified, language, load: true }, NEXT_TIMEOUTS.prepareMs);
         if (res.error) throw new Error(res.error);
       }

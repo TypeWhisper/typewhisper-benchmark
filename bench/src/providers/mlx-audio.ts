@@ -4,11 +4,18 @@ import { createInterface } from "readline";
 import { fileURLToPath } from "url";
 import { promisify } from "util";
 import type { STTProvider, AudioInput, TranscriptionResult } from "../types.js";
+import { JsonLineWorker } from "./json-line-worker.js";
 
 const execFileAsync = promisify(execFile);
 const WORKER_SCRIPT = fileURLToPath(
   new URL("../../scripts/mlx-audio-worker.py", import.meta.url)
 );
+// The same worker on an unreleased mlx-audio commit, for models the pinned release does not have yet.
+const NEXT_WORKER_SCRIPT = fileURLToPath(
+  new URL("../../scripts/mlx-audio-next-worker.py", import.meta.url)
+);
+// Loading a large model can take minutes; a clip's own deadline is the runner's timeout.
+const NEXT_TIMEOUTS = { prepareMs: 30 * 60_000, transcribeMs: 10 * 60_000 };
 
 interface MlxModel {
   repo: string;
@@ -24,6 +31,8 @@ interface MlxModel {
   options?: Record<string, string | number>;
   /** Removes speaker labels ("Speaker 0:") that speaker-attributing models put before each turn */
   stripSpeakerLabels?: boolean;
+  /** Runs in the worker on the unreleased mlx-audio commit (mlx-audio-next-worker.py) */
+  next?: boolean;
   languages: string[];
 }
 
@@ -51,6 +60,9 @@ const QWEN3_LANGUAGES: Record<string, string> = {
   it: "Italian",
   pt: "Portuguese",
 };
+
+// SOV-Transcribe-1's languages; it has no Russian.
+const SOV_LANGUAGES = ["en", "de", "fr", "es", "it", "pt", "auto"];
 
 export const MLX_MODELS: Record<string, MlxModel> = {
   "qwen3-asr-0.6b-8bit": {
@@ -99,7 +111,7 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     revision: "1dd23f46f6d4e6eae2531982ba2e33220086dd97",
     // The pinned 2026-10-21 release is multilingual (EN, FR, DE, ES, PT, IT, JA); Russian is not
     // among them and runs only to document how it behaves there.
-    languages: ["en", "de", "ru"],
+    languages: ["en", "de", "ru", "fr", "es", "it", "pt"],
   },
   // NVIDIA Canary 1B v2 (CC BY 4.0) in the MLX conversion mlx-audio documents (NVIDIA's own repo
   // lacks the tokenizer file mlx-audio reads): source = target language, punctuation on.
@@ -158,7 +170,49 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     stripSpeakerLabels: true,
     languages: MULTILINGUAL_AUTO,
   },
+  // Salesforce SOV-Transcribe-1 (Apache 2.0, released 2026-11-12): Whisper large-v3 encoder and a
+  // Gemma 4 26B-A4B decoder, in the community's MLX exports (decoder 8- or 4-bit, encoder BF16).
+  // Prompted with the model card's language-hint instruction, which asks for punctuation.
+  "sov-transcribe-1-8bit": {
+    repo: "nativ-community/SOV-Transcribe-1-8bit",
+    revision: "b0293c864bc749647fc08d6719a3b7cfec4a33b4",
+    prompt: sovTranscribePrompt,
+    options: { max_tokens: 1024 },
+    next: true,
+    languages: SOV_LANGUAGES,
+  },
+  "sov-transcribe-1-4bit": {
+    repo: "nativ-community/SOV-Transcribe-1-4bit",
+    revision: "8a2f46d85735e55c0b6d1c8d882c570ed20d4d5c",
+    prompt: sovTranscribePrompt,
+    options: { max_tokens: 1024 },
+    next: true,
+    languages: SOV_LANGUAGES,
+  },
 };
+
+/**
+ * SOV-Transcribe-1's prompts from the model card: the language hint for a known language, the
+ * automatic-language instruction otherwise. Both ask for punctuation.
+ */
+/** Whether the request answered before the deadline; a late answer is ignored. */
+async function answeredWithin(request: Promise<unknown>, ms: number): Promise<boolean> {
+  let timer: NodeJS.Timeout | undefined;
+  return Promise.race([
+    request.then(() => true),
+    new Promise<boolean>((resolveLate) => {
+      timer = setTimeout(() => resolveLate(false), ms);
+    }),
+  ]).finally(() => clearTimeout(timer));
+}
+
+export function sovTranscribePrompt(language: string): string {
+  const name = QWEN3_LANGUAGES[language];
+  if (language === "auto" || !name) {
+    return "Transcribe the audio verbatim in the language's standard writing system, using punctuation and capitalization. Output only the transcript.";
+  }
+  return `Transcribe the ${name} audio into text, ensuring all punctuation marks are included.`;
+}
 
 /**
  * Nemotron 3.5 Transcribe's "readable text" prompt from the model card, with the suite language
@@ -210,9 +264,14 @@ export class MlxAudioProvider implements STTProvider {
   private ready?: Promise<void>;
   private pending = new Map<number, (res: WorkerResponse) => void>();
   private nextId = 1;
+  private nextWorker: JsonLineWorker;
 
   constructor(uvPath?: string) {
     this.uvPath = uvPath || process.env.MLX_AUDIO_UV_PATH || "uv";
+    this.nextWorker = new JsonLineWorker("mlx-audio (main)", async () => ({
+      file: this.uvPath,
+      args: ["run", "--quiet", "--script", NEXT_WORKER_SCRIPT],
+    }));
   }
 
   async isAvailable(): Promise<boolean> {
@@ -231,19 +290,25 @@ export class MlxAudioProvider implements STTProvider {
 
   async prepare(model: string): Promise<void> {
     const entry = this.entry(model);
-    const res = await this.request({ load: "1", repo: entry.repo, revision: entry.revision });
+    const payload = { load: "1", repo: entry.repo, revision: entry.revision };
+    const res = entry.next
+      ? await this.nextWorker.request(payload, NEXT_TIMEOUTS.prepareMs)
+      : await this.request(payload);
     if (res.error) throw new Error(String(res.error));
   }
 
   async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
     const entry = this.entry(model);
 
-    const res = await this.request({
+    const payload = {
       repo: entry.repo,
       revision: entry.revision,
       file: audio.filePath,
       options: generateOptions(model, audio.language),
-    });
+    };
+    const res = entry.next
+      ? await this.nextWorker.request(payload, NEXT_TIMEOUTS.transcribeMs)
+      : await this.request(payload);
     if (res.error) throw new Error(String(res.error));
 
     const text = (res.text ?? "").trim();
@@ -262,19 +327,21 @@ export class MlxAudioProvider implements STTProvider {
    */
   async release(model: string): Promise<void> {
     const entry = MLX_MODELS[model];
-    if (!entry || !this.worker) return;
-    let timer: NodeJS.Timeout | undefined;
-    const answered = await Promise.race([
-      this.request({ unload: "1", repo: entry.repo, revision: entry.revision }).then(() => true),
-      new Promise<boolean>((resolveLate) => {
-        timer = setTimeout(() => resolveLate(false), RELEASE_TIMEOUT_MS);
-      }),
-    ]).finally(() => clearTimeout(timer));
-    if (!answered) this.dispose();
+    if (!entry) return;
+    const unload = { unload: "1", repo: entry.repo, revision: entry.revision };
+    if (entry.next) {
+      // The unload queues behind a clip that may still be stuck, so the deadline starts now.
+      const request = this.nextWorker.request(unload, RELEASE_TIMEOUT_MS);
+      if (!(await answeredWithin(request, RELEASE_TIMEOUT_MS))) this.nextWorker.dispose();
+      return;
+    }
+    if (!this.worker) return;
+    if (!(await answeredWithin(this.request(unload), RELEASE_TIMEOUT_MS))) this.dispose();
   }
 
   /** Stops the worker, so requests that timed out in the runner cannot keep the process alive. */
   dispose(): void {
+    this.nextWorker.dispose();
     const worker = this.worker;
     if (!worker) return;
     for (const resolvePending of this.pending.values()) resolvePending({ error: "mlx-audio worker stopped" });
