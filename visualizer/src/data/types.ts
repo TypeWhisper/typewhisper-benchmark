@@ -12,8 +12,8 @@ export interface SuiteInfo {
   origin: SuiteOrigin;
   /** Clips in the suite definition. */
   clips: number;
-  /** Optional scores some suites produce: p = punctuation, f = formatting, dg = Digits. */
-  scores: Array<"p" | "f" | "dg">;
+  /** Optional scores some suites produce: p = punctuation, f = formatting, dg = Digits, tr = medical terms. */
+  scores: Array<"p" | "f" | "dg" | "tr">;
   /** True when bench/tests has the references, so transcripts can be shown next to them. */
   references: boolean;
 }
@@ -49,6 +49,9 @@ export interface Cell {
   fn?: number;
   dg?: number;
   dn?: number;
+  /** Mean share of the clips' key terms found in the transcript, over `tn` clips with key terms. */
+  tr?: number;
+  tn?: number;
 }
 
 /** A local model's speed run on the reference Mac mini (bench/speed/speed-set.json). */

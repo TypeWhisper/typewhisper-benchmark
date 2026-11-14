@@ -25,6 +25,8 @@ describe("FluidAudioProvider", () => {
       "nemotron-3.5-asr-streaming-0.6b",
       "nemotron-3.5-asr-streaming-0.6b-pad1s",
       "nemotron-unified-asr-0.6b",
+      "parakeet-primeline",
+      "parakeet-medical-de",
     ]);
   });
 

@@ -126,6 +126,13 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     revision: "2af4bb8ccceb66a8ce06c4081bb968f1802c1e58",
     languages: MULTILINGUAL_AUTO,
   },
+  // Mediform's German medical fine-tune of Parakeet TDT 0.6B v3 (Apache 2.0), from the MLX
+  // safetensors the model card names. Trained on Mediform/medical_asr_de, which includes MultiMed.
+  "parakeet-medical-de": {
+    repo: "Mediform/parakeet-medical-de",
+    revision: "a0a2d335c5d8620ee5dee5acc615e6f8ae77bc13",
+    languages: ["de"],
+  },
   // NVIDIA Nemotron 3.5 Transcribe 30B-A4B (OpenMDW-1.1), released 2026-10-28, in the community's
   // 4-bit MLX export (language model 4-bit, audio encoders unquantized). Prompted with the model
   // card's "readable text" instruction, which suits dictation, and the suite language.

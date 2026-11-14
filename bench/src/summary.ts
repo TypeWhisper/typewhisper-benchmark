@@ -18,6 +18,7 @@ const PUBLIC_SOURCES = new Set<TestCase["source"]>([
   "fleurs",
   "voxpopuli",
   "mls",
+  "multimed",
 ]);
 
 const SLICE_DEFINITIONS = [
@@ -284,6 +285,7 @@ function computeRankings(
       avgFormattingScore: averageOptional(
         valid.map((result) => result.formattingScore)
       ),
+      avgTermRecall: averageOptional(valid.map((result) => result.termRecall)),
       avgRealtimeFactor: average(
         valid.map((result) => result.realtimeFactor)
       ),

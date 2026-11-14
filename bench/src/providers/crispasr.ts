@@ -108,6 +108,21 @@ export const CRISPASR_MODELS: Record<string, CrispAsrModel> = {
     languages: ALL_SUITE_LANGUAGES,
     candidate: true,
   },
+  // Johann Hartmann's German medical fine-tune of Parakeet TDT 0.6B v3 (CC BY 4.0; decoder and
+  // joint trained on Arztbriefe), next to the unchanged base model in the same runtime and
+  // quantization, so the difference is the fine-tune's.
+  "parakeet-de-med-q8_0": {
+    backend: "parakeet",
+    file: "candidates/parakeet_de_med-q8_0.gguf",
+    languages: ["de"],
+    candidate: true,
+  },
+  "parakeet-tdt-0.6b-v3-q8_0": {
+    backend: "parakeet",
+    file: "candidates/parakeet-tdt-0.6b-v3-q8_0.gguf",
+    languages: ALL_SUITE_LANGUAGES,
+    candidate: true,
+  },
 };
 
 export function getCrispAsrModelsBasePath(env: NodeJS.ProcessEnv = process.env): string {

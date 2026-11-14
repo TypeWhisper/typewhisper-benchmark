@@ -1,10 +1,12 @@
 import { calculateWER, calculateCER } from "./wer.js";
 import { normalizeText, normalizeCodeText } from "./normalize.js";
 import { calculatePunctuationScore, calculateFormattingScore } from "./punctuation.js";
+import { calculateTermRecall } from "./terms.js";
 
 export { calculateWER, calculateCER } from "./wer.js";
 export { normalizeText, normalizeCodeText } from "./normalize.js";
 export { calculatePunctuationScore, calculateFormattingScore } from "./punctuation.js";
+export { calculateTermRecall } from "./terms.js";
 
 export interface MetricsInput {
   reference: string;
@@ -13,6 +15,7 @@ export interface MetricsInput {
   codeReference?: string;
   formattedReference?: string;
   alternativeReferences?: string[];
+  keyTerms?: string[];
 }
 
 export interface MetricsResult {
@@ -24,10 +27,11 @@ export interface MetricsResult {
   punctuationScore?: number;
   formattingScore?: number;
   bestAlternativeWer?: number;
+  termRecall?: number;
 }
 
 export function computeMetrics(input: MetricsInput): MetricsResult {
-  const { reference, hypothesis, language, codeReference, formattedReference, alternativeReferences } = input;
+  const { reference, hypothesis, language, codeReference, formattedReference, alternativeReferences, keyTerms } = input;
 
   // Raw WER: just lowercase, no other normalization
   const werRaw = calculateWER(
@@ -67,6 +71,9 @@ export function computeMetrics(input: MetricsInput): MetricsResult {
       return calculateWER(normRef, normalizedHyp);
     }));
   }
+
+  const termRecall = calculateTermRecall(keyTerms, hypothesis, language);
+  if (termRecall !== undefined) result.termRecall = termRecall;
 
   return result;
 }

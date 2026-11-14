@@ -14,7 +14,7 @@ import type { AppState, Dir, Lang, Origin, Tier } from "../lib/url-state";
 import { modelMeta, type ModelMeta } from "./model-meta";
 import type { Cell, ModelRun, SuiteInfo, Summary } from "./types";
 
-export type MetricKey = "wer" | "cer" | "punct" | "fmt" | "digits" | "ms" | "rtf" | "speed" | "price";
+export type MetricKey = "wer" | "cer" | "punct" | "fmt" | "digits" | "terms" | "ms" | "rtf" | "speed" | "price";
 export type Unit = "pct" | "ms" | "rtf" | "x" | "usd";
 
 export interface MetricDef {
@@ -31,6 +31,7 @@ export const METRICS: Record<MetricKey, MetricDef> = {
   punct: { key: "punct", label: "Punct", name: "Punctuation score", better: "higher", unit: "pct" },
   fmt: { key: "fmt", label: "Fmt", name: "Formatting score", better: "higher", unit: "pct" },
   digits: { key: "digits", label: "Digits", name: "Numbers written as digits", better: "higher", unit: "pct" },
+  terms: { key: "terms", label: "Terms", name: "Medical terms transcribed", better: "higher", unit: "pct" },
   ms: { key: "ms", label: "ms/clip", name: "Time per clip", better: "lower", unit: "ms" },
   rtf: { key: "rtf", label: "RTF", name: "Real-time factor", better: "lower", unit: "rtf" },
   speed: { key: "speed", label: "Speed", name: "Speed factor", better: "higher", unit: "x" },
@@ -69,6 +70,7 @@ export const CATEGORY_NAMES: Record<string, string> = {
   "number-formatting": "Number formatting",
   "long-form-speech": "Long-form speech",
   "technical-jargon": "Hard cases",
+  "medical-speech": "Medical speech",
 };
 
 export function categoryName(category: string): string {
@@ -301,6 +303,7 @@ const VALUE_KEYS: Record<Exclude<MetricKey, "price" | "speed">, [keyof Cell, key
   punct: ["p", "pn"],
   fmt: ["f", "fn"],
   digits: ["dg", "dn"],
+  terms: ["tr", "tn"],
 };
 
 /** Pools a metric over suites, weighting each suite mean by its own count. */

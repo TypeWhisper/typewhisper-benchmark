@@ -24,6 +24,7 @@ describe("MlxAudioProvider", () => {
       "canary-1b-v2",
       "sophea-canary",
       "phonon-2.5",
+      "parakeet-medical-de",
       "nemotron-3.5-transcribe-4bit",
       "nemotron-3.5-transcribe-4bit-written",
       "vibevoice-asr-streaming-1.5b",

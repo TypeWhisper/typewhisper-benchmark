@@ -53,6 +53,9 @@ function suiteColumns(summary: Summary, suite: string): Column[] {
   if (info.scores.includes("dg")) {
     columns.push(fixed("digits", "digits", "Digits", "Share of clips whose numbers all appear exactly as in the reference. Higher is better."));
   }
+  if (info.scores.includes("tr")) {
+    columns.push(fixed("terms", "terms", "Terms", "Share of the clips' medical terms (drugs, diagnoses, procedures) that the transcript spells correctly. Higher is better."));
+  }
   columns.push(
     fixed("ms", "ms", "ms/clip", "Mean time per clip on this suite, measured inside each runtime. Lower is better."),
     fixed("rtf", "rtf", "RTF", "Processing time divided by audio length on this suite. Lower is better.")

@@ -76,6 +76,12 @@ export const FLUIDAUDIO_MODELS: Record<string, FluidAudioModel> = {
   // punctuated, offline and streaming) in FluidAudio 0.18.0's offline UnifiedAsrManager with the
   // fp16 encoder, prompted with the suite language ("auto" on the auto-detect suite).
   "nemotron-unified-asr-0.6b": { unified: "nemotron-unified", languages: null },
+  // German fine-tunes of Parakeet v3 in the same runtime, loaded from local Core ML folders
+  // (download-fluidaudio-models.sh). Candidates, not TypeWhisper settings.
+  // primeline's general German fine-tune (CC BY 4.0).
+  "parakeet-primeline": { local: "parakeet-primeline", version: "v3", languages: ["de"] },
+  // Mediform's German medical fine-tune (Apache 2.0), trained on 117 h of German medical speech.
+  "parakeet-medical-de": { local: "parakeet-medical-de", version: "v3", languages: ["de"] },
 };
 
 /**

@@ -366,6 +366,7 @@ export async function runBenchmark(
         codeReference: test.codeGroundTruth,
         formattedReference: test.formattedGroundTruth,
         alternativeReferences: test.alternativeGroundTruths,
+        keyTerms: test.keyTerms,
       });
 
       const result: TestResult = {
@@ -389,6 +390,7 @@ export async function runBenchmark(
         punctuationScore: metrics.punctuationScore,
         formattingScore: metrics.formattingScore,
         bestAlternativeWer: metrics.bestAlternativeWer,
+        termRecall: metrics.termRecall,
         durationMs: transcription.durationMs,
         realtimeFactor:
           audioInfo.durationSeconds > 0
