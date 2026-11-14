@@ -1,10 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   MLX_MODELS,
   MlxAudioProvider,
   generateOptions,
   germanMedicineTerms,
   nemotronTranscribePrompt,
+  sovTranscribePrompt,
   stripSpeakerLabels,
 } from "./mlx-audio.js";
 
@@ -31,6 +32,8 @@ describe("MlxAudioProvider", () => {
       "nemotron-3.5-transcribe-4bit",
       "nemotron-3.5-transcribe-4bit-written",
       "vibevoice-asr-streaming-1.5b",
+      "sov-transcribe-1-8bit",
+      "sov-transcribe-1-4bit",
     ]);
   });
 
@@ -64,6 +67,17 @@ describe("MlxAudioProvider", () => {
     expect(germanMedicineTerms()).toHaveLength(315);
   });
 
+  it("gives SOV-Transcribe-1 the model card's language hint, or its auto-language prompt", () => {
+    expect(generateOptions("sov-transcribe-1-4bit", "fr")).toEqual({
+      max_tokens: 1024,
+      prompt: "Transcribe the French audio into text, ensuring all punctuation marks are included.",
+    });
+    expect(sovTranscribePrompt("auto")).toContain("in the language's standard writing system");
+    const provider = new MlxAudioProvider();
+    expect(provider.supportsLanguage("sov-transcribe-1-8bit", "pt")).toBe(true);
+    expect(provider.supportsLanguage("sov-transcribe-1-8bit", "ru")).toBe(false);
+  });
+
   it("names the suite language in Nemotron 3.5 Transcribe's prompt", () => {
     const options = generateOptions("nemotron-3.5-transcribe-4bit", "de");
     expect(options.max_tokens).toBe(1024);
@@ -79,5 +93,31 @@ describe("MlxAudioProvider", () => {
     expect(stripSpeakerLabels("Speaker 0: Hello. Speaker 1:Hi there.")).toBe("Hello. Hi there.");
     expect(stripSpeakerLabels("No labels here.")).toBe("No labels here.");
     expect(stripSpeakerLabels("Speaker 0:The quick brown fox.Speaker 1:Hi there.")).toBe("The quick brown fox. Hi there.");
+  });
+});
+
+describe("MlxAudioProvider.release", () => {
+  it("stops the main-branch worker when an unload queued behind a stuck clip misses the deadline", async () => {
+    vi.useFakeTimers();
+    try {
+      const provider = new MlxAudioProvider();
+      const dispose = vi.fn();
+      // A clip that never answers holds the queue, so the unload behind it never runs.
+      (provider as any).nextWorker = { request: () => new Promise(() => {}), dispose };
+      const released = provider.release("sov-transcribe-1-4bit");
+      await vi.advanceTimersByTimeAsync(30_000);
+      await released;
+      expect(dispose).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("keeps the main-branch worker when the unload answers", async () => {
+    const provider = new MlxAudioProvider();
+    const dispose = vi.fn();
+    (provider as any).nextWorker = { request: async () => ({}), dispose };
+    await provider.release("sov-transcribe-1-4bit");
+    expect(dispose).not.toHaveBeenCalled();
   });
 });

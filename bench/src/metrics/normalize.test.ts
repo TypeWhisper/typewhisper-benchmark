@@ -90,6 +90,18 @@ describe("normalizeText", () => {
     expect(normalizeText("Ну, э, мм, вот так", "ru")).toBe("ну вот так");
   });
 
+  it("removes French, Spanish, Italian and Portuguese hesitations but keeps real words", () => {
+    expect(normalizeText("Euh, bah, je crois", "fr")).toBe("bah je crois");
+    expect(normalizeText("Eh, pues, no sé", "es")).toBe("pues no sé");
+    expect(normalizeText("Ehm, allora, va bene", "it")).toBe("allora va bene");
+    expect(normalizeText("Hã, então, tudo bem", "pt")).toBe("então tudo bem");
+  });
+
+  it("keeps decomposed accents", () => {
+    expect(normalizeText("e\u0301te\u0301", "fr")).toBe("été");
+    expect(normalizeText("Où est-il ?", "fr")).toBe("où est il");
+  });
+
   it("handles zero", () => {
     expect(normalizeText("0 errors", "en")).toBe("zero errors");
     expect(normalizeText("0 Fehler", "de")).toBe("null fehler");

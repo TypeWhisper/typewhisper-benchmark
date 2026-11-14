@@ -14,6 +14,8 @@ HF="uvx --quiet --from huggingface_hub==2.2.0 hf"
 # Pinned so the weights cannot change underneath the published results.
 FLUID_MINI_REPO="FluidVoice-Labs/fluid-speech-mini-coreml"
 FLUID_MINI_REVISION="d81c3160dfe5a5e1f8f7267164a07d30617a3a1a"
+FLUID_PRO_REPO="FluidVoice-Labs/fluid-speech-pro-coreml"
+FLUID_PRO_REVISION="3b9d38a93d606f84011e5a0a669b7ea146375a22"
 BARK_PRO_REPO="ConwayResearch/Underdog-Bark-3.0-Pro"
 BARK_PRO_REVISION="4b5c51e04aa8d16dda9ecdff71bc29f7360149e4"
 # Same repo, revision and variant as TypeWhisper's NemotronStreaming (ParakeetPlugin.swift).
@@ -51,6 +53,25 @@ else
   mv "$staging" "$target"
   rm -rf "$download"
   echo "=> Done: Fluid Speech Mini"
+fi
+
+target="$MODELS_DIR/fluid-speech-pro"
+if [ -d "$target" ]; then
+  echo "=> Skipping Fluid Speech Pro (already exists)"
+else
+  echo "=> Downloading Fluid Speech Pro (~650 MB) ..."
+  download="$STAGING_DIR/fluid-speech-pro.download"   # kept between runs so downloads resume
+  staging="$STAGING_DIR/fluid-speech-pro"
+  $HF download "$FLUID_PRO_REPO" --revision "$FLUID_PRO_REVISION" --local-dir "$download" \
+    --include "*.mlmodelc/*" --include "*.mlmodelc/**" --include "*.json" --include "LICENSE" --include "NOTICE"
+  rm -rf "$staging"
+  mkdir -p "$staging"
+  cp -R "$download"/*.mlmodelc "$download"/*.json "$download/LICENSE" "$download/NOTICE" "$staging/"
+  # Same Core ML contract as Fluid Speech Mini (FluidVoice's FluidAudio fork treats both alike).
+  cp -R "$staging/JointDecision.mlmodelc" "$staging/JointDecisionv3.mlmodelc"
+  mv "$staging" "$target"
+  rm -rf "$download"
+  echo "=> Done: Fluid Speech Pro"
 fi
 
 target="$MODELS_DIR/bark-3.0-pro"

@@ -48,7 +48,8 @@ export const CRISPASR_MODELS: Record<string, CrispAsrModel> = {
     languages: ALL_SUITE_LANGUAGES,
     candidate: true,
   },
-  // Fun-ASR-MLT-Nano-2512 (FunASR Model License v1.1): 31 languages incl. de and ru.
+  // Fun-ASR-MLT-Nano-2512 (FunASR Model License v1.1): 31 languages incl. Portuguese, but not German,
+  // French, Spanish, Italian or Russian.
   "fun-asr-mlt-nano-f16": {
     backend: "fun-asr-mlt-nano",
     file: "candidates/funasr-mlt-nano-2512-f16.gguf",

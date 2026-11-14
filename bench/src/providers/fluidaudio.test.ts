@@ -21,6 +21,7 @@ describe("FluidAudioProvider", () => {
       "parakeet-tdt-0.6b-v2",
       "parakeet-ultra",
       "fluid-speech-mini",
+      "fluid-speech-pro",
       "bark-3.0-pro",
       "nemotron-3.5-asr-streaming-0.6b",
       "nemotron-3.5-asr-streaming-0.6b-pad1s",
@@ -42,6 +43,7 @@ describe("FluidAudioProvider", () => {
     expect(provider.supportsLanguage("parakeet-ultra", "auto")).toBe(true);
     expect(provider.supportsLanguage("parakeet-tdt-0.6b-v3", "ru")).toBe(true);
     expect(provider.supportsLanguage("fluid-speech-mini", "de")).toBe(true);
+    expect(provider.supportsLanguage("fluid-speech-pro", "auto")).toBe(true);
     expect(provider.supportsLanguage("bark-3.0-pro", "auto")).toBe(false);
     expect(provider.supportsLanguage("parakeet-tdt-0.6b-v2", "auto")).toBe(false);
     expect(provider.supportsLanguage("unknown", "en")).toBe(false);

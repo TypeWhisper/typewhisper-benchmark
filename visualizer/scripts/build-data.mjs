@@ -108,7 +108,7 @@ export function inferCategory(suiteId) {
 }
 
 export function inferLanguage(suiteId) {
-  return suiteId.match(/-(de|en|ru|auto)$/)?.[1] ?? "other";
+  return suiteId.match(/-(de|en|fr|es|it|pt|ru|auto)$/)?.[1] ?? "other";
 }
 
 function inferTier(suiteId, category) {
