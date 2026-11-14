@@ -4,6 +4,7 @@ import {
   MlxAudioProvider,
   generateOptions,
   nemotronTranscribePrompt,
+  sovTranscribePrompt,
   stripSpeakerLabels,
 } from "./mlx-audio.js";
 
@@ -27,6 +28,8 @@ describe("MlxAudioProvider", () => {
       "nemotron-3.5-transcribe-4bit",
       "nemotron-3.5-transcribe-4bit-written",
       "vibevoice-asr-streaming-1.5b",
+      "sov-transcribe-1-8bit",
+      "sov-transcribe-1-4bit",
     ]);
   });
 
@@ -54,6 +57,17 @@ describe("MlxAudioProvider", () => {
     expect(generateOptions("granite-speech-5.0-2b", "de").language).toBeUndefined();
     expect(generateOptions("voxtral-mini-4b-realtime-4bit", "de")).toEqual({});
     expect(generateOptions("phonon-2.5", "de")).toEqual({});
+  });
+
+  it("gives SOV-Transcribe-1 the model card's language hint, or its auto-language prompt", () => {
+    expect(generateOptions("sov-transcribe-1-4bit", "fr")).toEqual({
+      max_tokens: 1024,
+      prompt: "Transcribe the French audio into text, ensuring all punctuation marks are included.",
+    });
+    expect(sovTranscribePrompt("auto")).toContain("in the language's standard writing system");
+    const provider = new MlxAudioProvider();
+    expect(provider.supportsLanguage("sov-transcribe-1-8bit", "pt")).toBe(true);
+    expect(provider.supportsLanguage("sov-transcribe-1-8bit", "ru")).toBe(false);
   });
 
   it("names the suite language in Nemotron 3.5 Transcribe's prompt", () => {

@@ -16,6 +16,8 @@ fi
 download_model() {
   local repo="$1" dir_name="$2"
   shift 2
+  # REVISION pins a commit for models whose repos may change; unset means main.
+  local revision="${REVISION:-main}"
   local files=("$@")
   local target="$MODELS_DIR/$dir_name"
 
@@ -29,7 +31,7 @@ download_model() {
 
   for file in "${files[@]}"; do
     echo "   $file"
-    fetch "$target/$file" "$HF_BASE/$repo/resolve/main/$file"
+    fetch "$target/$file" "$HF_BASE/$repo/resolve/$revision/$file"
   done
 
   echo "=> Done: $dir_name"
@@ -68,6 +70,28 @@ download_model \
   "csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8" \
   "sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8" \
   encoder.int8.onnx decoder.int8.onnx joiner.int8.onnx tokens.txt
+
+# Fluid Speech Pro, FluidVoice's fine-tune of Parakeet TDT 0.6B v3 (int8, ~810 MB)
+REVISION="fa588e9f87f1b9ad0ca2e2d8f7eaf84dc3803581" download_model \
+  "FluidVoice-Labs/fluid-speech-pro-onnx" \
+  "fluid-speech-pro-onnx-int8" \
+  encoder-model.int8.onnx encoder-model.int8.onnx.data decoder.int8.onnx decoder.int8.onnx.data \
+  joiner.int8.onnx joiner.int8.onnx.data vocab.txt LICENSE NOTICE
+# sherpa-onnx loads graphs from memory, so it cannot find external weight files; fold them into
+# each graph (all stay under protobuf's 2 GB limit).
+fluid_dir="$MODELS_DIR/fluid-speech-pro-onnx-int8"
+for graph in encoder-model decoder joiner; do
+  if [ -f "$fluid_dir/$graph.int8.onnx.data" ]; then
+    echo "   inlining $graph weights"
+    uv run --quiet --no-project --python 3.12 --with onnx==1.18.0 python -I -c '
+import sys, onnx
+path = sys.argv[1]
+onnx.save(onnx.load(path), path + ".tmp", save_as_external_data=False)
+' "$fluid_dir/$graph.int8.onnx"
+    mv "$fluid_dir/$graph.int8.onnx.tmp" "$fluid_dir/$graph.int8.onnx"
+    rm "$fluid_dir/$graph.int8.onnx.data"
+  fi
+done
 
 # Canary 180M Flash (~207 MB)
 download_model \

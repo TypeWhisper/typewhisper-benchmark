@@ -25,7 +25,7 @@ export const KYUTAI_MODELS: Record<string, KyutaiModel> = {
   "stt-1b-en_fr": {
     repo: "kyutai/stt-1b-en_fr-mlx",
     revision: "2b995724eef1e964b7ccb6a762b35a665c4abe0d",
-    languages: EXPLICIT_LANGUAGES,
+    languages: [...EXPLICIT_LANGUAGES, "fr"],
   },
   "stt-2.6b-en": {
     repo: "kyutai/stt-2.6b-en-mlx",

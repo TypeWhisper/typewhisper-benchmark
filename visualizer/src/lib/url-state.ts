@@ -10,7 +10,7 @@
  *   model   one model id (view=model)
  *   suite   suite id, e.g. clean-speech-mls-de (view=suite, transcript explorers)
  *   clip    clip (test) id inside the suite, e.g. de-clean-01
- *   lang    all | en | de | ru | auto                                       (default all)
+ *   lang    all | en | de | fr | es | it | pt | ru | auto                  (default all)
  *   tier    core | diagnostic | all                                         (default core)
  *   cat     suite category, e.g. noisy-environment                          (default: every category)
  *   origin  all | public | synthetic   (real recordings vs. TTS clips)      (default all)
@@ -29,7 +29,7 @@
  */
 
 export const VIEWS = ["leaderboard", "compare", "model", "suite", "models", "suites", "about"] as const;
-export const LANGS = ["all", "en", "de", "ru", "auto"] as const;
+export const LANGS = ["all", "en", "de", "fr", "es", "it", "pt", "ru", "auto"] as const;
 export const TIERS = ["core", "diagnostic", "all"] as const;
 export const ORIGINS = ["all", "public", "synthetic"] as const;
 export const DEPLOYS = ["all", "local", "cloud"] as const;
