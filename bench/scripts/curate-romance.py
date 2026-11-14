@@ -82,9 +82,16 @@ def select_balanced(entries, target):
 
 
 def ffmpeg_to_wav(out_path, data):
+    # Convert next to the target and rename on success, so an interrupted run leaves no partial WAV
+    # that a later run would take for finished.
+    tmp = out_path.with_name(out_path.name + ".tmp.wav")
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", "pipe:0",
-           "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", str(out_path)]
-    subprocess.run(cmd, input=data, check=True)
+           "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", str(tmp)]
+    try:
+        subprocess.run(cmd, input=data, check=True)
+        tmp.replace(out_path)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def test_entry(prefix, sample_dir, file_id, text, source, speaker=None):
@@ -111,7 +118,7 @@ def write_suite(lang, suite_id, name, description, category, tests, label):
         "tests": tests,
     }
     out = BENCH_ROOT / "tests" / f"{suite_id}.json"
-    out.write_text(json.dumps(suite, indent=2, ensure_ascii=False) + "\n")
+    out.write_text(json.dumps(suite, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{label}: written {len(tests)} tests to {out}")
 
 
@@ -188,9 +195,9 @@ def curate_common_voice(lang, target):
     if not (tsv.exists() and durations.exists() and tar_paths):
         print(f"Common Voice {spec['name']} test files not found under", root)
         return
-    with durations.open() as f:
+    with durations.open(encoding="utf-8") as f:
         seconds = {r["clip"]: int(r["duration[ms]"]) / 1000 for r in csv.DictReader(f, delimiter="\t")}
-    with tsv.open() as f:
+    with tsv.open(encoding="utf-8") as f:
         rows = list(csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE))
     candidates = [
         {"id": r["path"].removesuffix(".mp3"), "group": r["client_id"], "text": r["sentence"], "path": r["path"]}
@@ -256,7 +263,7 @@ def curate_noisy_fleurs(lang, target):
         print("Clean FLEURS suite missing:", clean_suite)
         return
     noises = {n: read_pcm(noise_dir / f"{n}.wav") for n in NOISES}
-    clean_tests = json.loads(clean_suite.read_text())["tests"][:target]
+    clean_tests = json.loads(clean_suite.read_text(encoding="utf-8"))["tests"][:target]
     sample_dir = f"samples-noisy-{lang}"
     out_dir = BENCH_ROOT / "audio" / sample_dir
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -264,13 +271,13 @@ def curate_noisy_fleurs(lang, target):
     for i, t in enumerate(clean_tests):
         noise_type, snr = NOISES[i % len(NOISES)], SNRS_DB[i % len(SNRS_DB)]
         file_id = t["audioFile"].split("/")[-1].removesuffix(".wav")
-        wav = out_dir / f"{file_id}.wav"
-        if not wav.exists():
-            speech = read_pcm(BENCH_ROOT / "audio" / t["audioFile"])
-            noise = np.resize(noises[noise_type], speech.shape)
-            # Scale the noise so that 20*log10(rms(speech) / rms(noise)) equals the target SNR.
-            noise *= rms(speech) / (rms(noise) * 10 ** (snr / 20))
-            write_pcm(wav, speech + noise)
+        # Always remix: a clip's noise type and SNR follow its position, which a different target can
+        # change, and the mix is cheap and deterministic.
+        speech = read_pcm(BENCH_ROOT / "audio" / t["audioFile"])
+        noise = np.resize(noises[noise_type], speech.shape)
+        # Scale the noise so that 20*log10(rms(speech) / rms(noise)) equals the target SNR.
+        noise *= rms(speech) / (rms(noise) * 10 ** (snr / 20))
+        write_pcm(out_dir / f"{file_id}.wav", speech + noise)
         tests.append({
             "id": f"noisy-{lang}-{file_id}",
             "audioFile": f"{sample_dir}/{file_id}.wav",

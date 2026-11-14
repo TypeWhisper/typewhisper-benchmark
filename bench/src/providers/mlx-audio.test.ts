@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   MLX_MODELS,
   MlxAudioProvider,
@@ -85,5 +85,31 @@ describe("MlxAudioProvider", () => {
     expect(stripSpeakerLabels("Speaker 0: Hello. Speaker 1:Hi there.")).toBe("Hello. Hi there.");
     expect(stripSpeakerLabels("No labels here.")).toBe("No labels here.");
     expect(stripSpeakerLabels("Speaker 0:The quick brown fox.Speaker 1:Hi there.")).toBe("The quick brown fox. Hi there.");
+  });
+});
+
+describe("MlxAudioProvider.release", () => {
+  it("stops the main-branch worker when an unload queued behind a stuck clip misses the deadline", async () => {
+    vi.useFakeTimers();
+    try {
+      const provider = new MlxAudioProvider();
+      const dispose = vi.fn();
+      // A clip that never answers holds the queue, so the unload behind it never runs.
+      (provider as any).nextWorker = { request: () => new Promise(() => {}), dispose };
+      const released = provider.release("sov-transcribe-1-4bit");
+      await vi.advanceTimersByTimeAsync(30_000);
+      await released;
+      expect(dispose).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("keeps the main-branch worker when the unload answers", async () => {
+    const provider = new MlxAudioProvider();
+    const dispose = vi.fn();
+    (provider as any).nextWorker = { request: async () => ({}), dispose };
+    await provider.release("sov-transcribe-1-4bit");
+    expect(dispose).not.toHaveBeenCalled();
   });
 });

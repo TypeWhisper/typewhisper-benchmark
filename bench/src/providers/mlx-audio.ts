@@ -195,6 +195,17 @@ export const MLX_MODELS: Record<string, MlxModel> = {
  * SOV-Transcribe-1's prompts from the model card: the language hint for a known language, the
  * automatic-language instruction otherwise. Both ask for punctuation.
  */
+/** Whether the request answered before the deadline; a late answer is ignored. */
+async function answeredWithin(request: Promise<unknown>, ms: number): Promise<boolean> {
+  let timer: NodeJS.Timeout | undefined;
+  return Promise.race([
+    request.then(() => true),
+    new Promise<boolean>((resolveLate) => {
+      timer = setTimeout(() => resolveLate(false), ms);
+    }),
+  ]).finally(() => clearTimeout(timer));
+}
+
 export function sovTranscribePrompt(language: string): string {
   const name = QWEN3_LANGUAGES[language];
   if (language === "auto" || !name) {
@@ -316,20 +327,16 @@ export class MlxAudioProvider implements STTProvider {
    */
   async release(model: string): Promise<void> {
     const entry = MLX_MODELS[model];
-    if (entry?.next) {
-      // Past the deadline the worker stops itself, which frees the memory as well.
-      await this.nextWorker.request({ unload: "1", repo: entry.repo, revision: entry.revision }, RELEASE_TIMEOUT_MS);
+    if (!entry) return;
+    const unload = { unload: "1", repo: entry.repo, revision: entry.revision };
+    if (entry.next) {
+      // The unload queues behind a clip that may still be stuck, so the deadline starts now.
+      const request = this.nextWorker.request(unload, RELEASE_TIMEOUT_MS);
+      if (!(await answeredWithin(request, RELEASE_TIMEOUT_MS))) this.nextWorker.dispose();
       return;
     }
-    if (!entry || !this.worker) return;
-    let timer: NodeJS.Timeout | undefined;
-    const answered = await Promise.race([
-      this.request({ unload: "1", repo: entry.repo, revision: entry.revision }).then(() => true),
-      new Promise<boolean>((resolveLate) => {
-        timer = setTimeout(() => resolveLate(false), RELEASE_TIMEOUT_MS);
-      }),
-    ]).finally(() => clearTimeout(timer));
-    if (!answered) this.dispose();
+    if (!this.worker) return;
+    if (!(await answeredWithin(this.request(unload), RELEASE_TIMEOUT_MS))) this.dispose();
   }
 
   /** Stops the worker, so requests that timed out in the runner cannot keep the process alive. */
