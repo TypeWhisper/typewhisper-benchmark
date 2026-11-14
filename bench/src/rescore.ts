@@ -19,6 +19,7 @@ export function scoreTranscript(
   | "punctuationScore"
   | "formattingScore"
   | "bestAlternativeWer"
+  | "termRecall"
 > {
   const metrics = computeMetrics({
     reference: test.groundTruth,
@@ -27,6 +28,7 @@ export function scoreTranscript(
     codeReference: test.codeGroundTruth,
     formattedReference: test.formattedGroundTruth,
     alternativeReferences: test.alternativeGroundTruths,
+    keyTerms: test.keyTerms,
   });
   return {
     werRaw: metrics.werRaw,
@@ -37,6 +39,7 @@ export function scoreTranscript(
     punctuationScore: metrics.punctuationScore,
     formattingScore: metrics.formattingScore,
     bestAlternativeWer: metrics.bestAlternativeWer,
+    termRecall: metrics.termRecall,
   };
 }
 

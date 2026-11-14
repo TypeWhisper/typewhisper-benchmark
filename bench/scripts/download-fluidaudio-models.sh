@@ -22,6 +22,16 @@ BARK_PRO_REVISION="4b5c51e04aa8d16dda9ecdff71bc29f7360149e4"
 NEMOTRON_REPO="FluidInference/Nemotron-3.5-ASR-Streaming-Multilingual-0.6b-CoreML"
 NEMOTRON_REVISION="1a41b75758b0337ff67db7d5408280aaaf23074e"
 NEMOTRON_VARIANT="multilingual/1120ms"
+# primeline's German fine-tune of Parakeet v3, exported with FluidInference's mobius tooling and
+# checked against NeMo inference on the unconverted checkpoint (see the repo's model card).
+PRIMELINE_REPO="ValentinWeyer/parakeet-primeline-de-coreml"
+PRIMELINE_REVISION="d912a28d658a93c7eba99760d52a462f1bd3810a"
+# Mediform's German medical fine-tune of Parakeet v3 (Mediform/parakeet-medical-de, Apache 2.0),
+# exported with mobius for FluidAudio as one zip.
+MEDICAL_DE_REPO="hohmannc1/parakeet-medical-de-coreml"
+MEDICAL_DE_REVISION="1fd6b396b51a46a1315249ab545c965cac15c11f"
+MEDICAL_DE_ZIP="parakeet-medical-de-coreml-fp16.zip"
+MEDICAL_DE_SHA256="131e79dcd57e40b9b149e0e6621c1c9fadb815f1df1d10ad1f24c675f2008210"
 
 mkdir -p "$STAGING_DIR"
 
@@ -106,6 +116,52 @@ else
   mv "$staging" "$target"
   rm -rf "$download"
   echo "=> Done: Nemotron 3.5 ASR Streaming"
+fi
+
+target="$MODELS_DIR/parakeet-primeline"
+if [ -d "$target" ]; then
+  echo "=> Skipping primeline Parakeet (already exists)"
+else
+  echo "=> Downloading primeline Parakeet, Core ML (~1.2 GB) ..."
+  download="$STAGING_DIR/parakeet-primeline.download"   # kept between runs so downloads resume
+  staging="$STAGING_DIR/parakeet-primeline"
+  $HF download "$PRIMELINE_REPO" --revision "$PRIMELINE_REVISION" --local-dir "$download" \
+    --include "*.mlmodelc/*" --include "*.mlmodelc/**" --include "*.json" --include "README.md"
+  rm -rf "$staging"
+  mkdir -p "$staging"
+  cp -R "$download"/*.mlmodelc "$download"/*.json "$download/README.md" "$staging/"
+  mv "$staging" "$target"
+  rm -rf "$download"
+  echo "=> Done: primeline Parakeet"
+fi
+
+target="$MODELS_DIR/parakeet-medical-de"
+if [ -d "$target" ]; then
+  echo "=> Skipping Parakeet Medical DE (already exists)"
+else
+  echo "=> Downloading Parakeet Medical DE, Core ML (~1.1 GB) ..."
+  download="$STAGING_DIR/parakeet-medical-de.download"   # kept between runs so downloads resume
+  staging="$STAGING_DIR/parakeet-medical-de"
+  $HF download "$MEDICAL_DE_REPO" --revision "$MEDICAL_DE_REVISION" --local-dir "$download" \
+    --include "$MEDICAL_DE_ZIP" --include "README.md"
+  echo "$MEDICAL_DE_SHA256  $download/$MEDICAL_DE_ZIP" | shasum -a 256 -c --status \
+    || { echo "checksum mismatch: $MEDICAL_DE_ZIP" >&2; exit 1; }
+  rm -rf "$staging"
+  mkdir -p "$staging"
+  ditto -x -k "$download/$MEDICAL_DE_ZIP" "$staging"
+  # The zip may wrap its files in one folder; FluidAudio expects them at the top level.
+  if [ ! -d "$staging/Encoder.mlmodelc" ]; then
+    inner=$(dirname "$(find "$staging" -maxdepth 3 -type d -name Encoder.mlmodelc | head -n 1)")
+    [ -n "$inner" ] && [ "$inner" != "." ] || { echo "no Encoder.mlmodelc in $MEDICAL_DE_ZIP" >&2; exit 1; }
+    mv "$inner" "$STAGING_DIR/parakeet-medical-de.inner"
+    rm -rf "$staging"
+    mv "$STAGING_DIR/parakeet-medical-de.inner" "$staging"
+  fi
+  rm -rf "$staging/__MACOSX"
+  cp "$download/README.md" "$staging/"
+  mv "$staging" "$target"
+  rm -rf "$download"
+  echo "=> Done: Parakeet Medical DE"
 fi
 
 rmdir "$STAGING_DIR" 2>/dev/null || true

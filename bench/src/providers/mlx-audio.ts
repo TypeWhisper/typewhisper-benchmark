@@ -1,4 +1,5 @@
 import { execFile, spawn, type ChildProcess } from "child_process";
+import { readFileSync } from "fs";
 import { arch, platform } from "os";
 import { createInterface } from "readline";
 import { fileURLToPath } from "url";
@@ -50,6 +51,33 @@ const GRANITE_LANGUAGES = ["en", "de", "fr", "es", "pt", "auto"];
 // Models that cover all suite languages and detect the language themselves.
 const MULTILINGUAL_AUTO = ["en", "de", "ru", "fr", "es", "it", "pt", "auto"];
 
+// The system prompt TypeWhisper's Qwen3 plugin sends (Qwen3ContextBiasFormatter): a fixed instruction,
+// then the dictionary terms. The plugin sets no term budget for Qwen3, so all terms go in.
+const QWEN3_PLUGIN_INSTRUCTION =
+  "Transcribe only words that are spoken in the audio. Do not append acknowledgements, continuations, or filler words after speech ends.";
+
+/** The German Medicine term pack as the plugin receives it: one term per line, deduplicated. */
+export function germanMedicineTerms(): string[] {
+  const file = fileURLToPath(new URL("../../probe/terms-german-medicine.txt", import.meta.url));
+  const seen = new Set<string>();
+  return readFileSync(file, "utf-8")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .filter((term) => {
+      const key = term.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+export function qwen3PluginPrompt(terms: string[]): string {
+  return terms.length === 0
+    ? QWEN3_PLUGIN_INSTRUCTION
+    : `${QWEN3_PLUGIN_INSTRUCTION}\nTechnical terms: ${terms.join(", ")}.`;
+}
+
 // Same repos as TypeWhisper's Qwen3, Voxtral, Granite and Canary plugins, then candidates.
 const QWEN3_LANGUAGES: Record<string, string> = {
   en: "English",
@@ -76,6 +104,22 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     revision: "a8379a2e2f9e313c9292cdf1af4055ab56d50d55",
     language: "name",
     languages: Object.keys(QWEN3_LANGUAGES),
+  },
+  // Qwen3-ASR 1.7B with the system prompt TypeWhisper's Qwen3 plugin sends: without dictionary
+  // terms, and with the German Medicine term pack. German only, for the medical suites.
+  "qwen3-asr-1.7b-8bit-plugin": {
+    repo: "mlx-community/Qwen3-ASR-1.7B-8bit",
+    revision: "a8379a2e2f9e313c9292cdf1af4055ab56d50d55",
+    language: "name",
+    options: { system_prompt: qwen3PluginPrompt([]) },
+    languages: ["de"],
+  },
+  "qwen3-asr-1.7b-8bit-medicine": {
+    repo: "mlx-community/Qwen3-ASR-1.7B-8bit",
+    revision: "a8379a2e2f9e313c9292cdf1af4055ab56d50d55",
+    language: "name",
+    options: { system_prompt: qwen3PluginPrompt(germanMedicineTerms()) },
+    languages: ["de"],
   },
   "voxtral-mini-4b-realtime-4bit": {
     repo: "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -137,6 +181,13 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     repo: "FermionResearch/Phonon-2.5",
     revision: "2af4bb8ccceb66a8ce06c4081bb968f1802c1e58",
     languages: MULTILINGUAL_AUTO,
+  },
+  // Mediform's German medical fine-tune of Parakeet TDT 0.6B v3 (Apache 2.0), from the MLX
+  // safetensors the model card names. Trained on Mediform/medical_asr_de, which includes MultiMed.
+  "parakeet-medical-de": {
+    repo: "Mediform/parakeet-medical-de",
+    revision: "a0a2d335c5d8620ee5dee5acc615e6f8ae77bc13",
+    languages: ["de"],
   },
   // NVIDIA Nemotron 3.5 Transcribe 30B-A4B (OpenMDW-1.1), released 2026-10-28, in the community's
   // 4-bit MLX export (language model 4-bit, audio encoders unquantized). Prompted with the model

@@ -81,7 +81,8 @@ export type TestCategory =
   | "code-switching"
   | "punctuation-formatting"
   | "number-formatting"
-  | "long-form-speech";
+  | "long-form-speech"
+  | "medical-speech";
 
 export interface TestCase {
   id: string;
@@ -97,10 +98,13 @@ export interface TestCase {
     | "fleurs"
     | "recorded"
     | "voxpopuli"
-    | "mls";
+    | "mls"
+    | "multimed";
   metadata?: TestCaseMetadata;
   alternativeGroundTruths?: string[];
   formattedGroundTruth?: string;
+  /** Terms the transcript must contain, scored as termRecall (e.g. drug names in a medical clip) */
+  keyTerms?: string[];
 }
 
 export interface TestSuite {
@@ -151,6 +155,8 @@ export interface TestResult {
   formattingScore?: number;
   bestAlternativeWer?: number;
   semanticScore?: number;
+  /** Share of the clip's keyTerms found in the transcript */
+  termRecall?: number;
 
   // Performance
   durationMs: number;
@@ -177,6 +183,7 @@ export interface ModelRanking {
   avgSemanticScore?: number;
   avgPunctuationScore?: number;
   avgFormattingScore?: number;
+  avgTermRecall?: number;
 
   // Speed
   avgRealtimeFactor: number;

@@ -315,7 +315,9 @@ export function ModelView({ summary }: { summary: Summary }) {
                 const cell = cells[suite];
                 const standing = standings.find((candidate) => candidate.suite === suite);
                 const extra =
-                  cell.dg != null
+                  cell.tr != null
+                    ? `Terms ${formatUnit("pct", cell.tr)}`
+                    : cell.dg != null
                     ? `Digits ${formatUnit("pct", cell.dg)}`
                     : cell.p != null
                       ? `Punct ${formatUnit("pct", cell.p)}`

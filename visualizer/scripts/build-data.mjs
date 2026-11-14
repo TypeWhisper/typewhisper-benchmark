@@ -140,7 +140,7 @@ function emptyAccumulator() {
   return {
     n: 0, ok: 0, err: 0, skip: 0,
     wer: 0, cer: 0, ms: 0, rtf: 0, audioMs: 0, cost: 0,
-    p: 0, pn: 0, f: 0, fn: 0, dg: 0, dn: 0,
+    p: 0, pn: 0, f: 0, fn: 0, dg: 0, dn: 0, tr: 0, tn: 0,
   };
 }
 
@@ -170,6 +170,10 @@ export function accumulate(acc, row, reference) {
     acc.f += row.formattingScore;
     acc.fn += 1;
   }
+  if (row.termRecall != null) {
+    acc.tr += row.termRecall;
+    acc.tn += 1;
+  }
   if (reference != null) {
     const hit = digitsHit(reference, row.transcription);
     if (hit != null) {
@@ -196,6 +200,7 @@ export function finalizeCell(acc) {
   if (acc.pn > 0) Object.assign(cell, { p: round(acc.p / acc.pn, 5), pn: acc.pn });
   if (acc.fn > 0) Object.assign(cell, { f: round(acc.f / acc.fn, 5), fn: acc.fn });
   if (acc.dn > 0) Object.assign(cell, { dg: round(acc.dg / acc.dn, 5), dn: acc.dn });
+  if (acc.tn > 0) Object.assign(cell, { tr: round(acc.tr / acc.tn, 5), tn: acc.tn });
   return cell;
 }
 
@@ -382,7 +387,7 @@ export function buildData({ resultsDir, testsDir, speedDir }) {
       tier: fromResults.tier ?? definition?.benchmarkTier ?? inferTier(suiteId, category),
       origin: fromResults.origin ?? inferOrigin(suiteId, category),
       clips: fromResults.testCount ?? testIds.length,
-      scores: ["p", "f", "dg"].filter(hasScores),
+      scores: ["p", "f", "dg", "tr"].filter(hasScores),
       references: Boolean(definition),
     };
   }

@@ -57,3 +57,18 @@ Results on 2026-10-26, 12 developer terms, Automatic threshold:
 | German, without a term | 261 | 21 / 20 | 0 / 0 | – |
 
 The one change left is "ray cast" → Raycast, which sounds the same as the term.
+
+### German medicine term pack
+
+Results on 2026-11-14, the 256 terms of `probe/terms-german-medicine.txt`, Precise (`--similarity 0.80`),
+on the two German medical suites. Score them with `npx tsx probe/score-terms.ts <records.jsonl>`.
+Terms is the share of each clip's key terms written correctly (see `src/metrics/terms.ts`).
+
+| Suite | Clips | Off: WER / terms | Boosting: WER / terms | Changed |
+|---|---|---|---|---|
+| Dictation (TTS, discharge letters) | 60 | 12.3% / 68.6% | 9.1% / 80.1% | 18 |
+| MultiMed (doctor-patient dialogue) | 203 | 8.3% / 83.1% | 8.3% / 83.3% | 3 |
+
+Of the 101 pack terms in the references, boosting writes 90 instead of 67, and makes one clip
+worse. About a third of the dictation key terms are not in the pack, so boosting cannot reach
+them. All three guard rules give the same result as plain boosting here.

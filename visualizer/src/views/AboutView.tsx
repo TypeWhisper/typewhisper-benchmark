@@ -30,7 +30,7 @@ const PARAMS: Array<[string, string, string]> = [
   ["deploy", "all · local · cloud", "all"],
   ["tw", "all · engine · candidate (TypeWhisper status)", "all"],
   ["q", "Model search text", "–"],
-  ["sort", "Column: wer, cer, punct, fmt, digits, ms, rtf, speed, price; with lang=all also wer-en, punct-de, …", "WER"],
+  ["sort", "Column: wer, cer, punct, fmt, digits, terms, ms, rtf, speed, price; with lang=all also wer-en, punct-de, …", "WER"],
   ["dir", "asc · desc, only when not best-first", "best first"],
   ["metric", "Metric of the ranked chart (same ids as sort)", "the sort column"],
   ["group", "suite · category (compare breakdown)", "suite"],
@@ -105,6 +105,12 @@ export function AboutView({ summary }: { summary: Summary }) {
             The groups of a phone number may be written without their spaces. The normalized WER forgives spelled-out
             numbers; this shows what a dictation user would see. PR #11 matched substrings, so a few values here are
             lower than in its table; PR #10 used a different definition.
+          </p>
+          <p>
+            <strong>Terms</strong>: on the medical suites, the share of each clip's medical terms (drug names, diagnoses,
+            procedures, lab values) that the transcript contains as whole words, after the same normalization as the WER. A
+            hyphen counts as a space (“Thorax CT”), but a misspelled or split term does not (“Biso Prolol”). One wrong
+            drug name costs a single word of WER but matters far more in a doctor's letter.
           </p>
         </Block>
         <Block title="Speed">

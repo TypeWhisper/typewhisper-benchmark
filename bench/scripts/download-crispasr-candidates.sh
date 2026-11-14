@@ -2,7 +2,7 @@
 # Downloads the CrispASR runtime and GGUF files for the candidate models of the `crispasr`
 # provider (models no TypeWhisper plugin runs yet), at pinned versions, and checks their SHA-256.
 # Run from the repository root: bash bench/scripts/download-crispasr-candidates.sh [model ...]
-# Without arguments it fetches every candidate (about 42 GB).
+# Without arguments it fetches every candidate (about 43 GB).
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -22,6 +22,8 @@ granite-speech-4.1-2b-plus-f16|cstr/granite-speech-4.1-2b-plus-GGUF|141758f7f75c
 parakeet-tdt_ctc-1.1b|cstr/parakeet-tdt_ctc-1.1b-GGUF|2659aef84d36922cc425e4d56ba1001a5836a143|parakeet-tdt_ctc-1.1b.gguf|5518c35a1260c3e3a15fdd526d76cdd3034f1ed0ae160723941dd42f021c8570
 voxtral-mini-3b-2507-q8_0|cstr/voxtral-mini-3b-2507-GGUF|cfe490428a44f70fcf6832a4828987ca29427305|voxtral-mini-3b-2507-q8_0.gguf|730c563d2b718c4612eefb7978a59799f454e4c1a3233298c3fc6c78aea6cda0
 parakeet-redux-f16|cstr/parakeet-redux-GGUF|3f288b7fb33caff80f1424bd5ea1cecaf9808209|parakeet-redux-f16.gguf|0b4fe28c72447fd4012ed6072c60887e69b36f6c54bc4c35069cb316acc1c113
+parakeet-de-med-q8_0|cstr/parakeet_de_med-GGUF|e7cf8988cd2479830252b8af165842ea7b8fb454|parakeet_de_med-q8_0.gguf|59e0691bf70d07d51e9bcd8a9c86f53cffe41337f12d9e29f0d2f5a842ec83f2
+parakeet-tdt-0.6b-v3-q8_0|cstr/parakeet-tdt-0.6b-v3-GGUF|dff69b0e675921ffd5a6133f5fbe2aac690d3ec3|parakeet-tdt-0.6b-v3-q8_0.gguf|300de963db10e991a8c3c1674000245546f2e99d396f860aecbde2dd0534e43f
 "
 
 fetch() {

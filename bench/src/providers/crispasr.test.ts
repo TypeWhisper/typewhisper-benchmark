@@ -41,6 +41,8 @@ describe("CrispAsrProvider", () => {
       "parakeet-tdt_ctc-1.1b",
       "voxtral-mini-3b-2507-q8_0",
       "parakeet-redux-f16",
+      "parakeet-de-med-q8_0",
+      "parakeet-tdt-0.6b-v3-q8_0",
     ]);
   });
 

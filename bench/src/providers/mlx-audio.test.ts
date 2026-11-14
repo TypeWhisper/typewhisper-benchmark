@@ -3,6 +3,7 @@ import {
   MLX_MODELS,
   MlxAudioProvider,
   generateOptions,
+  germanMedicineTerms,
   nemotronTranscribePrompt,
   sovTranscribePrompt,
   stripSpeakerLabels,
@@ -16,6 +17,8 @@ describe("MlxAudioProvider", () => {
     expect(provider.models).toEqual([
       "qwen3-asr-0.6b-8bit",
       "qwen3-asr-1.7b-8bit",
+      "qwen3-asr-1.7b-8bit-plugin",
+      "qwen3-asr-1.7b-8bit-medicine",
       "voxtral-mini-4b-realtime-4bit",
       "granite-4.0-1b-speech-8bit",
       "granite-speech-4.1-2b",
@@ -25,6 +28,7 @@ describe("MlxAudioProvider", () => {
       "canary-1b-v2",
       "sophea-canary",
       "phonon-2.5",
+      "parakeet-medical-de",
       "nemotron-3.5-transcribe-4bit",
       "nemotron-3.5-transcribe-4bit-written",
       "vibevoice-asr-streaming-1.5b",
@@ -57,6 +61,10 @@ describe("MlxAudioProvider", () => {
     expect(generateOptions("granite-speech-5.0-2b", "de").language).toBeUndefined();
     expect(generateOptions("voxtral-mini-4b-realtime-4bit", "de")).toEqual({});
     expect(generateOptions("phonon-2.5", "de")).toEqual({});
+    const medicine = generateOptions("qwen3-asr-1.7b-8bit-medicine", "de");
+    expect(medicine.language).toBe("German");
+    expect(String(medicine.system_prompt)).toMatch(/^Transcribe only words .*\nTechnical terms: Paracetamol, Ibuprofen, .*\.$/s);
+    expect(germanMedicineTerms()).toHaveLength(315);
   });
 
   it("gives SOV-Transcribe-1 the model card's language hint, or its auto-language prompt", () => {
