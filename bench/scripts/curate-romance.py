@@ -243,12 +243,19 @@ def read_pcm(path):
 
 
 def write_pcm(path, samples):
+    # Write next to the target and replace it only once complete, so a failed or interrupted write
+    # never leaves a truncated WAV in place of the old one.
     pcm = (np.clip(samples, -1, 1) * 32767).astype(np.int16)
-    with wave.open(str(path), "wb") as w:
-        w.setnchannels(1)
-        w.setsampwidth(2)
-        w.setframerate(16000)
-        w.writeframes(pcm.tobytes())
+    tmp = path.with_name(path.name + ".tmp.wav")
+    try:
+        with wave.open(str(tmp), "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(16000)
+            w.writeframes(pcm.tobytes())
+        tmp.replace(path)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def rms(x):
