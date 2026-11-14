@@ -1011,7 +1011,7 @@ const ENTRIES: Record<string, Entry> = {
     quant: "int8",
     languages: "25 European languages",
     tw: { status: "reference", note: "TypeWhisper runs Parakeet through FluidAudio; this is the int8 ONNX build on the CPU." },
-    pr: 22,
+    pr: undefined,
   }),
   "soniox:stt-rt-v6": soniox({
     name: "Soniox STT v6 (real-time)",
