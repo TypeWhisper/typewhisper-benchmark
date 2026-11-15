@@ -112,6 +112,12 @@ export function AboutView({ summary }: { summary: Summary }) {
             hyphen counts as a space (“Thorax CT”), but a misspelled or split term does not (“Biso Prolol”). One wrong
             drug name costs a single word of WER but matters far more in a doctor's letter.
           </p>
+          <p>
+            On the legal suites the key terms are legal terms (Verjährungsfrist, in dubio pro reo) and norm citations. A
+            citation counts whether it is written or spelled out: “§ 823 Abs. 1 BGB” equals “Paragraf 823 Absatz 1 BGB”,
+            “i. V. m.” equals “in Verbindung mit”, and the WER uses the same rule. A model that cannot write “§” loses the
+            whole citation.
+          </p>
         </Block>
         <Block title="Speed">
           <p>

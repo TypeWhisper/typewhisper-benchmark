@@ -12,7 +12,7 @@ export interface SuiteInfo {
   origin: SuiteOrigin;
   /** Clips in the suite definition. */
   clips: number;
-  /** Optional scores some suites produce: p = punctuation, f = formatting, dg = Digits, tr = medical terms. */
+  /** Optional scores some suites produce: p = punctuation, f = formatting, dg = Digits, tr = key terms (medical, legal). */
   scores: Array<"p" | "f" | "dg" | "tr">;
   /** True when bench/tests has the references, so transcripts can be shown next to them. */
   references: boolean;
