@@ -157,6 +157,9 @@ describe("normalizeText", () => {
     expect(normalizeText("the title civil", "en")).toBe("the title civil");
     expect(normalizeText("Art. eight ECHR", "en")).toBe("article eight echr");
     expect(normalizeText("No. Really", "en")).toBe("no really");
+    expect(normalizeText("A non-disclosure agreement", "en")).toBe("a non disclosure agreement");
+    expect(normalizeText("a nondisclosure agreement", "en")).toBe("a non disclosure agreement");
+    expect(normalizeText("Nonetheless, nonsense", "en")).toBe("nonetheless nonsense");
     expect(normalizeText("Art. 8 E C H R", "en")).toBe(normalizeText("Art. 8 E.C.H.R.", "en"));
     expect(normalizeText("Art. 8 E C H R", "en")).toBe("article eight echr");
     expect(normalizeText("at 2 p.m. with the M.P.", "en")).toBe("at two p m with the m p");

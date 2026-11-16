@@ -539,6 +539,9 @@ const CITATION_WORDS = "paragraf|artikel|section|article|articolo|artículo|rule
 const CITATION_NUMBER_SUFFIX = new RegExp(`(${NOT_IN_WORD}(?:${CITATION_WORDS})\\s+\\d+)(\\p{L})${NOT_BEFORE_WORD}`, "giu");
 const CITATION_CODE_PREFIX = new RegExp(`(${NOT_IN_WORD}(?:${CITATION_WORDS})\\s+)([LRD])(\\d)`, "giu");
 
+const NON_COMPOUNDS =
+  /(?<![\p{L}\p{N}])non(binding|compete|compliance|conformity|cooperative|disclosure|discrimination|legislative|payment|performing|profit)(?![\p{L}\p{N}])/giu;
+
 function romanToNumber(numeral: string): number {
   const values: Record<string, number> = { I: 1, V: 5, X: 10, L: 50, C: 100 };
   let total = 0;
@@ -586,6 +589,10 @@ export function normalizeText(text: string, lang: string = "en"): string {
   if (lang === "ru") {
     result = result.replace(/ё/g, "е");
   }
+
+  // "nondisclosure", "non-disclosure" and "non disclosure" (VoxPopuli) are all written. The hyphen
+  // becomes a space later, so closed forms are split; a list, because "none" and "nonsense" stay.
+  if (lang === "en") result = result.replace(NON_COMPOUNDS, "non $1");
 
   // 2. Expand English contractions (before punctuation removal so apostrophes are still present)
   if (lang === "en") {
