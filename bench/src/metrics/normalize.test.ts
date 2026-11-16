@@ -102,6 +102,23 @@ describe("normalizeText", () => {
     expect(normalizeText("Où est-il ?", "fr")).toBe("où est il");
   });
 
+  it("spells French, Spanish and Italian numbers the way they are written out", () => {
+    const fr = (n: string) => normalizeText(n, "fr");
+    expect(fr("21 71 80 81 97")).toBe("vingt et un soixante et onze quatre vingts quatre vingt un quatre vingt dix sept");
+    expect(fr("200 201 80000 1240")).toBe("deux cents deux cent un quatre vingt mille mille deux cent quarante");
+    expect(fr("l'article 2224")).toBe(fr("l'article deux mille deux cent vingt-quatre"));
+    const es = (n: string) => normalizeText(n, "es");
+    expect(es("16 24 100 101 1902 1964")).toBe(
+      "dieciséis veinticuatro cien ciento uno mil novecientos dos mil novecientos sesenta y cuatro"
+    );
+    expect(es("21000 500")).toBe("veintiún mil quinientos");
+    const it_ = (n: string) => normalizeText(n, "it");
+    expect(it_("21 28 108 180 1000 2043 2946")).toBe(
+      "ventuno ventotto centotto centottanta mille duemilaquarantatre duemilanovecentoquarantasei"
+    );
+    expect(it_("art. 2043")).toBe(it_("articolo duemilaquarantatré"));
+  });
+
   it("handles zero", () => {
     expect(normalizeText("0 errors", "en")).toBe("zero errors");
     expect(normalizeText("0 Fehler", "de")).toBe("null fehler");
@@ -127,8 +144,50 @@ describe("normalizeText", () => {
     expect(normalizeText("§ 153a StPO", "de")).toBe(normalizeText("Paragraf 153 a StPO", "de"));
   });
 
-  it("leaves legal abbreviations alone outside German and in other words", () => {
-    expect(normalizeText("Art. 5", "en")).toBe("art five");
+  it("reads English citations the way they are dictated", () => {
+    expect(normalizeText("42 U.S.C. § 1983", "en")).toBe(normalizeText("42 USC Section 1983", "en"));
+    expect(normalizeText("at 2 p.m.", "en")).toBe("at two p m");
+    expect(normalizeText("Rule 12(b)(6)", "en")).toBe(normalizeText("Rule 12b 6", "en"));
+    expect(normalizeText("s. 2 of the Limitation Act", "en")).toBe("section two of the limitation act");
+    expect(normalizeText("Art. 8 ECHR", "en")).toBe("article eight echr");
+    expect(normalizeText("Roe versus Wade", "en")).toBe(normalizeText("Roe v. Wade", "en"));
+    expect(normalizeText("It's art. Really", "en")).toBe("it is art really");
+    expect(normalizeText("Title VII and Title 7", "en")).toBe("title seven and title seven");
+    expect(normalizeText("TITLE VII, title vii, Title IX", "en")).toBe("title seven title seven title nine");
+    expect(normalizeText("the title civil", "en")).toBe("the title civil");
+    expect(normalizeText("Art. eight ECHR", "en")).toBe("article eight echr");
+    expect(normalizeText("Art. Eight ECHR", "en")).toBe(normalizeText("Art. 8 ECHR", "en"));
+    expect(normalizeText("art. Mille deux cent quarante", "fr")).toBe(normalizeText("art. 1240", "fr"));
+    expect(normalizeText("No. Really", "en")).toBe("no really");
+    expect(normalizeText("A non-disclosure agreement", "en")).toBe("a non disclosure agreement");
+    expect(normalizeText("a nondisclosure agreement", "en")).toBe("a non disclosure agreement");
+    expect(normalizeText("Nonetheless, nonsense", "en")).toBe("nonetheless nonsense");
+    expect(normalizeText("Art. 8 E C H R", "en")).toBe(normalizeText("Art. 8 E.C.H.R.", "en"));
+    expect(normalizeText("Art. 8 E C H R", "en")).toBe("article eight echr");
+    expect(normalizeText("42 u.s.c. § 1983 and art. 8 e.c.h.r.", "en")).toBe(normalizeText("42 U.S.C. § 1983 and Art. 8 ECHR", "en"));
+    expect(normalizeText("at 2 p.m. with the M.P.", "en")).toBe("at two p m with the m p");
+    expect(normalizeText("A V.P. Kerr", "en")).toBe("a v p kerr");
+  });
+
+  it("reads French, Spanish and Italian citations the way they are dictated", () => {
+    expect(normalizeText("art. L. 1234-1 du Code du travail, al. 2", "fr")).toBe(
+      normalizeText("article L1234-1 du Code du travail, alinéa 2", "fr")
+    );
+    expect(normalizeText("C'est de l'art.", "fr")).toBe("c est de l art");
+    expect(normalizeText("art. L. 1234 tiret 1", "fr")).toBe(normalizeText("art. L. 1234-1", "fr"));
+    expect(normalizeText("art. mille deux cent quarante", "fr")).toBe(normalizeText("art. 1240", "fr"));
+    expect(normalizeText("art. L. mille deux cent trente-quatre un", "fr")).toBe(normalizeText("art. L. 1234-1", "fr"));
+    expect(normalizeText("art. mil novecientos dos", "es")).toBe(normalizeText("art. 1902", "es"));
+    expect(normalizeText("art. duemilaquarantatré", "it")).toBe(normalizeText("art. 2043", "it"));
+    expect(normalizeText("le tiret du texte", "fr")).toBe("le tiret du texte");
+    expect(normalizeText("art. 1902 del Código Civil, apdo. 2", "es")).toBe(
+      normalizeText("artículo 1902 del Código Civil, apartado 2", "es")
+    );
+    expect(normalizeText("art. 360, co. 1, n. 3", "it")).toBe(normalizeText("articolo 360, comma 1, numero 3", "it"));
+  });
+
+  it("leaves legal abbreviations alone in languages without rules and in other words", () => {
+    expect(normalizeText("Art. 5", "pt")).toBe("art 5");
     expect(normalizeText("Kunstart. Ende", "de")).toBe("kunstart ende");
     expect(normalizeText("Das S. Bahn", "de")).toBe("das s bahn");
     expect(normalizeText("Das ist die richtige Art.", "de")).toBe("das ist die richtige art");

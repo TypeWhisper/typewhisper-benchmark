@@ -60,6 +60,8 @@ export interface RescoreReport {
   refreshed: string[];
   /** Suites removed from the file */
   dropped: string[];
+  /** Results removed because their test is no longer in its suite */
+  pruned: number;
 }
 
 interface ModelFile {
@@ -89,6 +91,7 @@ export async function rescoreResultFiles(
     const dropped: string[] = [];
     const refreshed: string[] = [];
     let changed = 0;
+    let pruned = 0;
 
     if (providerId && options.dropProviders?.includes(providerId)) {
       for (const suiteId of options.dropSuites ?? []) {
@@ -99,16 +102,19 @@ export async function rescoreResultFiles(
       }
     }
 
-    for (const [suiteId, results] of Object.entries(data.resultsBySuite)) {
+    for (const [suiteId, stored] of Object.entries(data.resultsBySuite)) {
       if (options.suiteIds && !options.suiteIds.includes(suiteId)) continue;
       const suite = suitesById.get(suiteId);
       if (!suite) continue;
+      const testsById = new Map(suite.tests.map((test) => [test.id, test]));
+      const results = stored.filter((result) => testsById.has(result.testId));
+      pruned += stored.length - results.length;
+      data.resultsBySuite[suiteId] = results;
       const fresh = buildSuiteMetadata([suite])[suiteId];
       if (JSON.stringify(data.suiteMetadata?.[suiteId]) !== JSON.stringify(fresh)) {
         data.suiteMetadata = { ...data.suiteMetadata, [suiteId]: fresh };
         refreshed.push(suiteId);
       }
-      const testsById = new Map(suite.tests.map((test) => [test.id, test]));
       for (const result of results) {
         const test = testsById.get(result.testId);
         if (result.status !== "ok" || !test) continue;
@@ -119,7 +125,7 @@ export async function rescoreResultFiles(
       }
     }
 
-    if (!changed && !dropped.length && !refreshed.length) continue;
+    if (!changed && !pruned && !dropped.length && !refreshed.length) continue;
 
     const summary = mergeBenchmarkSummaries({
       resultsBySuite: data.resultsBySuite,
@@ -127,13 +133,17 @@ export async function rescoreResultFiles(
       providerTypeMap: new Map([[providerId, data.ranking.providerType]]),
       version: new Date().toISOString().slice(0, 10),
     });
+    // A file without results would keep the ranking of the removed ones
+    if (!summary.rankings.length) {
+      throw new Error(`${file}: no results left after rescoring; delete the file instead`);
+    }
     const modelFile = {
-      ranking: summary.rankings[0] ?? data.ranking,
+      ranking: summary.rankings[0],
       suiteMetadata: summary.suiteMetadata,
       resultsBySuite: data.resultsBySuite,
     };
     await writeFile(path, JSON.stringify(modelFile, null, 2) + "\n", "utf-8");
-    reports.push({ file, changed, refreshed, dropped });
+    reports.push({ file, changed, refreshed, dropped, pruned });
   }
   return reports;
 }

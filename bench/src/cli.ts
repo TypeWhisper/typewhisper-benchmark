@@ -459,8 +459,9 @@ program
     });
     for (const report of reports) {
       const dropped = report.dropped.length ? `, dropped ${report.dropped.join(", ")}` : "";
+      const pruned = report.pruned ? `, removed ${report.pruned} result(s) of tests no longer in their suite` : "";
       const refreshed = report.refreshed.length ? `, metadata of ${report.refreshed.join(", ")}` : "";
-      console.log(`${report.file}: ${report.changed} result(s) rescored${refreshed}${dropped}`);
+      console.log(`${report.file}: ${report.changed} result(s) rescored${refreshed}${dropped}${pruned}`);
     }
     console.log(chalk.green(`${reports.length} result file(s) updated`));
   });

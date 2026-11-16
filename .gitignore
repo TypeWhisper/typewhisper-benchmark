@@ -7,8 +7,10 @@ bench/results/
 bench/audio/datasets/
 # Rebuilt byte-identically by: uv run --script bench/scripts/curate-medical-de.py multimed
 bench/audio/samples-multimed-de/
-# Bundestag terms of use: rebuilt by uv run --script bench/scripts/curate-legal-de.py bundestag
+# Bundestag terms of use: rebuilt by uv run --script bench/scripts/curate-legal.py bundestag
 bench/audio/samples-bundestag-legal-de/
+# Rebuilt by uv run --script bench/scripts/curate-legal.py voxpopuli
+bench/audio/samples-voxpopuli-legal-*/
 bench/models/
 bench/.build/
 models/
@@ -21,3 +23,5 @@ bench/audio/samples-*-fr/
 bench/audio/samples-*-es/
 bench/audio/samples-*-it/
 bench/audio/samples-*-pt/
+# TTS legal dictation is committed in every language
+!bench/audio/samples-legal-dictation-*/
