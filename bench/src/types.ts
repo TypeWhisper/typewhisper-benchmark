@@ -82,7 +82,8 @@ export type TestCategory =
   | "punctuation-formatting"
   | "number-formatting"
   | "long-form-speech"
-  | "medical-speech";
+  | "medical-speech"
+  | "legal-speech";
 
 export interface TestCase {
   id: string;
@@ -99,7 +100,8 @@ export interface TestCase {
     | "recorded"
     | "voxpopuli"
     | "mls"
-    | "multimed";
+    | "multimed"
+    | "bundestag";
   metadata?: TestCaseMetadata;
   alternativeGroundTruths?: string[];
   formattedGroundTruth?: string;

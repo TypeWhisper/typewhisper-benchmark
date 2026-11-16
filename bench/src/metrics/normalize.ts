@@ -327,6 +327,38 @@ export function normalizeCodeText(text: string): string {
   return result;
 }
 
+// --- German legal citations ---
+
+// A lawyer says "Paragraf 823 Absatz 1 BGB" and writes "§ 823 Abs. 1 BGB"; a model may produce
+// either, so both sides get the spoken words. Singular and plural count as the same ("§§ 280,
+// 281" against "Paragraf 280, 281"), and so do the f and ph spellings. Only abbreviations that
+// cite norms are expanded; everyday ones (z. B., bzw.) stay as they are.
+const NOT_IN_WORD = "(?<![\\p{L}\\p{N}])";
+// "Art." and "Alt." are also words ("die richtige Art. Das …", "Er ist alt.") and only count
+// before what they cite, a number in digits or words ("Art. 1", "Art. eins"). Models write the
+// abbreviations in either case ("Nr. 3", "nr. 3").
+const BEFORE_NUMBER = "(?=\\s*\\d)";
+const BEFORE_CITED = "(?=\\s*(?:\\d|\\p{Ll}))";
+const GERMAN_LEGAL_ABBREVIATIONS: Array<[RegExp, string]> = [
+  [/§+/gu, " paragraf "],
+  [new RegExp(`${NOT_IN_WORD}paragra(?:ph|f)(?:en)?(?![\\p{L}\\p{N}])`, "giu"), "paragraf"],
+  [new RegExp(`${NOT_IN_WORD}i\\.\\s*[Vv]\\.\\s*m\\.`, "gu"), " in verbindung mit "],
+  [new RegExp(`${NOT_IN_WORD}[Aa]bs\\.`, "gu"), " absatz "],
+  [new RegExp(`${NOT_IN_WORD}[Aa]rt\\.${BEFORE_CITED}`, "gu"), " artikel "],
+  [new RegExp(`${NOT_IN_WORD}[Nn]r\\.`, "gu"), " nummer "],
+  [new RegExp(`${NOT_IN_WORD}S\\.${BEFORE_NUMBER}`, "gu"), " satz "],
+  [new RegExp(`${NOT_IN_WORD}[Hh]s\\.`, "gu"), " halbsatz "],
+  [new RegExp(`${NOT_IN_WORD}[Aa]lt\\.${BEFORE_CITED}`, "gu"), " alternative "],
+  [new RegExp(`${NOT_IN_WORD}[Vv]ar\\.`, "gu"), " variante "],
+  [new RegExp(`${NOT_IN_WORD}lit\\.`, "gu"), " litera "],
+  // "§ 266a" and "§ 266 a" are the same norm; elsewhere "12B" or "HbA1c" stay whole
+  [/(paragraf\s+\d+|artikel\s+\d+)(\p{L})(?![\p{L}\p{N}])/giu, "$1 $2"],
+];
+
+function expandGermanLegalCitations(text: string): string {
+  return GERMAN_LEGAL_ABBREVIATIONS.reduce((result, [pattern, words]) => result.replace(pattern, words), text);
+}
+
 // --- Main normalization ---
 
 export function normalizeText(text: string, lang: string = "en"): string {
@@ -334,7 +366,12 @@ export function normalizeText(text: string, lang: string = "en"): string {
 
   // 1. Lowercase. Composed accents first: a decomposed "é" would otherwise lose its accent
   // with the punctuation in step 3.
-  let result = text.normalize("NFC").toLowerCase();
+  let result = text.normalize("NFC");
+  // Before lowercasing: "S. 1" (Satz) and "i. V. m." are only abbreviations in this case.
+  if (lang === "de") {
+    result = expandGermanLegalCitations(result);
+  }
+  result = result.toLowerCase();
 
   // Russian writing omits the diaeresis on "ё" most of the time, so models and references
   // disagree on it without any recognition error.

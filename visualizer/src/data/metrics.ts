@@ -31,7 +31,7 @@ export const METRICS: Record<MetricKey, MetricDef> = {
   punct: { key: "punct", label: "Punct", name: "Punctuation score", better: "higher", unit: "pct" },
   fmt: { key: "fmt", label: "Fmt", name: "Formatting score", better: "higher", unit: "pct" },
   digits: { key: "digits", label: "Digits", name: "Numbers written as digits", better: "higher", unit: "pct" },
-  terms: { key: "terms", label: "Terms", name: "Medical terms transcribed", better: "higher", unit: "pct" },
+  terms: { key: "terms", label: "Terms", name: "Key terms transcribed", better: "higher", unit: "pct" },
   ms: { key: "ms", label: "ms/clip", name: "Time per clip", better: "lower", unit: "ms" },
   rtf: { key: "rtf", label: "RTF", name: "Real-time factor", better: "lower", unit: "rtf" },
   speed: { key: "speed", label: "Speed", name: "Speed factor", better: "higher", unit: "x" },
@@ -75,6 +75,7 @@ export const CATEGORY_NAMES: Record<string, string> = {
   "long-form-speech": "Long-form speech",
   "technical-jargon": "Hard cases",
   "medical-speech": "Medical speech",
+  "legal-speech": "Legal speech",
 };
 
 export function categoryName(category: string): string {

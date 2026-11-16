@@ -19,6 +19,7 @@ const PUBLIC_SOURCES = new Set<TestCase["source"]>([
   "voxpopuli",
   "mls",
   "multimed",
+  "bundestag",
 ]);
 
 const SLICE_DEFINITIONS = [

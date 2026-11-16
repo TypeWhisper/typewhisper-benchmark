@@ -106,6 +106,39 @@ describe("normalizeText", () => {
     expect(normalizeText("0 errors", "en")).toBe("zero errors");
     expect(normalizeText("0 Fehler", "de")).toBe("null fehler");
   });
+
+  it("reads German norm citations the way a lawyer dictates them", () => {
+    const spoken = "paragraf achthundertdreiundzwanzig absatz eins bgb";
+    expect(normalizeText("§ 823 Abs. 1 BGB", "de")).toBe(spoken);
+    expect(normalizeText("§823 Absatz 1 BGB", "de")).toBe(spoken);
+    expect(normalizeText("Paragraph 823 Absatz 1 BGB", "de")).toBe(spoken);
+    expect(normalizeText("Paragraf 823 Absatz 1 BGB", "de")).toBe(spoken);
+    expect(normalizeText("Art. 2 Abs. 1 GG", "de")).toBe("artikel zwei absatz eins gg");
+    expect(normalizeText("§ 543 Abs. 2 S. 1 Nr. 3 BGB", "de")).toBe(
+      "paragraf fünfhundertdreiundvierzig absatz zwei satz eins nummer drei bgb"
+    );
+    expect(normalizeText("§ 280 Abs. 1 i. V. m. § 241 Abs. 2 BGB", "de")).toBe(
+      normalizeText("Paragraf 280 Absatz 1 in Verbindung mit Paragraf 241 Absatz 2 BGB", "de")
+    );
+  });
+
+  it("treats singular and plural paragraph signs and letter suffixes alike", () => {
+    expect(normalizeText("§§ 23, 71 GVG", "de")).toBe(normalizeText("Paragrafen 23, 71 GVG", "de"));
+    expect(normalizeText("§ 153a StPO", "de")).toBe(normalizeText("Paragraf 153 a StPO", "de"));
+  });
+
+  it("leaves legal abbreviations alone outside German and in other words", () => {
+    expect(normalizeText("Art. 5", "en")).toBe("art five");
+    expect(normalizeText("Kunstart. Ende", "de")).toBe("kunstart ende");
+    expect(normalizeText("Das S. Bahn", "de")).toBe("das s bahn");
+    expect(normalizeText("Das ist die richtige Art.", "de")).toBe("das ist die richtige art");
+    expect(normalizeText("Alt. Neu.", "de")).toBe("alt neu");
+  });
+
+  it("reads lowercase citation abbreviations like the written ones", () => {
+    expect(normalizeText("nr. 3 abs. 2 art. 5 i. v. m.", "de")).toBe(normalizeText("Nr. 3 Abs. 2 Art. 5 i. V. m.", "de"));
+    expect(normalizeText("Art. eins Abs. zwei", "de")).toBe("artikel eins absatz zwei");
+  });
 });
 
 describe("normalizeCodeText", () => {
