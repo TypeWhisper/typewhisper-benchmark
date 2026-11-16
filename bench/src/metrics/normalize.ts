@@ -454,6 +454,9 @@ export function normalizeCodeText(text: string): string {
 const NOT_IN_WORD = "(?<![\\p{L}\\p{N}])";
 const NOT_BEFORE_WORD = "(?![\\p{L}\\p{N}])";
 const BEFORE_NUMBER = "(?=\\s*\\d)";
+// German "Art." and "Alt." are also words ("die richtige Art. Das …", "Er ist alt.") and only count
+// before what they cite, a number in digits or words ("Art. 1", "Art. eins").
+const BEFORE_CITED = "(?=\\s*(?:\\d|\\p{Ll}))";
 // "art. L. 1234-1" (French codes) and "art. 2043": a code letter may come before the number
 const BEFORE_ARTICLE_NUMBER = "(?=\\s*(?:[LRD]\\.?\\s*)?\\d)";
 
@@ -467,14 +470,14 @@ const LEGAL_CITATIONS: Record<string, Array<[RegExp, string | ((match: string) =
   de: [
     [/§+/gu, " paragraf "],
     [abbreviation(`paragra(?:ph|f)(?:en)?${NOT_BEFORE_WORD}`, "giu"), "paragraf"],
-    [abbreviation("i\\.\\s*V\\.\\s*m\\."), " in verbindung mit "],
-    [abbreviation("Abs\\."), " absatz "],
-    [abbreviation("Art\\."), " artikel "],
-    [abbreviation("Nr\\."), " nummer "],
+    [abbreviation("i\\.\\s*[Vv]\\.\\s*m\\."), " in verbindung mit "],
+    [abbreviation("[Aa]bs\\."), " absatz "],
+    [abbreviation(`[Aa]rt\\.${BEFORE_CITED}`), " artikel "],
+    [abbreviation("[Nn]r\\."), " nummer "],
     [abbreviation(`S\\.${BEFORE_NUMBER}`), " satz "],
-    [abbreviation("Hs\\."), " halbsatz "],
-    [abbreviation("Alt\\."), " alternative "],
-    [abbreviation("Var\\."), " variante "],
+    [abbreviation("[Hh]s\\."), " halbsatz "],
+    [abbreviation(`[Aa]lt\\.${BEFORE_CITED}`), " alternative "],
+    [abbreviation("[Vv]ar\\."), " variante "],
     [abbreviation("lit\\."), " litera "],
   ],
   en: [

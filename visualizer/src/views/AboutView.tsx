@@ -116,9 +116,10 @@ export function AboutView({ summary }: { summary: Summary }) {
           <p>
             On the legal suites the key terms are legal terms (Verjährungsfrist, in dubio pro reo) and norm citations. A
             citation counts whether it is written or spelled out: “§ 823 Abs. 1 BGB” equals “Paragraf 823 Absatz 1 BGB”,
-            “i. V. m.” equals “in Verbindung mit”, and the WER uses the same rule. A model that cannot write “§” loses the
-            whole citation. The English, French, Spanish and Italian suites follow the same idea: “§ 1983” equals “Section
-            1983”, “art. 1240” equals “article 1240”, “al. 2” equals “alinéa 2”, “co. 1” equals “comma 1”.
+            “i. V. m.” equals “in Verbindung mit”, and the WER uses the same rule. A transcript that has neither “§” nor
+            “Paragraf” loses the whole citation. The English, French, Spanish and Italian suites follow the same idea:
+            “§ 1983” equals “Section 1983”, “art. 1240” equals “article 1240”, “al. 2” equals “alinéa 2”, “co. 1” equals
+            “comma 1”.
           </p>
         </Block>
         <Block title="Speed">
