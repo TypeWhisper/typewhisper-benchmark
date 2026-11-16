@@ -1,0 +1,983 @@
+{
+  "id": "legal-dictation-it",
+  "name": "Legal Dictation (Italian)",
+  "description": "Lawyer's dictation with citations (art. 2043 del codice civile), procedural terms and Latin maxims (macOS TTS, voice Alice)",
+  "language": "it",
+  "category": "legal-speech",
+  "benchmarkTier": "diagnostic",
+  "tests": [
+    {
+      "id": "it-law-01",
+      "audioFile": "samples-legal-dictation-it/it-law-01.wav",
+      "groundTruth": "Il sottoscritto avvocato, in nome e per conto del ricorrente, propone ricorso per decreto ingiuntivo.",
+      "keyTerms": [
+        "in nome e per conto",
+        "ricorrente",
+        "decreto ingiuntivo"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-02",
+      "audioFile": "samples-legal-dictation-it/it-law-02.wav",
+      "groundTruth": "La responsabilità extracontrattuale del convenuto discende dall'art. 2043 del codice civile.",
+      "keyTerms": [
+        "responsabilità extracontrattuale",
+        "convenuto",
+        "art. 2043 del codice civile"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "citation",
+        "tort"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-03",
+      "audioFile": "samples-legal-dictation-it/it-law-03.wav",
+      "groundTruth": "Il giudice ha concesso la provvisoria esecuzione del decreto ingiuntivo.",
+      "keyTerms": [
+        "provvisoria esecuzione",
+        "decreto ingiuntivo"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-04",
+      "audioFile": "samples-legal-dictation-it/it-law-04.wav",
+      "groundTruth": "Proponiamo opposizione a decreto ingiuntivo dinanzi al tribunale competente.",
+      "keyTerms": [
+        "opposizione a decreto ingiuntivo",
+        "tribunale"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-05",
+      "audioFile": "samples-legal-dictation-it/it-law-05.wav",
+      "groundTruth": "La sentenza di primo grado è stata appellata dinanzi alla Corte d'appello.",
+      "keyTerms": [
+        "sentenza di primo grado",
+        "Corte d'appello"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-06",
+      "audioFile": "samples-legal-dictation-it/it-law-06.wav",
+      "groundTruth": "Il ricorso per cassazione è stato dichiarato inammissibile.",
+      "keyTerms": [
+        "ricorso per cassazione",
+        "inammissibile"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-07",
+      "audioFile": "samples-legal-dictation-it/it-law-07.wav",
+      "groundTruth": "Il convenuto eccepisce il difetto di giurisdizione del giudice adito.",
+      "keyTerms": [
+        "convenuto",
+        "difetto di giurisdizione",
+        "giudice adito"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-08",
+      "audioFile": "samples-legal-dictation-it/it-law-08.wav",
+      "groundTruth": "Chiediamo l'ammissione della prova testimoniale e della consulenza tecnica d'ufficio.",
+      "keyTerms": [
+        "prova testimoniale",
+        "consulenza tecnica d'ufficio"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-09",
+      "audioFile": "samples-legal-dictation-it/it-law-09.wav",
+      "groundTruth": "Il diritto si è prescritto ai sensi dell'articolo 2946 del codice civile.",
+      "keyTerms": [
+        "prescritto",
+        "articolo 2946 del codice civile"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "citation",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-10",
+      "audioFile": "samples-legal-dictation-it/it-law-10.wav",
+      "groundTruth": "Il contratto è nullo per mancanza della forma scritta richiesta ad substantiam.",
+      "keyTerms": [
+        "nullo",
+        "ad substantiam"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "latin",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-11",
+      "audioFile": "samples-legal-dictation-it/it-law-11.wav",
+      "groundTruth": "Il venditore è tenuto alla garanzia per i vizi della cosa venduta.",
+      "keyTerms": [
+        "garanzia per i vizi"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-12",
+      "audioFile": "samples-legal-dictation-it/it-law-12.wav",
+      "groundTruth": "La clausola vessatoria non è stata specificamente approvata per iscritto.",
+      "keyTerms": [
+        "clausola vessatoria",
+        "specificamente approvata"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-13",
+      "audioFile": "samples-legal-dictation-it/it-law-13.wav",
+      "groundTruth": "Con la presente vi costituiamo formalmente in mora.",
+      "keyTerms": [
+        "costituiamo",
+        "in mora"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-14",
+      "audioFile": "samples-legal-dictation-it/it-law-14.wav",
+      "groundTruth": "Il locatore ha intimato lo sfratto per morosità.",
+      "keyTerms": [
+        "locatore",
+        "sfratto per morosità"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "tenancy"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-15",
+      "audioFile": "samples-legal-dictation-it/it-law-15.wav",
+      "groundTruth": "Il conduttore ha diritto alla restituzione del deposito cauzionale.",
+      "keyTerms": [
+        "conduttore",
+        "deposito cauzionale"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "tenancy"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-16",
+      "audioFile": "samples-legal-dictation-it/it-law-16.wav",
+      "groundTruth": "Il licenziamento è illegittimo per mancanza di giusta causa.",
+      "keyTerms": [
+        "licenziamento",
+        "illegittimo",
+        "giusta causa"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "employment"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-17",
+      "audioFile": "samples-legal-dictation-it/it-law-17.wav",
+      "groundTruth": "Il lavoratore impugna il licenziamento e chiede la reintegrazione nel posto di lavoro.",
+      "keyTerms": [
+        "impugna",
+        "reintegrazione"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "employment"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-18",
+      "audioFile": "samples-legal-dictation-it/it-law-18.wav",
+      "groundTruth": "Il datore di lavoro deve corrispondere il trattamento di fine rapporto.",
+      "keyTerms": [
+        "datore di lavoro",
+        "trattamento di fine rapporto"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "employment"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-19",
+      "audioFile": "samples-legal-dictation-it/it-law-19.wav",
+      "groundTruth": "L'imputato è accusato di truffa aggravata e appropriazione indebita.",
+      "keyTerms": [
+        "imputato",
+        "truffa aggravata",
+        "appropriazione indebita"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-20",
+      "audioFile": "samples-legal-dictation-it/it-law-20.wav",
+      "groundTruth": "Il pubblico ministero ha chiesto il rinvio a giudizio dell'indagato.",
+      "keyTerms": [
+        "pubblico ministero",
+        "rinvio a giudizio",
+        "indagato"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-21",
+      "audioFile": "samples-legal-dictation-it/it-law-21.wav",
+      "groundTruth": "Il giudice per le indagini preliminari ha disposto la custodia cautelare in carcere.",
+      "keyTerms": [
+        "giudice per le indagini preliminari",
+        "custodia cautelare"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-22",
+      "audioFile": "samples-legal-dictation-it/it-law-22.wav",
+      "groundTruth": "La difesa chiede l'assoluzione perché il fatto non sussiste.",
+      "keyTerms": [
+        "assoluzione",
+        "il fatto non sussiste"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-23",
+      "audioFile": "samples-legal-dictation-it/it-law-23.wav",
+      "groundTruth": "L'imputato ha chiesto di essere giudicato con rito abbreviato.",
+      "keyTerms": [
+        "rito abbreviato"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-24",
+      "audioFile": "samples-legal-dictation-it/it-law-24.wav",
+      "groundTruth": "Le parti hanno concordato l'applicazione della pena su richiesta.",
+      "keyTerms": [
+        "applicazione della pena su richiesta"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-25",
+      "audioFile": "samples-legal-dictation-it/it-law-25.wav",
+      "groundTruth": "Il reato è estinto per intervenuta prescrizione.",
+      "keyTerms": [
+        "estinto",
+        "prescrizione"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-26",
+      "audioFile": "samples-legal-dictation-it/it-law-26.wav",
+      "groundTruth": "La persona offesa si è costituita parte civile nel processo penale.",
+      "keyTerms": [
+        "persona offesa",
+        "parte civile",
+        "processo penale"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-27",
+      "audioFile": "samples-legal-dictation-it/it-law-27.wav",
+      "groundTruth": "Proponiamo ricorso al Tribunale amministrativo regionale per l'annullamento del provvedimento.",
+      "keyTerms": [
+        "Tribunale amministrativo regionale",
+        "annullamento",
+        "provvedimento"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "administrative"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-28",
+      "audioFile": "samples-legal-dictation-it/it-law-28.wav",
+      "groundTruth": "Chiediamo la sospensione cautelare dell'atto impugnato.",
+      "keyTerms": [
+        "sospensione cautelare",
+        "atto impugnato"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "administrative"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-29",
+      "audioFile": "samples-legal-dictation-it/it-law-29.wav",
+      "groundTruth": "Il Consiglio di Stato ha accolto l'appello per eccesso di potere.",
+      "keyTerms": [
+        "Consiglio di Stato",
+        "eccesso di potere"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "administrative"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-30",
+      "audioFile": "samples-legal-dictation-it/it-law-30.wav",
+      "groundTruth": "La questione di legittimità costituzionale è stata sollevata davanti alla Corte costituzionale.",
+      "keyTerms": [
+        "questione di legittimità costituzionale",
+        "Corte costituzionale"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "constitutional"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-31",
+      "audioFile": "samples-legal-dictation-it/it-law-31.wav",
+      "groundTruth": "I coniugi chiedono la separazione consensuale.",
+      "keyTerms": [
+        "coniugi",
+        "separazione consensuale"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "family"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-32",
+      "audioFile": "samples-legal-dictation-it/it-law-32.wav",
+      "groundTruth": "Il giudice ha disposto l'affidamento condiviso dei figli minori.",
+      "keyTerms": [
+        "affidamento condiviso"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "family"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-33",
+      "audioFile": "samples-legal-dictation-it/it-law-33.wav",
+      "groundTruth": "Il padre è tenuto a versare un assegno di mantenimento mensile.",
+      "keyTerms": [
+        "assegno di mantenimento"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "family"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-34",
+      "audioFile": "samples-legal-dictation-it/it-law-34.wav",
+      "groundTruth": "All'ex coniuge spetta l'assegno divorzile.",
+      "keyTerms": [
+        "assegno divorzile"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "family"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-35",
+      "audioFile": "samples-legal-dictation-it/it-law-35.wav",
+      "groundTruth": "Il de cuius ha nominato erede universale il nipote con testamento olografo.",
+      "keyTerms": [
+        "de cuius",
+        "erede universale",
+        "testamento olografo"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "latin",
+        "inheritance"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-36",
+      "audioFile": "samples-legal-dictation-it/it-law-36.wav",
+      "groundTruth": "I legittimari lesi possono esperire l'azione di riduzione.",
+      "keyTerms": [
+        "legittimari",
+        "azione di riduzione"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "inheritance"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-37",
+      "audioFile": "samples-legal-dictation-it/it-law-37.wav",
+      "groundTruth": "L'eredità è stata accettata con beneficio d'inventario.",
+      "keyTerms": [
+        "eredità",
+        "beneficio d'inventario"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "inheritance"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-38",
+      "audioFile": "samples-legal-dictation-it/it-law-38.wav",
+      "groundTruth": "Il notaio ha redatto l'atto pubblico di compravendita.",
+      "keyTerms": [
+        "notaio",
+        "atto pubblico",
+        "compravendita"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "real-estate"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-39",
+      "audioFile": "samples-legal-dictation-it/it-law-39.wav",
+      "groundTruth": "Il contratto preliminare di vendita è stato trascritto nei registri immobiliari.",
+      "keyTerms": [
+        "contratto preliminare",
+        "trascritto",
+        "registri immobiliari"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "real-estate"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-40",
+      "audioFile": "samples-legal-dictation-it/it-law-40.wav",
+      "groundTruth": "Sull'immobile grava un'ipoteca iscritta a favore della banca.",
+      "keyTerms": [
+        "ipoteca"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "real-estate"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-41",
+      "audioFile": "samples-legal-dictation-it/it-law-41.wav",
+      "groundTruth": "La società è stata dichiarata in liquidazione giudiziale e il curatore ha preso possesso dei beni.",
+      "keyTerms": [
+        "liquidazione giudiziale",
+        "curatore"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "corporate"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-42",
+      "audioFile": "samples-legal-dictation-it/it-law-42.wav",
+      "groundTruth": "L'assemblea straordinaria dei soci ha deliberato l'aumento di capitale.",
+      "keyTerms": [
+        "assemblea straordinaria",
+        "aumento di capitale"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "corporate"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-43",
+      "audioFile": "samples-legal-dictation-it/it-law-43.wav",
+      "groundTruth": "L'amministratore unico della società a responsabilità limitata è stato revocato per giusta causa.",
+      "keyTerms": [
+        "amministratore unico",
+        "società a responsabilità limitata",
+        "giusta causa"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "corporate"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-44",
+      "audioFile": "samples-legal-dictation-it/it-law-44.wav",
+      "groundTruth": "Il titolare del marchio agisce per contraffazione e concorrenza sleale.",
+      "keyTerms": [
+        "titolare del marchio",
+        "contraffazione",
+        "concorrenza sleale"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "ip"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-45",
+      "audioFile": "samples-legal-dictation-it/it-law-45.wav",
+      "groundTruth": "L'inadempimento non è di scarsa importanza e giustifica la risoluzione del contratto.",
+      "keyTerms": [
+        "inadempimento",
+        "risoluzione del contratto"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-46",
+      "audioFile": "samples-legal-dictation-it/it-law-46.wav",
+      "groundTruth": "La clausola penale è manifestamente eccessiva e può essere ridotta dal giudice.",
+      "keyTerms": [
+        "clausola penale",
+        "manifestamente eccessiva"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-47",
+      "audioFile": "samples-legal-dictation-it/it-law-47.wav",
+      "groundTruth": "Il debitore non risponde dell'inadempimento dovuto a causa di forza maggiore.",
+      "keyTerms": [
+        "debitore",
+        "forza maggiore"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "contract-law"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-48",
+      "audioFile": "samples-legal-dictation-it/it-law-48.wav",
+      "groundTruth": "Il creditore ha avviato l'esecuzione forzata mediante pignoramento presso terzi.",
+      "keyTerms": [
+        "creditore",
+        "esecuzione forzata",
+        "pignoramento presso terzi"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-49",
+      "audioFile": "samples-legal-dictation-it/it-law-49.wav",
+      "groundTruth": "L'ufficiale giudiziario ha notificato l'atto di citazione alla controparte.",
+      "keyTerms": [
+        "ufficiale giudiziario",
+        "atto di citazione",
+        "controparte"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-50",
+      "audioFile": "samples-legal-dictation-it/it-law-50.wav",
+      "groundTruth": "Il giudice ha condannato la parte soccombente alla rifusione delle spese di lite.",
+      "keyTerms": [
+        "parte soccombente",
+        "spese di lite"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-51",
+      "audioFile": "samples-legal-dictation-it/it-law-51.wav",
+      "groundTruth": "La sentenza è passata in giudicato.",
+      "keyTerms": [
+        "passata in giudicato"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-52",
+      "audioFile": "samples-legal-dictation-it/it-law-52.wav",
+      "groundTruth": "Ai sensi dell'art. 360, co. 1, n. 3 del codice di procedura civile, si denuncia la violazione di legge.",
+      "keyTerms": [
+        "art. 360, co. 1, n. 3 del codice di procedura civile",
+        "violazione di legge"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "citation",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-53",
+      "audioFile": "samples-legal-dictation-it/it-law-53.wav",
+      "groundTruth": "Si allega procura alle liti rilasciata in calce al presente atto.",
+      "keyTerms": [
+        "procura alle liti",
+        "in calce"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-54",
+      "audioFile": "samples-legal-dictation-it/it-law-54.wav",
+      "groundTruth": "Il tentativo obbligatorio di mediazione è condizione di procedibilità della domanda.",
+      "keyTerms": [
+        "mediazione",
+        "condizione di procedibilità"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-55",
+      "audioFile": "samples-legal-dictation-it/it-law-55.wav",
+      "groundTruth": "Nemo tenetur se detegere, l'indagato ha facoltà di non rispondere.",
+      "keyTerms": [
+        "Nemo tenetur se detegere",
+        "facoltà di non rispondere"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "latin",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-56",
+      "audioFile": "samples-legal-dictation-it/it-law-56.wav",
+      "groundTruth": "Il principio del ne bis in idem impedisce un secondo giudizio per lo stesso fatto.",
+      "keyTerms": [
+        "ne bis in idem"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "latin",
+        "criminal"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-57",
+      "audioFile": "samples-legal-dictation-it/it-law-57.wav",
+      "groundTruth": "Il danno non patrimoniale deve essere liquidato in via equitativa.",
+      "keyTerms": [
+        "danno non patrimoniale",
+        "in via equitativa"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "tort"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-58",
+      "audioFile": "samples-legal-dictation-it/it-law-58.wav",
+      "groundTruth": "Si chiede il risarcimento del danno da perdita di chance.",
+      "keyTerms": [
+        "risarcimento del danno",
+        "perdita di chance"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "tort"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-59",
+      "audioFile": "samples-legal-dictation-it/it-law-59.wav",
+      "groundTruth": "Il titolare del trattamento ha violato il Regolamento generale sulla protezione dei dati.",
+      "keyTerms": [
+        "titolare del trattamento",
+        "Regolamento generale sulla protezione dei dati"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "data-protection"
+      ],
+      "source": "custom"
+    },
+    {
+      "id": "it-law-60",
+      "audioFile": "samples-legal-dictation-it/it-law-60.wav",
+      "groundTruth": "Voglia il Tribunale adito accogliere le seguenti conclusioni.",
+      "keyTerms": [
+        "Tribunale adito",
+        "conclusioni"
+      ],
+      "tags": [
+        "legal",
+        "dictation",
+        "tts",
+        "civil-procedure"
+      ],
+      "source": "custom"
+    }
+  ]
+}
