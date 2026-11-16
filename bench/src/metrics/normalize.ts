@@ -469,7 +469,9 @@ const CITATION_NUMBER_WORDS: Record<string, string> = {
 function beforeCitationNumber(lang: string, codeLetter = false): string {
   // "art. L. 1234-1" (French codes): a code letter may come before the number
   const letter = codeLetter ? "(?:[LRD]\\.?\\s*)?" : "";
-  return `(?=\\s*${letter}(?:\\d|${CITATION_NUMBER_WORDS[lang]}))`;
+  // The number word may be capitalized ("Art. Eight"); the abbreviation keeps its own case rule
+  const words = CITATION_NUMBER_WORDS[lang].replace(/(?<=[(|])\p{Ll}/gu, (first) => `[${first}${first.toUpperCase()}]`);
+  return `(?=\\s*${letter}(?:\\d|${words}))`;
 }
 
 function abbreviation(source: string, flags = "gu"): RegExp {
