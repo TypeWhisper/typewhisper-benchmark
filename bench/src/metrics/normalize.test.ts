@@ -131,6 +131,13 @@ describe("normalizeText", () => {
     expect(normalizeText("Art. 5", "en")).toBe("art five");
     expect(normalizeText("Kunstart. Ende", "de")).toBe("kunstart ende");
     expect(normalizeText("Das S. Bahn", "de")).toBe("das s bahn");
+    expect(normalizeText("Das ist die richtige Art.", "de")).toBe("das ist die richtige art");
+    expect(normalizeText("Alt. Neu.", "de")).toBe("alt neu");
+  });
+
+  it("reads lowercase citation abbreviations like the written ones", () => {
+    expect(normalizeText("nr. 3 abs. 2 art. 5 i. v. m.", "de")).toBe(normalizeText("Nr. 3 Abs. 2 Art. 5 i. V. m.", "de"));
+    expect(normalizeText("Art. eins Abs. zwei", "de")).toBe("artikel eins absatz zwei");
   });
 });
 

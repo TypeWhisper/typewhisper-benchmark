@@ -334,17 +334,22 @@ export function normalizeCodeText(text: string): string {
 // 281" against "Paragraf 280, 281"), and so do the f and ph spellings. Only abbreviations that
 // cite norms are expanded; everyday ones (z. B., bzw.) stay as they are.
 const NOT_IN_WORD = "(?<![\\p{L}\\p{N}])";
+// "Art." and "Alt." are also words ("die richtige Art. Das …", "Er ist alt.") and only count
+// before what they cite, a number in digits or words ("Art. 1", "Art. eins"). Models write the
+// abbreviations in either case ("Nr. 3", "nr. 3").
+const BEFORE_NUMBER = "(?=\\s*\\d)";
+const BEFORE_CITED = "(?=\\s*(?:\\d|\\p{Ll}))";
 const GERMAN_LEGAL_ABBREVIATIONS: Array<[RegExp, string]> = [
   [/§+/gu, " paragraf "],
   [new RegExp(`${NOT_IN_WORD}paragra(?:ph|f)(?:en)?(?![\\p{L}\\p{N}])`, "giu"), "paragraf"],
-  [new RegExp(`${NOT_IN_WORD}i\\.\\s*V\\.\\s*m\\.`, "gu"), " in verbindung mit "],
-  [new RegExp(`${NOT_IN_WORD}Abs\\.`, "gu"), " absatz "],
-  [new RegExp(`${NOT_IN_WORD}Art\\.`, "gu"), " artikel "],
-  [new RegExp(`${NOT_IN_WORD}Nr\\.`, "gu"), " nummer "],
-  [new RegExp(`${NOT_IN_WORD}S\\.(?=\\s*\\d)`, "gu"), " satz "],
-  [new RegExp(`${NOT_IN_WORD}Hs\\.`, "gu"), " halbsatz "],
-  [new RegExp(`${NOT_IN_WORD}Alt\\.`, "gu"), " alternative "],
-  [new RegExp(`${NOT_IN_WORD}Var\\.`, "gu"), " variante "],
+  [new RegExp(`${NOT_IN_WORD}i\\.\\s*[Vv]\\.\\s*m\\.`, "gu"), " in verbindung mit "],
+  [new RegExp(`${NOT_IN_WORD}[Aa]bs\\.`, "gu"), " absatz "],
+  [new RegExp(`${NOT_IN_WORD}[Aa]rt\\.${BEFORE_CITED}`, "gu"), " artikel "],
+  [new RegExp(`${NOT_IN_WORD}[Nn]r\\.`, "gu"), " nummer "],
+  [new RegExp(`${NOT_IN_WORD}S\\.${BEFORE_NUMBER}`, "gu"), " satz "],
+  [new RegExp(`${NOT_IN_WORD}[Hh]s\\.`, "gu"), " halbsatz "],
+  [new RegExp(`${NOT_IN_WORD}[Aa]lt\\.${BEFORE_CITED}`, "gu"), " alternative "],
+  [new RegExp(`${NOT_IN_WORD}[Vv]ar\\.`, "gu"), " variante "],
   [new RegExp(`${NOT_IN_WORD}lit\\.`, "gu"), " litera "],
   // "§ 266a" and "§ 266 a" are the same norm; elsewhere "12B" or "HbA1c" stay whole
   [/(paragraf\s+\d+|artikel\s+\d+)(\p{L})(?![\p{L}\p{N}])/giu, "$1 $2"],
