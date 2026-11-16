@@ -457,8 +457,20 @@ const BEFORE_NUMBER = "(?=\\s*\\d)";
 // German "Art." and "Alt." are also words ("die richtige Art. Das …", "Er ist alt.") and only count
 // before what they cite, a number in digits or words ("Art. 1", "Art. eins").
 const BEFORE_CITED = "(?=\\s*(?:\\d|\\p{Ll}))";
-// "art. L. 1234-1" (French codes) and "art. 2043": a code letter may come before the number
-const BEFORE_ARTICLE_NUMBER = "(?=\\s*(?:[LRD]\\.?\\s*)?\\d)";
+// A citation number may also be spelled out ("art. mille deux cent quarante"). English and French
+// number words are whole words; Spanish and Italian ones are matched by their start, because they
+// join into one word ("veinticuatro", "duemilaquarantatre").
+const CITATION_NUMBER_WORDS: Record<string, string> = {
+  en: "(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)(?![\\p{L}\\p{N}])",
+  fr: "(?:zéro|un|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|quinze|seize|vingts?|trente|quarante|cinquante|soixante|cents?|mille)(?![\\p{L}\\p{N}])",
+  es: "(?:cero|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|dieci|veint|treinta|cuarenta|cincuenta|sesenta|setenta|ochenta|noventa|cien|doscient|trescient|cuatrocient|quinient|seiscient|setecient|ochocient|novecient|mil)",
+  it: "(?:zero|un|due|tre|quattr|cinque|sei|sett|otto|nove|dieci|undici|dodici|quindici|sedici|diciasset|diciott|diciannove|vent|quarant|cinquant|sessant|settant|ottant|novant|cento|mille)",
+};
+function beforeCitationNumber(lang: string, codeLetter = false): string {
+  // "art. L. 1234-1" (French codes): a code letter may come before the number
+  const letter = codeLetter ? "(?:[LRD]\\.?\\s*)?" : "";
+  return `(?=\\s*${letter}(?:\\d|${CITATION_NUMBER_WORDS[lang]}))`;
+}
 
 function abbreviation(source: string, flags = "gu"): RegExp {
   return new RegExp(`${NOT_IN_WORD}${source}`, flags);
@@ -483,41 +495,41 @@ const LEGAL_CITATIONS: Record<string, Array<[RegExp, string | ((match: string) =
   en: [
     [/§§/gu, " sections "],
     [/§/gu, " section "],
-    [abbreviation(`ss\\.${BEFORE_NUMBER}`), " sections "],
-    [abbreviation(`s\\.${BEFORE_NUMBER}`), " section "],
-    [abbreviation(`[Aa]rt\\.${BEFORE_NUMBER}`), " article "],
-    [abbreviation(`[Pp]ara\\.${BEFORE_NUMBER}`), " paragraph "],
-    [abbreviation(`No\\.${BEFORE_NUMBER}`), " number "],
+    [abbreviation(`ss\\.${beforeCitationNumber("en")}`), " sections "],
+    [abbreviation(`s\\.${beforeCitationNumber("en")}`), " section "],
+    [abbreviation(`[Aa]rt\\.${beforeCitationNumber("en")}`), " article "],
+    [abbreviation(`[Pp]ara\\.${beforeCitationNumber("en")}`), " paragraph "],
+    [abbreviation(`No\\.${beforeCitationNumber("en")}`), " number "],
     [abbreviation(`(?:vs\\.?|versus)${NOT_BEFORE_WORD}`, "giu"), " v "],
     // Read as one word, dotted or spelled ("E C H R"); other initials (p.m., "A V.P.") are left to
     // the general rules
     [abbreviation(`U\\.?\\s?S\\.?\\s?C\\.?${NOT_BEFORE_WORD}`), " usc "],
     [abbreviation(`C\\.?\\s?F\\.?\\s?R\\.?${NOT_BEFORE_WORD}`), " cfr "],
     [abbreviation(`E\\.?\\s?C\\.?\\s?H\\.?\\s?R\\.?${NOT_BEFORE_WORD}`), " echr "],
-    // "Title VII" is dictated as "Title Seven"
-    [/(?<![\p{L}\p{N}])[Tt]itle\s+[IVXLC]+(?![\p{L}\p{N}])/gu, (match) => {
+    // "Title VII" is dictated as "Title Seven"; only valid numerals, so "title civil" stays
+    [/(?<![\p{L}\p{N}])title\s+(?=[ivxlc])c{0,3}(?:xc|xl|l?x{0,3})(?:ix|iv|v?i{0,3})(?![\p{L}\p{N}])/giu, (match) => {
       const [title, numeral] = match.split(/\s+/);
-      return `${title} ${romanToNumber(numeral)}`;
+      return `${title} ${romanToNumber(numeral.toUpperCase())}`;
     }],
   ],
   fr: [
     [/§/gu, " paragraphe "],
-    [abbreviation(`[Aa]rt\\.${BEFORE_ARTICLE_NUMBER}`), " article "],
-    [abbreviation(`al\\.${BEFORE_NUMBER}`), " alinéa "],
-    [abbreviation(`n[°º]${BEFORE_NUMBER}`), " numéro "],
+    [abbreviation(`[Aa]rt\\.${beforeCitationNumber("fr", true)}`), " article "],
+    [abbreviation(`al\\.${beforeCitationNumber("fr")}`), " alinéa "],
+    [abbreviation(`n[°º]${beforeCitationNumber("fr")}`), " numéro "],
   ],
   es: [
-    [abbreviation(`[Aa]rts\\.${BEFORE_NUMBER}`), " artículos "],
-    [abbreviation(`[Aa]rt\\.${BEFORE_NUMBER}`), " artículo "],
-    [abbreviation(`apdo\\.${BEFORE_NUMBER}`), " apartado "],
-    [abbreviation(`(?:núm\\.|n\\.?\\s*[°º])${BEFORE_NUMBER}`), " número "],
+    [abbreviation(`[Aa]rts\\.${beforeCitationNumber("es")}`), " artículos "],
+    [abbreviation(`[Aa]rt\\.${beforeCitationNumber("es")}`), " artículo "],
+    [abbreviation(`apdo\\.${beforeCitationNumber("es")}`), " apartado "],
+    [abbreviation(`(?:núm\\.|n\\.?\\s*[°º])${beforeCitationNumber("es")}`), " número "],
   ],
   it: [
-    [abbreviation(`[Aa]rtt\\.${BEFORE_NUMBER}`), " articoli "],
-    [abbreviation(`[Aa]rt\\.${BEFORE_NUMBER}`), " articolo "],
-    [abbreviation(`co\\.${BEFORE_NUMBER}`), " comma "],
+    [abbreviation(`[Aa]rtt\\.${beforeCitationNumber("it")}`), " articoli "],
+    [abbreviation(`[Aa]rt\\.${beforeCitationNumber("it")}`), " articolo "],
+    [abbreviation(`co\\.${beforeCitationNumber("it")}`), " comma "],
     [abbreviation(`lett\\.`), " lettera "],
-    [abbreviation(`n\\.${BEFORE_NUMBER}`), " numero "],
+    [abbreviation(`n\\.${beforeCitationNumber("it")}`), " numero "],
   ],
 };
 

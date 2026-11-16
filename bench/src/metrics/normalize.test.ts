@@ -153,6 +153,10 @@ describe("normalizeText", () => {
     expect(normalizeText("Roe versus Wade", "en")).toBe(normalizeText("Roe v. Wade", "en"));
     expect(normalizeText("It's art. Really", "en")).toBe("it is art really");
     expect(normalizeText("Title VII and Title 7", "en")).toBe("title seven and title seven");
+    expect(normalizeText("TITLE VII, title vii, Title IX", "en")).toBe("title seven title seven title nine");
+    expect(normalizeText("the title civil", "en")).toBe("the title civil");
+    expect(normalizeText("Art. eight ECHR", "en")).toBe("article eight echr");
+    expect(normalizeText("No. Really", "en")).toBe("no really");
     expect(normalizeText("Art. 8 E C H R", "en")).toBe(normalizeText("Art. 8 E.C.H.R.", "en"));
     expect(normalizeText("Art. 8 E C H R", "en")).toBe("article eight echr");
     expect(normalizeText("at 2 p.m. with the M.P.", "en")).toBe("at two p m with the m p");
@@ -165,6 +169,10 @@ describe("normalizeText", () => {
     );
     expect(normalizeText("C'est de l'art.", "fr")).toBe("c est de l art");
     expect(normalizeText("art. L. 1234 tiret 1", "fr")).toBe(normalizeText("art. L. 1234-1", "fr"));
+    expect(normalizeText("art. mille deux cent quarante", "fr")).toBe(normalizeText("art. 1240", "fr"));
+    expect(normalizeText("art. L. mille deux cent trente-quatre un", "fr")).toBe(normalizeText("art. L. 1234-1", "fr"));
+    expect(normalizeText("art. mil novecientos dos", "es")).toBe(normalizeText("art. 1902", "es"));
+    expect(normalizeText("art. duemilaquarantatré", "it")).toBe(normalizeText("art. 2043", "it"));
     expect(normalizeText("le tiret du texte", "fr")).toBe("le tiret du texte");
     expect(normalizeText("art. 1902 del Código Civil, apdo. 2", "es")).toBe(
       normalizeText("artículo 1902 del Código Civil, apartado 2", "es")

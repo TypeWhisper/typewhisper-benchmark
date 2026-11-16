@@ -24,7 +24,8 @@
              scripts/legal-dictation-<lang>.json, read by a macOS voice (needs macOS `say` and
              ffmpeg). The reference is the written form ("§ 823 Abs. 1 BGB"); the voice reads the
              dictated form from "spoken" ("Paragraf 823 Absatz 1 BGB"). The normalizer treats
-             both the same.
+             both the same. manifest.json next to the WAVs records what each one was
+             recorded from; the script stops when an entry no longer matches its WAV.
 
 Usage: uv run --script bench/scripts/curate-legal.py [bundestag] [voxpopuli] [dictation] [--language de en ...]
 """
@@ -46,6 +47,7 @@ LANGUAGES = ["de", "en", "fr", "es", "it"]
 LANGUAGE_NAMES = {"de": "German", "en": "English", "fr": "French", "es": "Spanish", "it": "Italian"}
 # The voices the other TTS suites use (Anna, Samantha), and the default voice of each other language
 VOICES = {"de": "Anna", "en": "Samantha", "fr": "Thomas", "es": "Mónica", "it": "Alice"}
+SPEAKING_RATE = 180
 MIN_SECONDS, MAX_SECONDS = 3.0, 20.0
 # 16 kHz mono 16-bit PCM
 BYTES_PER_SECOND = 32000
@@ -351,18 +353,26 @@ def render_dictation(language):
     voice = VOICES[language]
     out_dir = BENCH_ROOT / "audio" / f"samples-legal-dictation-{language}"
     out_dir.mkdir(parents=True, exist_ok=True)
+    # What each WAV was recorded from, so a changed entry cannot pair new text with old audio
+    manifest_path = out_dir / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     tests = []
     for entry in entries:
         missing = [term for term in entry["keyTerms"] if term not in key_terms(entry["text"], entry["keyTerms"])]
         if missing:
             sys.exit(f"{entry['id']}: key terms not in the text: {missing}")
         wav = out_dir / f"{entry['id']}.wav"
+        recording = {"voice": voice, "rate": SPEAKING_RATE, "spoken": entry.get("spoken", entry["text"])}
         if not wav.exists():
             aiff = wav.with_suffix(".aiff")
-            spoken = entry.get("spoken", entry["text"])
-            subprocess.run(["say", "-v", voice, "-r", "180", "-o", str(aiff), spoken], check=True)
+            subprocess.run(["say", "-v", voice, "-r", str(SPEAKING_RATE), "-o", str(aiff), recording["spoken"]], check=True)
             ffmpeg_to_wav(wav, src_path=str(aiff))
             aiff.unlink()
+        elif manifest.get(entry["id"], recording) != recording:
+            # Re-recording silently would leave the stored results scored against the old audio
+            sys.exit(f"{entry['id']}: spoken text, voice or rate changed since {wav.name} was recorded; "
+                     "delete the WAV to record it again, then rerun the models on this suite")
+        manifest[entry["id"]] = recording
         tests.append({
             "id": entry["id"],
             "audioFile": f"{out_dir.name}/{wav.name}",
@@ -371,6 +381,7 @@ def render_dictation(language):
             "tags": ["legal", "dictation", "tts", *entry["tags"]],
             "source": "custom",
         })
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     write_suite({
         "id": f"legal-dictation-{language}",
         "name": f"Legal Dictation ({LANGUAGE_NAMES[language]})",

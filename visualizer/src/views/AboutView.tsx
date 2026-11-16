@@ -79,9 +79,10 @@ export function AboutView({ summary }: { summary: Summary }) {
         <Block title="Word error rate">
           <p>
             <strong>WER</strong> counts substituted, missing and extra words against the reference, divided by the
-            reference's word count. It is <strong>normalized</strong>: case and punctuation are ignored and number words
-            count as digits, so “three hundred fifty-two” matches “352”. This holds in English, German, French, Spanish
-            and Italian; Russian and Portuguese compare digits as written. <strong>CER</strong> does the same per
+            reference's word count. It is <strong>normalized</strong>: case and punctuation are ignored and digits are
+            spelled out before the comparison, so “352” matches “three hundred fifty-two”. A wrong number therefore
+            counts per spelled-out word: “352” against “353” is one substitution among four words. This holds in
+            English, German, French, Spanish and Italian; Russian and Portuguese compare digits as written. <strong>CER</strong> does the same per
             character. Lower is better.
           </p>
           <p>
@@ -117,7 +118,7 @@ export function AboutView({ summary }: { summary: Summary }) {
             On the legal suites the key terms are legal terms (Verjährungsfrist, in dubio pro reo) and norm citations. A
             citation counts whether it is written or spelled out: “§ 823 Abs. 1 BGB” equals “Paragraf 823 Absatz 1 BGB”,
             “i. V. m.” equals “in Verbindung mit”, and the WER uses the same rule. A transcript that has neither “§” nor
-            “Paragraf” loses the whole citation. The English, French, Spanish and Italian suites follow the same idea:
+            “Paragraf” (or “Paragraph”) loses the whole citation. The English, French, Spanish and Italian suites follow the same idea:
             “§ 1983” equals “Section 1983”, “art. 1240” equals “article 1240”, “al. 2” equals “alinéa 2”, “co. 1” equals
             “comma 1”.
           </p>

@@ -133,8 +133,12 @@ export async function rescoreResultFiles(
       providerTypeMap: new Map([[providerId, data.ranking.providerType]]),
       version: new Date().toISOString().slice(0, 10),
     });
+    // A file without results would keep the ranking of the removed ones
+    if (!summary.rankings.length) {
+      throw new Error(`${file}: no results left after rescoring; delete the file instead`);
+    }
     const modelFile = {
-      ranking: summary.rankings[0] ?? data.ranking,
+      ranking: summary.rankings[0],
       suiteMetadata: summary.suiteMetadata,
       resultsBySuite: data.resultsBySuite,
     };
