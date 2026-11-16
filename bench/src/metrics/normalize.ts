@@ -489,9 +489,16 @@ const LEGAL_CITATIONS: Record<string, Array<[RegExp, string | ((match: string) =
     [abbreviation(`[Pp]ara\\.${BEFORE_NUMBER}`), " paragraph "],
     [abbreviation(`No\\.${BEFORE_NUMBER}`), " number "],
     [abbreviation(`(?:vs\\.?|versus)${NOT_BEFORE_WORD}`, "giu"), " v "],
-    // Read as one word; other dotted initials (p.m., M.P.) are left to the general rules
-    [abbreviation("U\\.\\s?S\\.\\s?C\\."), " usc "],
-    [abbreviation("C\\.\\s?F\\.\\s?R\\."), " cfr "],
+    // Read as one word, dotted or spelled ("E C H R"); other initials (p.m., "A V.P.") are left to
+    // the general rules
+    [abbreviation(`U\\.?\\s?S\\.?\\s?C\\.?${NOT_BEFORE_WORD}`), " usc "],
+    [abbreviation(`C\\.?\\s?F\\.?\\s?R\\.?${NOT_BEFORE_WORD}`), " cfr "],
+    [abbreviation(`E\\.?\\s?C\\.?\\s?H\\.?\\s?R\\.?${NOT_BEFORE_WORD}`), " echr "],
+    // "Title VII" is dictated as "Title Seven"
+    [/(?<![\p{L}\p{N}])[Tt]itle\s+[IVXLC]+(?![\p{L}\p{N}])/gu, (match) => {
+      const [title, numeral] = match.split(/\s+/);
+      return `${title} ${romanToNumber(numeral)}`;
+    }],
   ],
   fr: [
     [/§/gu, " paragraphe "],
@@ -519,6 +526,25 @@ const LEGAL_CITATIONS: Record<string, Array<[RegExp, string | ((match: string) =
 const CITATION_WORDS = "paragraf|artikel|section|article|articolo|artículo|rule";
 const CITATION_NUMBER_SUFFIX = new RegExp(`(${NOT_IN_WORD}(?:${CITATION_WORDS})\\s+\\d+)(\\p{L})${NOT_BEFORE_WORD}`, "giu");
 const CITATION_CODE_PREFIX = new RegExp(`(${NOT_IN_WORD}(?:${CITATION_WORDS})\\s+)([LRD])(\\d)`, "giu");
+
+function romanToNumber(numeral: string): number {
+  const values: Record<string, number> = { I: 1, V: 5, X: 10, L: 50, C: 100 };
+  let total = 0;
+  for (let i = 0; i < numeral.length; i++) {
+    const value = values[numeral[i]];
+    total += value < (values[numeral[i + 1]] ?? 0) ? -value : value;
+  }
+  return total;
+}
+
+// "L. 1234-1" is dictated as "1234 tiret 1"; after the numbers are spelled out, the word between
+// two of them is the hyphen.
+const FR_NUMBER_WORD =
+  "(?:un|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|quinze|seize|vingts?|trente|quarante|cinquante|soixante|cents?|mille)";
+const FR_DICTATED_HYPHEN = new RegExp(
+  `(?<=(?<![\\p{L}\\p{N}])${FR_NUMBER_WORD})\\s+tiret\\s+(?=${FR_NUMBER_WORD}(?![\\p{L}\\p{N}]))`,
+  "gu"
+);
 
 function expandLegalCitations(text: string, lang: string): string {
   const rules = LEGAL_CITATIONS[lang];
@@ -574,6 +600,7 @@ export function normalizeText(text: string, lang: string = "en"): string {
   });
   // "ventitré" and "ventitre" are both written; the accent decides nothing.
   if (lang === "it") result = result.replace(/tré(?![\p{L}\p{N}])/gu, "tre");
+  if (lang === "fr") result = result.replace(FR_DICTATED_HYPHEN, " ");
 
   // 5. Remove filler words
   const fillers = fillersFor(lang);
