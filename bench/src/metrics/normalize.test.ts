@@ -162,6 +162,7 @@ describe("normalizeText", () => {
     expect(normalizeText("Nonetheless, nonsense", "en")).toBe("nonetheless nonsense");
     expect(normalizeText("Art. 8 E C H R", "en")).toBe(normalizeText("Art. 8 E.C.H.R.", "en"));
     expect(normalizeText("Art. 8 E C H R", "en")).toBe("article eight echr");
+    expect(normalizeText("42 u.s.c. § 1983 and art. 8 e.c.h.r.", "en")).toBe(normalizeText("42 U.S.C. § 1983 and Art. 8 ECHR", "en"));
     expect(normalizeText("at 2 p.m. with the M.P.", "en")).toBe("at two p m with the m p");
     expect(normalizeText("A V.P. Kerr", "en")).toBe("a v p kerr");
   });

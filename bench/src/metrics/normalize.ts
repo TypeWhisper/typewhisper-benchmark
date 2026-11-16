@@ -501,11 +501,11 @@ const LEGAL_CITATIONS: Record<string, Array<[RegExp, string | ((match: string) =
     [abbreviation(`[Pp]ara\\.${beforeCitationNumber("en")}`), " paragraph "],
     [abbreviation(`No\\.${beforeCitationNumber("en")}`), " number "],
     [abbreviation(`(?:vs\\.?|versus)${NOT_BEFORE_WORD}`, "giu"), " v "],
-    // Read as one word, dotted or spelled ("E C H R"); other initials (p.m., "A V.P.") are left to
-    // the general rules
-    [abbreviation(`U\\.?\\s?S\\.?\\s?C\\.?${NOT_BEFORE_WORD}`), " usc "],
-    [abbreviation(`C\\.?\\s?F\\.?\\s?R\\.?${NOT_BEFORE_WORD}`), " cfr "],
-    [abbreviation(`E\\.?\\s?C\\.?\\s?H\\.?\\s?R\\.?${NOT_BEFORE_WORD}`), " echr "],
+    // Read as one word, dotted or spelled ("E C H R"), in either case; other initials (p.m., "A V.P.")
+    // are left to the general rules
+    [abbreviation(`U\\.?\\s?S\\.?\\s?C\\.?${NOT_BEFORE_WORD}`, "giu"), " usc "],
+    [abbreviation(`C\\.?\\s?F\\.?\\s?R\\.?${NOT_BEFORE_WORD}`, "giu"), " cfr "],
+    [abbreviation(`E\\.?\\s?C\\.?\\s?H\\.?\\s?R\\.?${NOT_BEFORE_WORD}`, "giu"), " echr "],
     // "Title VII" is dictated as "Title Seven"; only valid numerals, so "title civil" stays
     [/(?<![\p{L}\p{N}])title\s+(?=[ivxlc])c{0,3}(?:xc|xl|l?x{0,3})(?:ix|iv|v?i{0,3})(?![\p{L}\p{N}])/giu, (match) => {
       const [title, numeral] = match.split(/\s+/);
