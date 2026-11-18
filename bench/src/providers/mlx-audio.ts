@@ -89,6 +89,11 @@ const QWEN3_LANGUAGES: Record<string, string> = {
   pt: "Portuguese",
 };
 
+// The Reson8/Rumble-2-Flash revision scripts/convert-rumble-2-flash.py converts.
+export const RUMBLE_REVISION = "a0c34287229103b706c670d70791683e34379732";
+// The control tokens Rumble-2-Flash's chat template puts first in the system prompt by default.
+export const RUMBLE_CONTROL_TOKENS = "<digits><nofiller><verbatim>";
+
 // SOV-Transcribe-1's languages; it has no Russian.
 const SOV_LANGUAGES = ["en", "de", "fr", "es", "it", "pt", "auto"];
 
@@ -239,6 +244,41 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     options: { max_tokens: 1024 },
     next: true,
     languages: SOV_LANGUAGES,
+  },
+  // Reson8's Rumble-2-Flash (Apache 2.0): Qwen3-ASR 0.6B with a 14-layer decoder and a smaller vocabulary.
+  // Its weights use the transformers 5 layout, so scripts/convert-rumble-2-flash.py renames them to the
+  // original Qwen3-ASR layout and quantizes the decoder into models/rumble/. The system prompt carries the
+  // model card's default control tokens (digits, no fillers, verbatim); without a language name the model
+  // detects the language itself.
+  "rumble-2-flash-8bit": {
+    repo: fileURLToPath(new URL("../../../models/rumble/rumble-2-flash-8bit", import.meta.url)),
+    revision: RUMBLE_REVISION,
+    language: "name",
+    options: { system_prompt: RUMBLE_CONTROL_TOKENS },
+    languages: [...Object.keys(QWEN3_LANGUAGES), "auto"],
+  },
+  // Rumble-2-Flash 8-bit with the system prompt TypeWhisper's Qwen3 plugin would send: the control
+  // tokens, then the plugin's fixed instruction without dictionary terms.
+  "rumble-2-flash-8bit-plugin": {
+    repo: fileURLToPath(new URL("../../../models/rumble/rumble-2-flash-8bit", import.meta.url)),
+    revision: RUMBLE_REVISION,
+    language: "name",
+    options: { system_prompt: RUMBLE_CONTROL_TOKENS + qwen3PluginPrompt([]) },
+    languages: ["en", "de"],
+  },
+  "rumble-2-flash-4bit": {
+    repo: fileURLToPath(new URL("../../../models/rumble/rumble-2-flash-4bit", import.meta.url)),
+    revision: RUMBLE_REVISION,
+    language: "name",
+    options: { system_prompt: RUMBLE_CONTROL_TOKENS },
+    languages: [...Object.keys(QWEN3_LANGUAGES), "auto"],
+  },
+  "rumble-2-flash-bf16": {
+    repo: fileURLToPath(new URL("../../../models/rumble/rumble-2-flash-bf16", import.meta.url)),
+    revision: RUMBLE_REVISION,
+    language: "name",
+    options: { system_prompt: RUMBLE_CONTROL_TOKENS },
+    languages: [...Object.keys(QWEN3_LANGUAGES), "auto"],
   },
 };
 

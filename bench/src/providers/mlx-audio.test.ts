@@ -34,6 +34,10 @@ describe("MlxAudioProvider", () => {
       "vibevoice-asr-streaming-1.5b",
       "sov-transcribe-1-8bit",
       "sov-transcribe-1-4bit",
+      "rumble-2-flash-8bit",
+      "rumble-2-flash-8bit-plugin",
+      "rumble-2-flash-4bit",
+      "rumble-2-flash-bf16",
     ]);
   });
 
@@ -76,6 +80,18 @@ describe("MlxAudioProvider", () => {
     const provider = new MlxAudioProvider();
     expect(provider.supportsLanguage("sov-transcribe-1-8bit", "pt")).toBe(true);
     expect(provider.supportsLanguage("sov-transcribe-1-8bit", "ru")).toBe(false);
+  });
+
+  it("gives Rumble-2-Flash its default control tokens, and no language name for auto", () => {
+    expect(generateOptions("rumble-2-flash-8bit", "de")).toEqual({
+      system_prompt: "<digits><nofiller><verbatim>",
+      language: "German",
+    });
+    expect(generateOptions("rumble-2-flash-8bit", "auto").language).toBeUndefined();
+    const provider = new MlxAudioProvider();
+    expect(provider.supportsLanguage("rumble-2-flash-4bit", "auto")).toBe(true);
+    expect(provider.supportsLanguage("rumble-2-flash-4bit", "ru")).toBe(true);
+    expect(MLX_MODELS["rumble-2-flash-bf16"].repo).toMatch(/\/models\/rumble\/rumble-2-flash-bf16$/);
   });
 
   it("names the suite language in Nemotron 3.5 Transcribe's prompt", () => {
