@@ -989,6 +989,7 @@ const ENTRIES: Record<string, Entry> = {
     trainedFor: [...EN_DE_RU, ...ROMANCE],
     tw: { status: "candidate", note: RUMBLE_NOTE },
     links: [hf("Reson8/Rumble-2-Flash")],
+    pr: 26,
   },
   "mlx-audio:rumble-2-flash-8bit-plugin": {
     name: "Rumble-2-Flash (8-bit, plugin prompt)",
@@ -1007,6 +1008,7 @@ const ENTRIES: Record<string, Entry> = {
       note: "The control tokens followed by the system prompt the Qwen3 plugin sends without dictionary terms. English and German suites, one run.",
     },
     links: [hf("Reson8/Rumble-2-Flash"), hf("TypeWhisper/Rumble-2-Flash-8bit")],
+    pr: 26,
   },
   "mlx-audio:rumble-2-flash-4bit": {
     name: "Rumble-2-Flash (4-bit, local)",
@@ -1021,6 +1023,7 @@ const ENTRIES: Record<string, Entry> = {
     trainedFor: [...EN_DE_RU, ...ROMANCE],
     tw: { status: "candidate", note: RUMBLE_NOTE },
     links: [hf("Reson8/Rumble-2-Flash")],
+    pr: 26,
   },
   "mlx-audio:rumble-2-flash-bf16": {
     name: "Rumble-2-Flash (BF16, local)",
@@ -1035,6 +1038,7 @@ const ENTRIES: Record<string, Entry> = {
     trainedFor: [...EN_DE_RU, ...ROMANCE],
     tw: { status: "candidate", note: RUMBLE_NOTE },
     links: [hf("Reson8/Rumble-2-Flash")],
+    pr: 26,
   },
   "mlx-audio:voxtral-mini-4b-realtime-4bit": {
     name: "Voxtral Mini 4B Realtime (4-bit)",
