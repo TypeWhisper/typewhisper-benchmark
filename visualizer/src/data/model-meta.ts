@@ -157,6 +157,8 @@ const lfm3 = (quant: string, note?: string): Entry => ({
 const EN_DE_RU = ["en", "de", "ru"];
 const SOV_NOTE =
   "Whisper large-v3 encoder with a Gemma 4 26B-A4B decoder; community MLX export, prompted with the model card's language hint, which asks for punctuation.";
+const RUMBLE_NOTE =
+  "Reson8's open weights of the Rumble-2-Flash API model, converted to MLX by bench/scripts/convert-rumble-2-flash.py (renamed weights, quantized decoder, BF16 audio encoder) and run through mlx-audio with the model card's default control tokens. TypeWhisper's Qwen3 plugin runs the 8-bit build from Hugging Face once mlx-audio-swift reads its end tokens from the tokenizer.";
 const CRISPASR_CANDIDATE_RUNTIME = "CrispASR 0.8.47 (GGUF, Metal)";
 
 /** AssemblyAI Universal-3.5 Pro on its async, Sync and realtime APIs, as TypeWhisper engines (AssemblyAI plugin). */
@@ -973,6 +975,66 @@ const ENTRIES: Record<string, Entry> = {
     tw: { status: "candidate", note: SOV_NOTE },
     links: [hf("salesforce-sovereign-intelligence/SOV-Transcribe-1"), hf("nativ-community/SOV-Transcribe-1-4bit")],
     pr: 21,
+  },
+  "mlx-audio:rumble-2-flash-8bit": {
+    name: "Rumble-2-Flash (8-bit, local)",
+    short: "Rumble-2-Flash 8-bit",
+    org: "Reson8",
+    family: "Rumble",
+    params: "0.5B",
+    size: "692 MB",
+    quant: "8-bit decoder, BF16 audio encoder",
+    license: "Apache 2.0",
+    languages: "45 languages",
+    trainedFor: [...EN_DE_RU, ...ROMANCE],
+    tw: { status: "candidate", note: RUMBLE_NOTE },
+    links: [hf("Reson8/Rumble-2-Flash")],
+  },
+  "mlx-audio:rumble-2-flash-8bit-plugin": {
+    name: "Rumble-2-Flash (8-bit, plugin prompt)",
+    short: "Rumble-2-Flash plugin",
+    org: "Reson8",
+    family: "Rumble",
+    params: "0.5B",
+    size: "692 MB",
+    quant: "8-bit decoder, BF16 audio encoder",
+    license: "Apache 2.0",
+    languages: "45 languages",
+    trainedFor: [...EN_DE_RU, ...ROMANCE],
+    tw: {
+      status: "probe",
+      plugin: "Qwen3",
+      note: "The control tokens followed by the system prompt the Qwen3 plugin sends without dictionary terms. English and German suites, one run.",
+    },
+    links: [hf("Reson8/Rumble-2-Flash"), hf("TypeWhisper/Rumble-2-Flash-8bit")],
+  },
+  "mlx-audio:rumble-2-flash-4bit": {
+    name: "Rumble-2-Flash (4-bit, local)",
+    short: "Rumble-2-Flash 4-bit",
+    org: "Reson8",
+    family: "Rumble",
+    params: "0.5B",
+    size: "539 MB",
+    quant: "4-bit decoder, BF16 audio encoder",
+    license: "Apache 2.0",
+    languages: "45 languages",
+    trainedFor: [...EN_DE_RU, ...ROMANCE],
+    tw: { status: "candidate", note: RUMBLE_NOTE },
+    links: [hf("Reson8/Rumble-2-Flash")],
+  },
+  "mlx-audio:rumble-2-flash-bf16": {
+    name: "Rumble-2-Flash (BF16, local)",
+    short: "Rumble-2-Flash BF16",
+    org: "Reson8",
+    family: "Rumble",
+    params: "0.5B",
+    size: "980 MB",
+    quant: "BF16",
+    license: "Apache 2.0",
+    languages: "45 languages",
+    trainedFor: [...EN_DE_RU, ...ROMANCE],
+    tw: { status: "candidate", note: RUMBLE_NOTE },
+    links: [hf("Reson8/Rumble-2-Flash")],
   },
   "mlx-audio:voxtral-mini-4b-realtime-4bit": {
     name: "Voxtral Mini 4B Realtime (4-bit)",
