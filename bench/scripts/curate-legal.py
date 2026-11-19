@@ -183,9 +183,6 @@ kwekersrecht kwekersrechten gegevensbescherming gegevensbeschermingsregels
 gegevensbeschermingsovereenkomst inbreuken schending schendingen
 """.split() + ["Hof van Justitie"],
 }
-# Languages whose VoxPopuli suite keeps one clip per reference text. English (18 pairs) and Spanish
-# (14 pairs) predate the check; deduplicating them removes clips from stored results.
-DEDUPLICATED = {"nl"}
 # VoxPopuli segments whose reference covers more or less speech than the audio: Parakeet TDT v3,
 # Whisper large-v3-turbo and Apple SpeechTranscriber all score above 40% WER on them (Dutch: Parakeet
 # TDT v3 and Ultra, Whisper large-v3-turbo, Cohere Transcribe and Rumble-2-Flash, as SpeechTranscriber
@@ -344,7 +341,7 @@ def curate_voxpopuli(language):
     out_dir.mkdir(parents=True, exist_ok=True)
     tests = []
     # VoxPopuli sometimes has one utterance twice, cut from two session recordings under different
-    # ids (Dutch: 5 pairs); only the first one counts
+    # ids (English: 18 pairs, Spanish: 14, Dutch: 5); only the first one counts
     seen_texts = set()
     for path in paths:
         table = pq.read_table(path, columns=["audio_id", "raw_text", "is_gold_transcript"])
@@ -364,7 +361,7 @@ def curate_voxpopuli(language):
             name = f"voxpopuli-{language}-{re.sub(r'[^0-9A-Za-z]+', '-', audio_id).strip('-')}"
             if name in VOXPOPULI_MISALIGNED:
                 continue
-            if language in DEDUPLICATED and text in seen_texts:
+            if text in seen_texts:
                 continue
             seen_texts.add(text)
             wav = out_dir / f"{name}.wav"
