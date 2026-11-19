@@ -139,6 +139,8 @@ describe("normalizeText", () => {
     expect(normalizeText("Dat is een vorm van art.", "nl")).toBe("dat is een vorm van art");
     expect(normalizeText("Dat is een vorm van art. Eenvoud helpt.", "nl")).toBe("dat is een vorm van art eenvoud helpt");
     expect(normalizeText("art. Eén", "nl")).toBe("artikel een");
+    expect(normalizeText("Dat is art. En dat is cultuur.", "nl")).toBe("dat is art en dat is cultuur");
+    expect(normalizeText("art. eenentwintig", "nl")).toBe(normalizeText("art. 21", "nl"));
     expect(normalizeText("art. honderdtweeënzestig", "nl")).toBe(normalizeText("art. 162", "nl"));
   });
 

@@ -502,8 +502,8 @@ const CITATION_NUMBER_WORDS: Record<string, string> = {
   es: "(?:cero|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|dieci|veint|treinta|cuarenta|cincuenta|sesenta|setenta|ochenta|noventa|cien|doscient|trescient|cuatrocient|quinient|seiscient|setecient|ochocient|novecient|mil)",
   it: "(?:zero|un|due|tre|quattr|cinque|sei|sett|otto|nove|dieci|undici|dodici|quindici|sedici|diciasset|diciott|diciannove|vent|quarant|cinquant|sessant|settant|ottant|novant|cento|mille)",
   // Dutch numbers are one word too ("honderdtweeënzestig"), so the whole word must be built from
-  // number parts: "Eenvoud" starts with "een" but is no number
-  nl: "(?:nul|een|één|eén|twee|drie|vier|vijf|zes|zeven|acht|negen|tien|elf|twaalf|dertien|veertien|twintig|dertig|veertig|vijftig|zestig|zeventig|tachtig|negentig|honderd|duizend|en|ën)+(?![\\p{L}\\p{N}])",
+  // number parts, starting with one: "Eenvoud" starts with "een" and "en" joins parts, neither is a number
+  nl: "(?:nul|een|één|eén|twee|drie|vier|vijf|zes|zeven|acht|negen|tien|elf|twaalf|dertien|veertien|twintig|dertig|veertig|vijftig|zestig|zeventig|tachtig|negentig|honderd|duizend)(?:een|twee|drie|vier|vijf|zes|zeven|acht|negen|tien|elf|twaalf|dertien|veertien|twintig|dertig|veertig|vijftig|zestig|zeventig|tachtig|negentig|honderd|duizend|en|ën)*(?![\\p{L}\\p{N}])",
 };
 function beforeCitationNumber(lang: string, codeLetter = false): string {
   // "art. L. 1234-1" (French codes): a code letter may come before the number
