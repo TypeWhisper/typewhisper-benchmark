@@ -12,12 +12,14 @@
              bench/audio/datasets/bundestag-asr-de/:
                for i in 0 1 2 3 4 5 6; do curl -L -o bench/audio/datasets/bundestag-asr-de/test-0000$i-of-00007.parquet \\
                  https://huggingface.co/datasets/D4ve-R/bundestag-asr/resolve/7eaa313809971719bc290494768cdbc7ba4b3a2e/data/test-0000$i-of-00007.parquet; done
-  voxpopuli  English, French, Spanish and Italian real speech from the European Parliament
+  voxpopuli  English, French, Spanish, Italian and Dutch real speech from the European Parliament
              (VoxPopuli, CC0), test and validation splits. Only clips with at least one legal term
              from VOXPOPULI_TERMS are kept, minus the misaligned segments in VOXPOPULI_MISALIGNED.
              French, Spanish and Italian clips with digits are skipped: the selection predates the
              normalizer's number spellers for these languages, and lifting the filter would add
-             clips every model has to run again. The WAVs are not committed. For <lang> in en fr es it and <split> in test validation:
+             clips every model has to run again. Dutch clips with digits are skipped too, because
+             spoken years ("negentienhonderdnegentig") do not match their digits. The WAVs are not
+             committed. For <lang> in en fr es it nl and <split> in test validation:
                curl -L -o bench/audio/datasets/voxpopuli-<lang>/<split>.parquet \\
                  https://huggingface.co/datasets/facebook/voxpopuli/resolve/42f01879c780b4a2e90ec0b4f616c2ece526e4f1/<lang>/<split>-00000-of-00001.parquet
   dictation  Lawyer's dictation (pleadings, letters, criminal defence) from
@@ -43,10 +45,10 @@ BENCH_ROOT = Path(__file__).resolve().parent.parent
 BUNDESTAG_DIR = BENCH_ROOT / "audio" / "datasets" / "bundestag-asr-de"
 BUNDESTAG_SHARDS = [f"test-0000{i}-of-00007.parquet" for i in range(7)]
 VOXPOPULI_SPLITS = ["test", "validation"]
-LANGUAGES = ["de", "en", "fr", "es", "it"]
-LANGUAGE_NAMES = {"de": "German", "en": "English", "fr": "French", "es": "Spanish", "it": "Italian"}
+LANGUAGES = ["de", "en", "fr", "es", "it", "nl"]
+LANGUAGE_NAMES = {"de": "German", "en": "English", "fr": "French", "es": "Spanish", "it": "Italian", "nl": "Dutch"}
 # The voices the other TTS suites use (Anna, Samantha), and the default voice of each other language
-VOICES = {"de": "Anna", "en": "Samantha", "fr": "Thomas", "es": "Mónica", "it": "Alice"}
+VOICES = {"de": "Anna", "en": "Samantha", "fr": "Thomas", "es": "Mónica", "it": "Alice", "nl": "Xander"}
 SPEAKING_RATE = 180
 MIN_SECONDS, MAX_SECONDS = 3.0, 20.0
 # 16 kHz mono 16-bit PCM
@@ -158,9 +160,33 @@ annullamento nullità brevetto brevetti immunità proporzionalità sussidiariet�
 corruzione whistleblowing ingiustizia
 """.split() + ["Stato di diritto", "diritti fondamentali", "diritto d'autore", "protezione dei dati",
                "mandato d'arresto", "Corte di giustizia"],
+    # Dutch joins compounds into one word, so the list names the compounds the splits contain.
+    # "Rechten" and "mensenrechten" are out like "rights"; so are "vervolgen" and "vervolgd" (also
+    # "to continue"), "schuld" (debt) and "asielzoekers" (migration policy).
+    "nl": """
+wet wetten wetgeving wetgevingen wetgevend wetgevende wetgevingsproces wetgevingsprocedure
+wetgevingsresolutie wetgevingspakket wetsvoorstel wetsvoorstellen wetswijzigingen wettelijk
+wettelijke wettige arbeidswetgeving vennootschapswetgeving gelijkebehandelingswetgeving
+antidiscriminatiewet verdrag verdragen associatieverdrag raamverdrag handelsverdragen
+vrijhandelsverdrag vrijhandelsverdragen richtlijn richtlijnen antiwitwasrichtlijn
+terugkeerrichtlijn erkenningsrichtlijn verordening verordeningen passagiersbeschermingsverordening
+amendement amendementen grondwet grondwettelijke grondrechten rechtsstaat rechtsstatelijkheid
+rechtssysteem rechtspraak rechter rechters rechterlijke rechtsgang rechtsgrondslag rechtszekerheid
+rechtsbescherming rechtspersoonlijkheid rechtmatige juridisch juridische strafrecht strafrechtelijk
+strafrechtelijke civielrechtelijk civielrechtelijke internationaalrechtelijk hof strafhof strafbaar
+gevangenisstraf doodstraf gevangenis gevangenissen procedure procedures procedurele
+asielprocedures veroordeeld aanklagen corruptie corrupt corrupte anticorruptie fraude
+belastingfraude identiteitsfraude fraudebestrijding fraudeurs illegaal illegale illegalen
+illegaliteit legale criminaliteit crimineel criminele criminelen asiel asielrecht getuigen
+advocaat advocaten arbitrage immuniteit subsidiariteit clausule bepalingen vonnis octrooirecht
+kwekersrecht kwekersrechten gegevensbescherming gegevensbeschermingsregels
+gegevensbeschermingsovereenkomst inbreuken schending schendingen
+""".split() + ["Hof van Justitie"],
 }
 # VoxPopuli segments whose reference covers more or less speech than the audio: Parakeet TDT v3,
-# Whisper large-v3-turbo and Apple SpeechTranscriber all score above 40% WER on them.
+# Whisper large-v3-turbo and Apple SpeechTranscriber all score above 40% WER on them (Dutch: Parakeet
+# TDT v3 and Ultra, Whisper large-v3-turbo, Cohere Transcribe and Rumble-2-Flash, as SpeechTranscriber
+# has no Dutch).
 VOXPOPULI_MISALIGNED = {
     "voxpopuli-fr-20091214-0900-PLENARY-13-fr-20091214-21-42-49-0",
     "voxpopuli-fr-20111130-0900-PLENARY-11-fr-20111130-16-35-45-16",
@@ -177,6 +203,11 @@ VOXPOPULI_MISALIGNED = {
     "voxpopuli-it-20160607-0900-PLENARY-15-it-20160607-18-14-40-1",
     "voxpopuli-it-20180313-0900-PLENARY-8-it-20180313-13-21-44-3",
     "voxpopuli-it-20180529-0900-PLENARY-23-it-20180529-21-25-31-2",
+    "voxpopuli-nl-20090310-0900-PLENARY-6-nl-20090310-10-25-00-0",
+    "voxpopuli-nl-20141022-0900-PLENARY-13-nl-20141022-18-13-10-0",
+    "voxpopuli-nl-20170118-0900-PLENARY-15-nl-20170118-15-44-47-0",
+    "voxpopuli-nl-20171212-0900-PLENARY-5-nl-20171212-10-14-54-0",
+    "voxpopuli-nl-20180315-0900-PLENARY-3-nl-20180315-09-28-48-0",
 }
 
 DICTATION_DESCRIPTIONS = {
@@ -185,6 +216,7 @@ DICTATION_DESCRIPTIONS = {
     "fr": "Lawyer's dictation with citations (art. 1240 du Code civil), procedural terms and Latin maxims",
     "es": "Lawyer's dictation with citations (art. 1902 del Código Civil), procedural terms and Latin maxims",
     "it": "Lawyer's dictation with citations (art. 2043 del codice civile), procedural terms and Latin maxims",
+    "nl": "Lawyer's dictation with citations (art. 6:162 BW), procedural terms and Latin maxims",
 }
 
 

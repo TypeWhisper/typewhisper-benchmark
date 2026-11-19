@@ -18,10 +18,12 @@ visualizer/public/data/benchmark-results.json
 .claude/
 *.aiff
 
-# French, Spanish, Italian and Portuguese clips: rebuilt by bench/scripts/curate-romance.py
+# French, Spanish, Italian, Portuguese and Dutch clips: rebuilt by bench/scripts/curate-romance.py
 bench/audio/samples-*-fr/
 bench/audio/samples-*-es/
 bench/audio/samples-*-it/
 bench/audio/samples-*-pt/
-# TTS legal dictation is committed in every language
+bench/audio/samples-*-nl/
+# TTS dictation is committed: legal in every language, medical in Dutch too
 !bench/audio/samples-legal-dictation-*/
+!bench/audio/samples-medical-dictation-nl/

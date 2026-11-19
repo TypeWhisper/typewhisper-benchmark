@@ -27,6 +27,7 @@ const LFM3_LANGUAGES: Record<string, string> = {
   es: "Spanish",
   it: "Italian",
   pt: "Portuguese",
+  nl: "Dutch",
 };
 const LFM3_SUITE_LANGUAGES = [...Object.keys(LFM3_LANGUAGES), "auto"];
 

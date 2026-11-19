@@ -28,7 +28,7 @@ interface CrispAsrModel {
 }
 
 // Languages for multilingual candidates: all suite languages plus auto-detect.
-const ALL_SUITE_LANGUAGES = ["en", "de", "ru", "fr", "es", "it", "pt", "auto"];
+const ALL_SUITE_LANGUAGES = ["en", "de", "ru", "fr", "es", "it", "pt", "nl", "auto"];
 // English-only candidates also run on the German and Russian suites, like the AuroraASR results,
 // to show how they behave there; they skip auto-detect.
 const ENGLISH_PLUS_DOCUMENTED = ["en", "de", "ru"];
@@ -41,11 +41,12 @@ export const CRISPASR_MODELS: Record<string, CrispAsrModel> = {
   "cohere-transcribe-q5_0": { backend: "cohere", file: "cohere-transcribe-q5_0.gguf", languages: COHERE_LANGUAGES },
   "cohere-transcribe-q8_0": { backend: "cohere", file: "cohere-transcribe-q8_0.gguf", languages: COHERE_LANGUAGES },
   // Candidates, as GGUF conversions by CrispASR's author (cstr/*-GGUF), at pinned revisions.
-  // Hojo-ASR-Multi-V1 (Apache 2.0): Qwen3-Omni audio tower + Qwen3-4B; de, fr, it, pt, es, ru and more.
+  // Hojo-ASR-Multi-V1 (Apache 2.0): Qwen3-Omni audio tower + Qwen3-4B; de, fr, it, pt, es, ru and more,
+  // but not Dutch.
   "hojo-asr-multi-v1-f16": {
     backend: "hojo-asr",
     file: "candidates/hojo-asr-multi-v1-f16.gguf",
-    languages: ALL_SUITE_LANGUAGES,
+    languages: ALL_SUITE_LANGUAGES.filter((language) => language !== "nl"),
     candidate: true,
   },
   // Fun-ASR-MLT-Nano-2512 (FunASR Model License v1.1): 31 languages incl. Portuguese, but not German,
@@ -98,7 +99,7 @@ export const CRISPASR_MODELS: Record<string, CrispAsrModel> = {
   "voxtral-mini-3b-2507-q8_0": {
     backend: "voxtral",
     file: "candidates/voxtral-mini-3b-2507-q8_0.gguf",
-    languages: ["en", "de", "fr", "es", "it", "pt", "auto"],
+    languages: ["en", "de", "fr", "es", "it", "pt", "nl", "auto"],
     candidate: true,
   },
   // moondream Parakeet Redux (CC BY 4.0): Parakeet TDT 0.6B v3 with a ternary encoder, which the

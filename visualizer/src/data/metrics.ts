@@ -38,7 +38,7 @@ export const METRICS: Record<MetricKey, MetricDef> = {
   price: { key: "price", label: "$/h", name: "Price per audio hour", better: "lower", unit: "usd" },
 };
 
-export const LANGUAGE_ORDER = ["en", "de", "fr", "es", "it", "pt", "ru", "auto"];
+export const LANGUAGE_ORDER = ["en", "de", "fr", "es", "it", "pt", "nl", "ru", "auto"];
 export const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
   de: "German",
@@ -46,6 +46,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   es: "Spanish",
   it: "Italian",
   pt: "Portuguese",
+  nl: "Dutch",
   ru: "Russian",
   auto: "Auto-detect",
 };

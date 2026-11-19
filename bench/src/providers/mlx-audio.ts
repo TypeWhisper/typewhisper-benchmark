@@ -49,7 +49,7 @@ export function stripSpeakerLabels(text: string): string {
 const GRANITE_PUNCTUATION_PROMPT = "transcribe the speech with proper punctuation and capitalization.";
 const GRANITE_LANGUAGES = ["en", "de", "fr", "es", "pt", "auto"];
 // Models that cover all suite languages and detect the language themselves.
-const MULTILINGUAL_AUTO = ["en", "de", "ru", "fr", "es", "it", "pt", "auto"];
+const MULTILINGUAL_AUTO = ["en", "de", "ru", "fr", "es", "it", "pt", "nl", "auto"];
 
 // The system prompt TypeWhisper's Qwen3 plugin sends (Qwen3ContextBiasFormatter): a fixed instruction,
 // then the dictionary terms. The plugin sets no term budget for Qwen3, so all terms go in.
@@ -87,6 +87,7 @@ const QWEN3_LANGUAGES: Record<string, string> = {
   es: "Spanish",
   it: "Italian",
   pt: "Portuguese",
+  nl: "Dutch",
 };
 
 // The Reson8/Rumble-2-Flash revision scripts/convert-rumble-2-flash.py converts.
@@ -95,7 +96,7 @@ export const RUMBLE_REVISION = "a0c34287229103b706c670d70791683e34379732";
 export const RUMBLE_CONTROL_TOKENS = "<digits><nofiller><verbatim>";
 
 // SOV-Transcribe-1's languages; it has no Russian.
-const SOV_LANGUAGES = ["en", "de", "fr", "es", "it", "pt", "auto"];
+const SOV_LANGUAGES = ["en", "de", "fr", "es", "it", "pt", "nl", "auto"];
 
 export const MLX_MODELS: Record<string, MlxModel> = {
   "qwen3-asr-0.6b-8bit": {
@@ -129,7 +130,7 @@ export const MLX_MODELS: Record<string, MlxModel> = {
   "voxtral-mini-4b-realtime-4bit": {
     repo: "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
     revision: "fdebf7b2af834a1db4b8a3c99ab7480b333adf9e",
-    languages: ["en", "de", "ru", "fr", "es", "it", "pt", "auto"],
+    languages: ["en", "de", "ru", "fr", "es", "it", "pt", "nl", "auto"],
   },
   // TypeWhisper's Granite plugin: no language and its built-in prompt (transcription, not translation).
   "granite-4.0-1b-speech-8bit": {
@@ -170,7 +171,7 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     revision: "1d2d321f7bfd2026ee2dcb5639f524ab8b5f0c96",
     language: "code",
     options: { max_tokens: 512 },
-    languages: ["en", "de", "ru", "fr", "es", "it", "pt"],
+    languages: ["en", "de", "ru", "fr", "es", "it", "pt", "nl"],
   },
   // The Greek/English Canary fine-tune TypeWhisper's Canary plugin offers. The suites have no
   // Greek, so it runs with English as the source language everywhere, like an English-only model.
@@ -217,14 +218,14 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     },
     languages: MULTILINGUAL_AUTO,
   },
-  // Microsoft VibeVoice-ASR Streaming 1.5B (MIT): 10 languages incl. EN, DE, RU; detects the language.
-  // It labels each speaker turn, which a dictation app would drop.
+  // Microsoft VibeVoice-ASR Streaming 1.5B (MIT): 10 languages incl. EN, DE, RU but not Dutch; detects
+  // the language. It labels each speaker turn, which a dictation app would drop.
   "vibevoice-asr-streaming-1.5b": {
     repo: "microsoft/VibeVoice-ASR-Streaming-1.5B",
     revision: "4262d23d8a539a6530cf64fbd0b1751ef9a30853",
     options: { max_tokens: 1024 },
     stripSpeakerLabels: true,
-    languages: MULTILINGUAL_AUTO,
+    languages: MULTILINGUAL_AUTO.filter((language) => language !== "nl"),
   },
   // Salesforce SOV-Transcribe-1 (Apache 2.0, released 2026-11-12): Whisper large-v3 encoder and a
   // Gemma 4 26B-A4B decoder, in the community's MLX exports (decoder 8- or 4-bit, encoder BF16).
@@ -264,7 +265,7 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     revision: RUMBLE_REVISION,
     language: "name",
     options: { system_prompt: RUMBLE_CONTROL_TOKENS + qwen3PluginPrompt([]) },
-    languages: ["en", "de"],
+    languages: ["en", "de", "nl"],
   },
   "rumble-2-flash-4bit": {
     repo: fileURLToPath(new URL("../../../models/rumble/rumble-2-flash-4bit", import.meta.url)),

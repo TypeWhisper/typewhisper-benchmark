@@ -29,7 +29,7 @@
  */
 
 export const VIEWS = ["leaderboard", "compare", "model", "suite", "models", "suites", "about"] as const;
-export const LANGS = ["all", "en", "de", "fr", "es", "it", "pt", "ru", "auto"] as const;
+export const LANGS = ["all", "en", "de", "fr", "es", "it", "pt", "nl", "ru", "auto"] as const;
 export const TIERS = ["core", "diagnostic", "all"] as const;
 export const ORIGINS = ["all", "public", "synthetic"] as const;
 export const DEPLOYS = ["all", "local", "cloud"] as const;
