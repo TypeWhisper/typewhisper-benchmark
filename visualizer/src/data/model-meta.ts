@@ -148,7 +148,7 @@ const lfm3 = (quant: string, note?: string): Entry => ({
   license: "LFM Open License v1.0",
   runtime: "mlx-vlm @230fc308 (MLX)",
   languages: "19 speech languages, no Russian",
-  trainedFor: [...EN_DE, ...ROMANCE],
+  trainedFor: [...EN_DE, ...ROMANCE, "nl"],
   tw: { status: "candidate", note },
   links: [hf("LiquidAI/LFM3-Audio-2B")],
   pr: 11,

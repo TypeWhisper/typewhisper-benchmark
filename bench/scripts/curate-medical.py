@@ -162,11 +162,13 @@ def render_dictation(language):
             subprocess.run(["say", "-v", voice, "-r", str(SPEAKING_RATE), "-o", str(aiff), recording["spoken"]], check=True)
             ffmpeg_to_wav(wav, src_path=str(aiff))
             aiff.unlink()
-        elif manifest.get(entry["id"], recording) != recording:
+            # Saved per recording, so an interrupted run leaves no WAV without its entry
+            manifest[entry["id"]] = recording
+            manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+        elif manifest.get(entry["id"]) != recording:
             # Re-recording silently would leave the stored results scored against the old audio
-            sys.exit(f"{entry['id']}: spoken text, voice or rate changed since {wav.name} was recorded; "
-                     "delete the WAV to record it again, then rerun the models on this suite")
-        manifest[entry["id"]] = recording
+            sys.exit(f"{entry['id']}: {wav.name} has no manifest entry, or its spoken text, voice or rate "
+                     "changed since it was recorded; delete the WAV to record it again, then rerun the models on this suite")
         tests.append({
             "id": entry["id"],
             "audioFile": f"{out_dir.name}/{wav.name}",

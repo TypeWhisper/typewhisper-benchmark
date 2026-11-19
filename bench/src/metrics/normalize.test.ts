@@ -137,6 +137,9 @@ describe("normalizeText", () => {
       normalizeText("artikelen 7 669 juncto 7 671 BW", "nl")
     );
     expect(normalizeText("Dat is een vorm van art.", "nl")).toBe("dat is een vorm van art");
+    expect(normalizeText("Dat is een vorm van art. Eenvoud helpt.", "nl")).toBe("dat is een vorm van art eenvoud helpt");
+    expect(normalizeText("art. Eén", "nl")).toBe("artikel een");
+    expect(normalizeText("art. honderdtweeënzestig", "nl")).toBe(normalizeText("art. 162", "nl"));
   });
 
   it("handles zero", () => {

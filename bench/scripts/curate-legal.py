@@ -183,6 +183,9 @@ kwekersrecht kwekersrechten gegevensbescherming gegevensbeschermingsregels
 gegevensbeschermingsovereenkomst inbreuken schending schendingen
 """.split() + ["Hof van Justitie"],
 }
+# Languages whose VoxPopuli suite keeps one clip per reference text. English (18 pairs) and Spanish
+# (14 pairs) predate the check; deduplicating them removes clips from stored results.
+DEDUPLICATED = {"nl"}
 # VoxPopuli segments whose reference covers more or less speech than the audio: Parakeet TDT v3,
 # Whisper large-v3-turbo and Apple SpeechTranscriber all score above 40% WER on them (Dutch: Parakeet
 # TDT v3 and Ultra, Whisper large-v3-turbo, Cohere Transcribe and Rumble-2-Flash, as SpeechTranscriber
@@ -340,6 +343,9 @@ def curate_voxpopuli(language):
     out_dir = BENCH_ROOT / "audio" / f"samples-voxpopuli-legal-{language}"
     out_dir.mkdir(parents=True, exist_ok=True)
     tests = []
+    # VoxPopuli sometimes has one utterance twice, cut from two session recordings under different
+    # ids (Dutch: 5 pairs); only the first one counts
+    seen_texts = set()
     for path in paths:
         table = pq.read_table(path, columns=["audio_id", "raw_text", "is_gold_transcript"])
         selected = []
@@ -358,6 +364,9 @@ def curate_voxpopuli(language):
             name = f"voxpopuli-{language}-{re.sub(r'[^0-9A-Za-z]+', '-', audio_id).strip('-')}"
             if name in VOXPOPULI_MISALIGNED:
                 continue
+            if language in DEDUPLICATED and text in seen_texts:
+                continue
+            seen_texts.add(text)
             wav = out_dir / f"{name}.wav"
             if not wav.exists():
                 ffmpeg_to_wav(wav, data=data)
@@ -400,11 +409,13 @@ def render_dictation(language):
             subprocess.run(["say", "-v", voice, "-r", str(SPEAKING_RATE), "-o", str(aiff), recording["spoken"]], check=True)
             ffmpeg_to_wav(wav, src_path=str(aiff))
             aiff.unlink()
-        elif manifest.get(entry["id"], recording) != recording:
+            # Saved per recording, so an interrupted run leaves no WAV without its entry
+            manifest[entry["id"]] = recording
+            manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+        elif manifest.get(entry["id"]) != recording:
             # Re-recording silently would leave the stored results scored against the old audio
-            sys.exit(f"{entry['id']}: spoken text, voice or rate changed since {wav.name} was recorded; "
-                     "delete the WAV to record it again, then rerun the models on this suite")
-        manifest[entry["id"]] = recording
+            sys.exit(f"{entry['id']}: {wav.name} has no manifest entry, or its spoken text, voice or rate "
+                     "changed since it was recorded; delete the WAV to record it again, then rerun the models on this suite")
         tests.append({
             "id": entry["id"],
             "audioFile": f"{out_dir.name}/{wav.name}",
