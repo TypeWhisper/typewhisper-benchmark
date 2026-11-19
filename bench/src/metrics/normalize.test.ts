@@ -119,6 +119,31 @@ describe("normalizeText", () => {
     expect(it_("art. 2043")).toBe(it_("articolo duemilaquarantatré"));
   });
 
+  it("spells Dutch numbers the way the Taalunie writes them", () => {
+    const nl = (n: string) => normalizeText(n, "nl");
+    expect(nl("1 13 21 22 23 30 99")).toBe(
+      "een dertien eenentwintig tweeëntwintig drieëntwintig dertig negenennegentig"
+    );
+    expect(nl("100 162 671 1000 2350")).toBe("honderd honderdtweeënzestig zeshonderdeenenzeventig duizend tweeduizend driehonderdvijftig");
+    expect(nl("Eén keer, vóór de zitting")).toBe("een keer voor de zitting");
+  });
+
+  it("removes Dutch hesitations and reads Dutch citations the way they are dictated", () => {
+    expect(normalizeText("Ehm, nou, dat klopt", "nl")).toBe("nou dat klopt");
+    expect(normalizeText("op grond van art. 6:162 BW", "nl")).toBe(
+      normalizeText("op grond van artikel zes honderdtweeënzestig BW", "nl")
+    );
+    expect(normalizeText("artt. 7:669 jo. 7:671 BW", "nl")).toBe(
+      normalizeText("artikelen 7 669 juncto 7 671 BW", "nl")
+    );
+    expect(normalizeText("Dat is een vorm van art.", "nl")).toBe("dat is een vorm van art");
+    expect(normalizeText("Dat is een vorm van art. Eenvoud helpt.", "nl")).toBe("dat is een vorm van art eenvoud helpt");
+    expect(normalizeText("art. Eén", "nl")).toBe("artikel een");
+    expect(normalizeText("Dat is art. En dat is cultuur.", "nl")).toBe("dat is art en dat is cultuur");
+    expect(normalizeText("art. eenentwintig", "nl")).toBe(normalizeText("art. 21", "nl"));
+    expect(normalizeText("art. honderdtweeënzestig", "nl")).toBe(normalizeText("art. 162", "nl"));
+  });
+
   it("handles zero", () => {
     expect(normalizeText("0 errors", "en")).toBe("zero errors");
     expect(normalizeText("0 Fehler", "de")).toBe("null fehler");

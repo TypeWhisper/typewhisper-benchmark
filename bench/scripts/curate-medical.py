@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = ["pyarrow"]
 # ///
-"""Build the two German medical suites, each clip with the medical terms it must transcribe (keyTerms).
+"""Build the medical suites, each clip with the medical terms it must transcribe (keyTerms).
 
   multimed   Real medical speech from the MultiMed German test split (MIT; ACL 2025): doctor-patient
              talks, ward handovers and lectures. Only clips with at least one medical term from
@@ -10,11 +10,15 @@
              bench/audio/datasets/multimed-de/test.parquet must exist:
                curl -L -o bench/audio/datasets/multimed-de/test.parquet \
                  https://huggingface.co/datasets/leduckhai/MultiMed/resolve/459d0ab6db332904f9d7b76a8baabf3333958fa8/German/test-00000-of-00001.parquet
-  dictation  Discharge-letter dictation from scripts/medical-dictation-de.json, read by the macOS
-             voice Anna (needs macOS `say` and ffmpeg).
+  dictation  Discharge-letter dictation from scripts/medical-dictation-<lang>.json (German, Dutch),
+             read by a macOS voice (needs macOS `say` and ffmpeg). The voice reads "spoken" where an
+             entry has one ("amoxicilline clavulaanzuur" for "amoxicilline/clavulaanzuur").
+             manifest.json next to the WAVs records what each one was recorded from; the script
+             stops when an entry no longer matches its WAV.
 
-Usage: uv run --script bench/scripts/curate-medical-de.py [multimed] [dictation]
+Usage: uv run --script bench/scripts/curate-medical.py [multimed] [dictation] [--language de nl]
 """
+import argparse
 import json
 import re
 import subprocess
@@ -26,7 +30,10 @@ import pyarrow.parquet as pq
 BENCH_ROOT = Path(__file__).resolve().parent.parent
 MULTIMED_PARQUET = BENCH_ROOT / "audio" / "datasets" / "multimed-de" / "test.parquet"
 TERM_PACK = BENCH_ROOT / "probe" / "terms-german-medicine.txt"
-DICTATION_SCRIPT = BENCH_ROOT / "scripts" / "medical-dictation-de.json"
+LANGUAGE_NAMES = {"de": "German", "nl": "Dutch"}
+# Anna as in the other German TTS suites; Xander is the Dutch voice of the legal dictation
+VOICES = {"de": "Anna", "nl": "Xander"}
+SPEAKING_RATE = 180
 MIN_SECONDS, MAX_SECONDS = 3.0, 20.0
 # Clips with sound annotations ("* Musik *") or bracketed remarks have references nobody says.
 ANNOTATION = re.compile(r"[*\[\]()]")
@@ -135,34 +142,48 @@ def curate_multimed():
     })
 
 
-def render_dictation():
-    entries = json.loads(DICTATION_SCRIPT.read_text())
-    out_dir = BENCH_ROOT / "audio" / "samples-medical-dictation-de"
+def render_dictation(language):
+    entries = json.loads((BENCH_ROOT / "scripts" / f"medical-dictation-{language}.json").read_text())
+    voice = VOICES[language]
+    out_dir = BENCH_ROOT / "audio" / f"samples-medical-dictation-{language}"
     out_dir.mkdir(parents=True, exist_ok=True)
+    # What each WAV was recorded from, so a changed entry cannot pair new text with old audio
+    manifest_path = out_dir / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     tests = []
     for entry in entries:
-        wav = out_dir / f"{entry['id']}.wav"
-        if not wav.exists():
-            aiff = wav.with_suffix(".aiff")
-            subprocess.run(["say", "-v", "Anna", "-r", "180", "-o", str(aiff), entry["text"]], check=True)
-            ffmpeg_to_wav(wav, src_path=str(aiff))
-            aiff.unlink()
         missing = [term for term in entry["keyTerms"] if term not in key_terms(entry["text"], entry["keyTerms"])]
         if missing:
             sys.exit(f"{entry['id']}: key terms not in the text: {missing}")
+        wav = out_dir / f"{entry['id']}.wav"
+        recording = {"voice": voice, "rate": SPEAKING_RATE, "spoken": entry.get("spoken", entry["text"])}
+        if not wav.exists():
+            aiff = wav.with_suffix(".aiff")
+            subprocess.run(["say", "-v", voice, "-r", str(SPEAKING_RATE), "-o", str(aiff), recording["spoken"]], check=True)
+            ffmpeg_to_wav(wav, src_path=str(aiff))
+            aiff.unlink()
+            # Saved per recording, so an interrupted run leaves no WAV without its entry
+            manifest[entry["id"]] = recording
+            manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+        elif manifest.get(entry["id"]) != recording:
+            # Re-recording silently would leave the stored results scored against the old audio
+            sys.exit(f"{entry['id']}: {wav.name} has no manifest entry, or its spoken text, voice or rate "
+                     "changed since it was recorded; delete the WAV to record it again, then rerun the models on this suite")
         tests.append({
             "id": entry["id"],
-            "audioFile": f"samples-medical-dictation-de/{wav.name}",
+            "audioFile": f"{out_dir.name}/{wav.name}",
             "groundTruth": entry["text"],
             "keyTerms": entry["keyTerms"],
             "tags": ["medical", "dictation", "tts", *entry["tags"]],
             "source": "custom",
         })
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     write_suite({
-        "id": "medical-dictation-de",
-        "name": "Medical Dictation (German)",
-        "description": "Discharge-letter dictation with drug names, diagnoses, lab values and procedures (macOS TTS, voice Anna)",
-        "language": "de",
+        "id": f"medical-dictation-{language}",
+        "name": f"Medical Dictation ({LANGUAGE_NAMES[language]})",
+        "description": "Discharge-letter dictation with drug names, diagnoses, lab values and procedures "
+                       f"(macOS TTS, voice {voice})",
+        "language": language,
         "category": "medical-speech",
         "benchmarkTier": "diagnostic",
         "tests": tests,
@@ -170,8 +191,17 @@ def render_dictation():
 
 
 if __name__ == "__main__":
-    parts = sys.argv[1:] or ["multimed", "dictation"]
-    if "multimed" in parts:
+    parser = argparse.ArgumentParser(description="Build the medical suites")
+    parser.add_argument("parts", nargs="*", help="multimed and/or dictation (default: both)")
+    parser.add_argument("--language", nargs="+", choices=sorted(VOICES), default=sorted(VOICES))
+    args = parser.parse_args()
+    parts = args.parts or ["multimed", "dictation"]
+    unknown = set(parts) - {"multimed", "dictation"}
+    if unknown:
+        parser.error(f"unknown parts: {', '.join(sorted(unknown))}")
+    # MultiMed has no Dutch
+    if "multimed" in parts and "de" in args.language:
         curate_multimed()
     if "dictation" in parts:
-        render_dictation()
+        for language in args.language:
+            render_dictation(language)

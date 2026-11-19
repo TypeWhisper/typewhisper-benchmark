@@ -39,8 +39,8 @@ describe("parseState", () => {
     ]);
   });
 
-  it("accepts the French, Spanish, Italian and Portuguese suites' languages", () => {
-    for (const lang of ["fr", "es", "it", "pt"]) expect(parseState(`?lang=${lang}`).lang).toBe(lang);
+  it("accepts the French, Spanish, Italian, Portuguese and Dutch suites' languages", () => {
+    for (const lang of ["fr", "es", "it", "pt", "nl"]) expect(parseState(`?lang=${lang}`).lang).toBe(lang);
   });
 
   it("falls back to defaults for unknown values", () => {

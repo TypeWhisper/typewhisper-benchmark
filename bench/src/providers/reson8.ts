@@ -35,7 +35,7 @@ export const RESON8_MODELS: Record<string, Reson8Model> = {
   "rumble-2-flash": {
     queryModel: "rumble-2-flash",
     wordTimings: false,
-    languages: new Set(["de", "en", "ru"]),
+    languages: new Set(["de", "en", "ru", "nl"]),
   },
 };
 

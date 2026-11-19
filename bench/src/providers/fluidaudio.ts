@@ -99,6 +99,7 @@ const NEMOTRON_PROMPT_LOCALES: Record<string, string> = {
   es: "es-US",
   it: "it-IT",
   pt: "pt-BR",
+  nl: "nl-NL",
 };
 
 export function nemotronLanguagePrompt(language: string): string | undefined {
@@ -201,7 +202,7 @@ export class FluidAudioProvider implements STTProvider {
     const unified = FLUIDAUDIO_MODELS[model]?.unified;
     if (unified) {
       // One language-prompted manager per suite language; load and prewarm them before timing.
-      for (const language of ["en", "de", "ru", "fr", "es", "it", "pt", "auto"]) {
+      for (const language of ["en", "de", "ru", "fr", "es", "it", "pt", "nl", "auto"]) {
         const res = await this.nextWorker.request({ model: unified, language, load: true }, NEXT_TIMEOUTS.prepareMs);
         if (res.error) throw new Error(res.error);
       }

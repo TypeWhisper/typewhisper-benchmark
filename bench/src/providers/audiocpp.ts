@@ -29,7 +29,7 @@ interface AudioCppModel {
 export const AUDIOCPP_MODELS: Record<string, AudioCppModel> = {
   "confucius4-r2t2-q8_0": {
     file: "r2t2-q8_0.gguf",
-    languages: ["en", "de", "ru", "fr", "es", "it", "pt", "auto"],
+    languages: ["en", "de", "ru", "fr", "es", "it", "pt", "nl", "auto"],
   },
 };
 
@@ -42,6 +42,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
   es: "Spanish",
   it: "Italian",
   pt: "Portuguese",
+  nl: "Dutch",
 };
 
 export function getAudioCppModelsBasePath(env: NodeJS.ProcessEnv = process.env): string {

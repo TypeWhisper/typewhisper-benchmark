@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = ["pyarrow", "numpy"]
 # ///
-"""Curate French, Spanish, Italian and Portuguese suites from FLEURS, Multilingual LibriSpeech
+"""Curate French, Spanish, Italian, Portuguese and Dutch suites from FLEURS, Multilingual LibriSpeech
 (MLS) and Common Voice 17, plus a noisy suite per language, built like the Russian ones
 (curate-russian.py).
 
@@ -13,10 +13,10 @@ digits are skipped: the normalizer has no number speller for these languages, so
 
 The WAVs are not committed: this script rebuilds the same clips from the pinned dataset
 revisions below. Prerequisites (all land in the gitignored bench/audio/datasets/), for <lang> in
-fr, es, it, pt:
-  FLEURS (fr_fr, es_419, it_it, pt_br), into fleurs-<lang>/test.parquet:
+fr, es, it, pt, nl:
+  FLEURS (fr_fr, es_419, it_it, pt_br, nl_nl), into fleurs-<lang>/test.parquet:
     https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/parquet-data/<fleurs>/test-00000-of-00001.parquet
-  MLS (french, spanish, italian, portuguese), into mls-<name>/test.parquet:
+  MLS (french, spanish, italian, portuguese, dutch), into mls-<name>/test.parquet:
     https://huggingface.co/datasets/facebook/multilingual_librispeech/resolve/2e83e61823b4c47dcbcb1980bb88601274127609/<name>/test-00000-of-00001.parquet
   Common Voice 17 (CC0 mirror), into common-voice-<lang>/, from
   https://huggingface.co/datasets/fsicoli/common_voice_17_0/resolve/8262c16bf297c87a9cd88c51997c4758ed7a8ba2/:
@@ -53,6 +53,7 @@ LANGUAGES = {
            # Several of the test split's audiobooks are Dante's Divine Comedy, in 14th-century Italian.
            "mls_note": "; includes verse from Dante's Divine Comedy, which every model finds hard"},
     "pt": {"name": "Portuguese", "fleurs": "pt_br", "mls": "portuguese", "fleurs_note": " (Brazilian Portuguese)"},
+    "nl": {"name": "Dutch", "fleurs": "nl_nl", "mls": "dutch", "fleurs_note": ""},
 }
 
 NOISES = ["office", "cafe", "keyboard", "traffic"]

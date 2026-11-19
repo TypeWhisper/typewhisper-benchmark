@@ -120,6 +120,7 @@ const FR_FILLERS = new Set(["euh", "euhm", "heu", "hum", "hm", "hmm", "mm", "mmm
 const ES_FILLERS = new Set(["eh", "ehm", "em", "mm", "mmm", "hm", "hmm"]);
 const IT_FILLERS = new Set(["eh", "ehm", "ehmm", "uhm", "mm", "mmm", "hm", "hmm"]);
 const PT_FILLERS = new Set(["hã", "ãh", "ahn", "hum", "eh", "mm", "mmm", "hm", "hmm"]);
+const NL_FILLERS = new Set(["eh", "ehm", "euh", "uh", "uhm", "hm", "hmm", "mm", "mmm"]);
 
 const FILLERS: Record<string, Set<string>> = {
   de: DE_FILLERS,
@@ -128,6 +129,7 @@ const FILLERS: Record<string, Set<string>> = {
   es: ES_FILLERS,
   it: IT_FILLERS,
   pt: PT_FILLERS,
+  nl: NL_FILLERS,
 };
 
 function fillersFor(lang: string): Set<string> {
@@ -417,12 +419,46 @@ function numberToItalian(n: number): string {
   return prefix + (rest > 0 ? belowThousandToItalian(rest) : "");
 }
 
+// --- Number to words (Dutch) ---
+// Written as one word up to "duizend" and with a space after it, as the Taalunie spells them
+// ("tweeduizend driehonderdvijftig"). After a vowel the "en" takes a diaeresis ("tweeëntwintig").
+
+const NL_UNITS = [
+  "nul", "een", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen",
+  "tien", "elf", "twaalf", "dertien", "veertien", "vijftien", "zestien", "zeventien", "achttien", "negentien",
+];
+const NL_TENS = ["", "", "twintig", "dertig", "veertig", "vijftig", "zestig", "zeventig", "tachtig", "negentig"];
+
+function belowThousandToDutch(n: number): string {
+  const hundreds = Math.floor(n / 100);
+  const rest = n % 100;
+  let words = hundreds === 0 ? "" : hundreds === 1 ? "honderd" : `${NL_UNITS[hundreds]}honderd`;
+  if (rest >= 20) {
+    const units = rest % 10;
+    const tens = NL_TENS[Math.floor(rest / 10)];
+    words += units === 0 ? tens : `${NL_UNITS[units]}${NL_UNITS[units].endsWith("e") ? "ën" : "en"}${tens}`;
+  } else if (rest > 0) {
+    words += NL_UNITS[rest];
+  }
+  return words;
+}
+
+function numberToDutch(n: number): string {
+  if (n === 0) return NL_UNITS[0];
+  const thousands = Math.floor(n / 1000);
+  const rest = n % 1000;
+  const prefix = thousands === 0 ? "" : thousands === 1 ? "duizend" : `${belowThousandToDutch(thousands)}duizend`;
+  const restWords = rest > 0 ? belowThousandToDutch(rest) : "";
+  return prefix && restWords ? `${prefix} ${restWords}` : prefix + restWords;
+}
+
 const NUMBER_SPELLERS: Partial<Record<string, (n: number) => string>> = {
   de: (n) => (n === 1 ? "eins" : numberToGerman(n)),
   en: numberToEnglish,
   fr: numberToFrench,
   es: numberToSpanish,
   it: numberToItalian,
+  nl: numberToDutch,
 };
 
 // --- Code text normalization ---
@@ -465,6 +501,9 @@ const CITATION_NUMBER_WORDS: Record<string, string> = {
   fr: "(?:zéro|un|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|quinze|seize|vingts?|trente|quarante|cinquante|soixante|cents?|mille)(?![\\p{L}\\p{N}])",
   es: "(?:cero|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|dieci|veint|treinta|cuarenta|cincuenta|sesenta|setenta|ochenta|noventa|cien|doscient|trescient|cuatrocient|quinient|seiscient|setecient|ochocient|novecient|mil)",
   it: "(?:zero|un|due|tre|quattr|cinque|sei|sett|otto|nove|dieci|undici|dodici|quindici|sedici|diciasset|diciott|diciannove|vent|quarant|cinquant|sessant|settant|ottant|novant|cento|mille)",
+  // Dutch numbers are one word too ("honderdtweeënzestig"), so the whole word must be built from
+  // number parts, starting with one: "Eenvoud" starts with "een" and "en" joins parts, neither is a number
+  nl: "(?:nul|een|één|eén|twee|drie|vier|vijf|zes|zeven|acht|negen|tien|elf|twaalf|dertien|veertien|twintig|dertig|veertig|vijftig|zestig|zeventig|tachtig|negentig|honderd|duizend)(?:een|twee|drie|vier|vijf|zes|zeven|acht|negen|tien|elf|twaalf|dertien|veertien|twintig|dertig|veertig|vijftig|zestig|zeventig|tachtig|negentig|honderd|duizend|en|ën)*(?![\\p{L}\\p{N}])",
 };
 function beforeCitationNumber(lang: string, codeLetter = false): string {
   // "art. L. 1234-1" (French codes): a code letter may come before the number
@@ -532,6 +571,14 @@ const LEGAL_CITATIONS: Record<string, Array<[RegExp, string | ((match: string) =
     [abbreviation(`co\\.${beforeCitationNumber("it")}`), " comma "],
     [abbreviation(`lett\\.`), " lettera "],
     [abbreviation(`n\\.${beforeCitationNumber("it")}`), " numero "],
+  ],
+  // "art. 6:162 BW" is dictated as "artikel zes honderdtweeënzestig BW"; the colon goes with the
+  // punctuation. "jo." (juncto) joins two norms.
+  nl: [
+    [abbreviation(`[Aa]rtt\\.${beforeCitationNumber("nl")}`), " artikelen "],
+    [abbreviation(`[Aa]rt\\.${beforeCitationNumber("nl")}`), " artikel "],
+    [abbreviation(`jo\\.${NOT_BEFORE_WORD}`, "giu"), " juncto "],
+    [abbreviation(`[Nn]r\\.${beforeCitationNumber("nl")}`), " nummer "],
   ],
 };
 
@@ -622,6 +669,9 @@ export function normalizeText(text: string, lang: string = "en"): string {
   // "ventitré" and "ventitre" are both written; the accent decides nothing.
   if (lang === "it") result = result.replace(/tré(?![\p{L}\p{N}])/gu, "tre");
   if (lang === "fr") result = result.replace(FR_DICTATED_HYPHEN, " ");
+  // Dutch stresses "een" (one) and "voor" (before) with accents ("één", "vóór", capitalized "Eén"); the
+  // accent decides nothing.
+  if (lang === "nl") result = result.replace(/(?<![\p{L}\p{N}])(één|eén|vóór)(?![\p{L}\p{N}])/gu, (word) => word.normalize("NFD").replace(/\u0301/g, ""));
 
   // 5. Remove filler words
   const fillers = fillersFor(lang);

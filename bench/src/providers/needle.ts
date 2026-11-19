@@ -28,7 +28,7 @@ export const NEEDLE_MODELS: Record<string, NeedleModel> = {
     repo: "Cactus-Compute/whistle",
     revision: "741118687e1f008f06d1351a402a731274789790",
     hints: ["en", "de", "fr", "es", "it", "nl", "pl"],
-    languages: ["en", "de", "ru", "fr", "es", "it", "auto"],
+    languages: ["en", "de", "ru", "fr", "es", "it", "nl", "auto"],
   },
 };
 
