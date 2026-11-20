@@ -70,6 +70,7 @@ export const PROVIDERS: Record<string, ProviderInfo> = {
   soniox: { name: "Soniox", runtime: "Soniox API (US region)", deployment: "cloud" },
   "whissle-arc": { name: "Whissle Arc", runtime: "arc_audio 1.2.0 (PyTorch, CPU)", deployment: "local" },
   "whisper-cpp": { name: "whisper.cpp", runtime: "whisper.cpp (whisper-cli)", deployment: "local" },
+  zoom: { name: "Zoom", runtime: "Zoom Scribe API (Fast mode)", deployment: "cloud" },
 };
 
 const hf = (repo: string) => ({ label: "Hugging Face", href: `https://huggingface.co/${repo}` });
@@ -180,6 +181,18 @@ const reson8 = (m: Pick<Entry, "name" | "short" | "family" | "languages" | "trai
   deployment: "cloud",
   links: [{ label: "Models", href: "https://docs.reson8.dev/speech-to-text/models/" }],
   pr: 17,
+  ...m,
+});
+
+/** Zoom Scribe, measured for the Zoom Scribe plugin (TypeWhisper/typewhisper-mac#1978). */
+const zoom = (m: Pick<Entry, "name" | "short" | "languages" | "trainedFor" | "tw"> & Partial<Pick<Entry, "runtime">>): Entry => ({
+  org: "Zoom",
+  family: "Zoom Scribe",
+  license: "Proprietary API",
+  runtime: "Zoom Scribe API (Fast mode)",
+  deployment: "cloud",
+  links: [{ label: "Docs", href: "https://developers.zoom.us/docs/ai-services/scribe/" }],
+  pr: 29,
   ...m,
 });
 
@@ -1101,6 +1114,59 @@ const ENTRIES: Record<string, Entry> = {
     languages: "About 100 languages",
     tw: { status: "engine", plugin: "OpenAI" },
   },
+  "zoom:zoom-scribe": zoom({
+    name: "Zoom Scribe (language model)",
+    short: "Zoom Scribe",
+    languages: "One zoom-scribe-<language> model each for English, German, Spanish, French, Italian and Portuguese; none for Dutch or Russian",
+    trainedFor: [...EN_DE, ...ROMANCE],
+    tw: {
+      status: "engine",
+      plugin: "Zoom Scribe",
+      note: "Scribe Single Language in the plugin: the model Scribe picks for the dictation language when no model is set (zoom-scribe-de for German and so on). Clips sent inline as 48 kbit/s M4A.",
+    },
+  }),
+  "zoom:zoom-scribe-multilingual": zoom({
+    name: "Zoom Scribe Multilingual",
+    short: "Zoom Multilingual",
+    languages: "10 languages, no Dutch or Russian",
+    trainedFor: [...EN_DE, ...ROMANCE],
+    tw: {
+      status: "engine",
+      plugin: "Zoom Scribe",
+      note: "zoom-scribe-multilingual with the dictation language set, as the plugin sends recordings, files and dictations without a live preview.",
+    },
+  }),
+  "zoom:zoom-scribe-multilingual-live": zoom({
+    name: "Zoom Scribe Multilingual (Live)",
+    short: "Zoom Multilingual Live",
+    runtime: "Zoom Scribe API (Live mode)",
+    languages: "10 languages, no Dutch or Russian",
+    trainedFor: [...EN_DE, ...ROMANCE],
+    tw: {
+      status: "engine",
+      plugin: "Zoom Scribe",
+      isDefault: true,
+      note: "Live mode as the Zoom Scribe plugin streams a dictation (TypeWhisper/typewhisper-mac#1978): 100 ms PCM16 frames at recording pace, session.close at the end, final text at session.closed. Time is the wait after the audio ends.",
+    },
+  }),
+  "zoom:zoom-scribe-en-pro": zoom({
+    name: "Zoom Scribe English Pro",
+    short: "Zoom EN Pro",
+    languages: "English",
+    trainedFor: EN,
+    tw: {
+      status: "engine",
+      plugin: "Zoom Scribe",
+      note: "Scribe English Pro in the plugin: zoom-scribe-en-pro, Zoom's premium English model. Scribe never picks a Pro model on its own.",
+    },
+  }),
+  "zoom:zoom-scribe-en-pro-v2.1": zoom({
+    name: "Zoom Scribe English Pro v2.1",
+    short: "Zoom EN Pro v2.1",
+    languages: "English",
+    trainedFor: EN,
+    tw: { status: "candidate", note: "zoom-scribe-en-pro-v2.1, listed as Zoom Scribe V2.1 Pro on Artificial Analysis." },
+  }),
   "reson8:resonant-1": reson8({
     name: "Resonant-1 (prerecorded)",
     short: "Resonant-1",
