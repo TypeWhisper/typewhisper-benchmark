@@ -185,7 +185,7 @@ const reson8 = (m: Pick<Entry, "name" | "short" | "family" | "languages" | "trai
 });
 
 /** Zoom Scribe on the Fast-mode API, measured as a possible cloud engine (no TypeWhisper plugin yet). */
-const zoom = (m: Pick<Entry, "name" | "short" | "languages" | "trainedFor" | "tw">): Entry => ({
+const zoom = (m: Pick<Entry, "name" | "short" | "languages" | "trainedFor" | "tw"> & Partial<Pick<Entry, "runtime">>): Entry => ({
   org: "Zoom",
   family: "Zoom Scribe",
   license: "Proprietary API",
@@ -1134,6 +1134,7 @@ const ENTRIES: Record<string, Entry> = {
   "zoom:zoom-scribe-multilingual-live": zoom({
     name: "Zoom Scribe Multilingual (Live)",
     short: "Zoom Multilingual Live",
+    runtime: "Zoom Scribe API (Live mode)",
     languages: "10 languages, no Dutch or Russian",
     trainedFor: [...EN_DE, ...ROMANCE],
     tw: {

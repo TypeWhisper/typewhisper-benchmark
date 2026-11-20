@@ -149,6 +149,7 @@ const SAMPLE_RATE = 16_000;
 /** 100 ms of 16-bit PCM per frame, as the Live docs ask for and the app's audio tap delivers. */
 const FRAME_BYTES = (SAMPLE_RATE / 10) * 2;
 const CREATED_TIMEOUT_MS = 10_000;
+const UPDATED_TIMEOUT_MS = 10_000;
 const CLOSE_TIMEOUT_MS = 10_000;
 
 async function decodePcm16(filePath: string): Promise<Buffer> {
@@ -238,8 +239,9 @@ export class ZoomProvider implements STTProvider {
   }
 
   /**
-   * One Live session as a live dictation runs it: after `session.created`, `session.update`, then 100 ms PCM frames
-   * at the pace they would be recorded, then `session.close` when the audio ends. The session is done at
+   * One Live session as a live dictation runs it: after `session.created`, `session.update`; once Zoom answers with
+   * `session.updated`, 100 ms PCM frames at the pace they would be recorded, then `session.close` when the audio
+   * ends. The session is done at
    * `session.closed`, after the last `transcription.completed`. `durationMs` is the wait from `session.close` until
    * then, what a user waits for after they stop.
    */
@@ -257,6 +259,7 @@ export class ZoomProvider implements STTProvider {
     const state = {
       openedAt: 0,
       created: false,
+      updated: false,
       sessionClosed: false,
       socketClosed: false,
       failure: undefined as Error | undefined,
@@ -286,6 +289,7 @@ export class ZoomProvider implements STTProvider {
     ws.onmessage = (event) => {
       const json = JSON.parse(typeof event.data === "string" ? event.data : Buffer.from(event.data).toString());
       if (json.type === "session.created") state.created = true;
+      else if (json.type === "session.updated") state.updated = true;
       else if (json.type === "session.closed") state.sessionClosed = true;
       else if (json.type === "error") {
         const message = `Zoom live error ${json.error?.code ?? ""}: ${json.error?.message ?? "unknown"}`;
@@ -313,6 +317,11 @@ export class ZoomProvider implements STTProvider {
       if (state.failure) throw state.failure;
       this.live.sessions += 1;
       ws.send(JSON.stringify(createLiveSessionUpdate(zoomModel, language)));
+      // Audio only after Zoom confirms the configuration, as the plugin does, so no frame runs with default settings.
+      if (!(await waitFor(() => state.updated || !!state.failure, UPDATED_TIMEOUT_MS))) {
+        throw new Error("Zoom live: no session.updated within 10 s of session.update");
+      }
+      if (state.failure) throw state.failure;
 
       const streamStart = performance.now();
       for (let offset = 0, index = 1; offset < pcm.length; offset += FRAME_BYTES, index++) {
