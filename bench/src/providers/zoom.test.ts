@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createFastBody, transcriptText, ZoomProvider } from "./zoom.js";
+import { createFastBody, createLiveSessionUpdate, LiveTranscript, transcriptText, ZoomProvider } from "./zoom.js";
 
 describe("ZoomProvider", () => {
   it("offers the language models, the multilingual model and the English Pro models", () => {
@@ -21,5 +21,26 @@ describe("ZoomProvider", () => {
   it("reads the display text and falls back to the segments", () => {
     expect(transcriptText({ result: { text_display: " Hallo Welt. " } })).toBe("Hallo Welt.");
     expect(transcriptText({ result: { segments: [{ text: "Hallo" }, { text: " Welt." }] } })).toBe("Hallo Welt.");
+  });
+});
+
+describe("Zoom Live", () => {
+  it("starts a session with partial results in the language's locale", () => {
+    expect(createLiveSessionUpdate("zoom-scribe-multilingual", "fr")).toEqual({
+      type: "session.update",
+      config: { language: "fr-FR", model: "zoom-scribe-multilingual", interim_results: true },
+      audio: { format: "pcm16" },
+    });
+  });
+
+  it("keeps the final transcript per item and falls back to the latest delta", () => {
+    const t = new LiveTranscript();
+    t.handle({ type: "transcription.delta", item_id: "a", delta: "Mein 6." });
+    t.handle({ type: "transcription.delta", item_id: "a", delta: "Mein sechster Sohn." });
+    t.handle({ type: "transcription.delta", item_id: "b", delta: "Ist er" });
+    t.handle({ type: "transcription.completed", item_id: "a", transcript: "Mein sechster Sohn scheint." });
+    t.handle({ type: "transcription.delta", item_id: "a", delta: "ignored" });
+    expect(t.text).toBe("Mein sechster Sohn scheint. Ist er");
+    expect(t.openItems).toBe(1);
   });
 });

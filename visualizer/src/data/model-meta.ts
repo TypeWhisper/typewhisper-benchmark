@@ -1131,6 +1131,16 @@ const ENTRIES: Record<string, Entry> = {
     trainedFor: [...EN_DE, ...ROMANCE],
     tw: { status: "candidate", note: "zoom-scribe-multilingual with the dictation language set." },
   }),
+  "zoom:zoom-scribe-multilingual-live": zoom({
+    name: "Zoom Scribe Multilingual (Live)",
+    short: "Zoom Multilingual Live",
+    languages: "10 languages, no Dutch or Russian",
+    trainedFor: [...EN_DE, ...ROMANCE],
+    tw: {
+      status: "candidate",
+      note: "Live mode as the Zoom Scribe plugin streams a dictation (TypeWhisper/typewhisper-mac#1978): 100 ms PCM16 frames at recording pace, session.close at the end, final text at session.closed. Time is the wait after the audio ends.",
+    },
+  }),
   "zoom:zoom-scribe-en-pro": zoom({
     name: "Zoom Scribe English Pro",
     short: "Zoom EN Pro",
