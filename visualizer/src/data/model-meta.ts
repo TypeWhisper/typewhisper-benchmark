@@ -184,7 +184,7 @@ const reson8 = (m: Pick<Entry, "name" | "short" | "family" | "languages" | "trai
   ...m,
 });
 
-/** Zoom Scribe on the Fast-mode API, measured as a possible cloud engine (no TypeWhisper plugin yet). */
+/** Zoom Scribe, measured for the Zoom Scribe plugin (TypeWhisper/typewhisper-mac#1978). */
 const zoom = (m: Pick<Entry, "name" | "short" | "languages" | "trainedFor" | "tw"> & Partial<Pick<Entry, "runtime">>): Entry => ({
   org: "Zoom",
   family: "Zoom Scribe",
@@ -1120,8 +1120,9 @@ const ENTRIES: Record<string, Entry> = {
     languages: "One zoom-scribe-<language> model each for English, German, Spanish, French, Italian and Portuguese; none for Dutch or Russian",
     trainedFor: [...EN_DE, ...ROMANCE],
     tw: {
-      status: "candidate",
-      note: "The model Scribe picks for the dictation language when no model is set (zoom-scribe-de for German and so on). Clips sent inline as 48 kbit/s M4A.",
+      status: "engine",
+      plugin: "Zoom Scribe",
+      note: "Scribe Single Language in the plugin: the model Scribe picks for the dictation language when no model is set (zoom-scribe-de for German and so on). Clips sent inline as 48 kbit/s M4A.",
     },
   }),
   "zoom:zoom-scribe-multilingual": zoom({
@@ -1129,7 +1130,11 @@ const ENTRIES: Record<string, Entry> = {
     short: "Zoom Multilingual",
     languages: "10 languages, no Dutch or Russian",
     trainedFor: [...EN_DE, ...ROMANCE],
-    tw: { status: "candidate", note: "zoom-scribe-multilingual with the dictation language set." },
+    tw: {
+      status: "engine",
+      plugin: "Zoom Scribe",
+      note: "zoom-scribe-multilingual with the dictation language set, as the plugin sends recordings, files and dictations without a live preview.",
+    },
   }),
   "zoom:zoom-scribe-multilingual-live": zoom({
     name: "Zoom Scribe Multilingual (Live)",
@@ -1138,7 +1143,9 @@ const ENTRIES: Record<string, Entry> = {
     languages: "10 languages, no Dutch or Russian",
     trainedFor: [...EN_DE, ...ROMANCE],
     tw: {
-      status: "candidate",
+      status: "engine",
+      plugin: "Zoom Scribe",
+      isDefault: true,
       note: "Live mode as the Zoom Scribe plugin streams a dictation (TypeWhisper/typewhisper-mac#1978): 100 ms PCM16 frames at recording pace, session.close at the end, final text at session.closed. Time is the wait after the audio ends.",
     },
   }),
@@ -1147,7 +1154,11 @@ const ENTRIES: Record<string, Entry> = {
     short: "Zoom EN Pro",
     languages: "English",
     trainedFor: EN,
-    tw: { status: "candidate", note: "zoom-scribe-en-pro, Zoom's premium English model. Scribe never picks a Pro model on its own." },
+    tw: {
+      status: "engine",
+      plugin: "Zoom Scribe",
+      note: "Scribe English Pro in the plugin: zoom-scribe-en-pro, Zoom's premium English model. Scribe never picks a Pro model on its own.",
+    },
   }),
   "zoom:zoom-scribe-en-pro-v2.1": zoom({
     name: "Zoom Scribe English Pro v2.1",
