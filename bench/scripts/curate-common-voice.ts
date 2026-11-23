@@ -167,14 +167,12 @@ async function curateSpontaneousSuite(
       continue;
     }
 
-    if (!existsSync(wavPath)) {
-      console.log(`  Converting: ${wavFilename} (${entry.durationMs}ms)`);
-      if (!convertToWav(mp3Path, wavPath)) {
-        console.log(`  Error converting ${entry.audioFile}`);
-        continue;
-      }
-    } else {
-      console.log(`  Exists: ${wavFilename}`);
+    // Always convert: a WAV left from an earlier selection would pair this entry's reference with
+    // another speaker's audio (the cause of the shuffled accented-speech references).
+    console.log(`  Converting: ${wavFilename} (${entry.durationMs}ms)`);
+    if (!convertToWav(mp3Path, wavPath)) {
+      console.log(`  Error converting ${entry.audioFile}`);
+      continue;
     }
 
     tests.push({
