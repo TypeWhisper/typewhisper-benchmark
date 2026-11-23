@@ -2,11 +2,15 @@
  * Curate spontaneous speech samples from Mozilla Common Voice
  * Spontaneous Speech corpus for accented-speech benchmark suites.
  *
- * Prerequisites:
- * - Download Spontaneous Speech datasets manually (license requires acceptance)
- * - Place EN dataset in: bench/audio/datasets/common-voice-en/
- * - Place DE dataset in: bench/audio/datasets/common-voice-de/
- * - Each should contain ss-corpus-{lang}.tsv and audios/ directory
+ * Prerequisites: Common Voice Spontaneous Speech 5.0 from the Mozilla Data Collective (CC0; accept the
+ * dataset's terms on its page, which forbid re-sharing the clips, so the WAVs are gitignored).
+ * Download with an API key (MDC_API_KEY) through the datacollective Python SDK:
+ *   English: cmu5nqn1h00vwmi07b4dbk085 (sps-corpus-5.0-2026-09-11-en)
+ *   German:  cmu5mc2sn00s5mi07udtq2864
+ *   uv run --no-project --with datacollective python -c \
+ *     'from datacollective import download_dataset; download_dataset("<id>", download_directory="<dir>")'
+ * Unpack each archive so that bench/audio/datasets/common-voice-{en,de}/ holds ss-corpus-{lang}.tsv,
+ * ss-reported-audios-{lang}.tsv and audios/.
  *
  * Usage: npx tsx bench/scripts/curate-common-voice.ts
  */
@@ -29,6 +33,16 @@ interface SPSEntry {
   votes: number;
   prompt: string;
   split: string;
+  qualityTags: string;
+}
+
+/** A TSV field as Common Voice writes it: quoted when it contains a quote, "" for a quote inside. */
+function unquote(field: string): string {
+  const trimmed = field.trim();
+  if (trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    return trimmed.slice(1, -1).replace(/""/g, '"');
+  }
+  return trimmed;
 }
 
 function parseSPSTsv(content: string): SPSEntry[] {
@@ -41,6 +55,7 @@ function parseSPSTsv(content: string): SPSEntry[] {
   const votesIdx = header.indexOf("votes");
   const promptIdx = header.indexOf("prompt");
   const splitIdx = header.indexOf("split");
+  const qualityIdx = header.indexOf("quality_tags");
 
   if (audioFileIdx === -1 || transcriptionIdx === -1) {
     throw new Error("TSV missing required columns: audio_file, transcription");
@@ -48,7 +63,9 @@ function parseSPSTsv(content: string): SPSEntry[] {
 
   const entries: SPSEntry[] = [];
   for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split("\t");
+    const cols = lines[i].split("\t").map(unquote);
+    // A field with a tab in it would shift every later column; such a row is skipped.
+    if (cols.length !== header.length) continue;
     const transcription = (cols[transcriptionIdx] || "").trim();
     if (!transcription) continue; // Skip entries without transcriptions
 
@@ -59,6 +76,7 @@ function parseSPSTsv(content: string): SPSEntry[] {
       votes: votesIdx !== -1 ? parseInt(cols[votesIdx] || "0", 10) : 0,
       prompt: promptIdx !== -1 ? (cols[promptIdx] || "").trim() : "",
       split: splitIdx !== -1 ? (cols[splitIdx] || "").trim() : "",
+      qualityTags: qualityIdx !== -1 ? (cols[qualityIdx] || "").trim() : "",
     });
   }
 
@@ -96,11 +114,28 @@ async function curateSpontaneousSuite(
 
   console.log(`  ${entries.length} entries with transcriptions`);
 
-  // Filter: reasonable length (3-30s), non-negative votes, transcript > 10 chars
+  // Clips listeners reported (wrong language, offensive, broken audio)
+  const reportedPath = join(datasetDir, `ss-reported-audios-${lang}.tsv`);
+  const reported = new Set<string>();
+  if (existsSync(reportedPath)) {
+    const reportedLines = (await readFile(reportedPath, "utf-8")).trim().split("\n");
+    const fileIdx = reportedLines[0].split("\t").indexOf("audio_file");
+    for (const line of reportedLines.slice(1)) reported.add(unquote(line.split("\t")[fileIdx] ?? ""));
+  }
+  // Releases with a split column assign validated transcriptions to train/dev/test; the benchmark
+  // takes the test split. Older releases without one fall back to every transcribed clip.
+  const hasSplits = entries.some((e) => e.split !== "");
+
+  // Filter: reasonable length (3-30s), non-negative votes, transcript > 10 chars, no annotation such
+  // as "[disfluency]" or "[unclear]" (nobody says it), no quality flag, not reported
   const quality = entries.filter(
     (e) =>
+      (!hasSplits || e.split === "test") &&
       e.votes >= 0 &&
       e.transcription.length > 10 &&
+      !/[\[\]]/.test(e.transcription) &&
+      e.qualityTags === "" &&
+      !reported.has(e.audioFile) &&
       e.durationMs >= 3000 &&
       e.durationMs <= 30000
   );
@@ -199,6 +234,7 @@ async function curateSpontaneousSuite(
     description: `Spontaneous speech from diverse speakers (Common Voice Spontaneous Speech corpus)`,
     language: lang,
     category: "accented-speech",
+    benchmarkTier: "core",
     tests,
   };
 }
