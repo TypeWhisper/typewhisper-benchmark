@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { fileURLToPath } from "url";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CohereProvider,
   cohereLanguages,
@@ -79,5 +80,39 @@ describe("Cohere WAV upload", () => {
     expect(header.readUInt16LE(34)).toBe(16);
     expect(header.toString("ascii", 36, 40)).toBe("data");
     expect(header.readUInt32LE(40)).toBe(32_000);
+  });
+});
+
+describe("Cohere requests", () => {
+  const clip = fileURLToPath(new URL("../../audio/samples-en/clean-01.wav", import.meta.url));
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it("sends a clip again after a connection reset while the answer arrives", async () => {
+    vi.stubEnv("COHERE_API_KEY", "test-key");
+    const fetch = vi
+      .fn()
+      .mockRejectedValueOnce(new TypeError("terminated"))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ text: " Hello. " }), { status: 200 }));
+    vi.stubGlobal("fetch", fetch);
+    const provider = new CohereProvider({});
+    const audio = { filePath: clip, format: "wav" as const, sampleRate: 16_000, durationSeconds: 3, language: "en" };
+    const result = await provider.transcribe(audio, DEFAULT_COHERE_MODEL);
+    expect(result.text).toBe("Hello.");
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry the monthly cap", async () => {
+    vi.stubEnv("COHERE_API_KEY", "test-key");
+    const body = JSON.stringify({ message: "You are using a Trial key, which is limited to 1000 API calls / month." });
+    const fetch = vi.fn().mockResolvedValue(new Response(body, { status: 429 }));
+    vi.stubGlobal("fetch", fetch);
+    const provider = new CohereProvider({});
+    const audio = { filePath: clip, format: "wav" as const, sampleRate: 16_000, durationSeconds: 3, language: "en" };
+    await expect(provider.transcribe(audio, DEFAULT_COHERE_MODEL)).rejects.toThrow(/Cohere 429/);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 });

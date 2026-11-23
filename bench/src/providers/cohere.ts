@@ -162,6 +162,8 @@ export class CohereProvider implements STTProvider {
   private rateLimited = 0;
   private timedOut = 0;
   private callsRemaining?: number;
+  /** WAVs converted in `beforeTranscribe`, so the spacer paces uploads rather than conversions. */
+  private readonly prepared = new Map<string, Buffer>();
 
   constructor(env: NodeJS.ProcessEnv = process.env) {
     this.models = cohereModels(env);
@@ -178,8 +180,10 @@ export class CohereProvider implements STTProvider {
     return this.models.includes(model) && this.languages.has(language);
   }
 
-  async beforeTranscribe(): Promise<void> {
-    await this.spacer?.take();
+  async beforeTranscribe(audio: AudioInput): Promise<void> {
+    if (!this.spacer) return;
+    this.prepared.set(audio.filePath, await encodeWav(audio.filePath));
+    await this.spacer.take();
   }
 
   dispose(): void {
@@ -190,13 +194,13 @@ export class CohereProvider implements STTProvider {
   }
 
   async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
-    const wav = await encodeWav(audio.filePath);
+    const wav = this.prepared.get(audio.filePath) ?? (await encodeWav(audio.filePath));
+    this.prepared.delete(audio.filePath);
     for (let attempt = 1; ; attempt++) {
       try {
         return { ...(await this.request(wav, model, audio.language)), model };
       } catch (error) {
-        const retryable = error instanceof RetryableError || (error instanceof TypeError && /fetch failed/i.test(error.message));
-        if (!retryable || attempt >= RETRIES) throw error;
+        if (!(error instanceof RetryableError) || attempt >= RETRIES) throw error;
         this.retries += 1;
         console.log(`Cohere: retrying (${error.message.slice(0, 240)})`);
         await sleep(retryDelayMs(attempt, error instanceof RetryableError ? error.retryAfterMs : undefined));
@@ -220,7 +224,9 @@ export class CohereProvider implements STTProvider {
       });
       body = await res.text();
     } catch (error) {
-      if (!(error instanceof Error) || error.name !== "TimeoutError") throw error;
+      // A failed connection or a reset while the answer arrives is sent again, like a request without an answer.
+      if (!(error instanceof Error)) throw error;
+      if (error.name !== "TimeoutError") throw new RetryableError(`Cohere transport failure: ${error.message}`, 0);
       this.timedOut += 1;
       throw new RetryableError(`Cohere: no answer within ${REQUEST_TIMEOUT_MS / 1_000} s`, 0);
     }
