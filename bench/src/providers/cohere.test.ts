@@ -91,7 +91,40 @@ describe("Cohere requests", () => {
     vi.unstubAllEnvs();
   });
 
-  it("sends a clip again after a connection reset while the answer arrives", async () => {
+  const brokenBody = (status: number) =>
+    new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.error(new TypeError("terminated"));
+        },
+      }),
+      { status }
+    );
+
+  it("sends a clip again when a 200 answer breaks off", async () => {
+    vi.stubEnv("COHERE_API_KEY", "test-key");
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(brokenBody(200))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ text: "Hello." }), { status: 200 }));
+    vi.stubGlobal("fetch", fetch);
+    const provider = new CohereProvider({});
+    const audio = { filePath: clip, format: "wav" as const, sampleRate: 16_000, durationSeconds: 3, language: "en" };
+    expect((await provider.transcribe(audio, DEFAULT_COHERE_MODEL)).text).toBe("Hello.");
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps a 401 final when its body breaks off", async () => {
+    vi.stubEnv("COHERE_API_KEY", "test-key");
+    const fetch = vi.fn().mockResolvedValue(brokenBody(401));
+    vi.stubGlobal("fetch", fetch);
+    const provider = new CohereProvider({});
+    const audio = { filePath: clip, format: "wav" as const, sampleRate: 16_000, durationSeconds: 3, language: "en" };
+    await expect(provider.transcribe(audio, DEFAULT_COHERE_MODEL)).rejects.toThrow(/Cohere 401, body unreadable/);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("sends a clip again after a connection reset before the answer", async () => {
     vi.stubEnv("COHERE_API_KEY", "test-key");
     const fetch = vi
       .fn()

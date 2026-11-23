@@ -126,9 +126,10 @@ class RetryableError extends Error {
   constructor(
     message: string,
     /** The server's Retry-After, if it sent one. */
-    readonly retryAfterMs?: number
+    readonly retryAfterMs?: number,
+    cause?: unknown
   ) {
-    super(message);
+    super(message, cause === undefined ? undefined : { cause });
   }
 }
 
@@ -214,7 +215,6 @@ export class CohereProvider implements STTProvider {
     if (!key) throw new Error("COHERE_API_KEY is not set");
     const start = performance.now();
     let res: Response;
-    let body: string;
     try {
       res = await fetch(API_URL, {
         method: "POST",
@@ -222,13 +222,19 @@ export class CohereProvider implements STTProvider {
         body: createCohereForm(wav, model, language),
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
+    } catch (error) {
+      throw this.transportError(error);
+    }
+    let body: string;
+    try {
       body = await res.text();
     } catch (error) {
-      // A failed connection or a reset while the answer arrives is sent again, like a request without an answer.
-      if (!(error instanceof Error)) throw error;
-      if (error.name !== "TimeoutError") throw new RetryableError(`Cohere transport failure: ${error.message}`, 0);
-      this.timedOut += 1;
-      throw new RetryableError(`Cohere: no answer within ${REQUEST_TIMEOUT_MS / 1_000} s`, 0);
+      // The status arrived before the body broke off, so it still decides: a 2xx is sent again at once, a 429 or
+      // server error after a pause, anything else fails.
+      if (res.ok) throw this.transportError(error);
+      const message = `Cohere ${res.status}, body unreadable: ${error instanceof Error ? error.message : String(error)}`;
+      if (res.status === 429 || res.status >= 500) throw new RetryableError(message, retryAfterMs(res), error);
+      throw new Error(message, { cause: error });
     }
     const durationMs = Math.round(performance.now() - start);
 
@@ -244,5 +250,13 @@ export class CohereProvider implements STTProvider {
     const json = JSON.parse(body) as { text?: string };
     if (typeof json.text !== "string") throw new Error(`Cohere response without text: ${body.slice(0, 300)}`);
     return { text: json.text.trim(), durationMs };
+  }
+
+  /** A failed connection, a reset or no answer within the timeout: the clip is sent again at once. */
+  private transportError(error: unknown): unknown {
+    if (!(error instanceof Error)) return error;
+    if (error.name !== "TimeoutError") return new RetryableError(`Cohere transport failure: ${error.message}`, 0, error);
+    this.timedOut += 1;
+    return new RetryableError(`Cohere: no answer within ${REQUEST_TIMEOUT_MS / 1_000} s`, 0, error);
   }
 }
