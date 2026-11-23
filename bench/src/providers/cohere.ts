@@ -1,4 +1,5 @@
 import { execFile } from "child_process";
+import { setTimeout as delay } from "timers/promises";
 import { promisify } from "util";
 import type { STTProvider, AudioInput, TranscriptionResult } from "../types.js";
 import { COHERE_LANGUAGES } from "./crispasr.js";
@@ -95,7 +96,8 @@ async function encodeWav(filePath: string): Promise<Buffer> {
   return Buffer.concat([wavHeader(pcm.length), pcm]);
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+/** Waits `ms`; rejects at once when `signal` aborts. */
+const sleep = (ms: number, signal?: AbortSignal) => delay(ms, undefined, { signal });
 
 /**
  * Spaces request starts evenly, `60 / perMinute` seconds apart, so a key stays below its per-minute limit instead of
@@ -117,8 +119,8 @@ export class RequestSpacer {
     return at - now;
   }
 
-  async take(): Promise<void> {
-    await sleep(this.book());
+  async take(signal?: AbortSignal): Promise<void> {
+    await sleep(this.book(), signal);
   }
 }
 
@@ -147,7 +149,8 @@ export function retryDelayMs(attempt: number, retryAfter?: number): number {
  * Cohere Transcribe through Cohere's API, as TypeWhisper's Cohere plugin calls it: one multipart `POST` per clip
  * with the model, the suite language and the clip as 16 kHz WAV. `durationMs` is the request, without the WAV
  * conversion. A request without an answer after 15 s is sent again at once; a 429 or server error is retried after
- * a pause (Retry-After when given, else 5 s doubling to 60 s). `COHERE_REQUESTS_PER_MINUTE` spaces requests evenly
+ * a pause (Retry-After when given, else 5 s doubling to 60 s), unless the runner's timeout has aborted the clip
+ * by then. `COHERE_REQUESTS_PER_MINUTE` spaces requests evenly
  * below a per-minute limit, outside the per-clip timeout.
  * Cohere names no per-hour API price, so no cost is recorded.
  */
@@ -194,33 +197,40 @@ export class CohereProvider implements STTProvider {
     if (this.callsRemaining !== undefined) console.log(`Cohere: lowest x-trial-endpoint-call-remaining ${this.callsRemaining}`);
   }
 
-  async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
+  async transcribe(audio: AudioInput, model: string, signal?: AbortSignal): Promise<TranscriptionResult> {
     const wav = this.prepared.get(audio.filePath) ?? (await encodeWav(audio.filePath));
     this.prepared.delete(audio.filePath);
     for (let attempt = 1; ; attempt++) {
       try {
-        return { ...(await this.request(wav, model, audio.language)), model };
+        return { ...(await this.request(wav, model, audio.language, signal)), model };
       } catch (error) {
-        if (!(error instanceof RetryableError) || attempt >= RETRIES) throw error;
+        // Once the runner has given up on the clip, nothing is sent again.
+        if (!(error instanceof RetryableError) || attempt >= RETRIES || signal?.aborted) throw error;
         this.retries += 1;
         console.log(`Cohere: retrying (${error.message.slice(0, 240)})`);
-        await sleep(retryDelayMs(attempt, error instanceof RetryableError ? error.retryAfterMs : undefined));
-        await this.spacer?.take();
+        await sleep(retryDelayMs(attempt, error.retryAfterMs), signal);
+        await this.spacer?.take(signal);
       }
     }
   }
 
-  private async request(wav: Buffer, model: string, language: string): Promise<Omit<TranscriptionResult, "model">> {
+  private async request(
+    wav: Buffer,
+    model: string,
+    language: string,
+    signal?: AbortSignal
+  ): Promise<Omit<TranscriptionResult, "model">> {
     const key = process.env.COHERE_API_KEY;
     if (!key) throw new Error("COHERE_API_KEY is not set");
     const start = performance.now();
+    const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
     let res: Response;
     try {
       res = await fetch(API_URL, {
         method: "POST",
         headers: { Authorization: `Bearer ${key}` },
         body: createCohereForm(wav, model, language),
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
       });
     } catch (error) {
       throw this.transportError(error);

@@ -138,6 +138,20 @@ describe("Cohere requests", () => {
     expect(fetch).toHaveBeenCalledTimes(2);
   });
 
+  it("stops retrying once the runner has given up on the clip", async () => {
+    vi.stubEnv("COHERE_API_KEY", "test-key");
+    const runner = new AbortController();
+    const fetch = vi.fn().mockImplementation(async () => {
+      runner.abort();
+      return new Response("{}", { status: 429, headers: { "retry-after": "60" } });
+    });
+    vi.stubGlobal("fetch", fetch);
+    const provider = new CohereProvider({});
+    const audio = { filePath: clip, format: "wav" as const, sampleRate: 16_000, durationSeconds: 3, language: "en" };
+    await expect(provider.transcribe(audio, DEFAULT_COHERE_MODEL, runner.signal)).rejects.toThrow(/Cohere 429/);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
   it("does not retry the monthly cap", async () => {
     vi.stubEnv("COHERE_API_KEY", "test-key");
     const body = JSON.stringify({ message: "You are using a Trial key, which is limited to 1000 API calls / month." });
