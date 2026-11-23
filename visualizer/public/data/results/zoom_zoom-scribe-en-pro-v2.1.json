@@ -3,15 +3,15 @@
     "providerId": "zoom",
     "model": "zoom-scribe-en-pro-v2.1",
     "providerType": "cloud",
-    "avgWerNormalized": 0.06056764157890754,
-    "avgCer": 0.042608998680462515,
+    "avgWerNormalized": 0.04087965370257225,
+    "avgCer": 0.02324084217548567,
     "avgPunctuationScore": 0.8399047619047617,
     "avgFormattingScore": 0.9104786435786436,
     "avgTermRecall": 0.9841740850642927,
-    "avgRealtimeFactor": 0.1701504837813481,
-    "avgDurationMs": 955.7297830374754,
-    "costPerHourAudio": 0.3499999999999988,
-    "totalTests": 1014,
+    "avgRealtimeFactor": 0.1732504461379597,
+    "avgDurationMs": 954.3477443609023,
+    "costPerHourAudio": 0.3499999999999989,
+    "totalTests": 1064,
     "errorCount": 0,
     "errorRate": 0,
     "skipCount": 0
@@ -501,33 +501,6 @@
     ],
     "accented-speech-en": [
       {
-        "testId": "en-accent-02",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Are there any foods you hate to eat?"
-        },
-        "status": "ok",
-        "transcription": "Is it easy to travel by train?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8080808080808081,
-        "durationMs": 417,
-        "realtimeFactor": 0.13627450980392156,
-        "audioDurationMs": 3060,
-        "costUsd": 0.0002975,
-        "timestamp": "2026-11-19T23:53:45.944Z"
-      },
-      {
         "testId": "en-accent-01",
         "suiteId": "accented-speech-en",
         "providerId": "zoom",
@@ -541,21 +514,75 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:\"Do you know the game \"\"The Hundred Line -Last Defense Acade"
+          "speaker": "prompt:Have you ever played basketball?"
         },
         "status": "ok",
-        "transcription": "I think that the kinds of tech that would make our lives better are any technology that helps us to live longer and be healthier. So, for example, maybe if my watch could tell me to stop eating so much sugar, I would be much happier.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 937,
-        "realtimeFactor": 0.05133683979837826,
-        "audioDurationMs": 18252,
-        "costUsd": 0.0017744999999999998,
-        "timestamp": "2026-11-19T23:53:46.265Z"
+        "transcription": "No, I hate sports.",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 432,
+        "realtimeFactor": 0.14285714285714285,
+        "audioDurationMs": 3024,
+        "costUsd": 0.000294,
+        "timestamp": "2026-11-23T17:06:39.158Z"
       },
       {
-        "testId": "en-accent-09",
+        "testId": "en-accent-01",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever played basketball?"
+        },
+        "status": "ok",
+        "transcription": "No, I hate sports.",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 963,
+        "realtimeFactor": 0.31845238095238093,
+        "audioDurationMs": 3024,
+        "costUsd": 0.000294,
+        "timestamp": "2026-11-23T17:06:40.035Z"
+      },
+      {
+        "testId": "en-accent-01",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever played basketball?"
+        },
+        "status": "ok",
+        "transcription": "No, I hate sports.",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1161,
+        "realtimeFactor": 0.38392857142857145,
+        "audioDurationMs": 3024,
+        "costUsd": 0.000294,
+        "timestamp": "2026-11-23T17:06:40.035Z"
+      },
+      {
+        "testId": "en-accent-02",
         "suiteId": "accented-speech-en",
         "providerId": "zoom",
         "model": "zoom-scribe-en-pro-v2.1",
@@ -568,25 +595,25 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Can you sing or play music?"
+          "speaker": "prompt:How should we care for the elderly?"
         },
         "status": "ok",
-        "transcription": "What is the weather today?",
-        "werRaw": 0.9411764705882353,
-        "werNormalized": 0.9411764705882353,
-        "cer": 0.8108108108108109,
-        "durationMs": 433,
-        "realtimeFactor": 0.13514357053682896,
-        "audioDurationMs": 3204,
-        "costUsd": 0.0003115,
-        "timestamp": "2026-11-19T23:53:46.956Z"
+        "transcription": "Just have a conversation.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 804,
+        "realtimeFactor": 0.2596899224806202,
+        "audioDurationMs": 3096,
+        "costUsd": 0.000301,
+        "timestamp": "2026-11-23T17:06:40.042Z"
       },
       {
-        "testId": "en-accent-06",
+        "testId": "en-accent-02",
         "suiteId": "accented-speech-en",
         "providerId": "zoom",
         "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
+        "run": 2,
         "suiteCategory": "accented-speech",
         "suiteLanguage": "en",
         "testTags": [
@@ -595,25 +622,25 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are you happy with the way your life has turned out so far?"
+          "speaker": "prompt:How should we care for the elderly?"
         },
         "status": "ok",
-        "transcription": "To Kill a Mockingbird.",
-        "werRaw": 0.96875,
-        "werNormalized": 0.96875,
-        "cer": 0.9025974025974026,
-        "durationMs": 873,
-        "realtimeFactor": 0.2852941176470588,
-        "audioDurationMs": 3060,
-        "costUsd": 0.0002975,
-        "timestamp": "2026-11-19T23:53:46.995Z"
+        "transcription": "Just have a conversation.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 875,
+        "realtimeFactor": 0.2826227390180879,
+        "audioDurationMs": 3096,
+        "costUsd": 0.000301,
+        "timestamp": "2026-11-23T17:06:40.140Z"
       },
       {
-        "testId": "en-accent-05",
+        "testId": "en-accent-04",
         "suiteId": "accented-speech-en",
         "providerId": "zoom",
         "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
+        "run": 3,
         "suiteCategory": "accented-speech",
         "suiteLanguage": "en",
         "testTags": [
@@ -622,25 +649,25 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are you good at swimming?"
+          "speaker": "prompt:Do you wear jewelry?"
         },
         "status": "ok",
-        "transcription": "Um, mostly dogs.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8181818181818182,
-        "durationMs": 988,
-        "realtimeFactor": 0.32287581699346407,
-        "audioDurationMs": 3060,
-        "costUsd": 0.0002975,
-        "timestamp": "2026-11-19T23:53:47.008Z"
+        "transcription": "Do you do you wear jelly?",
+        "werRaw": 0.4,
+        "werNormalized": 0.4,
+        "cer": 0.3333333333333333,
+        "durationMs": 969,
+        "realtimeFactor": 0.29907407407407405,
+        "audioDurationMs": 3240,
+        "costUsd": 0.000315,
+        "timestamp": "2026-11-23T17:06:41.088Z"
       },
       {
         "testId": "en-accent-03",
         "suiteId": "accented-speech-en",
         "providerId": "zoom",
         "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
+        "run": 2,
         "suiteCategory": "accented-speech",
         "suiteLanguage": "en",
         "testTags": [
@@ -649,18 +676,18 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are there local events or festivals your family attend?"
+          "speaker": "prompt:Have you got a pet?"
         },
         "status": "ok",
-        "transcription": "What can you cook?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8524590163934426,
-        "durationMs": 1288,
-        "realtimeFactor": 0.42091503267973857,
-        "audioDurationMs": 3060,
-        "costUsd": 0.0002975,
-        "timestamp": "2026-11-19T23:53:47.024Z"
+        "transcription": "No, I haven't.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1293,
+        "realtimeFactor": 0.4081439393939394,
+        "audioDurationMs": 3168,
+        "costUsd": 0.000308,
+        "timestamp": "2026-11-23T17:06:41.156Z"
       },
       {
         "testId": "en-accent-04",
@@ -676,18 +703,261 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are you good at growing plants?"
+          "speaker": "prompt:Do you wear jewelry?"
         },
         "status": "ok",
-        "transcription": "People, people annoys me.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 1103,
-        "realtimeFactor": 0.3604575163398693,
-        "audioDurationMs": 3060,
-        "costUsd": 0.0002975,
-        "timestamp": "2026-11-19T23:53:47.024Z"
+        "transcription": "Do you do you wear jelly?",
+        "werRaw": 0.4,
+        "werNormalized": 0.4,
+        "cer": 0.3333333333333333,
+        "durationMs": 1044,
+        "realtimeFactor": 0.32222222222222224,
+        "audioDurationMs": 3240,
+        "costUsd": 0.000315,
+        "timestamp": "2026-11-23T17:06:41.164Z"
+      },
+      {
+        "testId": "en-accent-03",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you got a pet?"
+        },
+        "status": "ok",
+        "transcription": "No, I haven't.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1519,
+        "realtimeFactor": 0.47948232323232326,
+        "audioDurationMs": 3168,
+        "costUsd": 0.000308,
+        "timestamp": "2026-11-23T17:06:41.178Z"
+      },
+      {
+        "testId": "en-accent-04",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Do you wear jewelry?"
+        },
+        "status": "ok",
+        "transcription": "Do you do you wear jelly?",
+        "werRaw": 0.4,
+        "werNormalized": 0.4,
+        "cer": 0.3333333333333333,
+        "durationMs": 1061,
+        "realtimeFactor": 0.3274691358024691,
+        "audioDurationMs": 3240,
+        "costUsd": 0.000315,
+        "timestamp": "2026-11-23T17:06:41.181Z"
+      },
+      {
+        "testId": "en-accent-05",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think about using X?"
+        },
+        "status": "ok",
+        "transcription": "What do you think about using eggs?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.12121212121212122,
+        "durationMs": 961,
+        "realtimeFactor": 0.29334554334554336,
+        "audioDurationMs": 3276,
+        "costUsd": 0.00031849999999999994,
+        "timestamp": "2026-11-23T17:06:41.181Z"
+      },
+      {
+        "testId": "en-accent-03",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you got a pet?"
+        },
+        "status": "ok",
+        "transcription": "No, I haven't.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1120,
+        "realtimeFactor": 0.35353535353535354,
+        "audioDurationMs": 3168,
+        "costUsd": 0.000308,
+        "timestamp": "2026-11-23T17:06:41.189Z"
+      },
+      {
+        "testId": "en-accent-02",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How should we care for the elderly?"
+        },
+        "status": "ok",
+        "transcription": "Just have a conversation.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1724,
+        "realtimeFactor": 0.5568475452196382,
+        "audioDurationMs": 3096,
+        "costUsd": 0.000301,
+        "timestamp": "2026-11-23T17:06:41.193Z"
+      },
+      {
+        "testId": "en-accent-05",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think about using X?"
+        },
+        "status": "ok",
+        "transcription": "What do you think about using eggs?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.12121212121212122,
+        "durationMs": 758,
+        "realtimeFactor": 0.2313797313797314,
+        "audioDurationMs": 3276,
+        "costUsd": 0.00031849999999999994,
+        "timestamp": "2026-11-23T17:06:41.226Z"
+      },
+      {
+        "testId": "en-accent-05",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think about using X?"
+        },
+        "status": "ok",
+        "transcription": "What do you think about using eggs?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.12121212121212122,
+        "durationMs": 989,
+        "realtimeFactor": 0.3018925518925519,
+        "audioDurationMs": 3276,
+        "costUsd": 0.00031849999999999994,
+        "timestamp": "2026-11-23T17:06:41.257Z"
+      },
+      {
+        "testId": "en-accent-07",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever thought about writing musi"
+        },
+        "status": "ok",
+        "transcription": "Have you ever thought about writing music?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 504,
+        "realtimeFactor": 0.14736842105263157,
+        "audioDurationMs": 3420,
+        "costUsd": 0.0003325,
+        "timestamp": "2026-11-23T17:06:41.775Z"
+      },
+      {
+        "testId": "en-accent-06",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What sport is your favourite?"
+        },
+        "status": "ok",
+        "transcription": "What sports is your favorite?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 822,
+        "realtimeFactor": 0.24035087719298245,
+        "audioDurationMs": 3420,
+        "costUsd": 0.0003325,
+        "timestamp": "2026-11-23T17:06:42.082Z"
       },
       {
         "testId": "en-accent-08",
@@ -703,18 +973,45 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Can you describe your most challenging climb?"
+          "speaker": "prompt:What do you do for work?"
         },
         "status": "ok",
-        "transcription": "What is your best traveling experience?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8879668049792531,
-        "durationMs": 716,
-        "realtimeFactor": 0.22860791826309068,
-        "audioDurationMs": 3132,
-        "costUsd": 0.0003045,
-        "timestamp": "2026-11-19T23:53:47.057Z"
+        "transcription": "What do you do for work?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.08,
+        "durationMs": 817,
+        "realtimeFactor": 0.22694444444444445,
+        "audioDurationMs": 3600,
+        "costUsd": 0.00035,
+        "timestamp": "2026-11-23T17:06:42.098Z"
+      },
+      {
+        "testId": "en-accent-08",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do for work?"
+        },
+        "status": "ok",
+        "transcription": "What do you do for work?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.08,
+        "durationMs": 786,
+        "realtimeFactor": 0.21833333333333332,
+        "audioDurationMs": 3600,
+        "costUsd": 0.00035,
+        "timestamp": "2026-11-23T17:06:42.102Z"
       },
       {
         "testId": "en-accent-07",
@@ -730,18 +1027,207 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Can you describe your favorite water sport experience?"
+          "speaker": "prompt:Have you ever thought about writing musi"
         },
         "status": "ok",
-        "transcription": "It is dark, kinda black.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8513513513513513,
-        "durationMs": 757,
-        "realtimeFactor": 0.24450904392764858,
-        "audioDurationMs": 3096,
-        "costUsd": 0.000301,
-        "timestamp": "2026-11-19T23:53:47.081Z"
+        "transcription": "Have you ever thought about writing music?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 833,
+        "realtimeFactor": 0.2435672514619883,
+        "audioDurationMs": 3420,
+        "costUsd": 0.0003325,
+        "timestamp": "2026-11-23T17:06:42.103Z"
+      },
+      {
+        "testId": "en-accent-08",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do for work?"
+        },
+        "status": "ok",
+        "transcription": "What do you do for work?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.08,
+        "durationMs": 827,
+        "realtimeFactor": 0.22972222222222222,
+        "audioDurationMs": 3600,
+        "costUsd": 0.00035,
+        "timestamp": "2026-11-23T17:06:42.109Z"
+      },
+      {
+        "testId": "en-accent-09",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What's the weather like today?"
+        },
+        "status": "ok",
+        "transcription": "What is the weather like today?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 765,
+        "realtimeFactor": 0.20631067961165048,
+        "audioDurationMs": 3708,
+        "costUsd": 0.00036050000000000003,
+        "timestamp": "2026-11-23T17:06:42.112Z"
+      },
+      {
+        "testId": "en-accent-06",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What sport is your favourite?"
+        },
+        "status": "ok",
+        "transcription": "What sports is your favorite?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 943,
+        "realtimeFactor": 0.27573099415204677,
+        "audioDurationMs": 3420,
+        "costUsd": 0.0003325,
+        "timestamp": "2026-11-23T17:06:42.114Z"
+      },
+      {
+        "testId": "en-accent-07",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever thought about writing musi"
+        },
+        "status": "ok",
+        "transcription": "Have you ever thought about writing music?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 842,
+        "realtimeFactor": 0.24619883040935672,
+        "audioDurationMs": 3420,
+        "costUsd": 0.0003325,
+        "timestamp": "2026-11-23T17:06:42.114Z"
+      },
+      {
+        "testId": "en-accent-06",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What sport is your favourite?"
+        },
+        "status": "ok",
+        "transcription": "What sports is your favorite?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 931,
+        "realtimeFactor": 0.2722222222222222,
+        "audioDurationMs": 3420,
+        "costUsd": 0.0003325,
+        "timestamp": "2026-11-23T17:06:42.178Z"
+      },
+      {
+        "testId": "en-accent-09",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What's the weather like today?"
+        },
+        "status": "ok",
+        "transcription": "What is the weather like today?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 931,
+        "realtimeFactor": 0.2510787486515642,
+        "audioDurationMs": 3708,
+        "costUsd": 0.00036050000000000003,
+        "timestamp": "2026-11-23T17:06:42.789Z"
+      },
+      {
+        "testId": "en-accent-10",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you celebrate birthdays?"
+        },
+        "status": "ok",
+        "transcription": "How do you celebrate birthdays?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 917,
+        "realtimeFactor": 0.24730312837108953,
+        "audioDurationMs": 3708,
+        "costUsd": 0.00036050000000000003,
+        "timestamp": "2026-11-23T17:06:43.111Z"
       },
       {
         "testId": "en-accent-11",
@@ -757,25 +1243,25 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a creative activity or project that you've ever wor"
+          "speaker": "prompt:Why is the sky on Earth blue?"
         },
         "status": "ok",
-        "transcription": "No, I'm not.",
-        "werRaw": 0.9375,
-        "werNormalized": 0.8235294117647058,
-        "cer": 0.8842105263157894,
-        "durationMs": 1073,
-        "realtimeFactor": 0.32753357753357754,
-        "audioDurationMs": 3276,
-        "costUsd": 0.00031849999999999994,
-        "timestamp": "2026-11-19T23:53:47.993Z"
+        "transcription": "Why is the sky on earth blue?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 918,
+        "realtimeFactor": 0.24519230769230768,
+        "audioDurationMs": 3744,
+        "costUsd": 0.000364,
+        "timestamp": "2026-11-23T17:06:43.116Z"
       },
       {
-        "testId": "en-accent-15",
+        "testId": "en-accent-09",
         "suiteId": "accented-speech-en",
         "providerId": "zoom",
         "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
+        "run": 3,
         "suiteCategory": "accented-speech",
         "suiteLanguage": "en",
         "testTags": [
@@ -784,153 +1270,18 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a visit to a cinema in your country"
+          "speaker": "prompt:What's the weather like today?"
         },
         "status": "ok",
-        "transcription": "Hey, Wario!",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.9239130434782609,
-        "durationMs": 894,
-        "realtimeFactor": 0.2586805555555556,
-        "audioDurationMs": 3456,
-        "costUsd": 0.000336,
-        "timestamp": "2026-11-19T23:53:47.995Z"
-      },
-      {
-        "testId": "en-accent-10",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe a board game, video games or card game that you've "
-        },
-        "status": "ok",
-        "transcription": "To take a rest and have a good rest.",
-        "werRaw": 0.8333333333333334,
-        "werNormalized": 0.8333333333333334,
-        "cer": 0.7528089887640449,
-        "durationMs": 1277,
-        "realtimeFactor": 0.3941358024691358,
-        "audioDurationMs": 3240,
-        "costUsd": 0.000315,
-        "timestamp": "2026-11-19T23:53:48.006Z"
-      },
-      {
-        "testId": "en-accent-14",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe a moment when you felt great joy. What made this ex"
-        },
-        "status": "ok",
-        "transcription": "Yes, I drive a vehicle.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8333333333333334,
-        "durationMs": 929,
-        "realtimeFactor": 0.26880787037037035,
-        "audioDurationMs": 3456,
-        "costUsd": 0.000336,
-        "timestamp": "2026-11-19T23:53:48.009Z"
-      },
-      {
-        "testId": "en-accent-17",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe any plants you have grown or harvested"
-        },
-        "status": "ok",
-        "transcription": "What was your favorite thing in school?",
-        "werRaw": 0.95,
-        "werNormalized": 0.95,
-        "cer": 0.7889908256880734,
-        "durationMs": 894,
-        "realtimeFactor": 0.2534013605442177,
-        "audioDurationMs": 3528,
-        "costUsd": 0.000343,
-        "timestamp": "2026-11-19T23:53:48.012Z"
-      },
-      {
-        "testId": "en-accent-16",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe a visit to an ocean, lake or river."
-        },
-        "status": "ok",
-        "transcription": "I attempt to not mark my birthday.",
-        "werRaw": 0.9166666666666666,
-        "werNormalized": 0.9166666666666666,
-        "cer": 0.8141592920353983,
-        "durationMs": 921,
-        "realtimeFactor": 0.2664930555555556,
-        "audioDurationMs": 3456,
-        "costUsd": 0.000336,
-        "timestamp": "2026-11-19T23:53:48.020Z"
-      },
-      {
-        "testId": "en-accent-19",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe how people pay for things in your society, for exam"
-        },
-        "status": "ok",
-        "transcription": "Ella Kappa Parat.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.875,
-        "durationMs": 873,
-        "realtimeFactor": 0.24744897959183673,
-        "audioDurationMs": 3528,
-        "costUsd": 0.000343,
-        "timestamp": "2026-11-19T23:53:48.026Z"
+        "transcription": "What is the weather like today?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 952,
+        "realtimeFactor": 0.25674217907227614,
+        "audioDurationMs": 3708,
+        "costUsd": 0.00036050000000000003,
+        "timestamp": "2026-11-23T17:06:43.125Z"
       },
       {
         "testId": "en-accent-12",
@@ -946,21 +1297,48 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a creative, beautiful or decorative object that you"
+          "speaker": "prompt:How much water did you drink today?"
         },
         "status": "ok",
-        "transcription": "We really don't, even though we should.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.7619047619047619,
-        "durationMs": 1000,
-        "realtimeFactor": 0.30193236714975846,
-        "audioDurationMs": 3312,
-        "costUsd": 0.00032199999999999997,
-        "timestamp": "2026-11-19T23:53:48.029Z"
+        "transcription": "I didn't drink today.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 916,
+        "realtimeFactor": 0.24232804232804234,
+        "audioDurationMs": 3780,
+        "costUsd": 0.00036749999999999993,
+        "timestamp": "2026-11-23T17:06:43.125Z"
       },
       {
-        "testId": "en-accent-18",
+        "testId": "en-accent-12",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How much water did you drink today?"
+        },
+        "status": "ok",
+        "transcription": "I didn't drink today.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 858,
+        "realtimeFactor": 0.22698412698412698,
+        "audioDurationMs": 3780,
+        "costUsd": 0.00036749999999999993,
+        "timestamp": "2026-11-23T17:06:43.126Z"
+      },
+      {
+        "testId": "en-accent-10",
         "suiteId": "accented-speech-en",
         "providerId": "zoom",
         "model": "zoom-scribe-en-pro-v2.1",
@@ -973,18 +1351,180 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe how a teacher, mentor or relative has shaped your l"
+          "speaker": "prompt:How do you celebrate birthdays?"
         },
         "status": "ok",
-        "transcription": "Canned spinach.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.9354838709677419,
-        "durationMs": 907,
-        "realtimeFactor": 0.2570861678004535,
-        "audioDurationMs": 3528,
-        "costUsd": 0.000343,
-        "timestamp": "2026-11-19T23:53:48.036Z"
+        "transcription": "How do you celebrate birthdays?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 938,
+        "realtimeFactor": 0.2529665587918015,
+        "audioDurationMs": 3708,
+        "costUsd": 0.00036050000000000003,
+        "timestamp": "2026-11-23T17:06:43.132Z"
+      },
+      {
+        "testId": "en-accent-11",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Why is the sky on Earth blue?"
+        },
+        "status": "ok",
+        "transcription": "Why is the sky on earth blue?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 923,
+        "realtimeFactor": 0.2465277777777778,
+        "audioDurationMs": 3744,
+        "costUsd": 0.000364,
+        "timestamp": "2026-11-23T17:06:43.132Z"
+      },
+      {
+        "testId": "en-accent-11",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Why is the sky on Earth blue?"
+        },
+        "status": "ok",
+        "transcription": "Why is the sky on earth blue?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 961,
+        "realtimeFactor": 0.2566773504273504,
+        "audioDurationMs": 3744,
+        "costUsd": 0.000364,
+        "timestamp": "2026-11-23T17:06:43.164Z"
+      },
+      {
+        "testId": "en-accent-10",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you celebrate birthdays?"
+        },
+        "status": "ok",
+        "transcription": "How do you celebrate birthdays?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 976,
+        "realtimeFactor": 0.2632146709816613,
+        "audioDurationMs": 3708,
+        "costUsd": 0.00036050000000000003,
+        "timestamp": "2026-11-23T17:06:43.170Z"
+      },
+      {
+        "testId": "en-accent-12",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How much water did you drink today?"
+        },
+        "status": "ok",
+        "transcription": "I didn't drink today.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1212,
+        "realtimeFactor": 0.32063492063492066,
+        "audioDurationMs": 3780,
+        "costUsd": 0.00036749999999999993,
+        "timestamp": "2026-11-23T17:06:44.099Z"
+      },
+      {
+        "testId": "en-accent-14",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are you wearing?"
+        },
+        "status": "ok",
+        "transcription": "What are you wearing?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 891,
+        "realtimeFactor": 0.22916666666666666,
+        "audioDurationMs": 3888,
+        "costUsd": 0.00037799999999999997,
+        "timestamp": "2026-11-23T17:06:44.121Z"
+      },
+      {
+        "testId": "en-accent-14",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are you wearing?"
+        },
+        "status": "ok",
+        "transcription": "What are you wearing?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 903,
+        "realtimeFactor": 0.2322530864197531,
+        "audioDurationMs": 3888,
+        "costUsd": 0.00037799999999999997,
+        "timestamp": "2026-11-23T17:06:44.123Z"
       },
       {
         "testId": "en-accent-13",
@@ -1000,18 +1540,612 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a historical event you learned about in school"
+          "speaker": "prompt:What do you do if someone farts nearby?"
         },
         "status": "ok",
-        "transcription": "My parents live upstairs from me.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.84251968503937,
-        "durationMs": 1138,
-        "realtimeFactor": 0.3292824074074074,
-        "audioDurationMs": 3456,
-        "costUsd": 0.000336,
-        "timestamp": "2026-11-19T23:53:48.211Z"
+        "transcription": "I will run in so fast.",
+        "werRaw": 0.8,
+        "werNormalized": 0.3333333333333333,
+        "cer": 0.2,
+        "durationMs": 917,
+        "realtimeFactor": 0.2380581516095535,
+        "audioDurationMs": 3852,
+        "costUsd": 0.0003745,
+        "timestamp": "2026-11-23T17:06:44.126Z"
+      },
+      {
+        "testId": "en-accent-14",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are you wearing?"
+        },
+        "status": "ok",
+        "transcription": "What are you wearing?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 916,
+        "realtimeFactor": 0.23559670781893005,
+        "audioDurationMs": 3888,
+        "costUsd": 0.00037799999999999997,
+        "timestamp": "2026-11-23T17:06:44.144Z"
+      },
+      {
+        "testId": "en-accent-13",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do if someone farts nearby?"
+        },
+        "status": "ok",
+        "transcription": "I will run in so fast.",
+        "werRaw": 0.8,
+        "werNormalized": 0.3333333333333333,
+        "cer": 0.2,
+        "durationMs": 926,
+        "realtimeFactor": 0.24039460020768433,
+        "audioDurationMs": 3852,
+        "costUsd": 0.0003745,
+        "timestamp": "2026-11-23T17:06:44.147Z"
+      },
+      {
+        "testId": "en-accent-15",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What was your favorite thing in school?"
+        },
+        "status": "ok",
+        "transcription": "Talking to the girls.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 923,
+        "realtimeFactor": 0.230980980980981,
+        "audioDurationMs": 3996,
+        "costUsd": 0.0003885,
+        "timestamp": "2026-11-23T17:06:44.153Z"
+      },
+      {
+        "testId": "en-accent-15",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What was your favorite thing in school?"
+        },
+        "status": "ok",
+        "transcription": "Talking to the girls.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 894,
+        "realtimeFactor": 0.22372372372372373,
+        "audioDurationMs": 3996,
+        "costUsd": 0.0003885,
+        "timestamp": "2026-11-23T17:06:44.159Z"
+      },
+      {
+        "testId": "en-accent-15",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What was your favorite thing in school?"
+        },
+        "status": "ok",
+        "transcription": "Talking to the girls.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 917,
+        "realtimeFactor": 0.22947947947947947,
+        "audioDurationMs": 3996,
+        "costUsd": 0.0003885,
+        "timestamp": "2026-11-23T17:06:44.177Z"
+      },
+      {
+        "testId": "en-accent-13",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do if someone farts nearby?"
+        },
+        "status": "ok",
+        "transcription": "I will run in so fast.",
+        "werRaw": 0.8,
+        "werNormalized": 0.3333333333333333,
+        "cer": 0.2,
+        "durationMs": 983,
+        "realtimeFactor": 0.2551921079958463,
+        "audioDurationMs": 3852,
+        "costUsd": 0.0003745,
+        "timestamp": "2026-11-23T17:06:44.195Z"
+      },
+      {
+        "testId": "en-accent-17",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your bedtime routine?"
+        },
+        "status": "ok",
+        "transcription": "I watch YouTube and Instagram.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 979,
+        "realtimeFactor": 0.24280753968253968,
+        "audioDurationMs": 4032,
+        "costUsd": 0.00039199999999999993,
+        "timestamp": "2026-11-23T17:06:45.212Z"
+      },
+      {
+        "testId": "en-accent-16",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Is it important to be unique?"
+        },
+        "status": "ok",
+        "transcription": "Is it important to be unique?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1019,
+        "realtimeFactor": 0.255005005005005,
+        "audioDurationMs": 3996,
+        "costUsd": 0.0003885,
+        "timestamp": "2026-11-23T17:06:45.225Z"
+      },
+      {
+        "testId": "en-accent-16",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Is it important to be unique?"
+        },
+        "status": "ok",
+        "transcription": "Is it important to be unique?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1051,
+        "realtimeFactor": 0.263013013013013,
+        "audioDurationMs": 3996,
+        "costUsd": 0.0003885,
+        "timestamp": "2026-11-23T17:06:45.234Z"
+      },
+      {
+        "testId": "en-accent-17",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your bedtime routine?"
+        },
+        "status": "ok",
+        "transcription": "I watch YouTube and Instagram.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1025,
+        "realtimeFactor": 0.2542162698412698,
+        "audioDurationMs": 4032,
+        "costUsd": 0.00039199999999999993,
+        "timestamp": "2026-11-23T17:06:45.238Z"
+      },
+      {
+        "testId": "en-accent-16",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Is it important to be unique?"
+        },
+        "status": "ok",
+        "transcription": "Is it important to be unique?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1043,
+        "realtimeFactor": 0.261011011011011,
+        "audioDurationMs": 3996,
+        "costUsd": 0.0003885,
+        "timestamp": "2026-11-23T17:06:45.248Z"
+      },
+      {
+        "testId": "en-accent-17",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your bedtime routine?"
+        },
+        "status": "ok",
+        "transcription": "I watch YouTube and Instagram.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1025,
+        "realtimeFactor": 0.2542162698412698,
+        "audioDurationMs": 4032,
+        "costUsd": 0.00039199999999999993,
+        "timestamp": "2026-11-23T17:06:45.258Z"
+      },
+      {
+        "testId": "en-accent-18",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Were you affected by the pandemic?"
+        },
+        "status": "ok",
+        "transcription": "Were you affected by the pandemic?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 995,
+        "realtimeFactor": 0.2445919370698132,
+        "audioDurationMs": 4067.9999999999995,
+        "costUsd": 0.00039549999999999996,
+        "timestamp": "2026-11-23T17:06:45.261Z"
+      },
+      {
+        "testId": "en-accent-18",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Were you affected by the pandemic?"
+        },
+        "status": "ok",
+        "transcription": "Were you affected by the pandemic?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1030,
+        "realtimeFactor": 0.2531956735496559,
+        "audioDurationMs": 4067.9999999999995,
+        "costUsd": 0.00039549999999999996,
+        "timestamp": "2026-11-23T17:06:45.269Z"
+      },
+      {
+        "testId": "en-accent-18",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Were you affected by the pandemic?"
+        },
+        "status": "ok",
+        "transcription": "Were you affected by the pandemic?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1026,
+        "realtimeFactor": 0.252212389380531,
+        "audioDurationMs": 4067.9999999999995,
+        "costUsd": 0.00039549999999999996,
+        "timestamp": "2026-11-23T17:06:45.269Z"
+      },
+      {
+        "testId": "en-accent-19",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think AI is?"
+        },
+        "status": "ok",
+        "transcription": "AI is very convenient.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 988,
+        "realtimeFactor": 0.23864734299516907,
+        "audioDurationMs": 4140,
+        "costUsd": 0.00040249999999999997,
+        "timestamp": "2026-11-23T17:06:45.269Z"
+      },
+      {
+        "testId": "en-accent-21",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What games do you like to play?"
+        },
+        "status": "ok",
+        "transcription": "What games do you like to play?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 931,
+        "realtimeFactor": 0.21550925925925926,
+        "audioDurationMs": 4320,
+        "costUsd": 0.00042,
+        "timestamp": "2026-11-23T17:06:46.288Z"
+      },
+      {
+        "testId": "en-accent-20",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you feel about swimming? Why?"
+        },
+        "status": "ok",
+        "transcription": "How do you feel about swimming? Why?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 969,
+        "realtimeFactor": 0.22810734463276836,
+        "audioDurationMs": 4248,
+        "costUsd": 0.000413,
+        "timestamp": "2026-11-23T17:06:46.295Z"
+      },
+      {
+        "testId": "en-accent-20",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you feel about swimming? Why?"
+        },
+        "status": "ok",
+        "transcription": "How do you feel about swimming? Why?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 965,
+        "realtimeFactor": 0.227165725047081,
+        "audioDurationMs": 4248,
+        "costUsd": 0.000413,
+        "timestamp": "2026-11-23T17:06:46.304Z"
+      },
+      {
+        "testId": "en-accent-19",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think AI is?"
+        },
+        "status": "ok",
+        "transcription": "AI is very convenient.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 999,
+        "realtimeFactor": 0.24130434782608695,
+        "audioDurationMs": 4140,
+        "costUsd": 0.00040249999999999997,
+        "timestamp": "2026-11-23T17:06:46.313Z"
+      },
+      {
+        "testId": "en-accent-21",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What games do you like to play?"
+        },
+        "status": "ok",
+        "transcription": "What games do you like to play?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 967,
+        "realtimeFactor": 0.2238425925925926,
+        "audioDurationMs": 4320,
+        "costUsd": 0.00042,
+        "timestamp": "2026-11-23T17:06:46.316Z"
+      },
+      {
+        "testId": "en-accent-22",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your earliest memory?"
+        },
+        "status": "ok",
+        "transcription": "My earliest memory is Nas.",
+        "werRaw": 0.75,
+        "werNormalized": 0.75,
+        "cer": 0.16666666666666666,
+        "durationMs": 953,
+        "realtimeFactor": 0.21348566308243727,
+        "audioDurationMs": 4464,
+        "costUsd": 0.00043400000000000003,
+        "timestamp": "2026-11-23T17:06:46.317Z"
       },
       {
         "testId": "en-accent-22",
@@ -1027,126 +2161,18 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe some foods that are healthy and nourishing"
+          "speaker": "prompt:What is your earliest memory?"
         },
         "status": "ok",
-        "transcription": "When I'm sick I stay in bed.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.7647058823529411,
-        "durationMs": 949,
-        "realtimeFactor": 0.26361111111111113,
-        "audioDurationMs": 3600,
-        "costUsd": 0.00035,
-        "timestamp": "2026-11-19T23:53:49.039Z"
-      },
-      {
-        "testId": "en-accent-25",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe your favorite comfort food."
-        },
-        "status": "ok",
-        "transcription": "No, I am not that good at swimming.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 1044,
-        "realtimeFactor": 0.2871287128712871,
-        "audioDurationMs": 3636,
-        "costUsd": 0.0003535,
-        "timestamp": "2026-11-19T23:53:49.140Z"
-      },
-      {
-        "testId": "en-accent-24",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe the last animal you saw."
-        },
-        "status": "ok",
-        "transcription": "No, I don't know this game.",
-        "werRaw": 0.8888888888888888,
-        "werNormalized": 0.8888888888888888,
-        "cer": 0.7446808510638298,
-        "durationMs": 1054,
-        "realtimeFactor": 0.28987898789878985,
-        "audioDurationMs": 3636,
-        "costUsd": 0.0003535,
-        "timestamp": "2026-11-19T23:53:49.150Z"
-      },
-      {
-        "testId": "en-accent-23",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe some foods that are unhealthy or should only be had"
-        },
-        "status": "ok",
-        "transcription": "What is your favorite song?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 1062,
-        "realtimeFactor": 0.295,
-        "audioDurationMs": 3600,
-        "costUsd": 0.00035,
-        "timestamp": "2026-11-19T23:53:49.155Z"
-      },
-      {
-        "testId": "en-accent-21",
-        "suiteId": "accented-speech-en",
-        "providerId": "zoom",
-        "model": "zoom-scribe-en-pro-v2.1",
-        "run": 1,
-        "suiteCategory": "accented-speech",
-        "suiteLanguage": "en",
-        "testTags": [
-          "spontaneous-speech",
-          "common-voice"
-        ],
-        "testSource": "common-voice",
-        "testMetadata": {
-          "speaker": "prompt:Describe how to cook or prepare your favourite meal."
-        },
-        "status": "ok",
-        "transcription": "Sometimes I am diffuse.",
-        "werRaw": 0.9743589743589743,
-        "werNormalized": 0.9722222222222222,
-        "cer": 0.8983957219251337,
-        "durationMs": 1065,
-        "realtimeFactor": 0.2988215488215488,
-        "audioDurationMs": 3564,
-        "costUsd": 0.00034649999999999997,
-        "timestamp": "2026-11-19T23:53:49.155Z"
+        "transcription": "My earliest memory is Nas.",
+        "werRaw": 0.75,
+        "werNormalized": 0.75,
+        "cer": 0.16666666666666666,
+        "durationMs": 963,
+        "realtimeFactor": 0.2157258064516129,
+        "audioDurationMs": 4464,
+        "costUsd": 0.00043400000000000003,
+        "timestamp": "2026-11-23T17:06:46.321Z"
       },
       {
         "testId": "en-accent-20",
@@ -1162,18 +2188,342 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe how to book a doctor's appointment in your country."
+          "speaker": "prompt:How do you feel about swimming? Why?"
         },
         "status": "ok",
-        "transcription": "Were you affected by pandemic?",
-        "werRaw": 0.9629629629629629,
-        "werNormalized": 0.9607843137254902,
-        "cer": 0.9063670411985019,
-        "durationMs": 1074,
-        "realtimeFactor": 0.30134680134680136,
-        "audioDurationMs": 3564,
-        "costUsd": 0.00034649999999999997,
-        "timestamp": "2026-11-19T23:53:49.160Z"
+        "transcription": "How do you feel about swimming? Why?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 997,
+        "realtimeFactor": 0.23469868173258004,
+        "audioDurationMs": 4248,
+        "costUsd": 0.000413,
+        "timestamp": "2026-11-23T17:06:46.321Z"
+      },
+      {
+        "testId": "en-accent-19",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think AI is?"
+        },
+        "status": "ok",
+        "transcription": "AI is very convenient.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 1014,
+        "realtimeFactor": 0.24492753623188407,
+        "audioDurationMs": 4140,
+        "costUsd": 0.00040249999999999997,
+        "timestamp": "2026-11-23T17:06:46.321Z"
+      },
+      {
+        "testId": "en-accent-21",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What games do you like to play?"
+        },
+        "status": "ok",
+        "transcription": "What games do you like to play?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 980,
+        "realtimeFactor": 0.22685185185185186,
+        "audioDurationMs": 4320,
+        "costUsd": 0.00042,
+        "timestamp": "2026-11-23T17:06:46.329Z"
+      },
+      {
+        "testId": "en-accent-25",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are your thoughts on indoor smoking"
+        },
+        "status": "ok",
+        "transcription": "What are your thoughts on indoor smoking?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.024390243902439025,
+        "durationMs": 426,
+        "realtimeFactor": 0.08964646464646464,
+        "audioDurationMs": 4752,
+        "costUsd": 0.00046199999999999995,
+        "timestamp": "2026-11-23T17:06:46.846Z"
+      },
+      {
+        "testId": "en-accent-25",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are your thoughts on indoor smoking"
+        },
+        "status": "ok",
+        "transcription": "What are your thoughts on indoor smoking?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.024390243902439025,
+        "durationMs": 483,
+        "realtimeFactor": 0.10164141414141414,
+        "audioDurationMs": 4752,
+        "costUsd": 0.00046199999999999995,
+        "timestamp": "2026-11-23T17:06:46.903Z"
+      },
+      {
+        "testId": "en-accent-22",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your earliest memory?"
+        },
+        "status": "ok",
+        "transcription": "My earliest memory is Nas.",
+        "werRaw": 0.75,
+        "werNormalized": 0.75,
+        "cer": 0.16666666666666666,
+        "durationMs": 548,
+        "realtimeFactor": 0.12275985663082438,
+        "audioDurationMs": 4464,
+        "costUsd": 0.00043400000000000003,
+        "timestamp": "2026-11-23T17:06:46.923Z"
+      },
+      {
+        "testId": "en-accent-25",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are your thoughts on indoor smoking"
+        },
+        "status": "ok",
+        "transcription": "What are your thoughts on indoor smoking?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.024390243902439025,
+        "durationMs": 768,
+        "realtimeFactor": 0.16161616161616163,
+        "audioDurationMs": 4752,
+        "costUsd": 0.00046199999999999995,
+        "timestamp": "2026-11-23T17:06:47.185Z"
+      },
+      {
+        "testId": "en-accent-24",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Should animals suffer because we like to"
+        },
+        "status": "ok",
+        "transcription": "Should animals suffer because we like to eat and meat?",
+        "werRaw": 0.2,
+        "werNormalized": 0.2,
+        "cer": 0.1346153846153846,
+        "durationMs": 778,
+        "realtimeFactor": 0.1715167548500882,
+        "audioDurationMs": 4536,
+        "costUsd": 0.00044099999999999993,
+        "timestamp": "2026-11-23T17:06:47.187Z"
+      },
+      {
+        "testId": "en-accent-23",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Describe your favorite comfort food."
+        },
+        "status": "ok",
+        "transcription": "Describe your favorite comfort food.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 804,
+        "realtimeFactor": 0.17724867724867724,
+        "audioDurationMs": 4536,
+        "costUsd": 0.00044099999999999993,
+        "timestamp": "2026-11-23T17:06:47.187Z"
+      },
+      {
+        "testId": "en-accent-23",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Describe your favorite comfort food."
+        },
+        "status": "ok",
+        "transcription": "Describe your favorite comfort food.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 830,
+        "realtimeFactor": 0.18298059964726632,
+        "audioDurationMs": 4536,
+        "costUsd": 0.00044099999999999993,
+        "timestamp": "2026-11-23T17:06:47.234Z"
+      },
+      {
+        "testId": "en-accent-24",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Should animals suffer because we like to"
+        },
+        "status": "ok",
+        "transcription": "Should animals suffer because we like to eat and meat?",
+        "werRaw": 0.2,
+        "werNormalized": 0.2,
+        "cer": 0.1346153846153846,
+        "durationMs": 941,
+        "realtimeFactor": 0.2074514991181658,
+        "audioDurationMs": 4536,
+        "costUsd": 0.00044099999999999993,
+        "timestamp": "2026-11-23T17:06:47.356Z"
+      },
+      {
+        "testId": "en-accent-23",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Describe your favorite comfort food."
+        },
+        "status": "ok",
+        "transcription": "Describe your favorite comfort food.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 982,
+        "realtimeFactor": 0.21649029982363316,
+        "audioDurationMs": 4536,
+        "costUsd": 0.00044099999999999993,
+        "timestamp": "2026-11-23T17:06:47.377Z"
+      },
+      {
+        "testId": "en-accent-24",
+        "suiteId": "accented-speech-en",
+        "providerId": "zoom",
+        "model": "zoom-scribe-en-pro-v2.1",
+        "run": 1,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Should animals suffer because we like to"
+        },
+        "status": "ok",
+        "transcription": "Should animals suffer because we like to eat and meat?",
+        "werRaw": 0.2,
+        "werNormalized": 0.2,
+        "cer": 0.1346153846153846,
+        "durationMs": 988,
+        "realtimeFactor": 0.21781305114638447,
+        "audioDurationMs": 4536,
+        "costUsd": 0.00044099999999999993,
+        "timestamp": "2026-11-23T17:06:47.397Z"
       }
     ],
     "clean-speech-commonvoice-en": [

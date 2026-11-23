@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { createConnection, createServer, type AddressInfo } from "net";
-import { join } from "path";
+import { dirname, join } from "path";
 import { describe, expect, it } from "vitest";
 import {
   acquireSpeedLock,
@@ -195,14 +195,21 @@ describe("speed lock", () => {
 });
 
 describe("speed set", () => {
-  it("has ten clips of each length, all on disk", async () => {
+  it("has ten clips of each length, all in their suites and on disk once rebuilt", async () => {
     const set = await loadSpeedSet();
     expect(set.clips).toHaveLength(30);
     for (const bucket of ["short", "medium", "long"]) {
       expect(set.clips.filter((entry) => entry.bucket === bucket)).toHaveLength(10);
     }
     expect(new Set(set.clips.map((entry) => entry.testId)).size).toBe(30);
-    for (const entry of set.clips) expect(existsSync(join(__dirname, "..", "audio", entry.audioFile))).toBe(true);
+    for (const entry of set.clips) {
+      const suite = JSON.parse(readFileSync(join(__dirname, "..", "tests", `${entry.suite}.json`), "utf-8"));
+      expect(suite.tests.some((test: { id: string; audioFile: string }) => test.id === entry.testId && test.audioFile === entry.audioFile)).toBe(true);
+      // Common Voice clips are gitignored (the dataset terms forbid re-sharing them) and exist only
+      // after curate-commonvoice-en.py has rebuilt the folder.
+      const folder = join(__dirname, "..", "audio", dirname(entry.audioFile));
+      if (existsSync(folder)) expect(existsSync(join(__dirname, "..", "audio", entry.audioFile))).toBe(true);
+    }
   });
 });
 
