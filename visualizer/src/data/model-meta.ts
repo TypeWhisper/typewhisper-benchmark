@@ -434,6 +434,7 @@ const ENTRIES: Record<string, Entry> = {
       { label: "Docs", href: "https://docs.cohere.com/docs/transcribe" },
       hf("CohereLabs/cohere-transcribe-03-2026"),
     ],
+    pr: 32,
   },
   "crispasr:fun-asr-mlt-nano-f16": {
     name: "Fun-ASR-MLT-Nano-2512 (F16)",
