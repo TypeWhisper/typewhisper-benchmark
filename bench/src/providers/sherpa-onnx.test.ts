@@ -34,3 +34,22 @@ describe("SherpaOnnxProvider GigaAM", () => {
     }
   });
 });
+
+describe("SherpaOnnxProvider Kroko", () => {
+  it("limits Kroko ASR XL to English", () => {
+    const provider = new SherpaOnnxProvider();
+    expect(provider.supportsLanguage("kroko-asr-xl-en", "en")).toBe(true);
+    expect(provider.supportsLanguage("kroko-asr-xl-en", "de")).toBe(false);
+  });
+
+  it("runs the Kroko Community packages in their seven suite languages", () => {
+    const provider = new SherpaOnnxProvider();
+    for (const model of ["kroko-community-64", "kroko-community-128"]) {
+      for (const language of ["de", "en", "es", "fr", "it", "nl", "pt"]) {
+        expect(provider.supportsLanguage(model, language)).toBe(true);
+      }
+      expect(provider.supportsLanguage(model, "ru")).toBe(false);
+      expect(provider.supportsLanguage(model, "auto")).toBe(false);
+    }
+  });
+});

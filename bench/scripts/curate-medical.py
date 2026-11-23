@@ -10,13 +10,13 @@
              bench/audio/datasets/multimed-de/test.parquet must exist:
                curl -L -o bench/audio/datasets/multimed-de/test.parquet \
                  https://huggingface.co/datasets/leduckhai/MultiMed/resolve/459d0ab6db332904f9d7b76a8baabf3333958fa8/German/test-00000-of-00001.parquet
-  dictation  Discharge-letter dictation from scripts/medical-dictation-<lang>.json (German, Dutch),
+  dictation  Discharge-letter dictation from scripts/medical-dictation-<lang>.json (German, English, Dutch),
              read by a macOS voice (needs macOS `say` and ffmpeg). The voice reads "spoken" where an
              entry has one ("amoxicilline clavulaanzuur" for "amoxicilline/clavulaanzuur").
              manifest.json next to the WAVs records what each one was recorded from; the script
              stops when an entry no longer matches its WAV.
 
-Usage: uv run --script bench/scripts/curate-medical.py [multimed] [dictation] [--language de nl]
+Usage: uv run --script bench/scripts/curate-medical.py [multimed] [dictation] [--language de en nl]
 """
 import argparse
 import json
@@ -30,9 +30,10 @@ import pyarrow.parquet as pq
 BENCH_ROOT = Path(__file__).resolve().parent.parent
 MULTIMED_PARQUET = BENCH_ROOT / "audio" / "datasets" / "multimed-de" / "test.parquet"
 TERM_PACK = BENCH_ROOT / "probe" / "terms-german-medicine.txt"
-LANGUAGE_NAMES = {"de": "German", "nl": "Dutch"}
-# Anna as in the other German TTS suites; Xander is the Dutch voice of the legal dictation
-VOICES = {"de": "Anna", "nl": "Xander"}
+LANGUAGE_NAMES = {"de": "German", "en": "English", "nl": "Dutch"}
+# Anna and Samantha as in the other German and English TTS suites; Xander is the Dutch voice of the
+# legal dictation
+VOICES = {"de": "Anna", "en": "Samantha", "nl": "Xander"}
 SPEAKING_RATE = 180
 MIN_SECONDS, MAX_SECONDS = 3.0, 20.0
 # Clips with sound annotations ("* Musik *") or bracketed remarks have references nobody says.
