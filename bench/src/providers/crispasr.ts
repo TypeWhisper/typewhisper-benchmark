@@ -34,7 +34,7 @@ const ALL_SUITE_LANGUAGES = ["en", "de", "ru", "fr", "es", "it", "pt", "nl", "au
 const ENGLISH_PLUS_DOCUMENTED = ["en", "de", "ru"];
 
 // Cohere Transcribe takes no auto-detect; TypeWhisper's plugin lists these 14 languages.
-const COHERE_LANGUAGES = ["en", "fr", "de", "es", "it", "pt", "nl", "pl", "el", "ar", "ja", "zh", "vi", "ko"];
+export const COHERE_LANGUAGES = ["en", "fr", "de", "es", "it", "pt", "nl", "pl", "el", "ar", "ja", "zh", "vi", "ko"];
 
 // Same GGUF files TypeWhisper's Cohere Transcribe (Local) plugin downloads; q5_0 is its default.
 export const CRISPASR_MODELS: Record<string, CrispAsrModel> = {
