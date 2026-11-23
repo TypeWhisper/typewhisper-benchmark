@@ -156,7 +156,7 @@ const krokoCommunity = (chunk: 64 | 128): Entry => ({
     note: `Streams in ${chunk === 64 ? "1.28" : "2.56"} s chunks; each clip is fed whole, then one chunk of silence more than Kroko's 0.66 s tail, so the last chunk is decoded. Beam search of 4 as in Kroko's runtime.`,
   },
   links: [hf("Banafo/Kroko-ASR")],
-  pr: undefined,
+  pr: 30,
 });
 
 const lfm3 = (quant: string, note?: string): Entry => ({
@@ -1251,7 +1251,7 @@ const ENTRIES: Record<string, Entry> = {
       note: "Non-streaming zipformer transducer with casing and punctuation, beam search of 4 as the model card runs it. The weights are gated, and commercial use is free only below USD 1M group revenue.",
     },
     links: [hf("Banafo/Kroko-ASR-XL-EN-Offline")],
-    pr: undefined,
+    pr: 30,
   },
   "sherpa-onnx:kroko-community-64": krokoCommunity(64),
   "sherpa-onnx:kroko-community-128": krokoCommunity(128),
