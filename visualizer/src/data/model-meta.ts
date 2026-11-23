@@ -194,7 +194,7 @@ const assemblyai = (m: Pick<Entry, "name" | "short" | "languages" | "trainedFor"
 });
 
 /** Reson8's speech-to-text models, as TypeWhisper engines (Reson8 plugin). */
-const reson8 = (m: Pick<Entry, "name" | "short" | "family" | "languages" | "trainedFor" | "tw">): Entry => ({
+const reson8 = (m: Pick<Entry, "name" | "short" | "family" | "languages" | "trainedFor" | "tw"> & Partial<Pick<Entry, "pr">>): Entry => ({
   org: "Reson8",
   license: "Proprietary API",
   runtime: "Reson8 API",
@@ -1209,6 +1209,30 @@ const ENTRIES: Record<string, Entry> = {
       status: "engine",
       plugin: "Reson8",
       note: "The plugin's live dictation path: one realtime connection, flushed at the end. Clips are streamed faster than real time.",
+    },
+  }),
+  "reson8:rumble-2": reson8({
+    name: "Rumble-2 (prerecorded)",
+    pr: 33,
+    short: "Rumble-2",
+    family: "Rumble",
+    languages: "About 60 languages",
+    trainedFor: [...EN_DE_RU, ...ROMANCE, "nl"],
+    tw: {
+      status: "candidate",
+      note: "Resonant-1's successor on every Reson8 endpoint, sent with the Reson8 plugin's query; the plugin does not offer it yet.",
+    },
+  }),
+  "reson8:rumble-2-realtime": reson8({
+    name: "Rumble-2 (realtime)",
+    pr: 33,
+    short: "Rumble-2 RT",
+    family: "Rumble",
+    languages: "About 60 languages",
+    trainedFor: [...EN_DE_RU, ...ROMANCE, "nl"],
+    tw: {
+      status: "candidate",
+      note: "Rumble-2 over the realtime endpoint, as the plugin's live dictation would stream it. Clips are streamed faster than real time.",
     },
   }),
   "reson8:rumble-2-flash": reson8({

@@ -6,7 +6,10 @@ describe("Reson8Provider", () => {
     const provider = new Reson8Provider();
     expect(provider.id).toBe("reson8");
     expect(provider.type).toBe("cloud");
-    expect(provider.models).toEqual(["resonant-1", "resonant-1-realtime", "rumble-2-flash"]);
+    expect(provider.models).toEqual(["resonant-1", "resonant-1-realtime", "rumble-2", "rumble-2-realtime", "rumble-2-flash"]);
+    expect(provider.supportsLanguage("rumble-2", "ru")).toBe(true);
+    expect(createReson8Query("rumble-2-realtime", "nl").get("model")).toBe("rumble-2");
+    expect(createReson8Query("rumble-2", "nl").get("include_words")).toBe("true");
   });
 
   it("runs Resonant-1 on its ten languages and Rumble-2-Flash on Russian too", () => {
