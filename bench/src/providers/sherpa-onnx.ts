@@ -19,8 +19,10 @@ try {
 }
 
 interface ModelEntry {
-  type: "transducer" | "canary" | "nemo-ctc";
-  dirName: string;
+  /** "online-transducer" is a streaming zipformer that sherpa-onnx's OnlineRecognizer runs. */
+  type: "transducer" | "online-transducer" | "canary" | "nemo-ctc";
+  /** Model folder; a function for single-language packages that come in one folder per language */
+  dirName: string | ((language: string) => string);
   files: {
     encoder: string;
     decoder?: string;
@@ -33,6 +35,28 @@ interface ModelEntry {
   modelType?: string;
   /** Supported languages, or null for auto-detect (multilingual transducer) */
   languages: string[] | null;
+  /** Audio per encoder chunk of a streaming model (its decode_chunk_len, in 10 ms frames) */
+  chunkSeconds?: number;
+  /** Decoding as the model card recommends; greedy search unless set */
+  decoding?: { method: "modified_beam_search"; maxActivePaths: number };
+}
+
+// Kroko's runtime (kroko-onnx, a sherpa-onnx fork) and model cards decode with a beam of 4.
+const KROKO_BEAM = { method: "modified_beam_search", maxActivePaths: 4 } as const;
+
+// The free Kroko Community packages: one streaming zipformer per language, in two chunk sizes.
+// download-sherpa-onnx-models.sh unpacks each package into the folder named here.
+export const KROKO_COMMUNITY_LANGUAGES = ["de", "en", "es", "fr", "it", "nl", "pt"];
+
+function krokoCommunity(chunk: 64 | 128): ModelEntry {
+  return {
+    type: "online-transducer",
+    dirName: (language) => `kroko-${language}-community-${chunk}-l-streaming-001`,
+    files: { encoder: "encoder.onnx", decoder: "decoder.onnx", joiner: "joiner.onnx", tokens: "tokens.txt" },
+    languages: KROKO_COMMUNITY_LANGUAGES,
+    chunkSeconds: chunk === 64 ? 1.28 : 2.56,
+    decoding: KROKO_BEAM,
+  };
 }
 
 const MODEL_REGISTRY: Record<string, ModelEntry> = {
@@ -72,6 +96,16 @@ const MODEL_REGISTRY: Record<string, ModelEntry> = {
     },
     languages: ["en", "de", "es", "fr"],
   },
+  // Kroko ASR XL, Banafo's English offline zipformer (gated licence; see the download script).
+  "kroko-asr-xl-en": {
+    type: "transducer",
+    dirName: "kroko-asr-xl-en-offline",
+    files: { encoder: "encoder.onnx", decoder: "decoder.onnx", joiner: "joiner.onnx", tokens: "tokens.txt" },
+    languages: ["en"],
+    decoding: KROKO_BEAM,
+  },
+  "kroko-community-64": krokoCommunity(64),
+  "kroko-community-128": krokoCommunity(128),
   // GigaAM v3 (Russian only). The "-punct" variants are the end-to-end models that also
   // restore punctuation and capitalization.
   "gigaam-v3-ctc": gigaAm("ctc", "sherpa-onnx-nemo-ctc-giga-am-v3-russian-2025-12-16"),
@@ -122,9 +156,18 @@ function getNumThreads(): number {
   return Math.max(1, Math.floor(cpus().length / 2));
 }
 
-function modelFilesExist(entry: ModelEntry): boolean {
-  const basePath = getSherpaOnnxModelsBasePath();
-  const dir = join(basePath, entry.dirName);
+/** The model folder for a language; single-language packages have one per language. */
+function modelDir(entry: ModelEntry, language: string): string {
+  const name = typeof entry.dirName === "function" ? entry.dirName(language) : entry.dirName;
+  return join(getSherpaOnnxModelsBasePath(), name);
+}
+
+function modelFilesExist(entry: ModelEntry, language?: string): boolean {
+  // Without a language, a per-language package counts as present when any language is.
+  if (language === undefined && typeof entry.dirName === "function") {
+    return (entry.languages ?? []).some((lang) => modelFilesExist(entry, lang));
+  }
+  const dir = modelDir(entry, language ?? "");
   if (!existsSync(dir)) return false;
   const { encoder, decoder, joiner, tokens } = entry.files;
   for (const f of [encoder, decoder, joiner, tokens]) {
@@ -149,7 +192,7 @@ export class SherpaOnnxProvider implements STTProvider {
 
   async isAvailable(): Promise<boolean> {
     if (!sherpa_onnx) return false;
-    return Object.values(MODEL_REGISTRY).some(modelFilesExist);
+    return Object.values(MODEL_REGISTRY).some((entry) => modelFilesExist(entry));
   }
 
   supportsLanguage(model: string, language: string): boolean {
@@ -189,7 +232,7 @@ export class SherpaOnnxProvider implements STTProvider {
       );
     }
 
-    if (!modelFilesExist(entry)) {
+    if (!modelFilesExist(entry, audio.language)) {
       throw new Error(
         `Model files not found for '${model}'. Run: bash scripts/download-sherpa-onnx-models.sh`
       );
@@ -201,7 +244,17 @@ export class SherpaOnnxProvider implements STTProvider {
     const wave = sherpa_onnx.readWave(audio.filePath);
     const stream = recognizer.createStream();
     stream.acceptWaveform({ sampleRate: wave.sampleRate, samples: wave.samples });
-    recognizer.decode(stream);
+    if (entry.type === "online-transducer") {
+      // Kroko's examples append 0.66 s of silence before input_finished. A streaming zipformer
+      // only decodes whole chunks, though, and the 128-L chunk is 2.56 s long, so that tail
+      // drops the last words of most clips. One chunk more of silence lets the final chunk run.
+      const tail = Math.round((0.66 + (entry.chunkSeconds ?? 0)) * wave.sampleRate);
+      stream.acceptWaveform({ sampleRate: wave.sampleRate, samples: new Float32Array(tail) });
+      stream.inputFinished();
+      while (recognizer.isReady(stream)) recognizer.decode(stream);
+    } else {
+      recognizer.decode(stream);
+    }
     const text = recognizer.getResult(stream).text;
 
     const durationMs = Math.round(performance.now() - start);
@@ -226,13 +279,13 @@ export class SherpaOnnxProvider implements STTProvider {
     model: string,
     language: string
   ): any {
-    // Only canary needs the language in its config
-    const cacheKey = entry.type === "canary" ? `${model}:${language}` : model;
+    // Canary takes the language in its config; per-language packages are one model per language.
+    const perLanguage = entry.type === "canary" || typeof entry.dirName === "function";
+    const cacheKey = perLanguage ? `${model}:${language}` : model;
     let recognizer = this.recognizerCache.get(cacheKey);
     if (recognizer) return recognizer;
 
-    const basePath = getSherpaOnnxModelsBasePath();
-    const dir = join(basePath, entry.dirName);
+    const dir = modelDir(entry, language);
     const numThreads = getNumThreads();
 
     const config: any = {
@@ -246,10 +299,11 @@ export class SherpaOnnxProvider implements STTProvider {
         provider: "cpu",
         tokens: join(dir, entry.files.tokens),
       },
-      decodingMethod: "greedy_search",
+      decodingMethod: entry.decoding?.method ?? "greedy_search",
+      ...(entry.decoding ? { maxActivePaths: entry.decoding.maxActivePaths } : {}),
     };
 
-    if (entry.type === "transducer") {
+    if (entry.type === "transducer" || entry.type === "online-transducer") {
       config.modelConfig.transducer = {
         encoder: join(dir, entry.files.encoder),
         decoder: join(dir, entry.files.decoder!),
@@ -270,7 +324,10 @@ export class SherpaOnnxProvider implements STTProvider {
       };
     }
 
-    recognizer = new sherpa_onnx.OfflineRecognizer(config);
+    recognizer =
+      entry.type === "online-transducer"
+        ? new sherpa_onnx.OnlineRecognizer(config)
+        : new sherpa_onnx.OfflineRecognizer(config);
     this.recognizerCache.set(cacheKey, recognizer);
     return recognizer;
   }

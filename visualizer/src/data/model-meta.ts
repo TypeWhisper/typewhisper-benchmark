@@ -139,6 +139,26 @@ const gigaam = (name: string, short: string, patch: Partial<Entry> = {}): Entry 
   ...patch,
 });
 
+// Banafo's free streaming zipformers, one package per language; 64-L and 128-L differ in chunk size.
+const krokoCommunity = (chunk: 64 | 128): Entry => ({
+  name: `Kroko Community ${chunk}-L (streaming)`,
+  short: `Kroko Community ${chunk}-L`,
+  org: "Banafo",
+  family: "Kroko",
+  params: "149M",
+  size: "~150 MB per language",
+  quant: "int8",
+  license: "CC BY-SA",
+  languages: "One model each for German, English, Spanish, French, Italian, Dutch, Portuguese, Hebrew, Swedish, Turkish",
+  trainedFor: ["de", "en", "es", "fr", "it", "nl", "pt"],
+  tw: {
+    status: "candidate",
+    note: `Streams in ${chunk === 64 ? "1.28" : "2.56"} s chunks; each clip is fed whole, then one chunk of silence more than Kroko's 0.66 s tail, so the last chunk is decoded. Beam search of 4 as in Kroko's runtime.`,
+  },
+  links: [hf("Banafo/Kroko-ASR")],
+  pr: 30,
+});
+
 const lfm3 = (quant: string, note?: string): Entry => ({
   name: `LFM3-Audio-2B (${quant})`,
   short: `LFM3-Audio ${quant}`,
@@ -1215,6 +1235,26 @@ const ENTRIES: Record<string, Entry> = {
     trainedFor: [...EN_DE, "fr", "es"],
     tw: { status: "reference" },
   },
+  "sherpa-onnx:kroko-asr-xl-en": {
+    name: "Kroko ASR XL English (offline)",
+    short: "Kroko XL",
+    org: "Banafo",
+    family: "Kroko",
+    params: "148M",
+    size: "~155 MB",
+    quant: "int8",
+    license: "Kroko Community Model License 2.1",
+    languages: "English",
+    trainedFor: ["en"],
+    tw: {
+      status: "candidate",
+      note: "Non-streaming zipformer transducer with casing and punctuation, beam search of 4 as the model card runs it. The weights are gated, and commercial use is free only below USD 1M group revenue.",
+    },
+    links: [hf("Banafo/Kroko-ASR-XL-EN-Offline")],
+    pr: 30,
+  },
+  "sherpa-onnx:kroko-community-64": krokoCommunity(64),
+  "sherpa-onnx:kroko-community-128": krokoCommunity(128),
   "sherpa-onnx:gigaam-v3-ctc": gigaam("GigaAM v3 CTC", "GigaAM v3 CTC"),
   "sherpa-onnx:gigaam-v3-ctc-punct": gigaam("GigaAM v3 CTC with punctuation", "GigaAM v3 CTC punct"),
   "sherpa-onnx:gigaam-v3-rnnt": gigaam("GigaAM v3 RNN-T", "GigaAM v3 RNN-T"),
