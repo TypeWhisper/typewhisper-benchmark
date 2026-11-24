@@ -20,8 +20,10 @@ interface Reson8Model {
   languages: Set<string>;
 }
 
-// Reson8's two speech-to-text models as `GET /v1/model` lists them (November 2026). Resonant-1 is the
-// default and streams; Rumble-2-Flash only takes prerecorded audio and plain parameters.
+// Reson8's speech-to-text models (docs.reson8.dev, November 2026). Resonant-1 is the default and streams;
+// Rumble-2-Flash only takes prerecorded audio and plain parameters. Rumble-2, Resonant-1's successor, takes
+// every endpoint and the same parameters (except patterns, which the plugin does not send); TypeWhisper's
+// plugin does not offer it yet.
 export const RESON8_MODELS: Record<string, Reson8Model> = {
   "resonant-1": {
     wordTimings: true,
@@ -31,6 +33,17 @@ export const RESON8_MODELS: Record<string, Reson8Model> = {
     realtime: true,
     wordTimings: true,
     languages: new Set(["de", "en", "es", "fr", "fy", "it", "nl", "pl", "pt", "sv"]),
+  },
+  "rumble-2": {
+    queryModel: "rumble-2",
+    wordTimings: true,
+    languages: new Set(["de", "en", "es", "fr", "fy", "it", "nl", "pl", "pt", "ru", "sv"]),
+  },
+  "rumble-2-realtime": {
+    queryModel: "rumble-2",
+    realtime: true,
+    wordTimings: true,
+    languages: new Set(["de", "en", "es", "fr", "fy", "it", "nl", "pl", "pt", "ru", "sv"]),
   },
   "rumble-2-flash": {
     queryModel: "rumble-2-flash",
