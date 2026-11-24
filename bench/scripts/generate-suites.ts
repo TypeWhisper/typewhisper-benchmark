@@ -15,7 +15,6 @@ const __dirname = dirname(__filename);
 const BENCH_ROOT = resolve(__dirname, "..");
 
 const CLEAN_TARGET = 25;
-const ACCENT_TARGET = 25;
 const LONGFORM_TARGET = 20;
 
 function toLangLabel(lang: string): string {
@@ -290,98 +289,6 @@ async function generateCommonVoiceSuite(): Promise<TestSuite | null> {
   });
 }
 
-interface SPSEntry {
-  audioFile: string;
-  transcription: string;
-  durationMs: number;
-  votes: number;
-  prompt: string;
-}
-
-function parseSPSTsv(content: string): SPSEntry[] {
-  return parseTabular(content)
-    .map((row) => ({
-      audioFile: row.audio_file || "",
-      transcription: (row.transcription || "").trim(),
-      durationMs: parseInt(row.duration_ms || "0", 10),
-      votes: parseInt(row.votes || "0", 10),
-      prompt: (row.prompt || "").trim(),
-    }))
-    .filter((entry) => !!entry.audioFile && !!entry.transcription);
-}
-
-async function generateAccentedSpeechSuite(
-  lang: "en" | "de"
-): Promise<TestSuite | null> {
-  const datasetDir = join(BENCH_ROOT, "audio", "datasets", `common-voice-${lang}`);
-  const tsvPath = join(datasetDir, `ss-corpus-${lang}.tsv`);
-
-  if (!existsSync(tsvPath)) {
-    console.log(
-      `Spontaneous Speech ${lang.toUpperCase()} not found at ${datasetDir}`
-    );
-    return null;
-  }
-
-  console.log(`Processing Spontaneous Speech ${lang.toUpperCase()}...`);
-  const entries = parseSPSTsv(await readFile(tsvPath, "utf-8"))
-    .filter(
-      (entry) =>
-        entry.votes >= 0 &&
-        entry.transcription.length > 10 &&
-        entry.durationMs >= 3000 &&
-        entry.durationMs <= 30000
-    )
-    .sort((left, right) => {
-      if (right.votes !== left.votes) return right.votes - left.votes;
-      if (left.durationMs !== right.durationMs) {
-        return left.durationMs - right.durationMs;
-      }
-      return left.audioFile.localeCompare(right.audioFile);
-    });
-
-  const selected = pickRoundRobin(entries, ACCENT_TARGET, (entry) => entry.prompt || entry.audioFile);
-  const audioOutDir = join(BENCH_ROOT, "audio", `samples-accent-${lang}`);
-  mkdirSync(audioOutDir, { recursive: true });
-
-  const tests: TestCase[] = [];
-
-  for (let index = 0; index < selected.length; index++) {
-    const entry = selected[index];
-    const sampleNum = String(index + 1).padStart(2, "0");
-    const mp3Path = join(datasetDir, "audios", entry.audioFile);
-    const wavFilename = `${lang}-accent-${sampleNum}.wav`;
-    const wavPath = join(audioOutDir, wavFilename);
-
-    if (!existsSync(mp3Path)) continue;
-    if (!(await ensureWav(mp3Path, wavPath))) continue;
-
-    tests.push({
-      id: `${lang}-accent-${sampleNum}`,
-      audioFile: `samples-accent-${lang}/${wavFilename}`,
-      groundTruth: entry.transcription,
-      tags: ["spontaneous-speech", "common-voice"],
-      source: "common-voice",
-      metadata: {
-        speaker: entry.prompt ? `prompt:${entry.prompt.slice(0, 60)}` : undefined,
-      },
-    });
-  }
-
-  if (tests.length === 0) return null;
-
-  return buildSuite({
-    id: `accented-speech-${lang}`,
-    name: `Accented Speech (${toLangLabel(lang)})`,
-    description:
-      "Spontaneous speech from diverse speakers (Common Voice Spontaneous Speech corpus)",
-    language: lang,
-    category: "accented-speech",
-    benchmarkTier: "core",
-    tests,
-  });
-}
-
 interface ManifestCodeSwitchingEntry {
   id: string;
   segments: Array<{ text: string; voice: string; lang: string }>;
@@ -570,8 +477,6 @@ async function main() {
   const staticSuites = await Promise.all([
     generateLibriSpeechSuite(),
     generateCommonVoiceSuite(),
-    generateAccentedSpeechSuite("en"),
-    generateAccentedSpeechSuite("de"),
     generatePunctuationFormattingSuite("de"),
     generatePunctuationFormattingSuite("en"),
     generateNumberFormattingSuite("de"),

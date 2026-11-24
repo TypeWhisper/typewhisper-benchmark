@@ -3,14 +3,14 @@
     "providerId": "mlx-audio",
     "model": "sophea-canary",
     "providerType": "local",
-    "avgWerNormalized": 0.6646021031196332,
-    "avgCer": 0.5464838916917195,
+    "avgWerNormalized": 0.6345398824675158,
+    "avgCer": 0.5073487005506084,
     "avgPunctuationScore": 0.6111746031746031,
     "avgFormattingScore": 0.7489707862370403,
-    "avgRealtimeFactor": 0.0336076707596767,
-    "avgDurationMs": 217.28795811518324,
+    "avgRealtimeFactor": 0.03292293133040452,
+    "avgDurationMs": 202.36303317535544,
     "costPerHourAudio": 0,
-    "totalTests": 980,
+    "totalTests": 1080,
     "errorCount": 0,
     "errorRate": 0,
     "skipCount": 25
@@ -258,18 +258,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Fährst du im Urlaub lieber an neue oder an bekannte Orte?"
+          "speaker": "prompt:Kochst du gerne und wenn ja, was?"
         },
         "status": "ok",
-        "transcription": "Which color do you like most and why?",
+        "transcription": "Cooks you like, and if y'all, what?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.7678571428571429,
-        "durationMs": 115,
-        "realtimeFactor": 0.034348864994026285,
-        "audioDurationMs": 3348,
+        "cer": 0.6451612903225806,
+        "durationMs": 114,
+        "realtimeFactor": 0.03518518518518519,
+        "audioDurationMs": 3240,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:34.416Z"
+        "timestamp": "2026-11-23T19:15:46.468Z"
+      },
+      {
+        "testId": "de-accent-01",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Kochst du gerne und wenn ja, was?"
+        },
+        "status": "ok",
+        "transcription": "Cooks you like, and if y'all, what?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6451612903225806,
+        "durationMs": 92,
+        "realtimeFactor": 0.028395061728395062,
+        "audioDurationMs": 3240,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:46.585Z"
+      },
+      {
+        "testId": "de-accent-01",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Kochst du gerne und wenn ja, was?"
+        },
+        "status": "ok",
+        "transcription": "Cooks you like, and if y'all, what?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6451612903225806,
+        "durationMs": 91,
+        "realtimeFactor": 0.02808641975308642,
+        "audioDurationMs": 3240,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:46.699Z"
       },
       {
         "testId": "de-accent-02",
@@ -285,18 +339,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Kochst du gerne und wenn ja, was?"
+          "speaker": "prompt:Wenn Sie ein weiteres Zimmer geschenkt b"
         },
         "status": "ok",
-        "transcription": "If you were an animal, which of us would you be, and why?",
+        "transcription": "I would make it a hobby-camber.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.8653846153846154,
-        "durationMs": 125,
-        "realtimeFactor": 0.029425612052730695,
-        "audioDurationMs": 4248,
+        "cer": 0.6410256410256411,
+        "durationMs": 86,
+        "realtimeFactor": 0.02654320987654321,
+        "audioDurationMs": 3240,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:34.572Z"
+        "timestamp": "2026-11-23T19:15:46.809Z"
+      },
+      {
+        "testId": "de-accent-02",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn Sie ein weiteres Zimmer geschenkt b"
+        },
+        "status": "ok",
+        "transcription": "I would make it a hobby-camber.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6410256410256411,
+        "durationMs": 86,
+        "realtimeFactor": 0.02654320987654321,
+        "audioDurationMs": 3240,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:46.920Z"
+      },
+      {
+        "testId": "de-accent-02",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn Sie ein weiteres Zimmer geschenkt b"
+        },
+        "status": "ok",
+        "transcription": "I would make it a hobby-camber.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6410256410256411,
+        "durationMs": 86,
+        "realtimeFactor": 0.02654320987654321,
+        "audioDurationMs": 3240,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:47.030Z"
       },
       {
         "testId": "de-accent-03",
@@ -312,18 +420,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Verlieren Sie Regenschirme oder kommt das nicht vor?"
+          "speaker": "prompt:Wie siehst du die Zukunft der künstliche"
         },
         "status": "ok",
-        "transcription": "First your vacation better at new or at known places",
+        "transcription": "Hesperia's sceptical.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.7669172932330827,
-        "durationMs": 104,
-        "realtimeFactor": 0.023875114784205693,
-        "audioDurationMs": 4356,
+        "cer": 0.6363636363636364,
+        "durationMs": 75,
+        "realtimeFactor": 0.022893772893772892,
+        "audioDurationMs": 3276,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:34.704Z"
+        "timestamp": "2026-11-23T19:15:47.129Z"
+      },
+      {
+        "testId": "de-accent-03",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wie siehst du die Zukunft der künstliche"
+        },
+        "status": "ok",
+        "transcription": "Hesperia's sceptical.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6363636363636364,
+        "durationMs": 75,
+        "realtimeFactor": 0.022893772893772892,
+        "audioDurationMs": 3276,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:47.228Z"
+      },
+      {
+        "testId": "de-accent-03",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wie siehst du die Zukunft der künstliche"
+        },
+        "status": "ok",
+        "transcription": "Hesperia's sceptical.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6363636363636364,
+        "durationMs": 75,
+        "realtimeFactor": 0.022893772893772892,
+        "audioDurationMs": 3276,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:47.327Z"
       },
       {
         "testId": "de-accent-04",
@@ -339,18 +501,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Warum denkst du, ist es wichtig, verschiedene historische Pe"
+          "speaker": "prompt:Welche Farbe magst du am meisten und war"
         },
         "status": "ok",
-        "transcription": "I cook very gerne and very different things.",
+        "transcription": "Which color do you like most and why?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.875,
-        "durationMs": 89,
-        "realtimeFactor": 0.016592095451155853,
-        "audioDurationMs": 5364,
+        "cer": 0.6666666666666666,
+        "durationMs": 76,
+        "realtimeFactor": 0.022700119474313024,
+        "audioDurationMs": 3348,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:34.821Z"
+        "timestamp": "2026-11-23T19:15:47.426Z"
+      },
+      {
+        "testId": "de-accent-04",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Farbe magst du am meisten und war"
+        },
+        "status": "ok",
+        "transcription": "Which color do you like most and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6666666666666666,
+        "durationMs": 78,
+        "realtimeFactor": 0.023297491039426525,
+        "audioDurationMs": 3348,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:47.528Z"
+      },
+      {
+        "testId": "de-accent-04",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Farbe magst du am meisten und war"
+        },
+        "status": "ok",
+        "transcription": "Which color do you like most and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6666666666666666,
+        "durationMs": 77,
+        "realtimeFactor": 0.022998805256869773,
+        "audioDurationMs": 3348,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:47.629Z"
       },
       {
         "testId": "de-accent-05",
@@ -366,18 +582,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Warum ist es wichtig, verschiedene Hobbys zu haben?"
+          "speaker": "prompt:Gehen Sie bewusst mit dem Verbrauch von "
         },
         "status": "ok",
-        "transcription": "I would like to learn new Greek because my sister in Greece lives.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.7727272727272727,
-        "durationMs": 141,
-        "realtimeFactor": 0.025106837606837608,
-        "audioDurationMs": 5616,
+        "transcription": "I consume consciously actually not so much water",
+        "werRaw": 0.875,
+        "werNormalized": 0.875,
+        "cer": 0.6545454545454545,
+        "durationMs": 87,
+        "realtimeFactor": 0.025173611111111112,
+        "audioDurationMs": 3456,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:34.993Z"
+        "timestamp": "2026-11-23T19:15:47.741Z"
+      },
+      {
+        "testId": "de-accent-05",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Gehen Sie bewusst mit dem Verbrauch von "
+        },
+        "status": "ok",
+        "transcription": "I consume consciously actually not so much water",
+        "werRaw": 0.875,
+        "werNormalized": 0.875,
+        "cer": 0.6545454545454545,
+        "durationMs": 90,
+        "realtimeFactor": 0.026041666666666668,
+        "audioDurationMs": 3456,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:47.854Z"
+      },
+      {
+        "testId": "de-accent-05",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Gehen Sie bewusst mit dem Verbrauch von "
+        },
+        "status": "ok",
+        "transcription": "I consume consciously actually not so much water",
+        "werRaw": 0.875,
+        "werNormalized": 0.875,
+        "cer": 0.6545454545454545,
+        "durationMs": 90,
+        "realtimeFactor": 0.026041666666666668,
+        "audioDurationMs": 3456,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:47.973Z"
       },
       {
         "testId": "de-accent-06",
@@ -393,18 +663,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Was ist dein Lieblingsgetränk und warum?"
+          "speaker": "prompt:Welchen Sport machst du am liebsten und "
         },
         "status": "ok",
-        "transcription": "I like mostly the autumn, because then everything just a bit backwards folds.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8122448979591836,
-        "durationMs": 150,
-        "realtimeFactor": 0.020833333333333332,
-        "audioDurationMs": 7200,
+        "transcription": "Am I liking garcelyn, I 'm mag sport not.",
+        "werRaw": 0.75,
+        "werNormalized": 0.75,
+        "cer": 0.40476190476190477,
+        "durationMs": 108,
+        "realtimeFactor": 0.0297029702970297,
+        "audioDurationMs": 3636,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:35.173Z"
+        "timestamp": "2026-11-23T19:15:48.106Z"
+      },
+      {
+        "testId": "de-accent-06",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welchen Sport machst du am liebsten und "
+        },
+        "status": "ok",
+        "transcription": "Am I liking garcelyn, I 'm mag sport not.",
+        "werRaw": 0.75,
+        "werNormalized": 0.75,
+        "cer": 0.40476190476190477,
+        "durationMs": 106,
+        "realtimeFactor": 0.029152915291529153,
+        "audioDurationMs": 3636,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:48.237Z"
+      },
+      {
+        "testId": "de-accent-06",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welchen Sport machst du am liebsten und "
+        },
+        "status": "ok",
+        "transcription": "Am I liking garcelyn, I 'm mag sport not.",
+        "werRaw": 0.75,
+        "werNormalized": 0.75,
+        "cer": 0.40476190476190477,
+        "durationMs": 117,
+        "realtimeFactor": 0.03217821782178218,
+        "audioDurationMs": 3636,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:48.379Z"
       },
       {
         "testId": "de-accent-07",
@@ -420,18 +744,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Was ist für dich das Wichtigste in einer Beziehung?"
+          "speaker": "prompt:Wie siehst du die Zukunft deiner Branche"
         },
         "status": "ok",
-        "transcription": "In a relationship, for me, the most important thing is the honesty of my partner.",
+        "transcription": "How do you see the future of your branch?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.6962025316455697,
-        "durationMs": 149,
-        "realtimeFactor": 0.02018970189701897,
-        "audioDurationMs": 7380,
+        "cer": 0.65,
+        "durationMs": 88,
+        "realtimeFactor": 0.02328042328042328,
+        "audioDurationMs": 3780,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:35.352Z"
+        "timestamp": "2026-11-23T19:15:48.491Z"
+      },
+      {
+        "testId": "de-accent-07",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wie siehst du die Zukunft deiner Branche"
+        },
+        "status": "ok",
+        "transcription": "How do you see the future of your branch?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.65,
+        "durationMs": 89,
+        "realtimeFactor": 0.023544973544973546,
+        "audioDurationMs": 3780,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:48.605Z"
+      },
+      {
+        "testId": "de-accent-07",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wie siehst du die Zukunft deiner Branche"
+        },
+        "status": "ok",
+        "transcription": "How do you see the future of your branch?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.65,
+        "durationMs": 87,
+        "realtimeFactor": 0.023015873015873017,
+        "audioDurationMs": 3780,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:48.716Z"
       },
       {
         "testId": "de-accent-08",
@@ -447,18 +825,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Art von Essen magst du am meisten und warum?"
+          "speaker": "prompt:Welche Art von Essen magst du am meisten"
         },
         "status": "ok",
-        "transcription": "I like mostly the roux sweeps, and that's because they sound wonderful when they come back after winter.",
+        "transcription": "Which kind of food do you like most and why?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 211,
-        "realtimeFactor": 0.024835216572504707,
-        "audioDurationMs": 8496,
+        "cer": 0.68,
+        "durationMs": 98,
+        "realtimeFactor": 0.024747474747474747,
+        "audioDurationMs": 3960,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:35.591Z"
+        "timestamp": "2026-11-23T19:15:48.839Z"
+      },
+      {
+        "testId": "de-accent-08",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Essen magst du am meisten"
+        },
+        "status": "ok",
+        "transcription": "Which kind of food do you like most and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.68,
+        "durationMs": 100,
+        "realtimeFactor": 0.025252525252525252,
+        "audioDurationMs": 3960,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:48.963Z"
+      },
+      {
+        "testId": "de-accent-08",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Essen magst du am meisten"
+        },
+        "status": "ok",
+        "transcription": "Which kind of food do you like most and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.68,
+        "durationMs": 92,
+        "realtimeFactor": 0.023232323232323233,
+        "audioDurationMs": 3960,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:49.080Z"
       },
       {
         "testId": "de-accent-09",
@@ -474,18 +906,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Art von Essen würdest du gerne einmal probieren und w"
+          "speaker": "prompt:Welche Fähigkeiten sind deiner Meinung n"
         },
         "status": "ok",
-        "transcription": "I would like to see more tolerance, and especially more dialogue between different groups and people.",
+        "transcription": "social and analytical abilities",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.8041237113402062,
-        "durationMs": 170,
-        "realtimeFactor": 0.01927437641723356,
-        "audioDurationMs": 8820,
+        "cer": 0.4,
+        "durationMs": 71,
+        "realtimeFactor": 0.01714975845410628,
+        "audioDurationMs": 4140,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:35.791Z"
+        "timestamp": "2026-11-23T19:15:49.175Z"
+      },
+      {
+        "testId": "de-accent-09",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Fähigkeiten sind deiner Meinung n"
+        },
+        "status": "ok",
+        "transcription": "social and analytical abilities",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.4,
+        "durationMs": 71,
+        "realtimeFactor": 0.01714975845410628,
+        "audioDurationMs": 4140,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:49.270Z"
+      },
+      {
+        "testId": "de-accent-09",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Fähigkeiten sind deiner Meinung n"
+        },
+        "status": "ok",
+        "transcription": "social and analytical abilities",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.4,
+        "durationMs": 71,
+        "realtimeFactor": 0.01714975845410628,
+        "audioDurationMs": 4140,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:49.363Z"
       },
       {
         "testId": "de-accent-10",
@@ -501,18 +987,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Art von Sport würdest du gerne einmal ausprobieren un"
+          "speaker": "prompt:Wenn du ein Tier wärst, welches wärst du"
         },
         "status": "ok",
-        "transcription": "I would like to try authentic Japanese food, because I imagine it very fine.",
+        "transcription": "If you were an animal, which of us would you be, and why?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.9206349206349206,
-        "durationMs": 164,
-        "realtimeFactor": 0.017454235845040442,
-        "audioDurationMs": 9396,
+        "cer": 0.8163265306122449,
+        "durationMs": 111,
+        "realtimeFactor": 0.026129943502824857,
+        "audioDurationMs": 4248,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:35.984Z"
+        "timestamp": "2026-11-23T19:15:49.499Z"
+      },
+      {
+        "testId": "de-accent-10",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn du ein Tier wärst, welches wärst du"
+        },
+        "status": "ok",
+        "transcription": "If you were an animal, which of us would you be, and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.8163265306122449,
+        "durationMs": 118,
+        "realtimeFactor": 0.027777777777777776,
+        "audioDurationMs": 4248,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:49.640Z"
+      },
+      {
+        "testId": "de-accent-10",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn du ein Tier wärst, welches wärst du"
+        },
+        "status": "ok",
+        "transcription": "If you were an animal, which of us would you be, and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.8163265306122449,
+        "durationMs": 112,
+        "realtimeFactor": 0.026365348399246705,
+        "audioDurationMs": 4248,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:49.776Z"
       },
       {
         "testId": "de-accent-11",
@@ -528,18 +1068,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Farbe magst du am meisten und warum?"
+          "speaker": "prompt:Fährst du im Urlaub lieber an neue oder "
         },
         "status": "ok",
-        "transcription": "I live in the near nearness of the North Sea coast, and I feel there's always wind, sometimes more, sometimes less.",
+        "transcription": "First your vacation better at new or at known places",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 222,
-        "realtimeFactor": 0.01921079958463136,
-        "audioDurationMs": 11556,
+        "cer": 0.625,
+        "durationMs": 97,
+        "realtimeFactor": 0.02226813590449954,
+        "audioDurationMs": 4356,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:36.235Z"
+        "timestamp": "2026-11-23T19:15:49.898Z"
+      },
+      {
+        "testId": "de-accent-11",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Fährst du im Urlaub lieber an neue oder "
+        },
+        "status": "ok",
+        "transcription": "First your vacation better at new or at known places",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.625,
+        "durationMs": 99,
+        "realtimeFactor": 0.022727272727272728,
+        "audioDurationMs": 4356,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:50.020Z"
+      },
+      {
+        "testId": "de-accent-11",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Fährst du im Urlaub lieber an neue oder "
+        },
+        "status": "ok",
+        "transcription": "First your vacation better at new or at known places",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.625,
+        "durationMs": 101,
+        "realtimeFactor": 0.023186409550045913,
+        "audioDurationMs": 4356,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:50.146Z"
       },
       {
         "testId": "de-accent-12",
@@ -555,18 +1149,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Fähigkeiten sind deiner Meinung nach am wichtigsten f"
+          "speaker": "prompt:Wenn du eine Milliarde Euro hättest, was"
         },
         "status": "ok",
-        "transcription": "I don't do like sports, but if I did, then it would be dancing.",
+        "transcription": "If you had a billion euros, what would you do with it?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.7647058823529411,
-        "durationMs": 154,
-        "realtimeFactor": 0.02487080103359173,
-        "audioDurationMs": 6192,
+        "cer": 0.6825396825396826,
+        "durationMs": 116,
+        "realtimeFactor": 0.025777777777777778,
+        "audioDurationMs": 4500,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:36.416Z"
+        "timestamp": "2026-11-23T19:15:50.286Z"
+      },
+      {
+        "testId": "de-accent-12",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn du eine Milliarde Euro hättest, was"
+        },
+        "status": "ok",
+        "transcription": "If you had a billion euros, what would you do with it?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6825396825396826,
+        "durationMs": 112,
+        "realtimeFactor": 0.024888888888888887,
+        "audioDurationMs": 4500,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:50.423Z"
+      },
+      {
+        "testId": "de-accent-12",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn du eine Milliarde Euro hättest, was"
+        },
+        "status": "ok",
+        "transcription": "If you had a billion euros, what would you do with it?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6825396825396826,
+        "durationMs": 112,
+        "realtimeFactor": 0.024888888888888887,
+        "audioDurationMs": 4500,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:50.559Z"
       },
       {
         "testId": "de-accent-13",
@@ -582,18 +1230,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Jahreszeit magst du am liebsten und warum?"
+          "speaker": "prompt:Welches Werkzeug benutzt du gerne im Hau"
         },
         "status": "ok",
-        "transcription": "My favorite drink is mineral water, quite normal mineral water, sprudel water with carbon dioxide. I mean, I would also drink it without carbon dioxide, but with sprudel, I don't know, it's a goodness thing. But water is, even if you say, oh, that doesn't have any taste in itself, my favorite drink is water.",
+        "transcription": "Which tool do you like to use in the household, and why?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 622,
-        "realtimeFactor": 0.028139703221136445,
-        "audioDurationMs": 22104,
+        "cer": 0.7090909090909091,
+        "durationMs": 114,
+        "realtimeFactor": 0.02513227513227513,
+        "audioDurationMs": 4536,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:37.070Z"
+        "timestamp": "2026-11-23T19:15:50.698Z"
+      },
+      {
+        "testId": "de-accent-13",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welches Werkzeug benutzt du gerne im Hau"
+        },
+        "status": "ok",
+        "transcription": "Which tool do you like to use in the household, and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7090909090909091,
+        "durationMs": 112,
+        "realtimeFactor": 0.024691358024691357,
+        "audioDurationMs": 4536,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:50.832Z"
+      },
+      {
+        "testId": "de-accent-13",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welches Werkzeug benutzt du gerne im Hau"
+        },
+        "status": "ok",
+        "transcription": "Which tool do you like to use in the household, and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7090909090909091,
+        "durationMs": 116,
+        "realtimeFactor": 0.025573192239858905,
+        "audioDurationMs": 4536,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:50.972Z"
       },
       {
         "testId": "de-accent-14",
@@ -609,18 +1311,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Sprache würdest du gerne lernen und warum?"
+          "speaker": "prompt:Wohin fährst du am liebsten in den Urlau"
         },
         "status": "ok",
-        "transcription": "Which kind of food do you like most and why?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.7375,
-        "durationMs": 104,
-        "realtimeFactor": 0.026262626262626262,
-        "audioDurationMs": 3960,
+        "transcription": "I personally drive 'em liebsten ans meer!",
+        "werRaw": 0.7142857142857143,
+        "werNormalized": 0.5714285714285714,
+        "cer": 0.2926829268292683,
+        "durationMs": 92,
+        "realtimeFactor": 0.020122484689413824,
+        "audioDurationMs": 4572,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:37.203Z"
+        "timestamp": "2026-11-23T19:15:51.087Z"
+      },
+      {
+        "testId": "de-accent-14",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wohin fährst du am liebsten in den Urlau"
+        },
+        "status": "ok",
+        "transcription": "I personally drive 'em liebsten ans meer!",
+        "werRaw": 0.7142857142857143,
+        "werNormalized": 0.5714285714285714,
+        "cer": 0.2926829268292683,
+        "durationMs": 92,
+        "realtimeFactor": 0.020122484689413824,
+        "audioDurationMs": 4572,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:51.203Z"
+      },
+      {
+        "testId": "de-accent-14",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wohin fährst du am liebsten in den Urlau"
+        },
+        "status": "ok",
+        "transcription": "I personally drive 'em liebsten ans meer!",
+        "werRaw": 0.7142857142857143,
+        "werNormalized": 0.5714285714285714,
+        "cer": 0.2926829268292683,
+        "durationMs": 95,
+        "realtimeFactor": 0.02077865266841645,
+        "audioDurationMs": 4572,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:51.322Z"
       },
       {
         "testId": "de-accent-15",
@@ -636,18 +1392,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche gesellschaftlichen Veränderungen würdest du gerne seh"
+          "speaker": "prompt:Magst du lieber den Herbst oder den Früh"
         },
         "status": "ok",
-        "transcription": "Which tool do you like to use in the household, and why?",
+        "transcription": "I love the summer, I like the autumn and the spring about the same amount.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.7522935779816514,
-        "durationMs": 120,
-        "realtimeFactor": 0.026455026455026454,
-        "audioDurationMs": 4536,
+        "cer": 0.6986301369863014,
+        "durationMs": 142,
+        "realtimeFactor": 0.030110262934690414,
+        "audioDurationMs": 4716,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:37.353Z"
+        "timestamp": "2026-11-23T19:15:51.487Z"
+      },
+      {
+        "testId": "de-accent-15",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Magst du lieber den Herbst oder den Früh"
+        },
+        "status": "ok",
+        "transcription": "I love the summer, I like the autumn and the spring about the same amount.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6986301369863014,
+        "durationMs": 144,
+        "realtimeFactor": 0.030534351145038167,
+        "audioDurationMs": 4716,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:51.655Z"
+      },
+      {
+        "testId": "de-accent-15",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Magst du lieber den Herbst oder den Früh"
+        },
+        "status": "ok",
+        "transcription": "I love the summer, I like the autumn and the spring about the same amount.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6986301369863014,
+        "durationMs": 150,
+        "realtimeFactor": 0.031806615776081425,
+        "audioDurationMs": 4716,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:51.831Z"
       },
       {
         "testId": "de-accent-16",
@@ -663,18 +1473,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welchen Sport machst du am liebsten und warum?"
+          "speaker": "prompt:Wie ist das Wetter in deiner Lieblingsst"
         },
         "status": "ok",
-        "transcription": "What kind of sport would you like to try out and why?",
-        "werRaw": 1,
-        "werNormalized": 0.9333333333333333,
-        "cer": 0.7125,
-        "durationMs": 105,
-        "realtimeFactor": 0.018459915611814346,
-        "audioDurationMs": 5688,
+        "transcription": "In my favorite city, regnets far too much, the weather nerves me so totally.",
+        "werRaw": 0.9285714285714286,
+        "werNormalized": 0.9285714285714286,
+        "cer": 0.55,
+        "durationMs": 148,
+        "realtimeFactor": 0.030910609857978277,
+        "audioDurationMs": 4788,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:37.490Z"
+        "timestamp": "2026-11-23T19:15:52.007Z"
+      },
+      {
+        "testId": "de-accent-16",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wie ist das Wetter in deiner Lieblingsst"
+        },
+        "status": "ok",
+        "transcription": "In my favorite city, regnets far too much, the weather nerves me so totally.",
+        "werRaw": 0.9285714285714286,
+        "werNormalized": 0.9285714285714286,
+        "cer": 0.55,
+        "durationMs": 144,
+        "realtimeFactor": 0.03007518796992481,
+        "audioDurationMs": 4788,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:52.178Z"
+      },
+      {
+        "testId": "de-accent-16",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wie ist das Wetter in deiner Lieblingsst"
+        },
+        "status": "ok",
+        "transcription": "In my favorite city, regnets far too much, the weather nerves me so totally.",
+        "werRaw": 0.9285714285714286,
+        "werNormalized": 0.9285714285714286,
+        "cer": 0.55,
+        "durationMs": 144,
+        "realtimeFactor": 0.03007518796992481,
+        "audioDurationMs": 4788,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:52.348Z"
       },
       {
         "testId": "de-accent-17",
@@ -690,18 +1554,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welches Tier magst du am meisten und warum?"
+          "speaker": "prompt:Welche Art von Hobby würdest du gerne ei"
         },
         "status": "ok",
-        "transcription": "The fall of the Berlin Wall, because it was the end of a decades-long rechtsherrschdict.",
+        "transcription": "Uh, I'll say false my spirit, false my spirit, absolutely not.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.7154471544715447,
-        "durationMs": 197,
-        "realtimeFactor": 0.024106705824767496,
-        "audioDurationMs": 8172.000000000001,
+        "cer": 0.6290322580645161,
+        "durationMs": 137,
+        "realtimeFactor": 0.028613199665831243,
+        "audioDurationMs": 4788,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:37.719Z"
+        "timestamp": "2026-11-23T19:15:52.511Z"
+      },
+      {
+        "testId": "de-accent-17",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Hobby würdest du gerne ei"
+        },
+        "status": "ok",
+        "transcription": "Uh, I'll say false my spirit, false my spirit, absolutely not.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6290322580645161,
+        "durationMs": 139,
+        "realtimeFactor": 0.029030910609857977,
+        "audioDurationMs": 4788,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:52.675Z"
+      },
+      {
+        "testId": "de-accent-17",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Hobby würdest du gerne ei"
+        },
+        "status": "ok",
+        "transcription": "Uh, I'll say false my spirit, false my spirit, absolutely not.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6290322580645161,
+        "durationMs": 137,
+        "realtimeFactor": 0.028613199665831243,
+        "audioDurationMs": 4788,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:52.837Z"
       },
       {
         "testId": "de-accent-18",
@@ -717,18 +1635,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welches Werkzeug benutzt du gerne im Haushalt und warum?"
+          "speaker": "prompt:Hast du eine Lieblingsfarbe?"
         },
         "status": "ok",
-        "transcription": "The social change I would wish for would be absolute discrimination freedom and a peaceful coexistence.",
+        "transcription": "No, I'm like everything depending on what sort of mood I have.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 204,
-        "realtimeFactor": 0.016617790811339198,
-        "audioDurationMs": 12276,
+        "cer": 0.7424242424242424,
+        "durationMs": 123,
+        "realtimeFactor": 0.024231678486997636,
+        "audioDurationMs": 5076,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:37.953Z"
+        "timestamp": "2026-11-23T19:15:52.984Z"
+      },
+      {
+        "testId": "de-accent-18",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Hast du eine Lieblingsfarbe?"
+        },
+        "status": "ok",
+        "transcription": "No, I'm like everything depending on what sort of mood I have.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7424242424242424,
+        "durationMs": 123,
+        "realtimeFactor": 0.024231678486997636,
+        "audioDurationMs": 5076,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:53.131Z"
+      },
+      {
+        "testId": "de-accent-18",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Hast du eine Lieblingsfarbe?"
+        },
+        "status": "ok",
+        "transcription": "No, I'm like everything depending on what sort of mood I have.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7424242424242424,
+        "durationMs": 126,
+        "realtimeFactor": 0.024822695035460994,
+        "audioDurationMs": 5076,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:53.282Z"
       },
       {
         "testId": "de-accent-19",
@@ -744,18 +1716,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welches historische Ereignis hat dich am meisten beeinflusst"
+          "speaker": "prompt:Welche Art von Kunst würdest du gerne ei"
         },
         "status": "ok",
-        "transcription": "Honestly, I don't think it's important to study historical personalities, I think it's important to understand structures, but people as personalities are, I think, not so important, at least not for history.",
+        "transcription": "I would like to know calligraphy.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 361,
-        "realtimeFactor": 0.02289446981227803,
-        "audioDurationMs": 15768,
+        "cer": 0.8125,
+        "durationMs": 87,
+        "realtimeFactor": 0.0168997668997669,
+        "audioDurationMs": 5148,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:38.344Z"
+        "timestamp": "2026-11-23T19:15:53.397Z"
+      },
+      {
+        "testId": "de-accent-19",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Kunst würdest du gerne ei"
+        },
+        "status": "ok",
+        "transcription": "I would like to know calligraphy.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.8125,
+        "durationMs": 87,
+        "realtimeFactor": 0.0168997668997669,
+        "audioDurationMs": 5148,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:53.510Z"
+      },
+      {
+        "testId": "de-accent-19",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Kunst würdest du gerne ei"
+        },
+        "status": "ok",
+        "transcription": "I would like to know calligraphy.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.8125,
+        "durationMs": 90,
+        "realtimeFactor": 0.017482517482517484,
+        "audioDurationMs": 5148,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:53.627Z"
       },
       {
         "testId": "de-accent-20",
@@ -771,18 +1797,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Wenn du ein Tier wärst, welches wärst du und warum?"
+          "speaker": "prompt:Wenn du für einen Tag unsichtbar wärst, "
         },
         "status": "ok",
-        "transcription": "For me, future for work is more in hand work than in digital. That means those who can now create whatever they want to create from hand, they have a great future for work.",
+        "transcription": "If you were for one day invisible, what would you do?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 302,
-        "realtimeFactor": 0.012749071259709558,
-        "audioDurationMs": 23688,
+        "cer": 0.7017543859649122,
+        "durationMs": 110,
+        "realtimeFactor": 0.021367521367521368,
+        "audioDurationMs": 5148,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:38.678Z"
+        "timestamp": "2026-11-23T19:15:53.767Z"
+      },
+      {
+        "testId": "de-accent-20",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn du für einen Tag unsichtbar wärst, "
+        },
+        "status": "ok",
+        "transcription": "If you were for one day invisible, what would you do?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7017543859649122,
+        "durationMs": 110,
+        "realtimeFactor": 0.021367521367521368,
+        "audioDurationMs": 5148,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:53.905Z"
+      },
+      {
+        "testId": "de-accent-20",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Wenn du für einen Tag unsichtbar wärst, "
+        },
+        "status": "ok",
+        "transcription": "If you were for one day invisible, what would you do?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7017543859649122,
+        "durationMs": 108,
+        "realtimeFactor": 0.02097902097902098,
+        "audioDurationMs": 5148,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:54.038Z"
       },
       {
         "testId": "de-accent-21",
@@ -798,18 +1878,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Wie ist das Wetter in deiner Lieblingsstadt?"
+          "speaker": "prompt:Was ist deine Lieblingsfarbe? Und wenn d"
         },
         "status": "ok",
-        "transcription": "Which skills are your opinion most important for professional success?",
+        "transcription": "I have no favorite color, I like all colors, depending on what sort of mood I have.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.797752808988764,
-        "durationMs": 116,
-        "realtimeFactor": 0.02148148148148148,
-        "audioDurationMs": 5400,
+        "cer": 0.7222222222222222,
+        "durationMs": 158,
+        "realtimeFactor": 0.030060882800608826,
+        "audioDurationMs": 5256,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:38.822Z"
+        "timestamp": "2026-11-23T19:15:54.222Z"
+      },
+      {
+        "testId": "de-accent-21",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Was ist deine Lieblingsfarbe? Und wenn d"
+        },
+        "status": "ok",
+        "transcription": "I have no favorite color, I like all colors, depending on what sort of mood I have.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7222222222222222,
+        "durationMs": 157,
+        "realtimeFactor": 0.02987062404870624,
+        "audioDurationMs": 5256,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:54.404Z"
+      },
+      {
+        "testId": "de-accent-21",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Was ist deine Lieblingsfarbe? Und wenn d"
+        },
+        "status": "ok",
+        "transcription": "I have no favorite color, I like all colors, depending on what sort of mood I have.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.7222222222222222,
+        "durationMs": 158,
+        "realtimeFactor": 0.030060882800608826,
+        "audioDurationMs": 5256,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:54.586Z"
       },
       {
         "testId": "de-accent-22",
@@ -825,18 +1959,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Wie siehst du die Zukunft der Arbeit in einer digitalen Welt"
+          "speaker": "prompt:Was ist für dich das Wichtigste in einer"
         },
         "status": "ok",
-        "transcription": "For me, political participation is important, only so can a community grow and prosper.",
+        "transcription": "Interesse in the other and influence ability",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.7558139534883721,
-        "durationMs": 155,
-        "realtimeFactor": 0.017645719489981785,
-        "audioDurationMs": 8784,
+        "cer": 0.5681818181818182,
+        "durationMs": 88,
+        "realtimeFactor": 0.01597676107480029,
+        "audioDurationMs": 5508,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:39.006Z"
+        "timestamp": "2026-11-23T19:15:54.697Z"
+      },
+      {
+        "testId": "de-accent-22",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Was ist für dich das Wichtigste in einer"
+        },
+        "status": "ok",
+        "transcription": "Interesse in the other and influence ability",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.5681818181818182,
+        "durationMs": 86,
+        "realtimeFactor": 0.01561365286855483,
+        "audioDurationMs": 5508,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:54.807Z"
+      },
+      {
+        "testId": "de-accent-22",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Was ist für dich das Wichtigste in einer"
+        },
+        "status": "ok",
+        "transcription": "Interesse in the other and influence ability",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.5681818181818182,
+        "durationMs": 87,
+        "realtimeFactor": 0.01579520697167756,
+        "audioDurationMs": 5508,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:54.917Z"
       },
       {
         "testId": "de-accent-23",
@@ -852,18 +2040,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Wie wichtig ist dir politische Beteiligung?"
+          "speaker": "prompt:Welche Sprache würdest du gerne lernen u"
         },
         "status": "ok",
-        "transcription": "I don't know if it's important to have different hobbies. I have different hobbies, but I can also imagine that people with just one hobby are very happy.",
+        "transcription": "I would like to learn new Greek because my sister in Greece lives.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 280,
-        "realtimeFactor": 0.025584795321637425,
-        "audioDurationMs": 10944,
+        "cer": 0.6625,
+        "durationMs": 128,
+        "realtimeFactor": 0.022792022792022793,
+        "audioDurationMs": 5616,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:39.319Z"
+        "timestamp": "2026-11-23T19:15:55.068Z"
+      },
+      {
+        "testId": "de-accent-23",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Sprache würdest du gerne lernen u"
+        },
+        "status": "ok",
+        "transcription": "I would like to learn new Greek because my sister in Greece lives.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6625,
+        "durationMs": 128,
+        "realtimeFactor": 0.022792022792022793,
+        "audioDurationMs": 5616,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:55.220Z"
+      },
+      {
+        "testId": "de-accent-23",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Sprache würdest du gerne lernen u"
+        },
+        "status": "ok",
+        "transcription": "I would like to learn new Greek because my sister in Greece lives.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6625,
+        "durationMs": 126,
+        "realtimeFactor": 0.022435897435897436,
+        "audioDurationMs": 5616,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:55.370Z"
       },
       {
         "testId": "de-accent-24",
@@ -879,18 +2121,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche Jahreszeit magst du am liebsten und warum?"
+          "speaker": "prompt:Welche Art von Sport würdest du gerne ei"
         },
         "status": "ok",
-        "transcription": "I like the most of the autumn, because everything is beautifully colorful and because there's a lot to eat.",
+        "transcription": "What kind of sport would you like to try out and why?",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.9166666666666666,
-        "durationMs": 209,
-        "realtimeFactor": 0.026269482151835093,
-        "audioDurationMs": 7956,
+        "cer": 0.6984126984126984,
+        "durationMs": 96,
+        "realtimeFactor": 0.016877637130801686,
+        "audioDurationMs": 5688,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:39.556Z"
+        "timestamp": "2026-11-23T19:15:55.490Z"
+      },
+      {
+        "testId": "de-accent-24",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Sport würdest du gerne ei"
+        },
+        "status": "ok",
+        "transcription": "What kind of sport would you like to try out and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6984126984126984,
+        "durationMs": 97,
+        "realtimeFactor": 0.017053445850914204,
+        "audioDurationMs": 5688,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:55.612Z"
+      },
+      {
+        "testId": "de-accent-24",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Welche Art von Sport würdest du gerne ei"
+        },
+        "status": "ok",
+        "transcription": "What kind of sport would you like to try out and why?",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.6984126984126984,
+        "durationMs": 97,
+        "realtimeFactor": 0.017053445850914204,
+        "audioDurationMs": 5688,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:55.733Z"
       },
       {
         "testId": "de-accent-25",
@@ -906,18 +2202,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Welche gesellschaftlichen Veränderungen würdest du gerne seh"
+          "speaker": "prompt:Was ist dein Lieblingsgetränk und warum?"
         },
         "status": "ok",
-        "transcription": "Do, it's this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this this",
+        "transcription": "Water, simply available and without great side effects",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 1517,
-        "realtimeFactor": 0.15841687552213868,
-        "audioDurationMs": 9576,
+        "cer": 0.711864406779661,
+        "durationMs": 101,
+        "realtimeFactor": 0.017756680731364275,
+        "audioDurationMs": 5688,
         "costUsd": 0,
-        "timestamp": "2026-10-27T05:09:41.106Z"
+        "timestamp": "2026-11-23T19:15:55.859Z"
+      },
+      {
+        "testId": "de-accent-25",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Was ist dein Lieblingsgetränk und warum?"
+        },
+        "status": "ok",
+        "transcription": "Water, simply available and without great side effects",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.711864406779661,
+        "durationMs": 102,
+        "realtimeFactor": 0.017932489451476793,
+        "audioDurationMs": 5688,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:55.985Z"
+      },
+      {
+        "testId": "de-accent-25",
+        "suiteId": "accented-speech-de",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "de",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Was ist dein Lieblingsgetränk und warum?"
+        },
+        "status": "ok",
+        "transcription": "Water, simply available and without great side effects",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.711864406779661,
+        "durationMs": 102,
+        "realtimeFactor": 0.017932489451476793,
+        "audioDurationMs": 5688,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T19:15:56.111Z"
       }
     ],
     "accented-speech-en": [
@@ -935,18 +2285,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:\"Do you know the game \"\"The Hundred Line -Last Defense Acade"
+          "speaker": "prompt:Have you ever played basketball?"
         },
         "status": "ok",
-        "transcription": "I think that the kinds of tech that would make our lives better are any technology that helps us to live longer and be healthier, so for example, maybe if my watch could tell me to stop eating so much sugar, I would be much happier.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 2415,
-        "realtimeFactor": 0.13231426692965154,
-        "audioDurationMs": 18252,
+        "transcription": "No, I hate sports.",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 144,
+        "realtimeFactor": 0.047619047619047616,
+        "audioDurationMs": 3024,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:17.389Z"
+        "timestamp": "2026-11-23T17:03:45.673Z"
+      },
+      {
+        "testId": "en-accent-01",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever played basketball?"
+        },
+        "status": "ok",
+        "transcription": "No, I hate sports.",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 119,
+        "realtimeFactor": 0.03935185185185185,
+        "audioDurationMs": 3024,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:45.820Z"
+      },
+      {
+        "testId": "en-accent-01",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever played basketball?"
+        },
+        "status": "ok",
+        "transcription": "No, I hate sports.",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 149,
+        "realtimeFactor": 0.04927248677248677,
+        "audioDurationMs": 3024,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:46.000Z"
       },
       {
         "testId": "en-accent-02",
@@ -962,18 +2366,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are there any foods you hate to eat?"
+          "speaker": "prompt:How should we care for the elderly?"
         },
         "status": "ok",
-        "transcription": "Is it easy to travel by train?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8080808080808081,
-        "durationMs": 252,
-        "realtimeFactor": 0.08235294117647059,
-        "audioDurationMs": 3060,
+        "transcription": "Just have a conversation.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 109,
+        "realtimeFactor": 0.03520671834625323,
+        "audioDurationMs": 3096,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:17.670Z"
+        "timestamp": "2026-11-23T17:03:46.138Z"
+      },
+      {
+        "testId": "en-accent-02",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How should we care for the elderly?"
+        },
+        "status": "ok",
+        "transcription": "Just have a conversation.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 99,
+        "realtimeFactor": 0.03197674418604651,
+        "audioDurationMs": 3096,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:46.269Z"
+      },
+      {
+        "testId": "en-accent-02",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How should we care for the elderly?"
+        },
+        "status": "ok",
+        "transcription": "Just have a conversation.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 97,
+        "realtimeFactor": 0.03133074935400517,
+        "audioDurationMs": 3096,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:46.397Z"
       },
       {
         "testId": "en-accent-03",
@@ -989,18 +2447,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are there local events or festivals your family attend?"
+          "speaker": "prompt:Have you got a pet?"
         },
         "status": "ok",
-        "transcription": "What can you cook?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8524590163934426,
-        "durationMs": 60,
-        "realtimeFactor": 0.0196078431372549,
-        "audioDurationMs": 3060,
+        "transcription": "No, I haven't.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 155,
+        "realtimeFactor": 0.04892676767676768,
+        "audioDurationMs": 3168,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:17.759Z"
+        "timestamp": "2026-11-23T17:03:46.580Z"
+      },
+      {
+        "testId": "en-accent-03",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you got a pet?"
+        },
+        "status": "ok",
+        "transcription": "No, I haven't.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 138,
+        "realtimeFactor": 0.043560606060606064,
+        "audioDurationMs": 3168,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:46.752Z"
+      },
+      {
+        "testId": "en-accent-03",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you got a pet?"
+        },
+        "status": "ok",
+        "transcription": "No, I haven't.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 124,
+        "realtimeFactor": 0.039141414141414144,
+        "audioDurationMs": 3168,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:46.902Z"
       },
       {
         "testId": "en-accent-04",
@@ -1016,18 +2528,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are you good at growing plants?"
+          "speaker": "prompt:Do you wear jewelry?"
         },
         "status": "ok",
-        "transcription": "People! People annoys me!",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 79,
-        "realtimeFactor": 0.025816993464052286,
-        "audioDurationMs": 3060,
+        "transcription": "Do you really?",
+        "werRaw": 0.6,
+        "werNormalized": 0.6,
+        "cer": 0.47619047619047616,
+        "durationMs": 75,
+        "realtimeFactor": 0.023148148148148147,
+        "audioDurationMs": 3240,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:17.867Z"
+        "timestamp": "2026-11-23T17:03:47.002Z"
+      },
+      {
+        "testId": "en-accent-04",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Do you wear jewelry?"
+        },
+        "status": "ok",
+        "transcription": "Do you really?",
+        "werRaw": 0.6,
+        "werNormalized": 0.6,
+        "cer": 0.47619047619047616,
+        "durationMs": 97,
+        "realtimeFactor": 0.029938271604938272,
+        "audioDurationMs": 3240,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:47.127Z"
+      },
+      {
+        "testId": "en-accent-04",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Do you wear jewelry?"
+        },
+        "status": "ok",
+        "transcription": "Do you really?",
+        "werRaw": 0.6,
+        "werNormalized": 0.6,
+        "cer": 0.47619047619047616,
+        "durationMs": 107,
+        "realtimeFactor": 0.03302469135802469,
+        "audioDurationMs": 3240,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:47.260Z"
       },
       {
         "testId": "en-accent-05",
@@ -1043,18 +2609,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are you good at swimming?"
+          "speaker": "prompt:What do you think about using X?"
         },
         "status": "ok",
-        "transcription": "Um, mostly dogs.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8181818181818182,
-        "durationMs": 65,
-        "realtimeFactor": 0.021241830065359478,
-        "audioDurationMs": 3060,
+        "transcription": "What do you think about using X?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.06060606060606061,
+        "durationMs": 144,
+        "realtimeFactor": 0.04395604395604396,
+        "audioDurationMs": 3276,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:17.960Z"
+        "timestamp": "2026-11-23T17:03:47.437Z"
+      },
+      {
+        "testId": "en-accent-05",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think about using X?"
+        },
+        "status": "ok",
+        "transcription": "What do you think about using X?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.06060606060606061,
+        "durationMs": 131,
+        "realtimeFactor": 0.039987789987789985,
+        "audioDurationMs": 3276,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:47.601Z"
+      },
+      {
+        "testId": "en-accent-05",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think about using X?"
+        },
+        "status": "ok",
+        "transcription": "What do you think about using X?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.06060606060606061,
+        "durationMs": 132,
+        "realtimeFactor": 0.040293040293040296,
+        "audioDurationMs": 3276,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:47.763Z"
       },
       {
         "testId": "en-accent-06",
@@ -1070,18 +2690,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Are you happy with the way your life has turned out so far?"
+          "speaker": "prompt:What sport is your favourite?"
         },
         "status": "ok",
-        "transcription": "Chuckil mancabre!",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.9285714285714286,
-        "durationMs": 76,
-        "realtimeFactor": 0.02483660130718954,
-        "audioDurationMs": 3060,
+        "transcription": "What the sports is, your favorite?",
+        "werRaw": 0.4,
+        "werNormalized": 0.2,
+        "cer": 0.14285714285714285,
+        "durationMs": 157,
+        "realtimeFactor": 0.04590643274853801,
+        "audioDurationMs": 3420,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.062Z"
+        "timestamp": "2026-11-23T17:03:47.949Z"
+      },
+      {
+        "testId": "en-accent-06",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What sport is your favourite?"
+        },
+        "status": "ok",
+        "transcription": "What the sports is, your favorite?",
+        "werRaw": 0.4,
+        "werNormalized": 0.2,
+        "cer": 0.14285714285714285,
+        "durationMs": 143,
+        "realtimeFactor": 0.041812865497076024,
+        "audioDurationMs": 3420,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:48.119Z"
+      },
+      {
+        "testId": "en-accent-06",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What sport is your favourite?"
+        },
+        "status": "ok",
+        "transcription": "What the sports is, your favorite?",
+        "werRaw": 0.4,
+        "werNormalized": 0.2,
+        "cer": 0.14285714285714285,
+        "durationMs": 136,
+        "realtimeFactor": 0.03976608187134503,
+        "audioDurationMs": 3420,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:48.284Z"
       },
       {
         "testId": "en-accent-07",
@@ -1097,18 +2771,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Can you describe your favorite water sport experience?"
+          "speaker": "prompt:Have you ever thought about writing musi"
         },
         "status": "ok",
-        "transcription": "It is dark kind of black.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8243243243243243,
-        "durationMs": 78,
-        "realtimeFactor": 0.025193798449612403,
-        "audioDurationMs": 3096,
+        "transcription": "Have you ever thought about writing music?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 175,
+        "realtimeFactor": 0.05116959064327485,
+        "audioDurationMs": 3420,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.167Z"
+        "timestamp": "2026-11-23T17:03:48.488Z"
+      },
+      {
+        "testId": "en-accent-07",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever thought about writing musi"
+        },
+        "status": "ok",
+        "transcription": "Have you ever thought about writing music?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 153,
+        "realtimeFactor": 0.04473684210526316,
+        "audioDurationMs": 3420,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:48.669Z"
+      },
+      {
+        "testId": "en-accent-07",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Have you ever thought about writing musi"
+        },
+        "status": "ok",
+        "transcription": "Have you ever thought about writing music?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 204,
+        "realtimeFactor": 0.05964912280701754,
+        "audioDurationMs": 3420,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:48.900Z"
       },
       {
         "testId": "en-accent-08",
@@ -1124,18 +2852,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Can you describe your most challenging climb?"
+          "speaker": "prompt:What do you do for work?"
         },
         "status": "ok",
-        "transcription": "What is your best travelling experience?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8879668049792531,
-        "durationMs": 81,
-        "realtimeFactor": 0.02586206896551724,
-        "audioDurationMs": 3132,
+        "transcription": "What do you do for work?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.08,
+        "durationMs": 130,
+        "realtimeFactor": 0.03611111111111111,
+        "audioDurationMs": 3600,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.273Z"
+        "timestamp": "2026-11-23T17:03:49.062Z"
+      },
+      {
+        "testId": "en-accent-08",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do for work?"
+        },
+        "status": "ok",
+        "transcription": "What do you do for work?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.08,
+        "durationMs": 109,
+        "realtimeFactor": 0.03027777777777778,
+        "audioDurationMs": 3600,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:49.203Z"
+      },
+      {
+        "testId": "en-accent-08",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do for work?"
+        },
+        "status": "ok",
+        "transcription": "What do you do for work?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.08,
+        "durationMs": 106,
+        "realtimeFactor": 0.029444444444444443,
+        "audioDurationMs": 3600,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:49.338Z"
       },
       {
         "testId": "en-accent-09",
@@ -1151,18 +2933,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Can you sing or play music?"
+          "speaker": "prompt:What's the weather like today?"
         },
         "status": "ok",
-        "transcription": "What is the weather today?",
-        "werRaw": 0.9411764705882353,
-        "werNormalized": 0.9411764705882353,
-        "cer": 0.8108108108108109,
-        "durationMs": 68,
-        "realtimeFactor": 0.02122347066167291,
-        "audioDurationMs": 3204,
+        "transcription": "What is the weather like today?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 133,
+        "realtimeFactor": 0.03586839266450917,
+        "audioDurationMs": 3708,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.366Z"
+        "timestamp": "2026-11-23T17:03:49.496Z"
+      },
+      {
+        "testId": "en-accent-09",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What's the weather like today?"
+        },
+        "status": "ok",
+        "transcription": "What is the weather like today?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 122,
+        "realtimeFactor": 0.03290183387270766,
+        "audioDurationMs": 3708,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:49.649Z"
+      },
+      {
+        "testId": "en-accent-09",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What's the weather like today?"
+        },
+        "status": "ok",
+        "transcription": "What is the weather like today?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 110,
+        "realtimeFactor": 0.0296655879180151,
+        "audioDurationMs": 3708,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:49.791Z"
       },
       {
         "testId": "en-accent-10",
@@ -1178,18 +3014,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a board game, video games or card game that you've "
+          "speaker": "prompt:How do you celebrate birthdays?"
         },
         "status": "ok",
-        "transcription": "To take a rest and have a good rest",
-        "werRaw": 0.8333333333333334,
-        "werNormalized": 0.8333333333333334,
-        "cer": 0.7528089887640449,
-        "durationMs": 77,
-        "realtimeFactor": 0.023765432098765433,
-        "audioDurationMs": 3240,
+        "transcription": "How do you celebrate birthdays?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 147,
+        "realtimeFactor": 0.03964401294498382,
+        "audioDurationMs": 3708,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.470Z"
+        "timestamp": "2026-11-23T17:03:49.964Z"
+      },
+      {
+        "testId": "en-accent-10",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you celebrate birthdays?"
+        },
+        "status": "ok",
+        "transcription": "How do you celebrate birthdays?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 115,
+        "realtimeFactor": 0.031014023732470336,
+        "audioDurationMs": 3708,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:50.105Z"
+      },
+      {
+        "testId": "en-accent-10",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you celebrate birthdays?"
+        },
+        "status": "ok",
+        "transcription": "How do you celebrate birthdays?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 118,
+        "realtimeFactor": 0.03182308522114347,
+        "audioDurationMs": 3708,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:50.248Z"
       },
       {
         "testId": "en-accent-11",
@@ -1205,18 +3095,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a creative activity or project that you've ever wor"
+          "speaker": "prompt:Why is the sky on Earth blue?"
         },
         "status": "ok",
-        "transcription": "No, I'm not!",
-        "werRaw": 0.9375,
-        "werNormalized": 0.8235294117647058,
-        "cer": 0.8842105263157894,
-        "durationMs": 64,
-        "realtimeFactor": 0.019536019536019536,
-        "audioDurationMs": 3276,
+        "transcription": "Why is the sky on earth blue?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 109,
+        "realtimeFactor": 0.029113247863247864,
+        "audioDurationMs": 3744,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.560Z"
+        "timestamp": "2026-11-23T17:03:50.385Z"
+      },
+      {
+        "testId": "en-accent-11",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Why is the sky on Earth blue?"
+        },
+        "status": "ok",
+        "transcription": "Why is the sky on earth blue?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 98,
+        "realtimeFactor": 0.026175213675213676,
+        "audioDurationMs": 3744,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:50.511Z"
+      },
+      {
+        "testId": "en-accent-11",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Why is the sky on Earth blue?"
+        },
+        "status": "ok",
+        "transcription": "Why is the sky on earth blue?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 159,
+        "realtimeFactor": 0.04246794871794872,
+        "audioDurationMs": 3744,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:50.702Z"
       },
       {
         "testId": "en-accent-12",
@@ -1232,18 +3176,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a creative, beautiful or decorative object that you"
+          "speaker": "prompt:How much water did you drink today?"
         },
         "status": "ok",
-        "transcription": "We really don't, even though we should.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.7619047619047619,
-        "durationMs": 91,
-        "realtimeFactor": 0.02747584541062802,
-        "audioDurationMs": 3312,
+        "transcription": "I didn't drink today.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 74,
+        "realtimeFactor": 0.019576719576719578,
+        "audioDurationMs": 3780,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.677Z"
+        "timestamp": "2026-11-23T17:03:50.807Z"
+      },
+      {
+        "testId": "en-accent-12",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How much water did you drink today?"
+        },
+        "status": "ok",
+        "transcription": "I didn't drink today.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 80,
+        "realtimeFactor": 0.021164021164021163,
+        "audioDurationMs": 3780,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:50.914Z"
+      },
+      {
+        "testId": "en-accent-12",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How much water did you drink today?"
+        },
+        "status": "ok",
+        "transcription": "I didn't drink today.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 103,
+        "realtimeFactor": 0.027248677248677248,
+        "audioDurationMs": 3780,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:51.043Z"
       },
       {
         "testId": "en-accent-13",
@@ -1259,18 +3257,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a historical event you learned about in school"
+          "speaker": "prompt:What do you do if someone farts nearby?"
         },
         "status": "ok",
-        "transcription": "My parents live upstairs from me.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.84251968503937,
-        "durationMs": 81,
-        "realtimeFactor": 0.0234375,
-        "audioDurationMs": 3456,
+        "transcription": "I will run so fast",
+        "werRaw": 0.8,
+        "werNormalized": 0.3333333333333333,
+        "cer": 0.28,
+        "durationMs": 71,
+        "realtimeFactor": 0.018431983385254414,
+        "audioDurationMs": 3852,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.784Z"
+        "timestamp": "2026-11-23T17:03:51.139Z"
+      },
+      {
+        "testId": "en-accent-13",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do if someone farts nearby?"
+        },
+        "status": "ok",
+        "transcription": "I will run so fast",
+        "werRaw": 0.8,
+        "werNormalized": 0.3333333333333333,
+        "cer": 0.28,
+        "durationMs": 61,
+        "realtimeFactor": 0.015835929387331256,
+        "audioDurationMs": 3852,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:51.226Z"
+      },
+      {
+        "testId": "en-accent-13",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you do if someone farts nearby?"
+        },
+        "status": "ok",
+        "transcription": "I will run so fast",
+        "werRaw": 0.8,
+        "werNormalized": 0.3333333333333333,
+        "cer": 0.28,
+        "durationMs": 68,
+        "realtimeFactor": 0.017653167185877467,
+        "audioDurationMs": 3852,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:51.318Z"
       },
       {
         "testId": "en-accent-14",
@@ -1286,18 +3338,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a moment when you felt great joy. What made this ex"
+          "speaker": "prompt:What are you wearing?"
         },
         "status": "ok",
-        "transcription": "Yes, I drive a vehicle.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.8333333333333334,
-        "durationMs": 90,
-        "realtimeFactor": 0.026041666666666668,
-        "audioDurationMs": 3456,
+        "transcription": "What are you worried?",
+        "werRaw": 0.25,
+        "werNormalized": 0.25,
+        "cer": 0.2,
+        "durationMs": 88,
+        "realtimeFactor": 0.02263374485596708,
+        "audioDurationMs": 3888,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.899Z"
+        "timestamp": "2026-11-23T17:03:51.435Z"
+      },
+      {
+        "testId": "en-accent-14",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are you wearing?"
+        },
+        "status": "ok",
+        "transcription": "What are you worried?",
+        "werRaw": 0.25,
+        "werNormalized": 0.25,
+        "cer": 0.2,
+        "durationMs": 62,
+        "realtimeFactor": 0.01594650205761317,
+        "audioDurationMs": 3888,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:51.527Z"
+      },
+      {
+        "testId": "en-accent-14",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are you wearing?"
+        },
+        "status": "ok",
+        "transcription": "What are you worried?",
+        "werRaw": 0.25,
+        "werNormalized": 0.25,
+        "cer": 0.2,
+        "durationMs": 63,
+        "realtimeFactor": 0.016203703703703703,
+        "audioDurationMs": 3888,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:51.620Z"
       },
       {
         "testId": "en-accent-15",
@@ -1313,18 +3419,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a visit to a cinema in your country"
+          "speaker": "prompt:What was your favorite thing in school?"
         },
         "status": "ok",
-        "transcription": "Eh, what?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.9347826086956522,
-        "durationMs": 48,
-        "realtimeFactor": 0.013888888888888888,
-        "audioDurationMs": 3456,
+        "transcription": "talking to the girls",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 66,
+        "realtimeFactor": 0.016516516516516516,
+        "audioDurationMs": 3996,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:18.973Z"
+        "timestamp": "2026-11-23T17:03:51.712Z"
+      },
+      {
+        "testId": "en-accent-15",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What was your favorite thing in school?"
+        },
+        "status": "ok",
+        "transcription": "talking to the girls",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 61,
+        "realtimeFactor": 0.015265265265265265,
+        "audioDurationMs": 3996,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:51.802Z"
+      },
+      {
+        "testId": "en-accent-15",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What was your favorite thing in school?"
+        },
+        "status": "ok",
+        "transcription": "talking to the girls",
+        "werRaw": 0.25,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 63,
+        "realtimeFactor": 0.015765765765765764,
+        "audioDurationMs": 3996,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:51.895Z"
       },
       {
         "testId": "en-accent-16",
@@ -1340,18 +3500,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe a visit to an ocean, lake or river."
+          "speaker": "prompt:Is it important to be unique?"
         },
         "status": "ok",
-        "transcription": "I attempt not to mark my birthday",
-        "werRaw": 0.9583333333333334,
-        "werNormalized": 0.9583333333333334,
-        "cer": 0.8141592920353983,
-        "durationMs": 95,
-        "realtimeFactor": 0.027488425925925927,
-        "audioDurationMs": 3456,
+        "transcription": "Is it important to be unique?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 89,
+        "realtimeFactor": 0.022272272272272273,
+        "audioDurationMs": 3996,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.093Z"
+        "timestamp": "2026-11-23T17:03:52.012Z"
+      },
+      {
+        "testId": "en-accent-16",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Is it important to be unique?"
+        },
+        "status": "ok",
+        "transcription": "Is it important to be unique?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 79,
+        "realtimeFactor": 0.01976976976976977,
+        "audioDurationMs": 3996,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:52.117Z"
+      },
+      {
+        "testId": "en-accent-16",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Is it important to be unique?"
+        },
+        "status": "ok",
+        "transcription": "Is it important to be unique?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 69,
+        "realtimeFactor": 0.017267267267267267,
+        "audioDurationMs": 3996,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:52.211Z"
       },
       {
         "testId": "en-accent-17",
@@ -1367,18 +3581,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe any plants you have grown or harvested"
+          "speaker": "prompt:What is your bedtime routine?"
         },
         "status": "ok",
-        "transcription": "What was your favorite thing in school?",
-        "werRaw": 0.95,
-        "werNormalized": 0.95,
-        "cer": 0.7889908256880734,
-        "durationMs": 77,
-        "realtimeFactor": 0.021825396825396824,
-        "audioDurationMs": 3528,
+        "transcription": "I watch YouTube and Instagram.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 74,
+        "realtimeFactor": 0.018353174603174604,
+        "audioDurationMs": 4032,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.194Z"
+        "timestamp": "2026-11-23T17:03:52.312Z"
+      },
+      {
+        "testId": "en-accent-17",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your bedtime routine?"
+        },
+        "status": "ok",
+        "transcription": "I watch YouTube and Instagram.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 68,
+        "realtimeFactor": 0.016865079365079364,
+        "audioDurationMs": 4032,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:52.406Z"
+      },
+      {
+        "testId": "en-accent-17",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your bedtime routine?"
+        },
+        "status": "ok",
+        "transcription": "I watch YouTube and Instagram.",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 85,
+        "realtimeFactor": 0.021081349206349208,
+        "audioDurationMs": 4032,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:52.517Z"
       },
       {
         "testId": "en-accent-18",
@@ -1394,18 +3662,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe how a teacher, mentor or relative has shaped your l"
+          "speaker": "prompt:Were you affected by the pandemic?"
         },
         "status": "ok",
-        "transcription": "Candy spinach.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 0.9408602150537635,
-        "durationMs": 65,
-        "realtimeFactor": 0.018424036281179137,
-        "audioDurationMs": 3528,
+        "transcription": "Were you affected by the pandemic?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 155,
+        "realtimeFactor": 0.03810226155358899,
+        "audioDurationMs": 4067.9999999999995,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.283Z"
+        "timestamp": "2026-11-23T17:03:52.697Z"
+      },
+      {
+        "testId": "en-accent-18",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Were you affected by the pandemic?"
+        },
+        "status": "ok",
+        "transcription": "Were you affected by the pandemic?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 164,
+        "realtimeFactor": 0.04031465093411996,
+        "audioDurationMs": 4067.9999999999995,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:52.893Z"
+      },
+      {
+        "testId": "en-accent-18",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Were you affected by the pandemic?"
+        },
+        "status": "ok",
+        "transcription": "Were you affected by the pandemic?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 173,
+        "realtimeFactor": 0.04252704031465094,
+        "audioDurationMs": 4067.9999999999995,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:53.100Z"
       },
       {
         "testId": "en-accent-19",
@@ -1421,18 +3743,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe how people pay for things in your society, for exam"
+          "speaker": "prompt:What do you think AI is?"
         },
         "status": "ok",
-        "transcription": "Come on, come on.",
-        "werRaw": 1,
-        "werNormalized": 0.9545454545454546,
-        "cer": 0.875,
-        "durationMs": 60,
-        "realtimeFactor": 0.017006802721088437,
-        "audioDurationMs": 3528,
+        "transcription": "A. is very convenient.",
+        "werRaw": 0.25,
+        "werNormalized": 0.25,
+        "cer": 0.047619047619047616,
+        "durationMs": 101,
+        "realtimeFactor": 0.024396135265700482,
+        "audioDurationMs": 4140,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.370Z"
+        "timestamp": "2026-11-23T17:03:53.228Z"
+      },
+      {
+        "testId": "en-accent-19",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think AI is?"
+        },
+        "status": "ok",
+        "transcription": "A. is very convenient.",
+        "werRaw": 0.25,
+        "werNormalized": 0.25,
+        "cer": 0.047619047619047616,
+        "durationMs": 80,
+        "realtimeFactor": 0.01932367149758454,
+        "audioDurationMs": 4140,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:53.335Z"
+      },
+      {
+        "testId": "en-accent-19",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What do you think AI is?"
+        },
+        "status": "ok",
+        "transcription": "A. is very convenient.",
+        "werRaw": 0.25,
+        "werNormalized": 0.25,
+        "cer": 0.047619047619047616,
+        "durationMs": 106,
+        "realtimeFactor": 0.025603864734299518,
+        "audioDurationMs": 4140,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:53.467Z"
       },
       {
         "testId": "en-accent-20",
@@ -1448,18 +3824,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe how to book a doctor's appointment in your country."
+          "speaker": "prompt:How do you feel about swimming? Why?"
         },
         "status": "ok",
-        "transcription": "Were you affected by pandemic?",
-        "werRaw": 0.9629629629629629,
-        "werNormalized": 0.9607843137254902,
-        "cer": 0.9063670411985019,
-        "durationMs": 94,
-        "realtimeFactor": 0.026374859708193043,
-        "audioDurationMs": 3564,
+        "transcription": "How do you feel about swimming? Why?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 118,
+        "realtimeFactor": 0.027777777777777776,
+        "audioDurationMs": 4248,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.490Z"
+        "timestamp": "2026-11-23T17:03:53.616Z"
+      },
+      {
+        "testId": "en-accent-20",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you feel about swimming? Why?"
+        },
+        "status": "ok",
+        "transcription": "How do you feel about swimming? Why?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 127,
+        "realtimeFactor": 0.029896421845574388,
+        "audioDurationMs": 4248,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:53.774Z"
+      },
+      {
+        "testId": "en-accent-20",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:How do you feel about swimming? Why?"
+        },
+        "status": "ok",
+        "transcription": "How do you feel about swimming? Why?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 135,
+        "realtimeFactor": 0.03177966101694915,
+        "audioDurationMs": 4248,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:53.934Z"
       },
       {
         "testId": "en-accent-21",
@@ -1475,18 +3905,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe how to cook or prepare your favourite meal."
+          "speaker": "prompt:What games do you like to play?"
         },
         "status": "ok",
-        "transcription": "Sometimes I am diffused.",
-        "werRaw": 0.9743589743589743,
-        "werNormalized": 0.9722222222222222,
-        "cer": 0.893048128342246,
-        "durationMs": 69,
-        "realtimeFactor": 0.01936026936026936,
-        "audioDurationMs": 3564,
+        "transcription": "What games do you like to play?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 93,
+        "realtimeFactor": 0.021527777777777778,
+        "audioDurationMs": 4320,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.586Z"
+        "timestamp": "2026-11-23T17:03:54.053Z"
+      },
+      {
+        "testId": "en-accent-21",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What games do you like to play?"
+        },
+        "status": "ok",
+        "transcription": "What games do you like to play?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 99,
+        "realtimeFactor": 0.022916666666666665,
+        "audioDurationMs": 4320,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:54.181Z"
+      },
+      {
+        "testId": "en-accent-21",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What games do you like to play?"
+        },
+        "status": "ok",
+        "transcription": "What games do you like to play?",
+        "werRaw": 0,
+        "werNormalized": 0,
+        "cer": 0,
+        "durationMs": 113,
+        "realtimeFactor": 0.026157407407407407,
+        "audioDurationMs": 4320,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:54.319Z"
       },
       {
         "testId": "en-accent-22",
@@ -1502,18 +3986,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe some foods that are healthy and nourishing"
+          "speaker": "prompt:What is your earliest memory?"
         },
         "status": "ok",
-        "transcription": "When I'm sick I stay in bed.",
+        "transcription": "Mother, you're so mean to us.",
         "werRaw": 1,
         "werNormalized": 1,
-        "cer": 0.7647058823529411,
-        "durationMs": 92,
-        "realtimeFactor": 0.025555555555555557,
-        "audioDurationMs": 3600,
+        "cer": 0.875,
+        "durationMs": 90,
+        "realtimeFactor": 0.020161290322580645,
+        "audioDurationMs": 4464,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.705Z"
+        "timestamp": "2026-11-23T17:03:54.441Z"
+      },
+      {
+        "testId": "en-accent-22",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your earliest memory?"
+        },
+        "status": "ok",
+        "transcription": "Mother, you're so mean to us.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.875,
+        "durationMs": 96,
+        "realtimeFactor": 0.021505376344086023,
+        "audioDurationMs": 4464,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:54.562Z"
+      },
+      {
+        "testId": "en-accent-22",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What is your earliest memory?"
+        },
+        "status": "ok",
+        "transcription": "Mother, you're so mean to us.",
+        "werRaw": 1,
+        "werNormalized": 1,
+        "cer": 0.875,
+        "durationMs": 93,
+        "realtimeFactor": 0.020833333333333332,
+        "audioDurationMs": 4464,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:54.681Z"
       },
       {
         "testId": "en-accent-23",
@@ -1529,18 +4067,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe some foods that are unhealthy or should only be had"
+          "speaker": "prompt:Describe your favorite comfort food."
         },
         "status": "ok",
-        "transcription": "What is your favorite song?",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 76,
-        "realtimeFactor": 0.021111111111111112,
-        "audioDurationMs": 3600,
+        "transcription": "Describe your favorite confectionery food.",
+        "werRaw": 0.2,
+        "werNormalized": 0.2,
+        "cer": 0.22857142857142856,
+        "durationMs": 130,
+        "realtimeFactor": 0.028659611992945325,
+        "audioDurationMs": 4536,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.808Z"
+        "timestamp": "2026-11-23T17:03:54.837Z"
+      },
+      {
+        "testId": "en-accent-23",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Describe your favorite comfort food."
+        },
+        "status": "ok",
+        "transcription": "Describe your favorite confectionery food.",
+        "werRaw": 0.2,
+        "werNormalized": 0.2,
+        "cer": 0.22857142857142856,
+        "durationMs": 125,
+        "realtimeFactor": 0.02755731922398589,
+        "audioDurationMs": 4536,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:54.988Z"
+      },
+      {
+        "testId": "en-accent-23",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Describe your favorite comfort food."
+        },
+        "status": "ok",
+        "transcription": "Describe your favorite confectionery food.",
+        "werRaw": 0.2,
+        "werNormalized": 0.2,
+        "cer": 0.22857142857142856,
+        "durationMs": 107,
+        "realtimeFactor": 0.02358906525573192,
+        "audioDurationMs": 4536,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:55.122Z"
       },
       {
         "testId": "en-accent-24",
@@ -1556,18 +4148,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe the last animal you saw."
+          "speaker": "prompt:Should animals suffer because we like to"
         },
         "status": "ok",
-        "transcription": "No, I don't know this game.",
-        "werRaw": 0.8888888888888888,
-        "werNormalized": 0.8888888888888888,
-        "cer": 0.7446808510638298,
-        "durationMs": 88,
-        "realtimeFactor": 0.0242024202420242,
-        "audioDurationMs": 3636,
+        "transcription": "Should animals suffer because they've been relieved of eating meat?",
+        "werRaw": 0.5,
+        "werNormalized": 0.6,
+        "cer": 0.40384615384615385,
+        "durationMs": 182,
+        "realtimeFactor": 0.040123456790123455,
+        "audioDurationMs": 4536,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:19.924Z"
+        "timestamp": "2026-11-23T17:03:55.329Z"
+      },
+      {
+        "testId": "en-accent-24",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Should animals suffer because we like to"
+        },
+        "status": "ok",
+        "transcription": "Should animals suffer because they've been relieved of eating meat?",
+        "werRaw": 0.5,
+        "werNormalized": 0.6,
+        "cer": 0.40384615384615385,
+        "durationMs": 175,
+        "realtimeFactor": 0.038580246913580245,
+        "audioDurationMs": 4536,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:55.532Z"
+      },
+      {
+        "testId": "en-accent-24",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:Should animals suffer because we like to"
+        },
+        "status": "ok",
+        "transcription": "Should animals suffer because they've been relieved of eating meat?",
+        "werRaw": 0.5,
+        "werNormalized": 0.6,
+        "cer": 0.40384615384615385,
+        "durationMs": 190,
+        "realtimeFactor": 0.04188712522045855,
+        "audioDurationMs": 4536,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:55.749Z"
       },
       {
         "testId": "en-accent-25",
@@ -1583,18 +4229,72 @@
         ],
         "testSource": "common-voice",
         "testMetadata": {
-          "speaker": "prompt:Describe your favorite comfort food."
+          "speaker": "prompt:What are your thoughts on indoor smoking"
         },
         "status": "ok",
-        "transcription": "No, I am not that good at swimming.",
-        "werRaw": 1,
-        "werNormalized": 1,
-        "cer": 1,
-        "durationMs": 91,
-        "realtimeFactor": 0.025027502750275026,
-        "audioDurationMs": 3636,
+        "transcription": "What are your thoughts on indoor smoking?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.024390243902439025,
+        "durationMs": 112,
+        "realtimeFactor": 0.02356902356902357,
+        "audioDurationMs": 4752,
         "costUsd": 0,
-        "timestamp": "2026-10-27T03:12:20.039Z"
+        "timestamp": "2026-11-23T17:03:55.890Z"
+      },
+      {
+        "testId": "en-accent-25",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 2,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are your thoughts on indoor smoking"
+        },
+        "status": "ok",
+        "transcription": "What are your thoughts on indoor smoking?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.024390243902439025,
+        "durationMs": 128,
+        "realtimeFactor": 0.026936026936026935,
+        "audioDurationMs": 4752,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:56.045Z"
+      },
+      {
+        "testId": "en-accent-25",
+        "suiteId": "accented-speech-en",
+        "providerId": "mlx-audio",
+        "model": "sophea-canary",
+        "run": 3,
+        "suiteCategory": "accented-speech",
+        "suiteLanguage": "en",
+        "testTags": [
+          "spontaneous-speech",
+          "common-voice"
+        ],
+        "testSource": "common-voice",
+        "testMetadata": {
+          "speaker": "prompt:What are your thoughts on indoor smoking"
+        },
+        "status": "ok",
+        "transcription": "What are your thoughts on indoor smoking?",
+        "werRaw": 0.14285714285714285,
+        "werNormalized": 0.14285714285714285,
+        "cer": 0.024390243902439025,
+        "durationMs": 106,
+        "realtimeFactor": 0.022306397306397305,
+        "audioDurationMs": 4752,
+        "costUsd": 0,
+        "timestamp": "2026-11-23T17:03:56.176Z"
       }
     ],
     "clean-speech-commonvoice-en": [
