@@ -22,6 +22,8 @@ interface MlxModel {
   repo: string;
   /** Pinned Hugging Face revision, so results stay reproducible */
   revision: string;
+  /** Optional subfolder inside the HF repo; worker downloads repo-root config.json alongside it. */
+  subdir?: string;
   /**
    * How the suite language reaches the model: Qwen3-ASR takes its name, Canary its code. The others get none (Voxtral Realtime detects it; Granite's `language` means translation).
    */
@@ -92,6 +94,8 @@ const QWEN3_LANGUAGES: Record<string, string> = {
 
 // The Reson8/Rumble-2-Flash revision scripts/convert-rumble-2-flash.py converts.
 export const RUMBLE_REVISION = "a0c34287229103b706c670d70791683e34379732";
+// Pinned Hugging Face revision of oruk/oruk-fourier-2b containing repo-root config.json and mlx/8bit/.
+export const ORUK_FOURIER_REVISION = "5291af68b00f0ed291d87f9d2730cf115b56b9cc";
 // The control tokens Rumble-2-Flash's chat template puts first in the system prompt by default.
 export const RUMBLE_CONTROL_TOKENS = "<digits><nofiller><verbatim>";
 
@@ -281,6 +285,16 @@ export const MLX_MODELS: Record<string, MlxModel> = {
     options: { system_prompt: RUMBLE_CONTROL_TOKENS },
     languages: [...Object.keys(QWEN3_LANGUAGES), "auto"],
   },
+  // Oruk Fourier 2B (CC BY-NC 4.0): English-only Qwen3-ASR 1.7B fine-tune with tied output embeddings.
+  // Its official 8-bit MLX export lives under mlx/8bit/ in oruk/oruk-fourier-2b (group size 64 decoder,
+  // BF16 audio encoder). The worker downloads repo-root config.json alongside mlx/8bit/* directly from HF.
+  "oruk-fourier-2b-8bit": {
+    repo: "oruk/oruk-fourier-2b",
+    revision: ORUK_FOURIER_REVISION,
+    subdir: "mlx/8bit",
+    language: "name",
+    languages: ["en"],
+  },
 };
 
 /**
@@ -382,7 +396,12 @@ export class MlxAudioProvider implements STTProvider {
 
   async prepare(model: string): Promise<void> {
     const entry = this.entry(model);
-    const payload = { load: "1", repo: entry.repo, revision: entry.revision };
+    const payload = {
+      load: "1",
+      repo: entry.repo,
+      revision: entry.revision,
+      ...(entry.subdir ? { subdir: entry.subdir } : {}),
+    };
     const res = entry.next
       ? await this.nextWorker.request(payload, NEXT_TIMEOUTS.prepareMs)
       : await this.request(payload);
@@ -395,6 +414,7 @@ export class MlxAudioProvider implements STTProvider {
     const payload = {
       repo: entry.repo,
       revision: entry.revision,
+      ...(entry.subdir ? { subdir: entry.subdir } : {}),
       file: audio.filePath,
       options: generateOptions(model, audio.language),
     };
@@ -420,7 +440,12 @@ export class MlxAudioProvider implements STTProvider {
   async release(model: string): Promise<void> {
     const entry = MLX_MODELS[model];
     if (!entry) return;
-    const unload = { unload: "1", repo: entry.repo, revision: entry.revision };
+    const unload = {
+      unload: "1",
+      repo: entry.repo,
+      revision: entry.revision,
+      ...(entry.subdir ? { subdir: entry.subdir } : {}),
+    };
     if (entry.next) {
       // The unload queues behind a clip that may still be stuck, so the deadline starts now.
       const request = this.nextWorker.request(unload, RELEASE_TIMEOUT_MS);

@@ -172,4 +172,19 @@ describe("model metadata", () => {
   it("has an entry for the TypeWhisper defaults", () => {
     expect(modelMeta("fluidaudio:parakeet-ultra").tw).toMatchObject({ status: "engine", isDefault: true, plugin: "Parakeet" });
   });
+
+  it("describes Oruk Fourier 2B local MLX and hosted API candidates", () => {
+    const local = modelMeta("mlx-audio:oruk-fourier-2b-8bit");
+    expect(local.derived).toBeUndefined();
+    expect(local.deployment).toBe("local");
+    expect(local.trainedFor).toEqual(["en"]);
+    expect(local.tw.status).toBe("candidate");
+
+    const api = modelMeta("oruk:oruk-fourier-2b");
+    expect(api.derived).toBeUndefined();
+    expect(api.deployment).toBe("cloud");
+    expect(api.runtime).toBe("Oruk Speech API");
+    expect(api.trainedFor).toEqual(["en"]);
+    expect(api.tw.status).toBe("candidate");
+  });
 });

@@ -18,21 +18,39 @@ import gc
 import json
 import sys
 import time
+from pathlib import Path
 
 from mlx_audio.stt.utils import load
 
 cache = {}
 
 
-def model_for(repo, revision):
-    key = (repo, revision)
+def resolve_model_source(repo, revision, subdir=None):
+    if not subdir:
+        return repo, revision
+    from huggingface_hub import snapshot_download
+
+    # Fetch repo-root config.json alongside the subfolder so Hugging Face attributes downloads canonically.
+    root = Path(
+        snapshot_download(
+            repo,
+            revision=revision,
+            allow_patterns=["config.json", f"{subdir}/*"],
+        )
+    )
+    return str(root / subdir), None
+
+
+def model_for(repo, revision, subdir=None):
+    key = (repo, revision, subdir)
     if key not in cache:
-        cache[key] = load(repo, revision=revision)
+        source, load_revision = resolve_model_source(repo, revision, subdir)
+        cache[key] = load(source, revision=load_revision) if load_revision else load(source)
     return cache[key]
 
 
-def unload(repo, revision):
-    cache.pop((repo, revision), None)
+def unload(repo, revision, subdir=None):
+    cache.pop((repo, revision, subdir), None)
     gc.collect()
     try:
         import mlx.core as mx
@@ -43,10 +61,11 @@ def unload(repo, revision):
 
 
 def handle(req):
+    subdir = req.get("subdir")
     if req.get("unload"):
-        unload(req["repo"], req.get("revision"))
+        unload(req["repo"], req.get("revision"), subdir)
         return {"unloaded": True}
-    model = model_for(req["repo"], req.get("revision"))
+    model = model_for(req["repo"], req.get("revision"), subdir)
     if req.get("load"):
         return {"loaded": True}
     kwargs = {"temperature": 0.0, **(req.get("options") or {})}
