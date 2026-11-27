@@ -203,6 +203,7 @@ const elevenlabs = (m: Pick<Entry, "name" | "short" | "tw" | "links">): Entry =>
   deployment: "cloud",
   languages: "90+ languages",
   trainedFor: EN_DE_RU,
+  pr: 35,
   ...m,
 });
 
