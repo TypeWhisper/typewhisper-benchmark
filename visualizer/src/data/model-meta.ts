@@ -448,7 +448,7 @@ const ENTRIES: Record<string, Entry> = {
     tw: {
       status: "engine",
       plugin: "Cohere",
-      note: "The Cohere plugin's model: the unquantized weights on Cohere's servers, one request per recording with the dictation language and the audio as 16 kHz WAV. Not yet measured on the accent, code dictation, code-switching, hard, legal and medical suites (trial keys allow 1,000 calls a month).",
+      note: "The Cohere plugin's model: the unquantized weights on Cohere's servers, one request per recording with the dictation language and the audio as 16 kHz WAV.",
     },
     links: [
       { label: "Docs", href: "https://docs.cohere.com/docs/transcribe" },
