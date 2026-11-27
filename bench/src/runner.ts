@@ -345,16 +345,18 @@ export async function runBenchmark(
       // A provider's own queue, such as a session-start pace, does not count against the timeout.
       await item.provider.beforeTranscribe?.(audioInfo, item.model);
 
-      // Clear the timer afterwards, or it keeps the process alive after the run ends.
+      // Clear the timer afterwards, or it keeps the process alive after the run ends. The timeout
+      // also aborts the provider's signal, so its retries stop with the clip.
       let timer: NodeJS.Timeout | undefined;
+      const timeout = new AbortController();
       const transcription = await withProviderTurn(item.provider, () =>
         Promise.race([
-          item.provider.transcribe(audioInfo, item.model),
+          item.provider.transcribe(audioInfo, item.model, timeout.signal),
           new Promise<never>((_, reject) => {
-            timer = setTimeout(
-              () => reject(new Error("Timeout")),
-              config.timeoutSeconds * 1000
-            );
+            timer = setTimeout(() => {
+              timeout.abort();
+              reject(new Error("Timeout"));
+            }, config.timeoutSeconds * 1000);
           }),
         ]).finally(() => clearTimeout(timer))
       );

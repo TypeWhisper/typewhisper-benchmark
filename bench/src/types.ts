@@ -44,7 +44,8 @@ export interface STTProvider {
   name: string;
   type: ProviderType;
   models: string[];
-  transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult>;
+  /** `signal` aborts when the runner gives up on the clip (`--timeout`), so a provider can stop retrying. */
+  transcribe(audio: AudioInput, model: string, signal?: AbortSignal): Promise<TranscriptionResult>;
   isAvailable(): Promise<boolean>;
   supportsLanguage(model: string, language: string): boolean;
   /** Optional one-time setup (download, load) that runs before timed requests */
