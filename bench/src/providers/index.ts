@@ -1,5 +1,6 @@
 import type { STTProvider } from "../types.js";
 import { OpenAIProvider } from "./openai.js";
+import { OrukProvider } from "./oruk.js";
 import { DeepgramProvider } from "./deepgram.js";
 import { GroqProvider } from "./groq.js";
 import { WhisperCppProvider } from "./whisper-cpp.js";
@@ -24,6 +25,7 @@ import { CohereProvider } from "./cohere.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
+  new OrukProvider(),
   new DeepgramProvider(),
   new GroqProvider(),
   new SonioxProvider(),

@@ -38,6 +38,7 @@ describe("MlxAudioProvider", () => {
       "rumble-2-flash-8bit-plugin",
       "rumble-2-flash-4bit",
       "rumble-2-flash-bf16",
+      "oruk-fourier-2b-8bit",
     ]);
   });
 
@@ -92,6 +93,18 @@ describe("MlxAudioProvider", () => {
     expect(provider.supportsLanguage("rumble-2-flash-4bit", "auto")).toBe(true);
     expect(provider.supportsLanguage("rumble-2-flash-4bit", "ru")).toBe(true);
     expect(MLX_MODELS["rumble-2-flash-bf16"].repo).toMatch(/\/models\/rumble\/rumble-2-flash-bf16$/);
+  });
+
+  it("configures Oruk Fourier 2B 8-bit as English-only from oruk/oruk-fourier-2b mlx/8bit", () => {
+    const entry = MLX_MODELS["oruk-fourier-2b-8bit"];
+    expect(entry.repo).toBe("oruk/oruk-fourier-2b");
+    expect(entry.subdir).toBe("mlx/8bit");
+    expect(entry.revision).toMatch(/^[0-9a-f]{40}$/);
+    expect(generateOptions("oruk-fourier-2b-8bit", "en")).toEqual({ language: "English" });
+    const provider = new MlxAudioProvider();
+    expect(provider.supportsLanguage("oruk-fourier-2b-8bit", "en")).toBe(true);
+    expect(provider.supportsLanguage("oruk-fourier-2b-8bit", "de")).toBe(false);
+    expect(provider.supportsLanguage("oruk-fourier-2b-8bit", "auto")).toBe(false);
   });
 
   it("names the suite language in Nemotron 3.5 Transcribe's prompt", () => {
