@@ -30,27 +30,46 @@ export class JsonLineWorker {
     private command: () => Promise<{ file: string; args: string[] }>
   ) {}
 
-  /** Sends one request after the earlier ones finished; past the deadline it stops the worker. */
-  request(payload: Record<string, unknown>, timeoutMs: number): Promise<WorkerResponse> {
-    const run = this.queue.then(() => this.requestNow(payload, timeoutMs));
+  /**
+   * Sends one request after the earlier ones finished; past the deadline it stops the worker.
+   * `signal` aborts when the caller gives up: a request aborted while queued is never sent, and
+   * one aborted while running stops the worker like a missed deadline, so the next request does
+   * not wait behind its work.
+   */
+  request(payload: Record<string, unknown>, timeoutMs: number, signal?: AbortSignal): Promise<WorkerResponse> {
+    const run = this.queue.then(() =>
+      signal?.aborted
+        ? { error: `${this.label} request was cancelled before it started` }
+        : this.requestNow(payload, timeoutMs, signal)
+    );
     this.queue = run.catch(() => undefined);
     return run;
   }
 
-  private async requestNow(payload: Record<string, unknown>, timeoutMs: number): Promise<WorkerResponse> {
+  private async requestNow(
+    payload: Record<string, unknown>,
+    timeoutMs: number,
+    signal?: AbortSignal
+  ): Promise<WorkerResponse> {
     let timer: NodeJS.Timeout | undefined;
+    let onAbort: (() => void) | undefined;
     let expired = false;
     const deadline = new Promise<WorkerResponse>((resolveDeadline) => {
-      timer = setTimeout(() => {
+      const stop = (error: string) => {
+        if (expired) return;
         expired = true;
-        resolveDeadline({ error: `${this.label} worker did not answer within ${timeoutMs / 1000} s` });
+        resolveDeadline({ error });
         this.dispose();
-      }, timeoutMs);
+      };
+      timer = setTimeout(() => stop(`${this.label} worker did not answer within ${timeoutMs / 1000} s`), timeoutMs);
+      onAbort = () => stop(`${this.label} request was cancelled`);
+      signal?.addEventListener("abort", onAbort, { once: true });
     });
     try {
       return await Promise.race([this.send(payload, () => expired), deadline]);
     } finally {
       clearTimeout(timer);
+      if (onAbort) signal?.removeEventListener("abort", onAbort);
     }
   }
 
