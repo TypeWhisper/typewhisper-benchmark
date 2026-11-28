@@ -419,8 +419,8 @@ export class ElevenLabsProvider implements STTProvider {
       if (!complete || state.answered < sentCommits) {
         throw new Error(`ElevenLabs realtime: ${state.answered} of ${sentCommits} commits answered within 8 s`);
       }
+      // An empty transcript is a result like for the other providers: it scores as 100 % WER.
       const text = joinedText(state.committed);
-      if (!text) throw new Error("ElevenLabs realtime returned no transcript");
       const openSeconds = (finishAt - state.openedAt) / 1_000;
       this.realtime.openSeconds += openSeconds;
       const firstPartialMs = state.firstPartialAt ? Math.round(state.firstPartialAt - streamStart) : undefined;
