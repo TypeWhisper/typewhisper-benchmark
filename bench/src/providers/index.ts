@@ -20,6 +20,7 @@ import { SonioxProvider } from "./soniox.js";
 import { Reson8Provider } from "./reson8.js";
 import { AssemblyAIProvider } from "./assemblyai.js";
 import { ZoomProvider } from "./zoom.js";
+import { ElevenLabsProvider } from "./elevenlabs.js";
 import { GigaAmOnnxProvider } from "./gigaam-onnx.js";
 import { CohereProvider } from "./cohere.js";
 
@@ -31,6 +32,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new Reson8Provider(),
   new AssemblyAIProvider(),
   new ZoomProvider(),
+  new ElevenLabsProvider(),
   new CohereProvider(),
   new WhisperCppProvider(),
   new AppleSpeechProvider(),

@@ -59,6 +59,7 @@ export const PROVIDERS: Record<string, ProviderInfo> = {
   cohere: { name: "Cohere", runtime: "Cohere API", deployment: "cloud" },
   crispasr: { name: "CrispASR", runtime: "CrispASR 0.8.24 (GGUF, Metal)", deployment: "local" },
   deepgram: { name: "Deepgram", runtime: "Deepgram API", deployment: "cloud" },
+  elevenlabs: { name: "ElevenLabs", runtime: "ElevenLabs API", deployment: "cloud" },
   "gigaam-onnx": { name: "GigaAM", runtime: "ONNX Runtime 1.24.2 (CPU, uv worker)", deployment: "local" },
   fluidaudio: { name: "FluidAudio", runtime: "FluidAudio 0.17.5 (Core ML)", deployment: "local" },
   groq: { name: "Groq", runtime: "Groq API", deployment: "cloud" },
@@ -192,6 +193,19 @@ const assemblyai = (m: Pick<Entry, "name" | "short" | "languages" | "trainedFor"
   runtime: "AssemblyAI API",
   deployment: "cloud",
   pr: 18,
+  ...m,
+});
+
+/** ElevenLabs Scribe on the batch and realtime APIs, as TypeWhisper engines (ElevenLabs plugin 1.3.0). */
+const elevenlabs = (m: Pick<Entry, "name" | "short" | "tw" | "links">): Entry => ({
+  org: "ElevenLabs",
+  family: "Scribe",
+  license: "Proprietary API",
+  runtime: "ElevenLabs API",
+  deployment: "cloud",
+  languages: "90+ languages",
+  trainedFor: [...EN_DE, "ru", ...ROMANCE, "nl"],
+  pr: 35,
   ...m,
 });
 
@@ -377,6 +391,56 @@ const ENTRIES: Record<string, Entry> = {
     links: [hf("ConwayResearch/Underdog-Bark-3.0")],
     pr: 7,
   },
+  "elevenlabs:scribe_v3": elevenlabs({
+    name: "Scribe v3 (batch)",
+    short: "ElevenLabs Scribe v3",
+    tw: {
+      status: "engine",
+      plugin: "ElevenLabs",
+      note: "The default model from plugin 1.3.0 for recordings, files and dictations in REST only mode, and the final text of dictations with dictionary terms. $0.20 per audio hour.",
+    },
+    links: [{ label: "Models", href: "https://elevenlabs.io/docs/overview/models" }],
+  }),
+  "elevenlabs:scribe_v2": elevenlabs({
+    name: "Scribe v2 (batch)",
+    short: "ElevenLabs Scribe v2",
+    tw: {
+      status: "engine",
+      plugin: "ElevenLabs",
+      note: "The plugin's model up to 1.2.0 and still selectable in 1.3.0, through the batch API. $0.20 per audio hour.",
+    },
+    links: [{ label: "Models", href: "https://elevenlabs.io/docs/overview/models" }],
+  }),
+  "elevenlabs:scribe_v3_live": elevenlabs({
+    name: "Scribe v3 Live (realtime)",
+    short: "ElevenLabs Scribe v3 Live",
+    tw: {
+      status: "engine",
+      plugin: "ElevenLabs",
+      note: "From plugin 1.3.0, Scribe v3's dictations in Auto mode: streamed while recorded, with manual commits, and the final text from the same session. Clips stream at recording pace; the latency is the wait after the audio ends. $0.22 per audio hour.",
+    },
+    links: [{ label: "Realtime API", href: "https://elevenlabs.io/docs/api-reference/speech-to-text/v-1-speech-to-text-realtime" }],
+  }),
+  "elevenlabs:scribe_v3_live-multilang": elevenlabs({
+    name: "Scribe v3 Live (realtime, multilang_mode)",
+    short: "ElevenLabs Scribe v3 Live multilang",
+    tw: {
+      status: "engine",
+      plugin: "ElevenLabs",
+      note: "Scribe v3 Live with the plugin's Mixed languages option (multilang_mode=true), for dictations that switch languages within a sentence. Off by default.",
+    },
+    links: [{ label: "Realtime API", href: "https://elevenlabs.io/docs/api-reference/speech-to-text/v-1-speech-to-text-realtime" }],
+  }),
+  "elevenlabs:scribe_v2_realtime": elevenlabs({
+    name: "Scribe v2 Realtime",
+    short: "ElevenLabs Scribe v2 RT",
+    tw: {
+      status: "engine",
+      plugin: "ElevenLabs",
+      note: "Scribe v2's dictations in Auto mode, streamed while recorded (plugin 1.2.0 and later). $0.22 per audio hour.",
+    },
+    links: [{ label: "Realtime API", href: "https://elevenlabs.io/docs/api-reference/speech-to-text/v-1-speech-to-text-realtime" }],
+  }),
   "fluidaudio:bark-3.0-pro": {
     name: "Underdog Bark 3.0 Pro",
     short: "Bark 3.0 Pro",
