@@ -21,6 +21,8 @@ import { Reson8Provider } from "./reson8.js";
 import { AssemblyAIProvider } from "./assemblyai.js";
 import { ZoomProvider } from "./zoom.js";
 import { ElevenLabsProvider } from "./elevenlabs.js";
+import { GigaAmOnnxProvider } from "./gigaam-onnx.js";
+import { CohereProvider } from "./cohere.js";
 
 const ALL_PROVIDERS: STTProvider[] = [
   new OpenAIProvider(),
@@ -31,6 +33,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new AssemblyAIProvider(),
   new ZoomProvider(),
   new ElevenLabsProvider(),
+  new CohereProvider(),
   new WhisperCppProvider(),
   new AppleSpeechProvider(),
   new SherpaOnnxProvider(),
@@ -46,6 +49,7 @@ const ALL_PROVIDERS: STTProvider[] = [
   new AudioCppProvider(),
   new NeedleProvider(),
   new ArcProvider(),
+  new GigaAmOnnxProvider(),
 ];
 
 export function getAllProviders(): STTProvider[] {

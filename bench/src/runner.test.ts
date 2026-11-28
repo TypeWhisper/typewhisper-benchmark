@@ -221,6 +221,40 @@ describe("runBenchmark", () => {
     expect(summary.rankings[0].errorCount).toBe(0);
   });
 
+  it("aborts the provider's signal when a clip times out", async () => {
+    let aborted = false;
+    const provider: STTProvider = {
+      id: "mock-hanging",
+      name: "Mock Hanging",
+      type: "cloud",
+      models: ["only"],
+      transcribe(_audio, _model, signal) {
+        return new Promise((_, reject) => {
+          signal?.addEventListener("abort", () => {
+            aborted = true;
+            reject(new Error("aborted"));
+          });
+        });
+      },
+      async isAvailable() {
+        return true;
+      },
+      supportsLanguage() {
+        return true;
+      },
+    };
+
+    const summary = await runBenchmark({
+      suites: [suiteWith(1)],
+      providers: [provider],
+      config: await configWith(1),
+      version: "t",
+    });
+
+    expect(aborted).toBe(true);
+    expect(summary.rankings[0].errorCount).toBe(1);
+  });
+
   it("releases a local model before preparing the next, also with several runner workers", async () => {
     const calls: string[] = [];
     const provider: STTProvider = {

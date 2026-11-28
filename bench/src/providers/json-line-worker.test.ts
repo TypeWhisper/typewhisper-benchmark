@@ -67,4 +67,26 @@ describe("JsonLineWorker", () => {
       worker.dispose();
     }
   });
+
+  it("skips a request aborted while queued and stops the worker for one aborted while running", async () => {
+    const worker = echoWorker();
+    try {
+      const first = await worker.request({ delayMs: 0 }, 2_000);
+      const controller = new AbortController();
+      const running = worker.request({ delayMs: 1_000 }, 5_000, controller.signal);
+      const queuedController = new AbortController();
+      const queued = worker.request({ delayMs: 0 }, 5_000, queuedController.signal);
+      queuedController.abort();
+      setTimeout(() => controller.abort(), 100);
+      expect((await running).error).toMatch(/cancelled$/);
+      expect((await queued).error).toMatch(/cancelled before it started/);
+      const next = await worker.request({ delayMs: 0 }, 2_000);
+      expect(next.error).toBeUndefined();
+      // A fresh worker answers, and it received only this request.
+      expect(next.text?.split(":")[0]).not.toBe(first.text?.split(":")[0]);
+      expect(next.text?.split(":")[1]).toBe("1");
+    } finally {
+      worker.dispose();
+    }
+  });
 });
