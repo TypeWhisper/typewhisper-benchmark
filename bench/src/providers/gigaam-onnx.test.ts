@@ -37,11 +37,16 @@ describe("GigaAmOnnxProvider", () => {
     expect(gigaAmLanguageSlot("v4-rnnt", "en")).toBe(0);
   });
 
-  it("needs an int8 encoder and a vocabulary in the model folder", () => {
+  it("needs the encoder, the vocabulary and the decoding graphs of the model's kind", () => {
     const env = { GIGAAM_MODELS_PATH: "/models" } as NodeJS.ProcessEnv;
     const list = (files: string[]) => () => files;
-    expect(hasGigaAmModelFiles("v4", env, list(["v4_rnnt_encoder.int8.onnx", "v4_rnnt_e2e_vocab.txt"]))).toBe(true);
-    expect(hasGigaAmModelFiles("v4", env, list(["v4_rnnt_encoder.int8.onnx"]))).toBe(false);
-    expect(Object.values(GIGAAM_MODELS).map((m) => m.dir)).toContain("multilingual-v2");
+    const v4 = GIGAAM_MODELS["v4-rnnt"];
+    const v3 = GIGAAM_MODELS["v3-e2e-rnnt"];
+    const v4Files = ["v4_rnnt_encoder.int8.onnx", "v4_rnnt_e2e_vocab.txt", "v4_rnnt_advance.onnx"];
+    expect(hasGigaAmModelFiles(v4, env, list(v4Files))).toBe(true);
+    expect(hasGigaAmModelFiles(v4, env, list(v4Files.slice(0, 2)))).toBe(false);
+    const v3Files = ["v3_e2e_rnnt_encoder.int8.onnx", "v3_e2e_rnnt_vocab.txt", "v3_e2e_rnnt_decoder.int8.onnx"];
+    expect(hasGigaAmModelFiles(v3, env, list(v3Files))).toBe(false);
+    expect(hasGigaAmModelFiles(v3, env, list([...v3Files, "v3_e2e_rnnt_joint.int8.onnx"]))).toBe(true);
   });
 });

@@ -64,13 +64,19 @@ export function gigaAmLanguageSlot(model: string, language: string): number {
   return index < 0 ? 0 : index + 1;
 }
 
+/** File suffixes a model folder needs: the decoding graphs depend on the model's kind. */
+export function requiredGigaAmFiles(kind: GigaAmModel["kind"]): string[] {
+  const decoding = kind === "e2e" ? ["_decoder.int8.onnx", "_joint.int8.onnx"] : ["_advance.onnx"];
+  return ["_encoder.int8.onnx", "_vocab.txt", ...decoding];
+}
+
 export function hasGigaAmModelFiles(
-  dir: string,
+  entry: Pick<GigaAmModel, "dir" | "kind">,
   env: NodeJS.ProcessEnv = process.env,
   listDir: (path: string) => string[] = (path) => (existsSync(path) ? readdirSync(path) : [])
 ): boolean {
-  const files = listDir(join(getGigaAmModelsBasePath(env), dir));
-  return files.some((f) => f.endsWith("_encoder.int8.onnx")) && files.some((f) => f.endsWith("_vocab.txt"));
+  const files = listDir(join(getGigaAmModelsBasePath(env), entry.dir));
+  return requiredGigaAmFiles(entry.kind).every((suffix) => files.some((f) => f.endsWith(suffix)));
 }
 
 /**
@@ -96,7 +102,7 @@ export class GigaAmOnnxProvider implements STTProvider {
     } catch {
       return false;
     }
-    return Object.values(GIGAAM_MODELS).some((entry) => hasGigaAmModelFiles(entry.dir));
+    return Object.values(GIGAAM_MODELS).some((entry) => hasGigaAmModelFiles(entry));
   }
 
   supportsLanguage(model: string, language: string): boolean {
@@ -104,11 +110,15 @@ export class GigaAmOnnxProvider implements STTProvider {
   }
 
   async prepare(model: string): Promise<void> {
-    const res = await this.worker.request({ load: "1", model: this.modelPath(model) }, TIMEOUTS.prepareMs);
+    const entry = this.entry(model);
+    const res = await this.worker.request(
+      { load: "1", model: this.modelPath(model), suffixes: requiredGigaAmFiles(entry.kind) },
+      TIMEOUTS.prepareMs
+    );
     if (res.error) throw new Error(res.error);
   }
 
-  async transcribe(audio: AudioInput, model: string): Promise<TranscriptionResult> {
+  async transcribe(audio: AudioInput, model: string, signal?: AbortSignal): Promise<TranscriptionResult> {
     const entry = this.entry(model);
     const res = await this.worker.request(
       {
@@ -117,7 +127,8 @@ export class GigaAmOnnxProvider implements STTProvider {
         file: audio.filePath,
         slot: gigaAmLanguageSlot(model, audio.language),
       },
-      TIMEOUTS.transcribeMs
+      TIMEOUTS.transcribeMs,
+      signal
     );
     if (res.error) throw new Error(res.error);
     return { text: (res.text ?? "").trim(), durationMs: Math.round(res.durationMs ?? 0), cost: 0, model };
@@ -134,7 +145,7 @@ export class GigaAmOnnxProvider implements STTProvider {
 
   private modelPath(model: string): string {
     const entry = this.entry(model);
-    if (!hasGigaAmModelFiles(entry.dir)) {
+    if (!hasGigaAmModelFiles(entry)) {
       throw new Error(
         `Model files not found for '${model}'. Run bench/scripts/download-gigaam-models.sh ` +
           `(v3) or bench/scripts/export-gigaam-onnx.py (v4, Multilingual v2)`

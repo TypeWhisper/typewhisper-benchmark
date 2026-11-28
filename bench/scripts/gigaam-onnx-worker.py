@@ -11,8 +11,9 @@
 """Persistent worker that runs GigaAM RNN-T models the way TypeWhisper's GigaAM plugin does.
 
 Reads one JSON request per line from stdin and answers with one JSON line on stdout:
-  -> {"id": 1, "model": "/abs/models/gigaam/v4", "kind": "advance", "file": "/abs/clip.wav", "slot": 2}
-  <- {"id": 1, "text": "...", "durationMs": 12.3}
+  -> {"id": 1, "load": "1", "model": "/abs/models/gigaam/v4", "suffixes": ["_encoder.int8.onnx", ...]}
+  -> {"id": 2, "model": "/abs/models/gigaam/v4", "kind": "advance", "file": "/abs/clip.wav", "slot": 2}
+  <- {"id": 2, "text": "...", "durationMs": 12.3}
 
 The pipeline matches the plugin: onnx-asr's GigaAM v3 feature extractor (16 kHz, 64 log-mel),
 clips padded to 1 s, recordings over 20 s cut at the quietest 200 ms near even cut points, and
@@ -202,9 +203,10 @@ def main():
         try:
             if request.get("load"):
                 # Load the sessions without a timed request, so the first clip does not pay for it.
+                # model_file fails on a missing graph, so an incomplete folder fails here.
                 vocabulary(request["model"])
-                for suffix in ("_encoder.int8.onnx", "_advance.onnx", "_decoder.int8.onnx", "_joint.int8.onnx"):
-                    if list(Path(request["model"]).glob(f"*{suffix}")):
+                for suffix in request["suffixes"]:
+                    if suffix.endswith(".onnx"):
                         session(model_file(request["model"], suffix))
                 preprocessor()
                 response = {}
