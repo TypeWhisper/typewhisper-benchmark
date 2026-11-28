@@ -202,7 +202,7 @@ const elevenlabs = (m: Pick<Entry, "name" | "short" | "tw" | "links">): Entry =>
   runtime: "ElevenLabs API",
   deployment: "cloud",
   languages: "90+ languages",
-  trainedFor: EN_DE_RU,
+  trainedFor: [...EN_DE, "ru", ...ROMANCE, "nl"],
   pr: 35,
   ...m,
 });
