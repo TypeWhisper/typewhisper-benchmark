@@ -228,6 +228,7 @@ export class ElevenLabsProvider implements STTProvider {
   models = Object.keys(ELEVENLABS_MODELS);
 
   private retries = 0;
+  private disposed = false;
   private realtime = {
     sessions: 0,
     commits: 0,
@@ -246,6 +247,7 @@ export class ElevenLabsProvider implements STTProvider {
   }
 
   dispose(): void {
+    this.disposed = true;
     if (this.retries > 0) console.log(`ElevenLabs: ${this.retries} request(s) retried`);
     const rt = this.realtime;
     if (rt.sessions > 0) {
@@ -266,6 +268,8 @@ export class ElevenLabsProvider implements STTProvider {
     const pcm = entry.api === "realtime" ? await decodePcm16(audio.filePath) : undefined;
 
     for (let attempt = 1; ; attempt++) {
+      // The runner does not cancel a timed-out call, so a retry must not open a session after the run ended.
+      if (this.disposed) throw new Error("ElevenLabs provider was disposed");
       try {
         if (entry.api === "batch") {
           const result = await this.transcribeBatch(upload!, entry.modelId, audio.language);

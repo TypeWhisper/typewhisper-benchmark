@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   audioMessage,
   createBatchForm,
@@ -8,6 +8,8 @@ import {
   joinedText,
   LiveCommitPolicy,
 } from "./elevenlabs.js";
+
+vi.mock("./assemblyai.js", () => ({ decodePcm16: async () => Buffer.alloc(3_200), encodeUpload: async () => Buffer.alloc(0) }));
 
 /** 16-bit PCM of `seconds` at a constant level. */
 function pcm(seconds: number, level: number): Buffer {
@@ -112,6 +114,26 @@ describe("ElevenLabsProvider", () => {
   it("joins commit texts like the plugin", () => {
     expect(joinedText(["Hallo.", "", "Wie geht's?"])).toBe("Hallo. Wie geht's?");
     expect(joinedText(["你好", "世界"])).toBe("你好世界");
+  });
+
+  it("starts no retry after dispose", async () => {
+    vi.useFakeTimers();
+    try {
+      const provider = new ElevenLabsProvider();
+      const streamOnce = vi.fn().mockRejectedValue(new TypeError("fetch failed"));
+      Object.assign(provider, { streamOnce });
+      const audio = { filePath: "clip.wav", language: "de", durationSeconds: 1 } as Parameters<typeof provider.transcribe>[0];
+      const result = provider.transcribe(audio, "scribe_v3_live");
+      const settled = expect(result).rejects.toThrow("disposed");
+      await vi.advanceTimersByTimeAsync(0);
+      expect(streamOnce).toHaveBeenCalledTimes(1);
+      provider.dispose();
+      await vi.advanceTimersByTimeAsync(10_000);
+      await settled;
+      expect(streamOnce).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("treats the plugin's realtime errors as the end of a session", () => {
